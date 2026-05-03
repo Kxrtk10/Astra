@@ -1,0 +1,164 @@
+[
+  {
+    "id": "cat_percentages_1",
+    "exam": "CAT",
+    "section": "QA",
+    "topic": "percentages",
+    "difficulty": "medium",
+    "question": "A shopkeeper marks an item 25% above cost price and gives a 10% discount. What is the overall profit percentage?",
+    "answer_type": "numerical"
+  },
+  {
+    "id": "cat_percentages_2",
+    "exam": "CAT",
+    "section": "QA",
+    "topic": "percentages",
+    "difficulty": "medium",
+    "question": "The number of boys in a class is 20% more than the number of girls. What percentage of the class are girls?",
+    "answer_type": "mcq"
+  },
+  {
+    "id": "cat_ratios_1",
+    "exam": "CAT",
+    "section": "QA",
+    "topic": "ratios",
+    "difficulty": "medium",
+    "question": "The ratio of incomes of A and B is 5:7 and the ratio of their expenditures is 3:4. If each saves Rs. 4000, find A's income.",
+    "answer_type": "numerical"
+  },
+  {
+    "id": "cat_dilr_1",
+    "exam": "CAT",
+    "section": "DILR",
+    "topic": "arrangements",
+    "difficulty": "hard",
+    "question": "Eight participants are seated around a circular table with fixed constraints on adjacency and section preferences. Determine who sits opposite P.",
+    "answer_type": "mcq"
+  },
+  {
+    "id": "cat_varc_1",
+    "exam": "CAT",
+    "section": "VARC",
+    "topic": "reading comprehension",
+    "difficulty": "medium",
+    "question": "A passage argues that technological abundance does not always improve human attention. Which option best captures the author's central claim?",
+    "answer_type": "mcq"
+  },
+  {
+    "id": "gre_quant_1",
+    "exam": "GRE",
+    "section": "Quant",
+    "topic": "percentages",
+    "difficulty": "medium",
+    "question": "If x is 20% greater than y, by what percent is y less than x?",
+    "answer_type": "mcq"
+  },
+  {
+    "id": "gre_quant_2",
+    "exam": "GRE",
+    "section": "Quant",
+    "topic": "ratios",
+    "difficulty": "medium",
+    "question": "The ratio of red balls to blue balls in a bag is 3:5. If 8 blue balls are added, the ratio becomes 1:2. How many red balls are in the bag?",
+    "answer_type": "numerical"
+  },
+  {
+    "id": "gre_quant_3",
+    "exam": "GRE",
+    "section": "Quant",
+    "topic": "algebra",
+    "difficulty": "medium",
+    "question": "If 2x + 3y = 18 and x - y = 2, what is the value of y?",
+    "answer_type": "numerical"
+  },
+  {
+    "id": "gre_verbal_1",
+    "exam": "GRE",
+    "section": "Verbal",
+    "topic": "text completion",
+    "difficulty": "medium",
+    "question": "The scientist was so ____ in defending her theory that she ignored all contrary evidence.",
+    "answer_type": "mcq"
+  },
+  {
+    "id": "gre_verbal_2",
+    "exam": "GRE",
+    "section": "Verbal",
+    "topic": "sentence equivalence",
+    "difficulty": "medium",
+    "question": "Although the speaker's tone was calm, the message itself was unmistakably ____.",
+    "answer_type": "mcq"
+  },
+  {
+    "id": "gre_awa_1",
+    "exam": "GRE",
+    "section": "AWA",
+    "topic": "argument analysis",
+    "difficulty": "medium",
+    "question": "Analyze the reasoning in an argument claiming that a city should expand parking because retail sales have recently fallen downtown.",
+    "answer_type": "essay"
+  },
+  {
+    "id": "gmat_quant_1",
+    "exam": "GMAT",
+    "section": "Quant",
+    "topic": "percentages",
+    "difficulty": "medium",
+    "question": "A company's revenue increased by 12% in the first year and decreased by 10% in the second year. Overall, was the final revenue above or below the original revenue?",
+    "answer_type": "mcq"
+  },
+  {
+    "id": "gmat_quant_2",
+    "exam": "GMAT",
+    "section": "Quant",
+    "topic": "ratios",
+    "difficulty": "medium",
+    "question": "In a mixture of coffee and milk, the ratio of coffee to milk is 7:3. How much milk should be added to 20 liters of the mixture so that the ratio becomes 7:5?",
+    "answer_type": "numerical"
+  },
+  {
+    "id": "gmat_quant_3",
+    "exam": "GMAT",
+    "section": "Quant",
+    "topic": "number properties",
+    "difficulty": "hard",
+    "question": "If n is divisible by 6 and 15, which of the following must be true about n?",
+    "answer_type": "mcq"
+  },
+  {
+    "id": "gmat_verbal_1",
+    "exam": "GMAT",
+    "section": "Verbal",
+    "topic": "critical reasoning",
+    "difficulty": "medium",
+    "question": "A company concludes that remote work improves productivity because output increased after a remote policy began. Which option most weakens the conclusion?",
+    "answer_type": "mcq"
+  },
+  {
+    "id": "gmat_verbal_2",
+    "exam": "GMAT",
+    "section": "Verbal",
+    "topic": "reading comprehension",
+    "difficulty": "medium",
+    "question": "A passage discusses whether market efficiency can coexist with investor irrationality. Which statement best reflects the author's view?",
+    "answer_type": "mcq"
+  },
+  {
+    "id": "gmat_di_1",
+    "exam": "GMAT",
+    "section": "Data Insights",
+    "topic": "data sufficiency",
+    "difficulty": "hard",
+    "question": "Is x greater than y? (1) x + z > y + z (2) x / z > y / z, where z is positive.",
+    "answer_type": "mcq"
+  },
+  {
+    "id": "gmat_di_2",
+    "exam": "GMAT",
+    "section": "Data Insights",
+    "topic": "multi-source reasoning",
+    "difficulty": "medium",
+    "question": "Use the information from the table and memo to determine whether the project stayed within budget after accounting for regional cost revisions.",
+    "answer_type": "mcq"
+  }
+]

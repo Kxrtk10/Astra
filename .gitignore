@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+
+# Editor and tooling caches
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.vscode/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+*.err
+uvicorn.out.log
+uvicorn.err.log
+
+# Local browser/profile state
+chrome-profile/
+
+# Generated progress snapshots
+progress/*.json
+
+# Local databases and generated state
+app_data/
+analytics_state/
+behavior_state/
+engagement_state/
+learning_state/
+memory/
+model_cache/
+personal_memory/
+planner_state/
+progress_state/
+profiles/
+users/
+context/conversation_history.json
+context_db.json
+learning_progress.json
+student_profile.json
+tmp_midterm_zip/

@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astra</title>
+  <link rel="stylesheet" href="/styles.css?v=20260408l">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body data-theme="midnight" data-background="glow">
+  <section id="splashScreen" class="splash-screen">
+    <div class="splash-glow splash-glow-a"></div>
+    <div class="splash-glow splash-glow-b"></div>
+    <div class="splash-stage">
+      <div id="astraPixels" class="astra-pixel-grid" aria-hidden="true"></div>
+      <div class="astra-reveal">
+        <h1 class="astra-wordmark" aria-label="ASTRA">ASTRA</h1>
+        <p class="splash-quote">"The future of education is here"</p>
+        <div class="splash-actions">
+          <button id="enterAstraBtn" type="button">Next</button>
+          <button id="skipAstraBtn" type="button" class="ghost-button">Skip intro</button>
+        </div>
+        <p class="muted splash-hint">Press Enter to continue.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="loginScreen" class="login-screen hidden">
+    <div class="hero-copy">
+        <p class="eyebrow">Astra Learning Companion</p>
+      <h1 id="authHeroTitle">Study for your exam with an AI teacher that feels bright, human, and easy to come back to.</h1>
+      <p id="authHeroQuote" class="hero-quote">Your journey starts here with Astra.</p>
+      <p id="authHeroText" class="hero-text">
+        Personalized tutoring, adaptive planning, revision support, practice drills, and a warm AI guide
+        that helps students feel comfortable before jumping into serious prep.
+      </p>
+      <div id="authHeroBadges" class="hero-badges">
+        <span>Personalized</span>
+        <span>Accessible</span>
+        <span>Custom Themes</span>
+        <span>Personal Tutor</span>
+      </div>
+    </div>
+
+    <div class="login-card">
+      <p id="authCardKicker" class="card-kicker">Learning Studio Access</p>
+      <h2 id="authTitle">Sign in to the learning studio</h2>
+      <div class="login-switch">
+        <button id="showSigninBtn" type="button" class="ghost-button active-switch">Sign in</button>
+        <button id="showSignupBtn" type="button" class="ghost-button">Sign up</button>
+      </div>
+
+      <div id="signinPanel" class="auth-panel">
+        <p id="authSubtitle" class="muted">Sign in with your account to open your personal learning studio.</p>
+        <div class="auth-form-card">
+          <p class="auth-form-title">Sign In</p>
+          <input id="signinEmail" type="email" placeholder="Your email">
+          <input id="signinPassword" type="password" placeholder="Your password">
+          <button id="loadProfileBtn">Enter Learning Studio</button>
+        </div>
+      </div>
+
+      <div id="signupPanel" class="auth-panel hidden">
+        <p class="muted">Create your account, then take a short walk with Astra. These questions help Astra understand your style, build trust, and shape the kind of mentor you actually want beside you.</p>
+        <div class="auth-form-card onboarding-card">
+          <p class="auth-form-title">Walk With Astra</p>
+          <p class="muted">Astra asks a few gentle questions first so it can learn your vibe, avoid assumptions, and build a mentor you’ll actually want to open up to.</p>
+          <textarea id="signupWhyAstra" rows="2" placeholder="Why do you want Astra in your corner?"></textarea>
+          <textarea id="signupInterests" rows="2" placeholder="What do you enjoy outside studies, like hobbies or topics you love?"></textarea>
+          <textarea id="signupDislikes" rows="2" placeholder="What should Astra avoid or never do?"></textarea>
+          <textarea id="signupConversationStyle" rows="2" placeholder="What kind of conversation style feels best to you?"></textarea>
+          <textarea id="signupStressSupport" rows="2" placeholder="What helps you when you feel stressed or overloaded?"></textarea>
+          <textarea id="signupGoalsSummary" rows="2" placeholder="What are you trying to become, beyond the exam?"></textarea>
+          <div class="walkthrough-actions-row">
+            <button id="openSignupWalkthroughBtn" type="button" class="ghost-button">Start guided walk</button>
+            <button id="skipSignupWalkthroughBtn" type="button" class="ghost-button">Skip for now</button>
+          </div>
+        </div>
+        <div class="auth-form-card">
+          <p class="auth-form-title">Sign Up</p>
+          <input id="signupName" type="text" placeholder="Your display name">
+          <input id="signupEmail" type="email" placeholder="Your email">
+          <input id="signupPassword" type="password" placeholder="Create a password">
+          <input id="signupStudentName" type="text" placeholder="Optional student profile name">
+          <input id="signupHours" type="number" min="1" max="16" step="0.5" value="6" placeholder="Max study hours per day">
+          <p class="muted">Create a simple account first, then add your exam setup inside the app.</p>
+          <button id="createProfileBtn" type="button">Create Account And Continue</button>
+        </div>
+      </div>
+
+      <p id="profileStatus" class="muted">Your dashboard will open after the profile is loaded.</p>
+    </div>
+  </section>
+
+  <section id="introScreen" class="intro-screen hidden" aria-label="Astra introduction">
+    <div class="intro-shell">
+      <div class="intro-copy">
+        <p class="eyebrow">Astra intro</p>
+        <h1 id="introTitle">Meet Astra before the studio opens.</h1>
+        <p id="introQuote" class="hero-quote">A focused welcome, a quick preview, and then straight into the learning flow.</p>
+        <p id="introText" class="hero-text">
+          This short step keeps the experience smooth and intentional. You get a brief overview of Astra, a video preview that matches the brand, and then a seamless move into the studio.
+        </p>
+        <div class="intro-actions">
+          <button id="introContinueBtn" type="button">Enter Learning Studio</button>
+          <button id="introSoundBtn" type="button" class="ghost-button">Play with sound</button>
+        </div>
+        <p id="introHint" class="muted">If your browser blocks sound at first, use the sound button and continue once you are ready.</p>
+      </div>
+
+      <div class="intro-media-card">
+        <div class="intro-media-copy">
+          <p id="introVideoTitle" class="card-title">Welcome Back</p>
+          <p id="introVideoMeta" class="muted">Your Astra intro video will appear here after sign-in or sign-up.</p>
+          <p id="introVideoSummary" class="hero-text">A calm, branded introduction that feels like the next step in the product, not a random embed.</p>
+        </div>
+        <div class="intro-video-shell">
+          <video id="introVideoPlayer" class="intro-video" muted playsinline loop preload="metadata"></video>
+          <div class="intro-video-overlay">
+            <span id="introVideoTag" class="pill">Intro</span>
+            <button id="introVideoToggle" type="button" class="ghost-button">Pause</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="chapter-resume-banner" class="chapter-resume-banner hidden"></div>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside class="side-panel">
+      <div class="brand-block">
+        <p class="eyebrow">Astra Learning Studio</p>
+        <h1 id="studentWelcome">Astra</h1>
+        <p id="studentSubcopy" class="subcopy">Your personalized JEE coach is ready.</p>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Quick actions</p>
+        <div class="quick-actions">
+          <button data-command="Create study plan">Study plan</button>
+          <button data-command="What should I study today?">Today's plan</button>
+          <button data-command="Show weekly plan">Weekly plan</button>
+          <button data-command="Show my points">Points</button>
+          <button data-command="How am I doing behaviorally?">Behavior</button>
+          <button data-command="I feel overwhelmed and need support">Support me</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <p class="card-title">AI Teacher Avatars</p>
+            <p class="muted">Choose the tutor energy that fits you best.</p>
+          </div>
+          <span class="pill">Avatar Beta</span>
+        </div>
+        <div id="avatarGrid" class="avatar-grid"></div>
+      </div>
+
+    </aside>
+
+    <main class="main-panel">
+      <div class="main-toolbar">
+        <button id="studioMenuToggleBtn" type="button" class="ghost-button menu-toggle-button">Hide studio menu</button>
+      </div>
+      <div id="tabBar" class="tab-bar" role="tablist" aria-label="Tutor views">
+        <div class="nav-hub nav-hub-home" data-nav-group-container="home">
+          <p class="nav-hub-label">Home</p>
+          <p class="nav-hub-cue">Start with your current state, then move to Tutor.</p>
+          <div class="nav-hub-buttons">
+            <button class="tab-button active" data-tab="overviewTab" data-tab-key="overview" data-nav-group="home" role="tab" aria-selected="true">Overview</button>
+          </div>
+        </div>
+        <div class="nav-hub nav-hub-learn" data-nav-group-container="learn">
+          <p class="nav-hub-label">Learn</p>
+          <p class="nav-hub-cue">Tutor Text for written help, Tutor Room for live voice tutoring, Video Tutor for video answers, then Practice, Mock Test, rescue, or tip.</p>
+          <div class="nav-hub-buttons">
+            <button class="tab-button" data-tab="tutorTab" data-tab-key="tutor" data-nav-group="learn" role="tab" aria-selected="false">Tutor</button>
+            <button class="tab-button" data-tab="tutorRoomTab" data-tab-key="tutorroom" data-nav-group="learn" role="tab" aria-selected="false">Tutor Room</button>
+            <button class="tab-button" data-tab="videoTutorTab" data-tab-key="videotutor" data-nav-group="learn" role="tab" aria-selected="false">Video Tutor</button>
+            <button class="tab-button" data-tab="practiceTab" data-tab-key="practice" data-nav-group="learn" role="tab" aria-selected="false">Practice</button>
+            <button class="tab-button" data-tab="mockTestTab" data-tab-key="mocktest" data-nav-group="learn" role="tab" aria-selected="false">Mock Test</button>
+            <button class="tab-button" data-tab="lastMinuteTab" data-tab-key="lastminute" data-nav-group="learn" role="tab" aria-selected="false">Last Minute</button>
+            <button class="tab-button" data-tab="tipsTab" data-tab-key="tips" data-nav-group="learn" role="tab" aria-selected="false">Tips</button>
+          </div>
+        </div>
+        <div class="nav-hub nav-hub-plan" data-nav-group-container="plan">
+          <p class="nav-hub-label">Plan</p>
+          <p class="nav-hub-cue">Check Progress, then open Weekly Plan for the next route.</p>
+          <div class="nav-hub-buttons">
+            <button class="tab-button" data-tab="weeklyTab" data-tab-key="weekly" data-nav-group="plan" role="tab" aria-selected="false">Weekly Plan</button>
+            <button class="tab-button" data-tab="progressTab" data-tab-key="progress" data-nav-group="plan" role="tab" aria-selected="false">Progress</button>
+          </div>
+        </div>
+        <div class="nav-hub nav-hub-connect" data-nav-group-container="connect">
+          <p class="nav-hub-label">Connect</p>
+          <p class="nav-hub-cue">Use Lounge to reset, Network to collaborate, League to climb.</p>
+          <div class="nav-hub-buttons">
+            <button class="tab-button" data-tab="loungeTab" data-tab-key="lounge" data-nav-group="connect" role="tab" aria-selected="false">Lounge</button>
+            <button class="tab-button" data-tab="networkTab" data-tab-key="network" data-nav-group="connect" role="tab" aria-selected="false">Network</button>
+            <button class="tab-button" data-tab="leagueTab" data-tab-key="league" data-nav-group="connect" role="tab" aria-selected="false">League</button>
+          </div>
+        </div>
+        <div class="nav-hub nav-hub-settings" data-nav-group-container="settings">
+          <p class="nav-hub-label">Settings</p>
+          <p class="nav-hub-cue">Personalize Astra first, then use Guide or Assist when needed.</p>
+          <div class="nav-hub-buttons">
+            <button class="tab-button" data-tab="personalizeTab" data-tab-key="personalize" data-nav-group="settings" role="tab" aria-selected="false">Personalize</button>
+            <button class="tab-button" data-tab="guideTab" data-tab-key="guide" data-nav-group="settings" role="tab" aria-selected="false">Guide</button>
+            <button class="tab-button" data-tab="assistTab" data-tab-key="assist" data-nav-group="settings" role="tab" aria-selected="false">Assist</button>
+          </div>
+        </div>
+      </div>
+
+      <section id="tutorTab" class="tab-panel active" role="tabpanel">
+        <div class="tutor-layout">
+          <div class="table-card tutor-main-card tutor-chat-panel" style="position: relative;">
+            
+            <div class="tutor-controls-bar">
+              <div class="studio-field tutor-level-field">
+                <label for="tutorLevelSelect">Tutor level</label>
+                <select id="tutorLevelSelect">
+                  <option value="1">Level 1: Simple</option>
+                  <option value="2">Level 2: Light detail</option>
+                  <option value="3" selected>Level 3: Balanced</option>
+                  <option value="4">Level 4: Deep</option>
+                  <option value="5">Level 5: Expert detail</option>
+                </select>
+              </div>
+              <p id="tutorLevelHint" class="muted">Level 3 gives a balanced explanation. Switch lower for simple answers or higher for deeper detail.</p>
+            </div>
+
+            <div class="table-card tutor-mode-card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Tutor Mode</p>
+                  <p class="muted">Choose how Astra should sound in the Tutor tab.</p>
+                </div>
+                <span id="tutorModePill" class="pill">Calm</span>
+              </div>
+              <div class="tutor-mode-pills" role="tablist" aria-label="Tutor mode">
+                <button type="button" class="tutor-mode-pill active" data-tutor-mode="calm">Calm</button>
+                <button type="button" class="tutor-mode-pill" data-tutor-mode="motivating">Motivating</button>
+                <button type="button" class="tutor-mode-pill" data-tutor-mode="strict">Strict</button>
+              </div>
+            </div>
+
+            <div class="tutor-divider"></div>
+
+            <div class="card-header">
+              <div>
+                <p class="card-title">Ask Anything</p>
+                <p class="muted">Ask an academic doubt, request a plan, or ask for a concept breakdown with visuals, reasoning, and guided progression.</p>
+              </div>
+              <span id="tutorModeBadge" class="pill">Live Tutor</span>
+            </div>
+            <div class="subtab-action-row">
+              <button id="clearTutorChatBtn" type="button" class="ghost-button">Delete tutor chat</button>
+            </div>
+
+            <div id="chapter-resume-card" class="table-card chapter-resume-card hidden"></div>
+
+            <div class="tutor-workspace">
+              <div class="tutor-chat-column">
+                <div class="table-card chat-thread-card">
+                  <div class="card-header">
+                    <div>
+                      <p class="card-title">Recent Chats</p>
+                      <p class="muted">Only the latest chats stay in view. Open the drawer for the full list.</p>
+                    </div>
+                    <div class="chat-thread-actions">
+                      <button id="newTutorChatBtn" type="button" class="ghost-button">New chat</button>
+                      <button id="viewAllTutorChatsBtn" type="button" class="ghost-button">View all</button>
+                    </div>
+                  </div>
+                  <div id="tutorConversationList" class="conversation-list">
+                    <p class="muted">Your saved tutor chats will appear here.</p>
+                  </div>
+                </div>
+
+                <div id="chatFeed" class="chat-feed tutor-feed">
+                  <div class="message tutor">
+                    <p>Ask for explanations, quizzes, recovery support, or just start talking. I will help from wherever you are.</p>
+                  </div>
+                </div>
+
+                <form id="chatForm" class="composer">
+                  <textarea id="messageInput" rows="3" placeholder="Ask your tutor for an academic explanation, strategy, or concept breakdown..."></textarea>
+                  <div class="image-doubt-row">
+                    <input id="doubtImageInput" type="file" accept="image/*">
+                    <button id="analyzeImageBtn" type="button" class="ghost-button">Scan doubt image</button>
+                  </div>
+                  <p id="imageUploadStatus" class="muted">Upload a picture of your doubt, worksheet, or handwritten solution.</p>
+                <div class="composer-actions">
+                <span class="muted">Examples: Explain JEE probability, Make my JEE plan for today, Teach projectile motion visually</span>
+                  <div class="mini-action-row">
+                    <button id="summarizeTutorBtn" type="button" class="ghost-button">Summarize answer</button>
+                    <button type="submit">Send</button>
+                    <button id="tutor-fullscreen-btn" type="button" class="ghost-button tutor-fullscreen-button" title="Expand to fullscreen" aria-label="Expand to fullscreen">⛶ Fullscreen</button>
+                  </div>
+                </div>
+              </form>
+
+                <div class="quick-prompt-grid">
+                  <button type="button" class="ghost-button" data-tutor-prompt="Explain JEE electrostatics in a simple way.">Explain a JEE concept</button>
+                  <button type="button" class="ghost-button" data-command="What should I study today?">Today's JEE study</button>
+                  <button type="button" class="ghost-button" data-tutor-prompt="Teach this JEE topic with a real-life case study so I can actually visualize it.">Use a case study</button>
+                  <button type="button" class="ghost-button" data-tutor-prompt="Break this JEE topic into a 3D-style visual explanation.">Visualize it</button>
+                  <button type="button" class="ghost-button" id="quickSummaryBtn">Quick summary</button>
+                </div>
+
+                <div class="table-card tutor-room-launch-card">
+                  <div class="card-header">
+                    <div>
+                      <p class="card-title">Tutor Room</p>
+                      <p class="muted">Open the bigger voice and video space when you want Astra to feel more like a live tutor presence.</p>
+                    </div>
+                    <button id="openTutorRoomBtn" type="button" class="ghost-button">Open Tutor Room</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tutorConversationDrawerBackdrop" class="conversation-drawer-backdrop hidden"></div>
+            <aside id="tutorConversationDrawer" class="conversation-drawer hidden" aria-hidden="true">
+              <div class="conversation-drawer-shell">
+                <div class="card-header">
+                  <div>
+                    <p class="card-title">All Chats</p>
+                    <p class="muted">Browse, rename, pin, delete, or restore your tutor chats.</p>
+                  </div>
+                  <button id="closeTutorConversationDrawerBtn" type="button" class="ghost-button">Close</button>
+                </div>
+                <div class="inline-form drawer-search">
+                  <input id="tutorChatSearchInput" type="text" placeholder="Search saved tutor chats by title">
+                </div>
+                <div class="drawer-section">
+                  <p class="drawer-section-title">Today</p>
+                  <div id="tutorConversationDrawerToday" class="conversation-list"></div>
+                </div>
+                <div class="drawer-section">
+                  <p class="drawer-section-title">Yesterday</p>
+                  <div id="tutorConversationDrawerYesterday" class="conversation-list"></div>
+                </div>
+                <div class="drawer-section">
+                  <p class="drawer-section-title">This Week</p>
+                  <div id="tutorConversationDrawerWeek" class="conversation-list"></div>
+                </div>
+                <div class="drawer-section">
+                  <p class="drawer-section-title">Older</p>
+                  <div id="tutorConversationDrawerOlder" class="conversation-list"></div>
+                </div>
+                <div class="drawer-section">
+                  <p class="drawer-section-title">Recently Deleted</p>
+                  <div id="deletedTutorConversationList" class="conversation-list"></div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="tutorRoomTab" class="tab-panel" role="tabpanel">
+        <div class="tutor-room-layout">
+          <div class="table-card tutor-room-hero-card">
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">Tutor Room</p>
+                <h2>Big-screen voice and 3D tutor presence</h2>
+                <p class="muted">Talk, type, interrupt, and continue from the exact checkpoint while the spoken response and 3D stage stay centered on a larger screen.</p>
+              </div>
+              <div class="mini-action-row">
+                <button id="backToTutorTextBtn" type="button" class="ghost-button">Back to written Tutor</button>
+                <button id="fullscreenStudioBtn" type="button" class="ghost-button studio-fullscreen-button">Fullscreen</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card tutor-room-live-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Live Tutor Desk</p>
+                <p id="tutorRoomLiveSummary" class="muted">Speak or type a doubt, interrupt mid-answer, and resume naturally from the last checkpoint.</p>
+              </div>
+              <span id="tutorRoomLivePill" class="pill">Ready</span>
+            </div>
+            <div class="tutor-live-grid">
+              <div class="tutor-live-panel">
+                <div class="live-status-line">
+                  <span id="tutorRoomVoiceState" class="focus-pill">Voice off</span>
+                  <span id="tutorRoomSpeakState" class="focus-pill">Auto-speak off</span>
+                  <span id="tutorRoomCaptionState" class="focus-pill">Captions on</span>
+                  <span id="tutorRoomReadState" class="focus-pill">Reading comfort off</span>
+                  <span id="tutorRoomPaceState" class="focus-pill">Pacing standard</span>
+                  <span id="tutorRoomLevelState" class="focus-pill">Level 3</span>
+                </div>
+                <p id="tutorRoomLiveHint" class="muted">Press Enter to send a question. Press Esc while Astra is speaking to pause the reply and save a checkpoint.</p>
+                <div class="mini-action-row tutor-room-live-actions">
+                  <button id="tutorRoomSpeakLastBtn" type="button" class="ghost-button">Speak last reply</button>
+                  <button id="tutorRoomPauseBtn" type="button" class="ghost-button">Pause reply</button>
+                  <button id="tutorRoomResumeBtn" type="button" class="ghost-button">Resume reply</button>
+                  <button id="tutorRoomStopBtn" type="button" class="ghost-button">Stop and checkpoint</button>
+                </div>
+              </div>
+
+              <form id="tutorRoomForm" class="composer tutor-room-composer">
+                <textarea id="tutorRoomMessageInput" rows="4" placeholder="Talk to Astra like a live tutor. You can ask a doubt, interrupt mid-answer, or ask to continue from the checkpoint..."></textarea>
+                <div class="composer-actions">
+                  <span class="muted">Type here for direct tutoring. Shift+Enter makes a new line.</span>
+                  <div class="mini-action-row">
+                    <button id="tutorRoomBackToTutorBtn" type="button" class="ghost-button">Open written Tutor</button>
+                    <button type="submit">Send</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="table-card tutor-room-history-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Tutor Room Transcript</p>
+                <p class="muted">This mirrors the live tutor chat so you can keep track of the full conversation right where you are studying.</p>
+              </div>
+              <span class="pill">History</span>
+            </div>
+            <div id="tutorRoomTranscript" class="chat-feed tutor-feed tutor-room-transcript"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="guideTab" class="tab-panel" role="tabpanel">
+        <div class="practice-layout">
+          <div class="table-card practice-main-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">App Guide</p>
+                <h2>Feature help without confusion</h2>
+              </div>
+              <span class="pill">Navigation Help</span>
+            </div>
+            <p class="muted">Use this assistant only when you want help finding features, understanding tabs, or using the app more efficiently.</p>
+
+            <div class="practice-mode-grid">
+              <button type="button" class="ghost-button" data-guide-prompt="Where should I go if I want to learn a concept?">Learn a concept</button>
+              <button type="button" class="ghost-button" data-guide-prompt="Which tab should I use for PYQs and timed questions?">Practice questions</button>
+              <button type="button" class="ghost-button" data-guide-prompt="Where do I find night mode and tutor customization?">Personalize the app</button>
+              <button type="button" class="ghost-button" data-guide-prompt="How should I use this app in the simplest way?">Simple path</button>
+            </div>
+
+            <div id="guideFeed" class="chat-feed tutor-feed practice-feed">
+              <div class="message tutor">
+                <p>I am the App Guide. Ask me where a feature lives, which tab to use, or how to get started in the simplest way.</p>
+              </div>
+            </div>
+
+            <form id="guideForm" class="composer">
+              <textarea id="guideMessageInput" rows="3" placeholder="Examples: Where do I upload a doubt image, which tab is best for practice, how do I change the tutor, where is night mode..."></textarea>
+              <div class="composer-actions">
+                <span class="muted">This assistant is only for app usage and navigation help.</span>
+                <button type="submit">Ask App Guide</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="practiceTab" class="tab-panel" role="tabpanel">
+        <div class="practice-layout">
+          <div class="table-card practice-main-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Question Zone</p>
+                <h2>Practice By Mode</h2>
+              </div>
+              <span class="pill">Exam Drill</span>
+            </div>
+            <p class="muted">Use this tab for JEE-first questions, timed drills, PYQ-style sets, and full-paper style practice.</p>
+
+            <div class="practice-mode-grid">
+              <button type="button" class="ghost-button" data-practice-prompt="Generate quiz 12 questions for a diagnostic JEE Main mock test with balanced Physics, Chemistry, and Mathematics coverage. Keep it baseline-level, reveal strengths and weak spots, and make it feel like a real first assessment." data-practice-mode="diagnostic mock">Diagnostic mock</button>
+              <button type="button" class="ghost-button" data-practice-prompt="Generate quiz 5 quick JEE Main-style questions from my active subjects with direct scoring focus.">JEE Main quick set</button>
+              <button type="button" class="ghost-button" data-practice-prompt="Generate quiz 5 JEE Advanced-style concept-heavy questions from my active subjects with deeper reasoning.">JEE Advanced depth set</button>
+              <button type="button" class="ghost-button" data-practice-prompt="Generate quiz 10 time-bound JEE-style questions for my active subjects with a suggested time limit.">Time-bound questions</button>
+              <button type="button" class="ghost-button" data-practice-prompt="Generate quiz a JEE previous-year-question style practice set for my active subjects.">Previous year style</button>
+              <button type="button" class="ghost-button" data-practice-prompt="Generate quiz a mini JEE full practice paper from public exam-style patterns for my active subjects.">Mini practice paper</button>
+              <button type="button" class="ghost-button" data-practice-prompt="Generate quiz a random JEE rapid-fire quiz across Physics, Chemistry, and Mathematics with short unexpected questions and a quick timer suggestion.">Rapid fire</button>
+            </div>
+
+            <div id="practiceFeed" class="chat-feed tutor-feed practice-feed">
+              <div class="message tutor">
+                <p>Ask for quick JEE drills, PYQ-style questions, timed sets, or a full mini paper and I will keep the focus strictly on practice.</p>
+              </div>
+            </div>
+            <div class="subtab-action-row">
+              <button id="clearPracticeChatBtn" type="button" class="ghost-button">Delete practice chat</button>
+            </div>
+
+            <form id="practiceForm" class="composer">
+              <textarea id="practiceMessageInput" rows="3" placeholder="Examples: Generate JEE Main electrostatics questions, give me JEE Advanced rotational motion depth practice, build a mini JEE Physics paper..."></textarea>
+              <div class="composer-actions">
+                <span class="muted">This space is for question practice only, not concept chat.</span>
+                <button type="submit">Generate practice</button>
+              </div>
+            </form>
+
+            <div class="table-card practice-review-card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Log Your Attempt</p>
+                  <p class="muted">Track how long you took and how accurate you were so the app can adjust speed and challenge better.</p>
+                </div>
+                <span class="pill">Analytics</span>
+              </div>
+              <div class="card-header compact-header">
+                <div>
+                  <p class="card-title">Baseline mock scores</p>
+                  <p class="muted">Add your first subject-wise mock scores so Astra can estimate where to push, where to slow down, and what to repair first.</p>
+                </div>
+                <span class="pill">Baseline</span>
+              </div>
+              <div class="practice-review-grid">
+                <input id="mockExamInput" type="text" placeholder="Exam, for example JEE Main">
+                <input id="mockPhysicsInput" type="number" min="0" max="100" step="1" placeholder="Physics %">
+                <input id="mockChemistryInput" type="number" min="0" max="100" step="1" placeholder="Chemistry %">
+                <input id="mockMathInput" type="number" min="0" max="100" step="1" placeholder="Mathematics %">
+              </div>
+              <div class="subtab-action-row">
+                <button id="saveMockScoresBtn" type="button" class="ghost-button">Save mock baseline</button>
+              </div>
+              <div class="practice-review-grid">
+                <input id="practiceTimeInput" type="number" min="0" step="0.5" placeholder="Time taken in minutes">
+                <input id="practiceAccuracyInput" type="number" min="0" max="100" step="1" placeholder="Accuracy %">
+                <input id="practiceQuestionCountInput" type="number" min="0" step="1" placeholder="Questions attempted">
+              <input id="practiceExamInput" type="text" placeholder="Exam, for example JEE Main">
+              </div>
+              <div class="inline-form review-notes-row">
+                <input id="practiceNotesInput" type="text" placeholder="Optional note: where you got stuck or what went wrong">
+                <button id="submitPracticeReviewBtn" type="button" class="ghost-button">Save attempt</button>
+              </div>
+              <div id="practiceAnalyticsCard" class="practice-analytics-card">
+                <p class="muted">Your latest speed and accuracy summary will appear here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="mockTestTab" class="tab-panel mock-test-tab" role="tabpanel">
+        <div class="practice-layout">
+          <div class="table-card practice-main-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Diagnostic Room</p>
+                <h2>Mock Test With Astra</h2>
+              </div>
+              <span class="pill">Baseline</span>
+            </div>
+            <p class="muted">Start here if you want Astra to understand your real strengths and weak spots before the plan becomes more specific. This room is designed like a guided test journey, with a short intro, one full-screen MCQ at a time, and a final report at the end.</p>
+
+            <div id="mockTestIntroCard" class="table-card mock-intro-card">
+              <div class="card-header compact-header">
+                <div>
+                  <p class="card-title">Why this matters</p>
+                  <p class="muted">A baseline mock test gives Astra an actual starting point so planning, practice, and teaching speed can become more accurate.</p>
+                </div>
+                <span class="pill">First Step</span>
+              </div>
+              <div class="mock-intro-story">
+                <p class="mock-intro-title">What happens next</p>
+                <ul class="mock-intro-list">
+                  <li>You get a clean baseline so Astra can see where you stand right now.</li>
+                  <li>Each question appears alone in MCQ format to keep the test simple and focused.</li>
+                  <li>The final report turns your strengths and weak spots into a weekly study plan.</li>
+                </ul>
+              </div>
+              <div class="practice-review-grid">
+                <input id="mockTestExamInput" type="text" placeholder="Exam, for example JEE Main">
+                <input id="mockTestCountInput" type="number" min="6" max="15" step="1" placeholder="Questions, default 9">
+              </div>
+              <div class="subtab-action-row">
+                <button id="startMockTestBtn" type="button" class="ghost-button">Open mock test room</button>
+              </div>
+              <p id="mockTestStatus" class="muted">When you start, Astra will open one question at a time and then evaluate the full paper at the end.</p>
+            </div>
+
+            <div id="mockTestQuestionCard" class="table-card mock-question-card hidden">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Question <span id="mockTestProgress"></span></p>
+                  <p id="mockTestQuestionMeta" class="muted">Subject and difficulty will appear here.</p>
+                </div>
+                <div class="mock-room-actions">
+                  <span id="mockTestTimer" class="pill">60 min</span>
+                  <button id="mockTestExitBtn" type="button" class="ghost-button mock-exit-button">Exit</button>
+                </div>
+              </div>
+              <div id="mockTestQuestionText" class="mock-question-text"></div>
+              <div id="mockTestOptionList" class="mock-option-list"></div>
+              <div class="mock-nav-row">
+                <button id="mockTestNavPrev" type="button" class="ghost-button">Previous</button>
+                <button id="mockTestNavNext" type="button" class="ghost-button">Next</button>
+                <button id="mockTestSubmitBtn" type="button">Finish test</button>
+              </div>
+            </div>
+
+            <div id="mockTestReportCard" class="table-card mock-report-card hidden">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Performance Report</p>
+                  <p class="muted">Astra will summarize your score, subject strengths, and the next best study move after the test.</p>
+                </div>
+                <div class="mock-room-actions">
+                  <span class="pill">Report</span>
+                  <button id="mockTestExitBtnReport" type="button" class="ghost-button mock-exit-button">Exit</button>
+                </div>
+              </div>
+              <div id="mockTestReportBody" class="mock-report-body"></div>
+              <div class="subtab-action-row">
+                <button id="mockTestWeeklyPlanBtn" type="button" class="ghost-button">Open weekly plan</button>
+                <button id="mockTestRetakeBtn" type="button" class="ghost-button">Retake baseline</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="videoTutorTab" class="tab-panel" role="tabpanel">
+        <div class="video-tutor-layout">
+          <div class="table-card video-tutor-hero-card">
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">Video Tutor</p>
+                <h2>Generate Video Explanation</h2>
+                <p class="muted">Type a question, then Astra will build the video brief, script preview, and render status in one place.</p>
+              </div>
+              <span class="pill">Video</span>
+            </div>
+            <div class="video-tutor-input-card">
+              <textarea id="videoTutorQuestionInput" rows="3" placeholder="Enter the question or concept you want turned into a video explanation..."></textarea>
+              <div class="composer-actions">
+                <span class="muted">Keep it short and specific for the best script preview.</span>
+                <div class="mini-action-row">
+                  <button id="generateVideoAnswerBtn" type="button">Generate Video Answer</button>
+                  <button id="videoAnswerBtn" type="button" class="ghost-button">Launch video</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card video-tutor-week-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">This Week's Videos</p>
+                <p class="muted">These are pre-planned from your weekly journey so Astra can prepare video scripts ahead of time.</p>
+              </div>
+              <span class="pill">Weekly Plan</span>
+            </div>
+            <div id="videoTutorWeeklyStatus" class="muted">Loading this week's video plan...</div>
+            <div id="videoTutorWeeklyVideos" class="video-week-grid"></div>
+          </div>
+
+          <div class="table-card video-tutor-request-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Request a Video</p>
+                <p class="muted">Ask for any JEE topic and Astra will prepare the script first, then the full video.</p>
+              </div>
+              <span class="pill">Request</span>
+            </div>
+            <div class="video-request-grid">
+              <input id="videoTutorRequestTopicInput" type="text" placeholder="Type a JEE topic, like Projectile Motion or Electrostatics" />
+              <select id="videoTutorRequestSubjectSelect">
+                <option value="Physics">Physics</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Mathematics">Mathematics</option>
+              </select>
+              <button id="generateRequestedVideoBtn" type="button">Generate Video for This Topic</button>
+            </div>
+            <div id="videoTutorRequestStatus" class="muted">Type a topic to begin.</div>
+            <div id="videoTutorRequestBriefPanel" class="video-answer-brief-panel">
+              <p class="muted">The brief preview will appear here after you request a topic.</p>
+            </div>
+            <div class="mini-action-row">
+              <button id="generateRequestedFullVideoBtn" type="button" class="ghost-button" disabled>Generate Full Video</button>
+            </div>
+            <div class="card-header compact-header">
+              <div>
+                <p class="card-title">Requested Videos</p>
+                <p class="muted">Your personal video requests are saved here.</p>
+              </div>
+            </div>
+            <div id="videoTutorRequestedList" class="video-request-list"></div>
+          </div>
+
+          <div class="table-card video-tutor-output-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Script Preview</p>
+                <p class="muted">Astra will show the generated video brief, status, and transcript here.</p>
+              </div>
+              <span class="pill">Output</span>
+            </div>
+            <div id="videoAnswerBriefPanel" class="video-answer-brief-panel">
+              <p class="muted">Ask a question, then generate the video brief.</p>
+            </div>
+            <div id="video-status-panel" class="video-status-panel muted">Astra is waiting for a video answer request.</div>
+            <video id="tutor-video-player" class="tutor-video-player hidden" controls playsinline preload="metadata"></video>
+            <div id="video-transcript" class="video-transcript muted"></div>
+            <div class="mini-action-row tutor-room-video-actions">
+              <span id="videoRenderStatus" class="muted">Click Generate Video Answer to launch the full tutor video pipeline.</span>
+            </div>
+          </div>
+
+          <div class="table-card visual-side-panel tutor-room-stage-panel">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Explanation Studio</p>
+                <p class="muted">Video-style scenes, visual learning, and the stepwise reasoning beside them.</p>
+              </div>
+              <span class="pill">Multi Mode</span>
+            </div>
+            <div class="studio-pane-switcher">
+              <button type="button" class="ghost-button studio-pane-button active" data-studio-pane="threeConceptPanel">3D Concept</button>
+              <button type="button" class="ghost-button studio-pane-button" data-studio-pane="threeTutorPanel">3D Tutor</button>
+              <button type="button" class="ghost-button studio-pane-button" data-studio-pane="conceptCanvasPanel">Motion Board</button>
+              <button type="button" class="ghost-button studio-pane-button" data-studio-pane="videoExplanationPanel">Lesson</button>
+              <button type="button" class="ghost-button studio-pane-button" data-studio-pane="visualLearningPanel">Visual Notes</button>
+              <button type="button" class="ghost-button studio-pane-button" data-studio-pane="reasoningPanel">Reasoning</button>
+              <button type="button" class="ghost-button studio-pane-button" data-studio-pane="summaryPanel">Summary</button>
+            </div>
+            <div id="threeConceptPanel" class="concept-canvas-panel studio-pane active">
+              <div class="card-header compact-header">
+                <div>
+                  <p class="card-title">3D Concept Stage</p>
+                  <p class="muted">This is the main visual teaching board. Watch the concept happen here while the explanation unfolds live.</p>
+                </div>
+                <span class="pill">3D Hero</span>
+              </div>
+              <canvas id="threeConceptCanvas" class="three-stage-canvas" width="1280" height="720" aria-label="3D concept visualization stage"></canvas>
+              <p class="muted">This board is meant to make the real-life behavior of a concept visible instead of abstract.</p>
+            </div>
+            <div id="threeTutorPanel" class="concept-canvas-panel studio-pane">
+              <div class="card-header compact-header">
+                <div>
+                  <p class="card-title">3D Tutor Stage</p>
+                  <p class="muted">A live tutor presence for direct conversation and a premium 3D learning flow.</p>
+                </div>
+                <span class="pill">3D Avatar</span>
+              </div>
+              <canvas id="threeTutorCanvas" class="three-stage-canvas" width="960" height="640" aria-label="3D tutor avatar stage"></canvas>
+              <p class="muted">Your tutor stays here as the main stage, and the room will gently focus here after a fresh reply so the flow stays clean.</p>
+            </div>
+            <div id="videoExplanationPanel" class="video-explanation-panel studio-pane">
+              <p class="muted">Ask for a concept and the lesson storyboard will appear here.</p>
+            </div>
+            <div id="conceptCanvasPanel" class="concept-canvas-panel studio-pane">
+              <div class="card-header compact-header">
+                <div>
+                  <p class="card-title">Concept Motion Board</p>
+                  <p class="muted">A first animated board for concepts that benefit from motion and spatial intuition.</p>
+                </div>
+                <span class="pill">Visual Motion</span>
+              </div>
+              <canvas id="conceptCanvas" width="520" height="260" aria-label="Animated concept canvas"></canvas>
+            </div>
+            <div id="visualLearningPanel" class="visual-learning-panel studio-pane">
+              <p class="muted">Ask the tutor to explain a concept, and the visual scene will appear here.</p>
+            </div>
+            <div id="reasoningPanel" class="reasoning-panel studio-pane">
+              <p class="muted">Reasoning and calculation steps will appear here beside the lesson.</p>
+            </div>
+            <div id="summaryPanel" class="reasoning-panel studio-pane">
+              <p class="muted">A quick crisp summary of the latest explanation will appear here.</p>
+            </div>
+          </div>
+
+          <div class="table-card video-tutor-media-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Previously Generated</p>
+                <p class="muted">Pick a clip, then bridge it into the 3D tutor room or the lesson flow.</p>
+              </div>
+              <span class="pill">Video Bridge</span>
+            </div>
+            <div class="video-library-shell">
+              <div class="video-library-player-card">
+                <video id="tutorVideoPlayer" class="tutor-video-player" controls playsinline preload="metadata"></video>
+                <div class="video-library-player-copy">
+                  <p id="tutorVideoTitle" class="card-title">No video selected</p>
+                  <p id="tutorVideoMeta" class="muted">Add videos to `web/media/tutor-videos` or provide entries in `data/tutor_video_library.json`.</p>
+                  <p id="tutorVideoSummary" class="muted">Choose a clip and Astra will suggest the best 3D concept bridge and tutor follow-up.</p>
+                  <div id="tutorVideoBridgeCues" class="video-library-cues"></div>
+                </div>
+                <div class="video-library-actions">
+                  <button id="openVideoBridgeBtn" type="button" class="ghost-button">Open 3D bridge</button>
+                  <button id="useVideoInTutorBtn" type="button">Use in Tutor</button>
+                </div>
+              </div>
+              <div class="video-library-list-card">
+                <div class="card-header compact-header">
+                  <div>
+                    <p class="card-title">Available videos</p>
+                    <p class="muted">The strongest matches rise to the top based on your study context.</p>
+                  </div>
+                </div>
+                <div id="tutorVideoList" class="video-library-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="lastMinuteTab" class="tab-panel" role="tabpanel">
+        <div class="practice-layout">
+          <div class="table-card practice-main-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Last Minute Rescue</p>
+                <h2>One Night Before Revision</h2>
+              </div>
+              <span class="pill">High Yield</span>
+            </div>
+            <p class="muted">Use this tab when JEE is near and you need a fast high-yield coverage system, one-day revision plan, or last-night rescue schedule.</p>
+            <p class="muted">For best results, keep your exam subjects and portion updated in Personalize so this tab can cover the full syllabus instead of guessing.</p>
+
+            <div class="practice-mode-grid">
+              <button type="button" class="ghost-button" data-last-minute-prompt="Build me a one-night-before JEE revision plan with only the most important topics, revision order, and final recall checklist.">One-night revision</button>
+              <button type="button" class="ghost-button" data-last-minute-prompt="Create a JEE Main rescue plan for my active Physics, Chemistry, and Mathematics topics with units to cover first, formulas, repeated question patterns, and what must not be skipped.">JEE Main rescue</button>
+              <button type="button" class="ghost-button" data-last-minute-prompt="Create a JEE Advanced rescue plan for my active Physics, Chemistry, and Mathematics topics with deeper reasoning, traps, derivations, and final recall loops.">JEE Advanced rescue</button>
+              <button type="button" class="ghost-button" data-last-minute-prompt="Create a JEE last-minute revision sprint with traps, formulas, final revision loops, and what to avoid tonight.">JEE sprint</button>
+              <button type="button" class="ghost-button" data-last-minute-prompt="Give me a 60-minute ultra-crash revision plan from my active exams with only the highest-yield topics and fastest recall prompts.">60-minute crash plan</button>
+            </div>
+
+            <div id="lastMinuteFeed" class="chat-feed tutor-feed practice-feed">
+              <div class="message tutor">
+                <p>Ask for a one-night JEE revision plan, one-day-before rescue plan, or fast high-yield checklist and I will keep it practical, urgent, and easy to follow.</p>
+              </div>
+            </div>
+
+            <form id="lastMinuteForm" class="composer">
+              <textarea id="lastMinuteMessageInput" rows="3" placeholder="Examples: I have JEE Main tomorrow, make a one-night plan... Give me a JEE Physics revision sprint... Make a JEE Advanced final checklist..."></textarea>
+              <div class="composer-actions">
+                <span class="muted">Best for JEE Main and JEE Advanced final revision in this MVP.</span>
+                <button type="submit">Build last-minute plan</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="tipsTab" class="tab-panel" role="tabpanel">
+        <div class="practice-layout">
+          <div class="table-card practice-main-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Strategy Zone</p>
+                <h2>Tips And Tricks</h2>
+              </div>
+              <span class="pill">Smart Attempting</span>
+            </div>
+            <p class="muted">This tab is for JEE time management, paper strategy, section-order strategy, and curated public resources that help students attempt smarter.</p>
+
+            <div class="practice-mode-grid">
+              <button type="button" class="ghost-button" data-tips-prompt="Give me the top time management tips for my active exams and explain how to actually apply them.">Time management</button>
+              <button type="button" class="ghost-button" data-tips-prompt="Tell me the smartest paper-attempt strategy for my active exams.">Paper strategy</button>
+              <button type="button" class="ghost-button" data-tips-prompt="Give me section-wise hacks and common traps for my active exams.">Section hacks</button>
+              <button type="button" class="ghost-button" data-tips-prompt="Tell me how toppers usually avoid wasting time and silly mistakes in my active exams.">Avoid silly mistakes</button>
+            </div>
+
+            <div id="tipsFeed" class="chat-feed tutor-feed practice-feed">
+              <div class="message tutor">
+                <p>Ask for exam strategy, time-management advice, or how to apply public tips in an actual paper.</p>
+              </div>
+            </div>
+
+            <form id="tipsForm" class="composer">
+              <textarea id="tipsMessageInput" rows="3" placeholder="Examples: Best JEE time management tricks, how should I attempt JEE Physics, what is the smartest JEE paper strategy..."></textarea>
+              <div class="composer-actions">
+                <span class="muted">The chatbot will explain how to use the tip, not just name it.</span>
+                <button type="submit">Get strategy help</button>
+              </div>
+            </form>
+
+            <div class="table-card tips-resource-card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Curated Public Resources</p>
+                  <p class="muted">Starter links from official or widely used public sources for strategy and prep guidance.</p>
+                </div>
+                <span class="pill">Starter Kit</span>
+              </div>
+              <div id="tipsResourceList" class="tips-resource-list">
+                <p class="muted">Relevant exam strategy resources will appear here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="networkTab" class="tab-panel" role="tabpanel">
+        <div class="network-layout">
+          <div class="table-card network-hero-card">
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">Learning Network</p>
+                <h2>Personal tutors, shared intelligence, and focused learner circles.</h2>
+              </div>
+              <button id="refreshNetworkBtn" class="ghost-button" type="button">Refresh network</button>
+            </div>
+            <p id="networkNote" class="muted">
+              Your tutor stays personal to you. This layer shares anonymized teaching patterns, learner similarity, and opt-in group study without turning the app into distracting social media.
+            </p>
+            <div id="networkStats" class="network-stat-grid">
+              <div class="network-stat-card">
+                <strong>-</strong>
+                <span>Peers in network</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card network-card group-study-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Group Study Room</p>
+                <p class="muted">Opt in to match with friends or similar learners. Astra builds a shared plan for the room and still keeps every student on a personal track.</p>
+              </div>
+              <span id="groupStudyStatusPill" class="pill">Solo</span>
+            </div>
+
+            <div class="group-study-controls">
+              <label class="field">
+                <span>Enable group study</span>
+                <input id="groupStudyEnabledToggle" type="checkbox">
+              </label>
+              <label class="field">
+                <span>Study mode</span>
+                <select id="groupStudyModeSelect">
+                  <option value="solo">Solo</option>
+                  <option value="friends">Friends-first</option>
+                  <option value="random">Random match</option>
+                  <option value="mixed">Mixed room</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Group size</span>
+                <select id="groupStudySizeSelect">
+                  <option value="2">2 students</option>
+                  <option value="3">3 students</option>
+                  <option value="4">4 students</option>
+                  <option value="5">5 students</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Session length</span>
+                <select id="groupStudyMinutesSelect">
+                  <option value="30">30 min</option>
+                  <option value="45">45 min</option>
+                  <option value="60">60 min</option>
+                  <option value="90">90 min</option>
+                  <option value="120">120 min</option>
+                </select>
+              </label>
+              <label class="field group-study-focus">
+                <span>Shared focus</span>
+                <input id="groupStudyFocusInput" type="text" placeholder="e.g. Projectile motion, Thermodynamics, Algebra" />
+              </label>
+            </div>
+
+            <div class="group-study-actions">
+              <button id="saveGroupStudyBtn" class="ghost-button" type="button">Save group setup</button>
+              <button id="rerollGroupStudyBtn" class="ghost-button" type="button">Change group</button>
+              <button id="soloGroupStudyBtn" class="ghost-button" type="button">Go solo</button>
+            </div>
+
+            <div class="group-study-summary-card">
+              <p class="card-title">Shared plan</p>
+              <p id="groupStudySummary" class="muted">Turn on group study to see a shared room plan.</p>
+              <div id="groupStudyRuleChips" class="manager-chip-list"></div>
+            </div>
+
+            <div class="group-study-columns">
+              <div class="group-study-column">
+                <p class="card-title">Room members</p>
+                <div id="groupStudyMembers" class="network-list">
+                  <p class="muted">Matched learners will appear here when group study is active.</p>
+                </div>
+              </div>
+              <div class="group-study-column">
+                <p class="card-title">Session steps</p>
+                <div id="groupStudyPlan" class="network-list">
+                  <p class="muted">The shared plan for the room will appear here.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="network-grid">
+            <div class="table-card network-card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Tutor Network Insights</p>
+                  <p class="muted">Signals your personal tutor can borrow from the wider tutor network.</p>
+                </div>
+                <span class="pill">Private</span>
+              </div>
+              <div id="tutorNetworkInsights" class="network-list">
+                <p class="muted">Tutor-network insight cards will appear here.</p>
+              </div>
+            </div>
+
+            <div class="table-card network-card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Similar Learners</p>
+                  <p class="muted">Privacy-safe peer matching based on exam goals, study style, and preparation pattern.</p>
+                </div>
+                <span class="pill">Suggested</span>
+              </div>
+              <div id="studentMatchesList" class="network-list">
+                <p class="muted">Once there is enough overlap, your strongest learner matches will show up here.</p>
+              </div>
+            </div>
+
+            <div class="table-card network-card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Study Circles</p>
+                  <p class="muted">Academic-only circles that could later become cohorts, accountability rooms, or moderated groups.</p>
+                </div>
+                <span class="pill">Starter</span>
+              </div>
+              <div id="studyCircleList" class="network-list">
+                <p class="muted">Suggested circles will appear here once your profile and goals are loaded.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="assistTab" class="tab-panel" role="tabpanel">
+        <div class="overview-lite-grid">
+          <div class="table-card memory-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Feature Health</p>
+                <p class="muted">A quick recheck of the major app systems so we can see what is healthy and what still needs work.</p>
+              </div>
+              <span class="pill">QA</span>
+            </div>
+            <div id="featureHealthList" class="sources-list">
+              <p class="muted">Feature health will appear here after a profile loads.</p>
+            </div>
+          </div>
+
+          <div class="table-card memory-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Live Sources</p>
+                <p class="muted">When the tutor uses current-topic context, the supporting links appear here.</p>
+              </div>
+              <span class="pill">Grounded</span>
+            </div>
+            <div id="liveSourcesList" class="sources-list">
+              <p class="muted">No live sources yet.</p>
+            </div>
+          </div>
+
+          <div class="table-card memory-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Learning Library</p>
+                <p class="muted">Trusted open resources linked to your JEE subjects, plan, and revision needs.</p>
+              </div>
+              <span id="learningSourcePackBadge" class="pill">Open Sources</span>
+            </div>
+            <p id="learningSourceRouteNote" class="muted">Astra will choose a compact source pack based on your current study state.</p>
+            <div id="learningSourcesList" class="tips-resource-list">
+              <p class="muted">Your learning sources will appear here.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="loungeTab" class="tab-panel" role="tabpanel">
+        <div class="lounge-layout">
+          <div class="table-card lounge-stack-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Casual Talk</p>
+                <h2>Relax, vent, or just talk</h2>
+              </div>
+              <span class="pill">Beyond Prep</span>
+            </div>
+            <p class="muted">This space is only for casual conversation, daily life, comfort, and mental breathing room.</p>
+            <div class="checkin-chips starter-row">
+              <button type="button" class="soft-chip" data-starter="Start a casual conversation with me about how my day is going.">Let the tutor start</button>
+              <button type="button" class="soft-chip" data-starter="Can we talk casually for a minute about life outside studies?">Talk casually</button>
+              <button type="button" class="soft-chip" data-starter="I need to clear my mind before I study.">Clear my mind</button>
+              <button type="button" class="soft-chip" data-starter="Tell me something fun and light before we study.">Say something light</button>
+              <button type="button" class="soft-chip" data-hobby="Let's talk football casually. Which team or match do you want to talk about?">Football</button>
+              <button type="button" class="soft-chip" data-hobby="Let's talk about movies, shows, or entertainment for a bit.">Entertainment</button>
+              <button type="button" class="soft-chip" data-hobby="Let's talk about sports, games, or anything fun that is on your mind.">Sports</button>
+              <button type="button" class="soft-chip" data-starter="Tell me about the latest interesting current affairs topic today.">Current affairs</button>
+              <button type="button" class="soft-chip" data-starter="Tell me an interesting general knowledge topic I can talk about with anyone.">General knowledge</button>
+            </div>
+
+            <div class="lounge-divider"></div>
+
+            <div class="card-header lounge-starter-header">
+              <div>
+                <p class="card-title">Start The Conversation</p>
+                <p class="muted">You can begin, or let the tutor begin.</p>
+              </div>
+              <span class="pill">Open</span>
+            </div>
+            <div class="lounge-tools-row">
+              <div class="lounge-timer-box">
+                <p class="card-title">Relax Timer</p>
+                <p class="muted">A gentle limit so casual talk does not turn into endless distraction.</p>
+                <div class="timer-controls">
+                  <button type="button" class="ghost-button" data-timer-minutes="5">5 min</button>
+                  <button type="button" class="ghost-button" data-timer-minutes="10">10 min</button>
+                  <button type="button" class="ghost-button" data-timer-minutes="15">15 min</button>
+                  <button id="stopLoungeTimerBtn" type="button" class="ghost-button">Stop</button>
+                </div>
+                <p id="loungeTimerStatus" class="muted">No timer running.</p>
+              </div>
+            </div>
+
+            <div class="table-card chat-thread-card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Saved Lounge Chats</p>
+                  <p class="muted">Keep casual conversations organized and come back to important ones later.</p>
+                </div>
+                <button id="newLoungeChatBtn" type="button" class="ghost-button">New chat</button>
+              </div>
+              <div class="inline-form">
+                <input id="loungeChatSearchInput" type="text" placeholder="Search saved lounge chats by title">
+              </div>
+              <div id="loungeConversationList" class="conversation-list">
+                <p class="muted">Your saved lounge chats will appear here.</p>
+              </div>
+            </div>
+
+            <div class="table-card chat-thread-card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Recently Deleted Lounge Chats</p>
+                  <p class="muted">Restore a lounge chat if you removed it by mistake.</p>
+                </div>
+                <span class="pill">Recovery</span>
+              </div>
+              <div id="deletedLoungeConversationList" class="conversation-list">
+                <p class="muted">Deleted lounge chats will appear here when available.</p>
+              </div>
+            </div>
+
+            <div id="loungeFeed" class="chat-feed compact-feed">
+              <div class="message tutor">
+                <p>This space is for casual talk, not pressure. We can chat first and study later.</p>
+              </div>
+            </div>
+            <div class="subtab-action-row">
+              <button id="clearLoungeChatBtn" type="button" class="ghost-button">Delete lounge chat</button>
+            </div>
+            <form id="loungeForm" class="composer lounge-composer">
+              <textarea id="loungeMessageInput" rows="3" placeholder="Talk about your day, football, a movie, a show, your mood, or anything you want off your chest..."></textarea>
+              <div class="composer-actions">
+                <span class="muted">Examples: My day was hectic, I need to vent, Tell me something calming</span>
+                <div class="lounge-compose-actions">
+                  <button id="loungeVoiceBtn" type="button" class="ghost-button">Voice message</button>
+                  <button type="submit">Start lounge chat</button>
+                </div>
+              </div>
+              <p id="loungeVoiceStatus" class="muted lounge-voice-status">Voice messages are off. Use the mic to dictate a lounge message.</p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="overviewTab" class="tab-panel" role="tabpanel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Fresh Start</p>
+            <h2>Your home base</h2>
+          </div>
+          <button id="refreshWeeklyPlanBtn" class="ghost-button" type="button">Refresh weekly plan</button>
+        </div>
+
+        <div class="home-subtab-bar" role="tablist" aria-label="Home sections">
+          <button class="home-subtab-button active" data-home-subtab="overview" type="button">Overview</button>
+          <button class="home-subtab-button" data-home-subtab="motivation" type="button">Motivation</button>
+          <button class="home-subtab-button" data-home-subtab="personality" type="button">Tutor Personality</button>
+          <button class="home-subtab-button" data-home-subtab="progress" type="button">Recent Progress</button>
+        </div>
+
+        <button id="motivationQuickAccessBtn" type="button" class="ghost-button motivation-jump-button">Feeling low? Read this</button>
+
+        <div class="home-subtab-panel active" data-home-subtab-panel="overview">
+          <div class="overview-lite-grid">
+            <div class="table-card welcome-card">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Overview</p>
+                  <h3>Your current position</h3>
+                </div>
+              </div>
+              <p class="muted">This screen shows your current position, your next step, and your weekly direction without extra clutter.</p>
+              <div id="overviewSnapshotStrip" class="weekly-summary compact overview-snapshot-strip">
+                <div class="summary-card">
+                  <span class="summary-label">Today</span>
+                  <strong id="overviewTodayText">Steady start</strong>
+                </div>
+                <div class="summary-card">
+                  <span class="summary-label">This week</span>
+                  <strong id="overviewWeekText">-</strong>
+                </div>
+                <div class="summary-card">
+                  <span class="summary-label">Next step</span>
+                  <strong id="overviewNextText">Open your weekly plan</strong>
+                </div>
+              </div>
+              <div id="weeklySummary" class="weekly-summary compact">
+                <div class="summary-card">
+                  <span class="summary-label">Core target</span>
+                  <strong id="weeklyCoreHours">-</strong>
+                </div>
+                <div class="summary-card">
+                  <span class="summary-label">This week</span>
+                  <strong id="weeklyScheduledHours">-</strong>
+                </div>
+                <div class="summary-card">
+                  <span class="summary-label">Main focus</span>
+                  <strong id="weeklyFocusSplit">-</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-subtab-panel hidden" data-home-subtab-panel="motivation">
+          <details id="motivationSection" class="table-card motivation-card" open>
+            <summary class="motivation-summary">
+              <div>
+                <p class="eyebrow">Motivation</p>
+                <h2>Your Daily Boost</h2>
+              </div>
+              <span class="pill">Expanded</span>
+            </summary>
+            <div class="motivation-body">
+              <div class="motivation-hero">
+                <p class="card-title">Daily Quote</p>
+                <p id="dailyMotivationQuote" class="motivation-quote">Astra will keep your momentum alive.</p>
+              </div>
+
+              <div class="motivation-block">
+                <div class="card-header">
+                  <div>
+                    <p class="card-title">Quick Boost Tokens</p>
+                    <p class="muted">Three small reminders that keep the day moving.</p>
+                  </div>
+                  <span class="pill">Random 3</span>
+                </div>
+                <div id="motivationBoostTokens" class="motivation-token-row"></div>
+              </div>
+
+              <div class="motivation-block">
+                <div class="card-header">
+                  <div>
+                    <p class="card-title">Real Stories</p>
+                    <p class="muted">Eight grounded stories about comeback, pressure, and resilience.</p>
+                  </div>
+                  <span id="motivationStoryStatus" class="pill">Story 1 of 8</span>
+                </div>
+                <p id="motivationStoryTitle" class="motivation-story-title">Story title</p>
+                <div id="motivationStoryBody" class="motivation-story-body" hidden></div>
+                <div class="motivation-story-actions">
+                  <button id="motivationReadStoryBtn" type="button">Read a Story</button>
+                  <button id="motivationPrevStoryBtn" type="button" class="ghost-button">Previous Story</button>
+                  <button id="motivationNextStoryBtn" type="button" class="ghost-button">Next Story</button>
+                </div>
+              </div>
+
+              <div class="motivation-lounge-callout">
+                <p class="card-title">Need to talk about how you are feeling?</p>
+                <p class="muted">Astra can move you into Lounge when you want a softer, more human conversation.</p>
+                <button id="talkToAstraInLoungeBtn" type="button" class="ghost-button">Talk to Astra in Lounge</button>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="home-subtab-panel hidden" data-home-subtab-panel="personality">
+          <div class="table-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Tutor Personality</p>
+                <p class="muted">Choose the mentor face and voice that feels best for the way you learn.</p>
+              </div>
+              <span class="pill">Personal</span>
+            </div>
+            <p class="muted">Select a tutor below to update the current mentor throughout the app.</p>
+            <div id="homeTutorPersonalityGrid" class="home-tutor-grid"></div>
+          </div>
+        </div>
+
+        <div class="home-subtab-panel hidden" data-home-subtab-panel="progress">
+          <div class="table-card memory-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Where you are now</p>
+                <p class="muted">A short snapshot of your current state and the next useful step.</p>
+              </div>
+              <span class="pill">Focus</span>
+            </div>
+            <div id="studentInsightSummary" class="student-insight-summary">
+              <p class="muted">Your adaptive support snapshot will appear here.</p>
+            </div>
+          </div>
+
+          <div class="table-card mini-plan-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Weekly preview</p>
+                <p class="muted">A small glimpse of the week so you always know the direction.</p>
+              </div>
+              <div class="mini-action-row">
+                <button id="openWeeklyTabBtn" class="ghost-button" type="button">Open weekly plan</button>
+                <button id="openProgressTabBtn" class="ghost-button" type="button">Open progress board</button>
+              </div>
+            </div>
+            <div id="weeklyPreviewCards" class="weekly-preview-cards"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="leagueTab" class="tab-panel" role="tabpanel">
+        <div class="overview-lite-grid">
+          <div class="table-card welcome-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">League Arena</p>
+                <h2>Climb the ladder, one win at a time</h2>
+              </div>
+              <span class="pill">Competition Mode</span>
+            </div>
+            <p class="muted">Your points, streaks, and mission wins now have their own home so the climb feels visible and exciting.</p>
+            <div class="weekly-summary compact">
+              <div class="summary-card">
+                <span class="summary-label">Current League</span>
+                <strong id="leagueTabName">Bronze 1</strong>
+              </div>
+              <div class="summary-card">
+                <span class="summary-label">Points</span>
+                <strong id="leagueTabPoints">0</strong>
+              </div>
+              <div class="summary-card">
+                <span class="summary-label">Streak</span>
+                <strong id="leagueTabStreak">0 days</strong>
+              </div>
+            </div>
+            <p id="leagueTabNext" class="muted">Next promotion will appear here.</p>
+            <div class="league-progress-track large" aria-hidden="true">
+              <div id="leagueTabProgressFill" class="league-progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="table-card league-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">League Ladder</p>
+                <p class="muted">Keep moving upward from Bronze to Champion as your learning actions stack up.</p>
+              </div>
+              <span class="pill">Rank Path</span>
+            </div>
+            <div id="leagueTabLadder" class="league-ladder">
+              <p class="muted">Your rank ladder will appear here.</p>
+            </div>
+          </div>
+
+          <div class="table-card league-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Daily Missions</p>
+                <p class="muted">These are the actions that keep your league climb alive.</p>
+              </div>
+              <span class="pill">Quests</span>
+            </div>
+            <div id="leagueTabMissions" class="league-missions">
+              <p class="muted">Your missions will appear here.</p>
+            </div>
+          </div>
+
+          <div class="table-card league-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Recent Wins</p>
+                <p class="muted">See the habits that earned your latest point jumps.</p>
+              </div>
+              <span class="pill">Momentum</span>
+            </div>
+            <div id="leagueTabRecent" class="league-recent-list">
+              <p class="muted">Your latest point wins will appear here.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="weeklyTab" class="tab-panel" role="tabpanel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">JEE Plan Board</p>
+            <h2>This Week For JEE Main And Advanced</h2>
+          </div>
+          <button id="refreshWeeklyPlanBtnAlt" class="ghost-button">Refresh weekly plan</button>
+        </div>
+
+        <div id="journey-setup-card" class="table-card journey-card hidden">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Your JEE Journey</p>
+              <p class="muted">Hi, I am going to build your complete JEE journey right now.</p>
+            </div>
+            <span class="pill">Setup</span>
+          </div>
+          <div class="journey-setup-grid">
+            <div class="studio-field">
+              <label for="journey-exam-date">When is your JEE exam?</label>
+              <input id="journey-exam-date" type="date">
+              <p class="muted">Select your JEE exam date</p>
+            </div>
+            <div class="studio-field">
+              <label for="journeyHoursInput">How many hours can you study daily?</label>
+              <input id="journeyHoursInput" type="range" min="2" max="16" step="1" value="6">
+              <p id="journeyHoursLabel" class="muted">6 hours/day</p>
+            </div>
+          </div>
+          <div class="mini-action-row">
+            <button id="setupJourneyBtn" type="button">Mapping your JEE journey...</button>
+            <button id="journeyExamDateSaveBtn" type="button" class="ghost-button">Save</button>
+            <button id="beginJourneyBtn" type="button" class="ghost-button">Begin My Journey</button>
+          </div>
+          <p id="journeySetupStatus" class="muted">We will map your syllabus, revision loop, and daily rhythm from here.</p>
+        </div>
+
+        <div id="todays-focus-card" class="table-card journey-card hidden">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Today's Focus</p>
+              <p id="todaysFocusSummary" class="muted">Your morning session will appear here once the journey is ready.</p>
+            </div>
+            <span id="todaysSessionBadge" class="pill">Learning</span>
+          </div>
+          <div class="journey-focus-grid">
+            <div>
+              <p id="todaysSubjectBadge" class="focus-pill">Physics</p>
+              <p id="todaysUnitText" class="memory-heading">Unit</p>
+              <p id="todaysTopicText" class="muted">Topic</p>
+            </div>
+            <div>
+              <p id="todaysConfidenceText" class="memory-heading">Confidence: new</p>
+              <p id="todaysWeightageText" class="muted">0% of JEE Main</p>
+              <p id="todaysGoalText" class="muted">Daily goal</p>
+            </div>
+          </div>
+          <div class="mini-action-row">
+            <button id="startSessionBtn" type="button">Start Session</button>
+            <button id="openJourneySummaryBtn" type="button" class="ghost-button">View journey summary</button>
+          </div>
+        </div>
+
+        <div id="session-timer" class="table-card journey-card hidden">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Session Timer</p>
+              <p class="muted">Stay on rhythm while Astra teaches, then checkpoint and continue.</p>
+            </div>
+            <span id="sessionTimerPill" class="pill">00:00</span>
+          </div>
+          <p id="sessionTimerText" class="muted">Session timer idle.</p>
+        </div>
+
+        <div id="session-summary-card" class="table-card journey-card hidden">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Session Summary</p>
+              <p id="sessionSummaryText" class="muted">Your score, confidence update, and next revision will appear here.</p>
+            </div>
+            <span id="sessionSummaryBadge" class="pill">Complete</span>
+          </div>
+          <div class="journey-summary-grid">
+            <p id="sessionScoreText" class="memory-heading">Score: -</p>
+            <p id="sessionNextRevisionText" class="muted">Next revision: -</p>
+            <p id="sessionTomorrowText" class="muted">Tomorrow's topic: -</p>
+          </div>
+        </div>
+
+        <div id="journey-progress-sidebar" class="table-card journey-card hidden">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Journey Progress</p>
+              <p class="muted">A compact view of covered topics, streak, and your next milestone.</p>
+            </div>
+            <span class="pill">Progress</span>
+          </div>
+          <p id="journeyCoveredText" class="memory-heading">Topics covered: 0/0</p>
+          <p id="journeyStreakText" class="muted">Current streak: 0 days</p>
+          <p id="journeyOverallText" class="muted">Overall journey: 0%</p>
+          <p id="journeyMilestoneText" class="muted">Next milestone: -</p>
+        </div>
+
+        <div id="journey-mastery-card" class="table-card journey-card hidden">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Mastery Map</p>
+              <p class="muted">A quick view of what is new, learning, revising, and already strong.</p>
+            </div>
+            <span class="pill">Mastery</span>
+          </div>
+          <p id="journeyMasterySummary" class="memory-heading">Mastery summary will appear here.</p>
+          <div id="journeyMasteryList" class="weekly-strategy-list">
+            <p class="muted">Your mastery map will appear here.</p>
+          </div>
+        </div>
+
+        <div class="table-card section-progress-card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Section Progress</p>
+              <p class="muted">As Physics, Chemistry, and Mathematics sections get completed, this board highlights strengths, weaknesses, and where you are still losing time.</p>
+            </div>
+            <span class="pill">Progress Lens</span>
+          </div>
+          <div id="sectionProgressList" class="section-progress-list">
+            <p class="muted">Your section summaries will appear here once your schedule starts moving.</p>
+          </div>
+        </div>
+
+        <div class="table-card weekly-strategy-card">
+          <div class="card-header">
+              <div>
+                <p class="card-title">Weekly Strategy</p>
+                <p class="muted">A clear JEE study logic board shaped by PCM strengths, with JEE Main as the first scoring target and JEE Advanced kept alive through smaller depth bridges.</p>
+              </div>
+            <span class="pill">Clear Plan</span>
+          </div>
+          <div id="weeklyStrategyList" class="weekly-strategy-list">
+            <p class="muted">Your weekly strategy notes will appear here.</p>
+          </div>
+        </div>
+
+        <div class="table-card weekly-table-card">
+          <table id="weeklyPlanTable" class="weekly-table">
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Theme</th>
+                <th>Main Focus</th>
+                <th>Study Blocks</th>
+                <th>Total Hours</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="progressTab" class="tab-panel" role="tabpanel">
+        <div class="network-layout">
+          <div class="table-card network-hero-card">
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">Progress Board</p>
+                <h2>Leave No Stone Unturned</h2>
+              </div>
+              <button id="refreshProgressBtn" class="ghost-button" type="button">Refresh progress</button>
+            </div>
+            <p id="progressReminderText" class="muted">
+              Track what is done, what still needs revision, and what is still pending so nothing silently slips through.
+            </p>
+            <div id="progressStats" class="network-stat-grid">
+              <div class="network-stat-card">
+                <strong id="progressDoneCount">0</strong>
+                <span>Done</span>
+              </div>
+              <div class="network-stat-card">
+                <strong id="progressReviseCount">0</strong>
+                <span>Needs revision</span>
+              </div>
+              <div class="network-stat-card">
+                <strong id="progressPendingCount">0</strong>
+                <span>Pending</span>
+              </div>
+              <div class="network-stat-card">
+                <strong id="progressTotalCount">0</strong>
+                <span>Total tracked</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card progress-analytics-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Week Over Week</p>
+                <p id="progressWeekSummary" class="muted">How your progress changed from the previous week will appear here.</p>
+              </div>
+              <span class="pill">Trend Lens</span>
+            </div>
+            <div class="progress-analytics-grid">
+              <div class="network-stat-card progress-analytics-stat">
+                <strong id="progressCurrentWeekRate">0%</strong>
+                <span>This week done rate</span>
+              </div>
+              <div class="network-stat-card progress-analytics-stat">
+                <strong id="progressPreviousWeekRate">0%</strong>
+                <span>Previous week done rate</span>
+              </div>
+              <div class="network-stat-card progress-analytics-stat">
+                <strong id="progressImprovementRate">0%</strong>
+                <span>Improvement change</span>
+              </div>
+              <div class="network-stat-card progress-analytics-stat">
+                <strong id="progressNeedFocus">0 topics</strong>
+                <span>Improvement needed</span>
+              </div>
+            </div>
+            <div class="progress-chart-card">
+              <canvas id="progressWeeklyCanvas" width="1200" height="360" aria-label="Weekly progress comparison chart"></canvas>
+            </div>
+            <p id="progressComparisonText" class="muted progress-comparison-text">Your week-over-week trend will be explained here.</p>
+          </div>
+
+          <div id="chapter-mastery-board" class="table-card progress-analytics-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Chapter Mastery Board</p>
+                <p id="chapterMasterySummary" class="muted">Your chapters will be color-coded by mastery level here.</p>
+              </div>
+              <span class="pill">Chapter Map</span>
+            </div>
+            <div id="chapterMasteryGrid" class="chapter-mastery-grid">
+              <p class="muted">No chapter mastery data yet.</p>
+            </div>
+          </div>
+
+          <div id="chapter-completion-card" class="table-card progress-analytics-card hidden"></div>
+
+          <div id="chapter-test-container" class="table-card progress-analytics-card hidden"></div>
+
+          <div id="chapter-analytics-card" class="table-card progress-analytics-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Performance Analytics</p>
+                <p id="chapterAnalyticsSummary" class="muted">Subject averages, trends, and strongest chapters will appear here.</p>
+              </div>
+              <span class="pill">Analytics</span>
+            </div>
+            <div id="chapterAnalyticsList" class="weekly-strategy-list">
+              <p class="muted">Analytics data will appear here.</p>
+            </div>
+          </div>
+
+          <div id="chapter-revision-card" class="table-card progress-analytics-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Revision Tracker</p>
+                <p id="chapterRevisionSummary" class="muted">Chapters due today and the next 7 days will appear here.</p>
+              </div>
+              <span class="pill">Revision</span>
+            </div>
+            <div id="chapterRevisionList" class="weekly-strategy-list">
+              <p class="muted">Revision schedule will appear here.</p>
+            </div>
+          </div>
+
+          <div id="chapter-detail-card" class="table-card progress-analytics-card hidden">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Chapter Detail</p>
+                <p id="chapterDetailSummary" class="muted">Select a chapter to inspect its scores and revision needs.</p>
+              </div>
+              <div class="card-header-actions">
+                <span class="pill">Detail</span>
+                <button id="chapterDetailCloseBtn" type="button" class="ghost-button">Close</button>
+              </div>
+            </div>
+            <div id="chapterDetailList" class="weekly-strategy-list">
+              <p class="muted">Chapter detail will appear here.</p>
+            </div>
+            <div class="mini-action-row">
+              <button id="startChapterSessionBtn" type="button">Start Chapter Session</button>
+            </div>
+          </div>
+
+          <div class="table-card practice-main-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Add Or Update A Topic</p>
+                <p class="muted">Mark chapters, topics, or units as done, pending, or needing revision.</p>
+              </div>
+              <span class="pill">Quick Update</span>
+            </div>
+            <div class="practice-review-grid progress-form-grid">
+              <input id="progressExamInput" type="text" placeholder="Exam, for example JEE Main or JEE Advanced">
+              <input id="progressSubjectInput" type="text" placeholder="Subject, for example Thermodynamics">
+              <input id="progressTopicInput" type="text" placeholder="Topic or chapter name">
+              <select id="progressStatusSelect">
+                <option value="pending">Red: Pending</option>
+                <option value="revise">Brown: Needs revision</option>
+                <option value="done">Green: Done</option>
+              </select>
+            </div>
+            <div class="inline-form review-notes-row">
+              <input id="progressNoteInput" type="text" placeholder="Optional note, like revise formulas once more or numericals still weak">
+              <button id="saveProgressItemBtn" type="button" class="ghost-button">Save progress item</button>
+            </div>
+          </div>
+
+          <div class="network-grid progress-grid">
+            <div class="table-card network-card progress-column done-column">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Green Check</p>
+                  <p class="muted">Completed and reasonably confident.</p>
+                </div>
+                <span class="pill progress-pill done-pill">Done</span>
+              </div>
+              <div id="progressDoneList" class="network-list">
+                <p class="muted">Done topics will appear here.</p>
+              </div>
+            </div>
+
+            <div class="table-card network-card progress-column revise-column">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Brown Mark</p>
+                  <p class="muted">Covered once but still needs another pass.</p>
+                </div>
+                <span class="pill progress-pill revise-pill">Revise</span>
+              </div>
+              <div id="progressReviseList" class="network-list">
+                <p class="muted">Revision-needed topics will appear here.</p>
+              </div>
+            </div>
+
+            <div class="table-card network-card progress-column pending-column">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Red Mark</p>
+                  <p class="muted">Still pending and worth checking soon.</p>
+                </div>
+                <span class="pill progress-pill pending-pill">Pending</span>
+              </div>
+              <div id="progressPendingList" class="network-list">
+                <p class="muted">Pending topics will appear here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="personalizeTab" class="tab-panel" role="tabpanel">
+        <div class="personalize-grid">
+          <div class="table-card memory-manager-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Walk With Astra</p>
+                <p class="muted">Run the same friendly interview again any time you want to refresh Astra’s understanding of you.</p>
+              </div>
+              <span class="pill">Bond First</span>
+            </div>
+            <p class="muted">This walkthrough helps Astra learn how you think, what you enjoy, what to avoid, and how to support you better. You can skip any question and edit everything later.</p>
+            <div class="walkthrough-actions-row">
+              <button id="startWalkWithAstraBtn" type="button" class="ghost-button">Start Walk With Astra</button>
+              <button id="editWalkWithAstraBtn" type="button" class="ghost-button">Edit saved answers</button>
+            </div>
+          </div>
+
+          <div class="table-card tutor-studio-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Customize Your AI Tutor</p>
+                <p class="muted">Shape your tutor's name, personality, and look so it actually feels like your own mentor.</p>
+              </div>
+              <span class="pill">Tutor Studio</span>
+            </div>
+            <div class="tutor-studio-grid">
+              <div class="studio-field">
+                <label for="tutorNameInput">Tutor name</label>
+                <input id="tutorNameInput" type="text" placeholder="Name your tutor">
+              </div>
+              <div class="studio-field">
+                <label for="tutorPersonaPresetSelect">Coach preset</label>
+                <select id="tutorPersonaPresetSelect">
+                  <option value="balanced">Balanced mentor</option>
+                  <option value="calm">Calm guide</option>
+                  <option value="strict">Strict disciplinarian</option>
+                  <option value="friendly">Friendly senior</option>
+                  <option value="coach">Motivational coach</option>
+                </select>
+              </div>
+              <div class="studio-field">
+                <label for="tutorStyleInput">Personality notes</label>
+                <input id="tutorStyleInput" type="text" placeholder="How should Astra talk, push, explain, and correct?">
+              </div>
+              <div class="studio-field">
+                <label for="tutorAppearanceInput">Tutor look</label>
+                <input id="tutorAppearanceInput" type="text" placeholder="Realistic memoji, glasses, sporty hoodie, blue hair, warm smile, etc.">
+              </div>
+              <div class="studio-field studio-wide-field">
+                <label>Personality traits</label>
+                <div id="tutorTraitChips" class="checkin-chips personality-chip-row"></div>
+                <p class="muted language-hint">Pick any traits you want. Astra will blend them into the style instruction.</p>
+              </div>
+              <button id="saveTutorNameBtn" type="button">Update my AI tutor</button>
+            </div>
+            <p id="tutorStudioSummary" class="muted">Your tutor can be personal, fun, and still serious when it matters.</p>
+          </div>
+
+          <div class="table-card memory-manager-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Your Saved Life Context</p>
+                <p class="muted">Only the details you add here are saved. Nothing should be guessed for you.</p>
+              </div>
+              <span class="pill">Editable</span>
+            </div>
+            <div class="freeform-stack compact-stack">
+              <div class="inline-form">
+                <input id="personManagerInput" type="text" placeholder="Add a person exactly how you want it saved, like My friend Ayaan">
+                <button id="addPersonBtn" class="ghost-button" type="button">Add person</button>
+              </div>
+              <div class="inline-form">
+                <input id="interestManagerInput" type="text" placeholder="Add a hobby or interest in your own words">
+                <button id="addInterestBtn" class="ghost-button" type="button">Add hobby</button>
+              </div>
+              <div class="inline-form">
+                <input id="lifeNoteInput" type="text" placeholder="Add a personal preference or life note you want remembered">
+                <button id="addLifeNoteBtn" class="ghost-button" type="button">Save note</button>
+              </div>
+            </div>
+            <div id="memoryManager" class="memory-manager">
+              <p class="muted">Your editable preferences and memories will appear here.</p>
+            </div>
+          </div>
+
+          <div class="table-card exam-manager-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Manage Your Exams</p>
+                <p class="muted">Pick from common exams, auto-fill the subjects, or add a custom local exam with your own syllabus notes.</p>
+              </div>
+              <span class="pill">Adaptive</span>
+            </div>
+            <div class="freeform-stack compact-stack">
+              <div class="inline-form exam-inline-form">
+                <select id="examCatalogSelect">
+                  <option value="">Choose JEE Main or JEE Advanced</option>
+                  <option value="__custom__">My JEE track is not listed</option>
+                </select>
+                <input id="customExamNameInput" type="text" placeholder="Custom or local exam name">
+                <input id="examDateInput" type="date">
+                <input id="examSubjectsInput" type="text" placeholder="Subjects will auto-fill for known exams, or type your own">
+              </div>
+              <div class="inline-form exam-portion-form">
+                <input id="examPortionInput" type="text" placeholder="Optional syllabus or portion note for this exam">
+                <button id="addExamBtn" class="ghost-button" type="button">Add exam</button>
+              </div>
+            </div>
+            <div id="examManager" class="exam-manager">
+              <p class="muted">Your current exam plans will appear here.</p>
+            </div>
+          </div>
+
+          <div class="table-card exam-manager-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Upload Syllabus Or Portion</p>
+                <p class="muted">For JEE Main or JEE Advanced, add your syllabus as pasted text or upload a PDF, TXT, or DOCX. The tutor and last-minute planner will use it automatically.</p>
+              </div>
+              <span class="pill">Course Scope</span>
+            </div>
+            <div class="freeform-stack compact-stack">
+              <div class="inline-form">
+                <input id="syllabusTitleInput" type="text" placeholder="Optional title, like Thermodynamics Unit 1 or MBBS Pathology Portion">
+              </div>
+              <div class="inline-form">
+                <textarea id="syllabusTextInput" rows="4" placeholder="Paste the syllabus, unit list, chapter names, topics, or exam portion here..."></textarea>
+              </div>
+              <div class="inline-form">
+                <input id="syllabusFileInput" type="file" accept=".pdf,.txt,.docx,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                <button id="uploadSyllabusBtn" class="ghost-button" type="button">Save syllabus</button>
+              </div>
+            </div>
+            <p id="syllabusStatus" class="muted">Upload a file, paste text, or do both. The tutor will use the saved portion in future replies and plans.</p>
+            <div id="syllabusManager" class="exam-manager">
+              <p class="muted">Saved syllabus documents will appear here.</p>
+            </div>
+          </div>
+
+          <div class="table-card settings-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Look And Feel</p>
+                <p class="muted">Choose your language, colors, background, and reading comfort.</p>
+              </div>
+              <span class="pill">Your Space</span>
+            </div>
+
+            <div class="settings-stack">
+              <div class="studio-field">
+                <label for="languageSelect">Tutor language</label>
+                <select id="languageSelect">
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Telugu">Telugu</option>
+                  <option value="Kannada">Kannada</option>
+                  <option value="Malayalam">Malayalam</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Gujarati">Gujarati</option>
+                  <option value="Bengali">Bengali</option>
+                  <option value="Punjabi">Punjabi</option>
+                  <option value="Urdu">Urdu</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="French">French</option>
+                </select>
+                <p class="muted language-hint">
+                  Tutor replies, summaries, and voice playback will try to follow this language where possible.
+                </p>
+              </div>
+
+              <div class="studio-field">
+                <label>Color vibe</label>
+                <div class="theme-picker">
+                  <button type="button" class="theme-swatch active" data-theme="sunrise">Sunrise</button>
+                  <button type="button" class="theme-swatch" data-theme="ocean">Ocean</button>
+                  <button type="button" class="theme-swatch" data-theme="mint">Mint</button>
+                  <button type="button" class="theme-swatch" data-theme="candy">Candy</button>
+                  <button type="button" class="theme-swatch" data-theme="midnight">Midnight</button>
+                </div>
+              </div>
+
+              <div class="studio-field">
+                <label>Background style</label>
+                <div class="theme-picker">
+                  <button type="button" class="theme-swatch active" data-background="glow">Glow</button>
+                  <button type="button" class="theme-swatch" data-background="mesh">Mesh</button>
+                  <button type="button" class="theme-swatch" data-background="aurora">Aurora</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card settings-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Voice Controls</p>
+                <p class="muted">Speak or pause tutor replies here so the sidebar stays clean.</p>
+              </div>
+              <span class="pill">Voice Web</span>
+            </div>
+            <div class="voice-controls">
+              <button id="speakLastReplyBtn" class="ghost-button" type="button">Speak last reply</button>
+              <button id="pauseVoiceBtn" class="ghost-button" type="button">Pause reply</button>
+              <button id="resumeVoiceBtn" class="ghost-button" type="button">Resume reply</button>
+              <button id="stopVoiceBtn" class="ghost-button" type="button">Stop voice</button>
+            </div>
+            <div class="settings-stack">
+              <label class="toggle-row">
+                <input id="autoSpeakReplies" type="checkbox">
+                <span>Auto-speak tutor replies</span>
+              </label>
+              <label class="toggle-row">
+                <input id="voiceChatMode" type="checkbox">
+                <span>Voice-chat style replies</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="table-card settings-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Saved Data</p>
+                <p id="dataSaveStatus" class="muted">Checking what is stored for your profile...</p>
+              </div>
+              <span class="pill">Auto Save</span>
+            </div>
+            <p id="dataSaveCounts" class="muted">Your profile, progress, and chats will be tracked here.</p>
+          </div>
+
+          <div class="table-card settings-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Layout And Reading Comfort</p>
+                <p class="muted">Rearrange tabs and choose reading, pacing, and accessibility settings that make study time easier to follow.</p>
+              </div>
+              <span class="pill">Flexible</span>
+            </div>
+
+            <div id="tabManager" class="tab-manager"></div>
+
+            <div class="settings-stack">
+              <label class="toggle-row">
+                <input id="nightModeToggle" type="checkbox">
+                <span>Night mode</span>
+              </label>
+              <label class="toggle-row">
+                <input id="showLeagueToggle" type="checkbox" checked>
+                <span>Show League tab</span>
+              </label>
+              <label class="toggle-row">
+                <input id="highContrastMode" type="checkbox">
+                <span>High contrast mode</span>
+              </label>
+              <label class="toggle-row">
+                <input id="largeTextMode" type="checkbox">
+                <span>Larger text</span>
+              </label>
+              <label class="toggle-row">
+                <input id="reducedMotionMode" type="checkbox">
+                <span>Reduced motion</span>
+              </label>
+              <label class="toggle-row">
+                <input id="readingComfortMode" type="checkbox">
+                <span>Reading comfort mode</span>
+              </label>
+              <label class="toggle-row">
+                <input id="chunkedReplyMode" type="checkbox" checked>
+                <span>Chunk replies into smaller parts</span>
+              </label>
+              <div class="studio-field">
+                <label for="responsePacingSelect">Reply pacing</label>
+                <select id="responsePacingSelect">
+                  <option value="standard">Standard</option>
+                  <option value="gentle">Gentle</option>
+                  <option value="slow">Slow</option>
+                </select>
+                <p class="muted">Gentle and slow pacing ask Astra to use shorter sentences, clearer breaks, and a calmer rhythm.</p>
+              </div>
+              <input id="autoCaptionMode" type="checkbox" checked class="hidden">
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <section id="walkthroughModal" class="walkthrough-modal hidden" aria-hidden="true">
+    <div class="walkthrough-backdrop"></div>
+    <div id="walkthroughParticles" class="walkthrough-particles" aria-hidden="true"></div>
+    <div class="walkthrough-card" role="dialog" aria-modal="true" aria-labelledby="walkthroughTitle">
+      <div class="card-header">
+        <div>
+          <p class="eyebrow">Walk With Astra</p>
+          <h2 id="walkthroughTitle" class="walkthrough-title">A short walk with Astra</h2>
+        </div>
+        <span id="walkthroughModePill" class="pill">New user</span>
+      </div>
+      <p class="muted" id="walkthroughIntro">
+        Astra starts by learning who you are so it can guide you with more care, more accuracy, and the right kind of support.<br>
+        It is built to be a mentor, a companion, and a steady study partner rather than a cold chatbot.<br>
+        The better Astra understands you, the better it can match your pace, your language, your comfort, and your goals.<br>
+        This first walk is here so Astra can avoid guessing and instead begin with your real preferences.<br>
+        We ask about your interests, dislikes, and study style because every student learns differently.<br>
+        We also ask about your emotional comfort so Astra can support you when you feel pressure, doubt, or fatigue.<br>
+        You will answer 7 short questions, and then you will get one final chance to ask Astra anything you want to know.<br>
+        You can think of this as setting the tone for a long and meaningful study journey together.<br>
+        Astra will use your answers to build a tutor style that feels natural and easy to trust.<br>
+        You can skip any question, come back later, and change everything whenever you want.<br>
+        The goal is simple: help Astra understand you first so learning can feel personal, calm, and effective.
+      </p>
+      <div class="walkthrough-stepbar">
+        <span id="walkthroughStepLabel" class="pill">Welcome</span>
+        <span id="walkthroughStepCount" class="muted">9 questions ahead</span>
+      </div>
+      <div id="walkthroughQuestionBlock" class="walkthrough-question-block">
+        <p id="walkthroughPrompt" class="walkthrough-prompt">Question appears here.</p>
+        <p id="walkthroughHelper" class="muted">Helper text appears here.</p>
+        <textarea id="walkthroughInput" rows="3" placeholder="Type your answer here..."></textarea>
+      </div>
+      <div class="walkthrough-actions-row walkthrough-footer">
+        <button id="walkthroughBackBtn" type="button" class="ghost-button">Back</button>
+        <button id="walkthroughSkipBtn" type="button" class="ghost-button">Skip for now</button>
+        <button id="walkthroughNextBtn" type="button" class="ghost-button">Next</button>
+        <button id="walkthroughSaveBtn" type="button">Save answers</button>
+        <button id="walkthroughCloseBtn" type="button" class="ghost-button">Close</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="/three.legacy.min.js?v=20260408l"></script>
+  <script src="/OrbitControls.legacy.js?v=20260408l"></script>
+  <script src="/app-config.js?v=20260426"></script>
+  <script src="/api-client.js?v=20260426"></script>
+  <script src="/app.js?v=20260408l"></script>
+  <script src="/three_visualizer.js?v=20260408l"></script>
+</body>
+</html>
+
+
+

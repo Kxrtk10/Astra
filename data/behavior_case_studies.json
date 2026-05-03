@@ -1,0 +1,88 @@
+[
+  {
+    "id": "anxious_but_sincere",
+    "name": "Anxious But Sincere",
+    "description": "The student wants to improve but often sounds worried, uncertain, or afraid of failure.",
+    "signals": {
+      "anxiety": 3,
+      "low_confidence": 2,
+      "motivation": 1
+    },
+    "support_strategy": "Use calm reassurance, reduce overload, give one clear next step, and celebrate small progress."
+  },
+  {
+    "id": "motivated_but_inconsistent",
+    "name": "Motivated But Inconsistent",
+    "description": "The student shows interest and intent, but consistency breaks because of missed sessions or drift.",
+    "signals": {
+      "motivation": 2,
+      "avoidance": 2,
+      "burnout": 1
+    },
+    "support_strategy": "Use short plans, accountability check-ins, recovery scheduling, and momentum-building tasks."
+  },
+  {
+    "id": "burned_out_learner",
+    "name": "Burned Out Learner",
+    "description": "The student seems drained, mentally tired, and at risk of disengaging if pressure stays high.",
+    "signals": {
+      "burnout": 3,
+      "anxiety": 1,
+      "avoidance": 1
+    },
+    "support_strategy": "Lower load temporarily, simplify explanations, focus on recovery and emotional safety before ramping back up."
+  },
+  {
+    "id": "confused_but_engaged",
+    "name": "Confused But Engaged",
+    "description": "The student participates and asks questions, but often signals confusion or misunderstanding.",
+    "signals": {
+      "confusion": 3,
+      "motivation": 1
+    },
+    "support_strategy": "Break concepts into smaller chunks, avoid jargon, ask one question at a time, and use examples."
+  },
+  {
+    "id": "avoiding_difficult_sections",
+    "name": "Avoiding Difficult Sections",
+    "description": "The student tends to skip or postpone weak areas, often redirecting away from hard topics.",
+    "signals": {
+      "avoidance": 3,
+      "low_confidence": 1,
+      "frustration": 1
+    },
+    "support_strategy": "Reduce avoidance by starting with easy wins inside weak sections and gradually increasing challenge."
+  },
+  {
+    "id": "high_effort_low_accuracy",
+    "name": "High Effort Low Accuracy",
+    "description": "The student is putting in work, but outcomes remain weak and they may need diagnostic support.",
+    "signals": {
+      "motivation": 2,
+      "confusion": 2,
+      "frustration": 1
+    },
+    "support_strategy": "Focus on misconceptions, exam strategy, and guided practice rather than just adding more volume."
+  },
+  {
+    "id": "needs_reassurance",
+    "name": "Needs Reassurance",
+    "description": "The student benefits strongly from warm encouragement and can lose momentum without emotional support.",
+    "signals": {
+      "low_confidence": 2,
+      "anxiety": 1,
+      "motivation": 1
+    },
+    "support_strategy": "Use supportive tone, normalize struggle, and frame progress as steady improvement instead of judgment."
+  },
+  {
+    "id": "responds_to_challenge",
+    "name": "Responds To Challenge",
+    "description": "The student appears energized by structure and challenge and can handle more direct coaching.",
+    "signals": {
+      "motivation": 3,
+      "confidence": 2
+    },
+    "support_strategy": "Use stretch goals, direct performance feedback, and higher challenge while keeping it constructive."
+  }
+]

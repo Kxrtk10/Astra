@@ -1,0 +1,11879 @@
+const splashScreen = document.getElementById("splashScreen");
+const astraPixels = document.getElementById("astraPixels");
+const enterAstraBtn = document.getElementById("enterAstraBtn");
+const skipAstraBtn = document.getElementById("skipAstraBtn");
+const loginScreen = document.getElementById("loginScreen");
+const appShell = document.getElementById("appShell");
+const signinEmailInput = document.getElementById("signinEmail");
+const signinPasswordInput = document.getElementById("signinPassword");
+const loadProfileBtn = document.getElementById("loadProfileBtn");
+const profileStatus = document.getElementById("profileStatus");
+const authTitle = document.getElementById("authTitle");
+const authSubtitle = document.getElementById("authSubtitle");
+const showSigninBtn = document.getElementById("showSigninBtn");
+const showSignupBtn = document.getElementById("showSignupBtn");
+const signinPanel = document.getElementById("signinPanel");
+const signupPanel = document.getElementById("signupPanel");
+const signupName = document.getElementById("signupName");
+const signupEmail = document.getElementById("signupEmail");
+const signupPassword = document.getElementById("signupPassword");
+const signupStudentName = document.getElementById("signupStudentName");
+const signupHours = document.getElementById("signupHours");
+const signupWhyAstra = document.getElementById("signupWhyAstra");
+const signupInterests = document.getElementById("signupInterests");
+const signupDislikes = document.getElementById("signupDislikes");
+const signupConversationStyle = document.getElementById("signupConversationStyle");
+const signupStressSupport = document.getElementById("signupStressSupport");
+const signupGoalsSummary = document.getElementById("signupGoalsSummary");
+const openSignupWalkthroughBtn = document.getElementById("openSignupWalkthroughBtn");
+const skipSignupWalkthroughBtn = document.getElementById("skipSignupWalkthroughBtn");
+const createProfileBtn = document.getElementById("createProfileBtn");
+const studentWelcome = document.getElementById("studentWelcome");
+const studentSubcopy = document.getElementById("studentSubcopy");
+const avatarGrid = document.getElementById("avatarGrid");
+const sidebarTutorSummary = document.getElementById("sidebarTutorSummary");
+const dataSaveStatus = document.getElementById("dataSaveStatus");
+const dataSaveCounts = document.getElementById("dataSaveCounts");
+const leagueName = document.getElementById("leagueName");
+const leaguePoints = document.getElementById("leaguePoints");
+const leagueNext = document.getElementById("leagueNext");
+const leagueProgressFill = document.getElementById("leagueProgressFill");
+const leagueMissions = document.getElementById("leagueMissions");
+const leagueRecent = document.getElementById("leagueRecent");
+const leagueTabName = document.getElementById("leagueTabName");
+const leagueTabPoints = document.getElementById("leagueTabPoints");
+const leagueTabStreak = document.getElementById("leagueTabStreak");
+const leagueTabNext = document.getElementById("leagueTabNext");
+const leagueTabProgressFill = document.getElementById("leagueTabProgressFill");
+const leagueTabLadder = document.getElementById("leagueTabLadder");
+const leagueTabMissions = document.getElementById("leagueTabMissions");
+const leagueTabRecent = document.getElementById("leagueTabRecent");
+const motivationQuickAccessBtn = document.getElementById("motivationQuickAccessBtn");
+const dailyMotivationQuote = document.getElementById("dailyMotivationQuote");
+const motivationBoostTokens = document.getElementById("motivationBoostTokens");
+const motivationStoryStatus = document.getElementById("motivationStoryStatus");
+const motivationStoryTitle = document.getElementById("motivationStoryTitle");
+const motivationStoryBody = document.getElementById("motivationStoryBody");
+const motivationReadStoryBtn = document.getElementById("motivationReadStoryBtn");
+const motivationPrevStoryBtn = document.getElementById("motivationPrevStoryBtn");
+const motivationNextStoryBtn = document.getElementById("motivationNextStoryBtn");
+const motivationSection = document.getElementById("motivationSection");
+const talkToAstraInLoungeBtn = document.getElementById("talkToAstraInLoungeBtn");
+const tutorNameInput = document.getElementById("tutorNameInput");
+const saveTutorNameBtn = document.getElementById("saveTutorNameBtn");
+const tutorPersonaPresetSelect = document.getElementById("tutorPersonaPresetSelect");
+const tutorStyleInput = document.getElementById("tutorStyleInput");
+const tutorAppearanceInput = document.getElementById("tutorAppearanceInput");
+const tutorTraitChips = document.getElementById("tutorTraitChips");
+const tutorStudioSummary = document.getElementById("tutorStudioSummary");
+const avatarStageTitle = document.getElementById("avatarStageTitle");
+const avatarStageTagline = document.getElementById("avatarStageTagline");
+const avatarStageStatus = document.getElementById("avatarStageStatus");
+const avatarFace = document.getElementById("avatarFace");
+const avatarPortrait = document.getElementById("avatarPortrait");
+const avatarMouth = document.getElementById("avatarMouth");
+const avatarGlasses = document.getElementById("avatarGlasses");
+const avatarShoulders = document.getElementById("avatarShoulders");
+const avatarAppearanceText = document.getElementById("avatarAppearanceText");
+const chapterResumeBanner = document.getElementById("chapter-resume-banner");
+const chapterResumeCard = document.getElementById("chapter-resume-card");
+const chapterDetailCloseBtn = document.getElementById("chapterDetailCloseBtn");
+const chapterCompletionCard = document.getElementById("chapter-completion-card");
+const chapterTestContainer = document.getElementById("chapter-test-container");
+const refreshWeeklyPlanBtn = document.getElementById("refreshWeeklyPlanBtn");
+const refreshWeeklyPlanBtnAlt = document.getElementById("refreshWeeklyPlanBtnAlt");
+const openWeeklyTabBtn = document.getElementById("openWeeklyTabBtn");
+const openProgressTabBtn = document.getElementById("openProgressTabBtn");
+const jumpToTutorBtn = document.getElementById("jumpToTutorBtn");
+const openTutorRoomBtn = document.getElementById("openTutorRoomBtn");
+const backToTutorTextBtn = document.getElementById("backToTutorTextBtn");
+const viewAllTutorChatsBtn = document.getElementById("viewAllTutorChatsBtn");
+const closeTutorConversationDrawerBtn = document.getElementById("closeTutorConversationDrawerBtn");
+const tutorConversationDrawer = document.getElementById("tutorConversationDrawer");
+const tutorConversationDrawerBackdrop = document.getElementById("tutorConversationDrawerBackdrop");
+const tutorConversationDrawerToday = document.getElementById("tutorConversationDrawerToday");
+const tutorConversationDrawerYesterday = document.getElementById("tutorConversationDrawerYesterday");
+const tutorConversationDrawerWeek = document.getElementById("tutorConversationDrawerWeek");
+const tutorConversationDrawerOlder = document.getElementById("tutorConversationDrawerOlder");
+const logoutBtn = document.getElementById("logoutBtn");
+const studioMenuToggleBtn = document.getElementById("studioMenuToggleBtn");
+const languageBadge = document.getElementById("languageBadge");
+const tutorModeBadge = document.getElementById("tutorModeBadge");
+const tutorModePill = document.getElementById("tutorModePill");
+const tutorModeButtons = Array.from(document.querySelectorAll("[data-tutor-mode]"));
+const tutorLevelSelect = document.getElementById("tutorLevelSelect");
+const tutorLevelHint = document.getElementById("tutorLevelHint");
+const adaptiveProfileNote = document.getElementById("adaptiveProfileNote");
+const journeySetupCard = document.getElementById("journey-setup-card");
+const journeyExamDateInput = document.getElementById("journey-exam-date");
+const journeyHoursInput = document.getElementById("journeyHoursInput");
+const journeyHoursLabel = document.getElementById("journeyHoursLabel");
+const setupJourneyBtn = document.getElementById("setupJourneyBtn");
+const journeyExamDateSaveBtn = document.getElementById("journeyExamDateSaveBtn");
+const beginJourneyBtn = document.getElementById("beginJourneyBtn");
+const journeySetupStatus = document.getElementById("journeySetupStatus");
+const todaysFocusCard = document.getElementById("todays-focus-card");
+const todaysFocusSummary = document.getElementById("todaysFocusSummary");
+const todaysSessionBadge = document.getElementById("todaysSessionBadge");
+const todaysSubjectBadge = document.getElementById("todaysSubjectBadge");
+const todaysUnitText = document.getElementById("todaysUnitText");
+const todaysTopicText = document.getElementById("todaysTopicText");
+const todaysConfidenceText = document.getElementById("todaysConfidenceText");
+const todaysWeightageText = document.getElementById("todaysWeightageText");
+const todaysGoalText = document.getElementById("todaysGoalText");
+const startSessionBtn = document.getElementById("startSessionBtn");
+const openJourneySummaryBtn = document.getElementById("openJourneySummaryBtn");
+const sessionTimerCard = document.getElementById("session-timer");
+const sessionTimerPill = document.getElementById("sessionTimerPill");
+const sessionTimerText = document.getElementById("sessionTimerText");
+const sessionSummaryCard = document.getElementById("session-summary-card");
+const sessionSummaryText = document.getElementById("sessionSummaryText");
+const sessionSummaryBadge = document.getElementById("sessionSummaryBadge");
+const sessionScoreText = document.getElementById("sessionScoreText");
+const sessionNextRevisionText = document.getElementById("sessionNextRevisionText");
+const sessionTomorrowText = document.getElementById("sessionTomorrowText");
+const journeyProgressSidebar = document.getElementById("journey-progress-sidebar");
+const journeyCoveredText = document.getElementById("journeyCoveredText");
+const journeyStreakText = document.getElementById("journeyStreakText");
+const journeyOverallText = document.getElementById("journeyOverallText");
+const journeyMilestoneText = document.getElementById("journeyMilestoneText");
+const journeyMasteryCard = document.getElementById("journey-mastery-card");
+const journeyMasterySummary = document.getElementById("journeyMasterySummary");
+const journeyMasteryList = document.getElementById("journeyMasteryList");
+const weeklyCoreHours = document.getElementById("weeklyCoreHours");
+const weeklyScheduledHours = document.getElementById("weeklyScheduledHours");
+const weeklyFocusSplit = document.getElementById("weeklyFocusSplit");
+const weeklyPlanTableBody = document.querySelector("#weeklyPlanTable tbody");
+const weeklyPreviewCards = document.getElementById("weeklyPreviewCards");
+const sectionProgressList = document.getElementById("sectionProgressList");
+const weeklyStrategyList = document.getElementById("weeklyStrategyList");
+const memorySummary = document.getElementById("memorySummary");
+const studentInsightSummary = document.getElementById("studentInsightSummary");
+const overviewTodayText = document.getElementById("overviewTodayText");
+const overviewWeekText = document.getElementById("overviewWeekText");
+const overviewNextText = document.getElementById("overviewNextText");
+const walkthroughModal = document.getElementById("walkthroughModal");
+const walkthroughBackdrop = walkthroughModal ? walkthroughModal.querySelector(".walkthrough-backdrop") : null;
+const walkthroughParticles = document.getElementById("walkthroughParticles");
+const walkthroughQuestionBlock = document.getElementById("walkthroughQuestionBlock");
+const walkthroughAstraNote = document.getElementById("walkthroughAstraNote");
+const walkthroughModePill = document.getElementById("walkthroughModePill");
+const walkthroughStepLabel = document.getElementById("walkthroughStepLabel");
+const walkthroughStepCount = document.getElementById("walkthroughStepCount");
+const walkthroughPrompt = document.getElementById("walkthroughPrompt");
+const walkthroughHelper = document.getElementById("walkthroughHelper");
+const walkthroughInput = document.getElementById("walkthroughInput");
+const walkthroughAstraAnswer = document.getElementById("walkthroughAstraAnswer");
+const walkthroughBackBtn = document.getElementById("walkthroughBackBtn");
+const walkthroughSkipBtn = document.getElementById("walkthroughSkipBtn");
+const walkthroughNextBtn = document.getElementById("walkthroughNextBtn");
+const walkthroughSaveBtn = document.getElementById("walkthroughSaveBtn");
+const walkthroughCloseBtn = document.getElementById("walkthroughCloseBtn");
+const askAstraBtn = document.getElementById("askAstraBtn");
+const startWalkWithAstraBtn = document.getElementById("startWalkWithAstraBtn");
+const editWalkWithAstraBtn = document.getElementById("editWalkWithAstraBtn");
+const memoryManager = document.getElementById("memoryManager");
+const funFactText = document.getElementById("funFactText");
+const funFactCategory = document.getElementById("funFactCategory");
+const liveSourcesList = document.getElementById("liveSourcesList");
+const visualLearningPanel = document.getElementById("visualLearningPanel");
+const tutorVideoPlayer = document.getElementById("tutorVideoPlayer");
+const tutorVideoTitle = document.getElementById("tutorVideoTitle");
+const tutorVideoMeta = document.getElementById("tutorVideoMeta");
+const tutorVideoSummary = document.getElementById("tutorVideoSummary");
+const tutorVideoBridgeCues = document.getElementById("tutorVideoBridgeCues");
+const tutorVideoList = document.getElementById("tutorVideoList");
+const openVideoBridgeBtn = document.getElementById("openVideoBridgeBtn");
+const useVideoInTutorBtn = document.getElementById("useVideoInTutorBtn");
+const videoExplanationPanel = document.getElementById("videoExplanationPanel");
+const conceptCanvasPanel = document.getElementById("conceptCanvasPanel");
+const conceptCanvas = document.getElementById("conceptCanvas");
+const reasoningPanel = document.getElementById("reasoningPanel");
+const summaryPanel = document.getElementById("summaryPanel");
+const videoTutorWeeklyStatus = document.getElementById("videoTutorWeeklyStatus");
+const videoTutorWeeklyVideos = document.getElementById("videoTutorWeeklyVideos");
+const videoTutorRequestTopicInput = document.getElementById("videoTutorRequestTopicInput");
+const videoTutorRequestSubjectSelect = document.getElementById("videoTutorRequestSubjectSelect");
+const generateRequestedVideoBtn = document.getElementById("generateRequestedVideoBtn");
+const videoTutorRequestStatus = document.getElementById("videoTutorRequestStatus");
+const videoTutorRequestBriefPanel = document.getElementById("videoTutorRequestBriefPanel");
+const generateRequestedFullVideoBtn = document.getElementById("generateRequestedFullVideoBtn");
+const videoTutorRequestedList = document.getElementById("videoTutorRequestedList");
+const chatFeed = document.getElementById("chatFeed");
+const guideFeed = document.getElementById("guideFeed");
+const loungeFeed = document.getElementById("loungeFeed");
+const practiceFeed = document.getElementById("practiceFeed");
+const featureHealthList = document.getElementById("featureHealthList");
+const clearTutorChatBtn = document.getElementById("clearTutorChatBtn");
+const tutorFullscreenBtn = document.getElementById("tutor-fullscreen-btn");
+const clearPracticeChatBtn = document.getElementById("clearPracticeChatBtn");
+const clearLoungeChatBtn = document.getElementById("clearLoungeChatBtn");
+const newTutorChatBtn = document.getElementById("newTutorChatBtn");
+const tutorConversationList = document.getElementById("tutorConversationList");
+const deletedTutorConversationList = document.getElementById("deletedTutorConversationList");
+const tutorChatSearchInput = document.getElementById("tutorChatSearchInput");
+const newLoungeChatBtn = document.getElementById("newLoungeChatBtn");
+const loungeConversationList = document.getElementById("loungeConversationList");
+const deletedLoungeConversationList = document.getElementById("deletedLoungeConversationList");
+const loungeChatSearchInput = document.getElementById("loungeChatSearchInput");
+const lastMinuteFeed = document.getElementById("lastMinuteFeed");
+const tipsFeed = document.getElementById("tipsFeed");
+const chatForm = document.getElementById("chatForm");
+const messageInput = document.getElementById("messageInput");
+const summarizeTutorBtn = document.getElementById("summarizeTutorBtn");
+const quickSummaryBtn = document.getElementById("quickSummaryBtn");
+const tutorRoomForm = document.getElementById("tutorRoomForm");
+const tutorRoomMessageInput = document.getElementById("tutorRoomMessageInput");
+const tutorRoomLivePill = document.getElementById("tutorRoomLivePill");
+const tutorRoomLiveSummary = document.getElementById("tutorRoomLiveSummary");
+const tutorRoomLiveHint = document.getElementById("tutorRoomLiveHint");
+const tutorRoomVoiceState = document.getElementById("tutorRoomVoiceState");
+const tutorRoomSpeakState = document.getElementById("tutorRoomSpeakState");
+const tutorRoomCaptionState = document.getElementById("tutorRoomCaptionState");
+const tutorRoomReadState = document.getElementById("tutorRoomReadState");
+const tutorRoomPaceState = document.getElementById("tutorRoomPaceState");
+const tutorRoomLevelState = document.getElementById("tutorRoomLevelState");
+const tutorRoomSpeakLastBtn = document.getElementById("tutorRoomSpeakLastBtn");
+const tutorRoomPauseBtn = document.getElementById("tutorRoomPauseBtn");
+const tutorRoomResumeBtn = document.getElementById("tutorRoomResumeBtn");
+const tutorRoomStopBtn = document.getElementById("tutorRoomStopBtn");
+const generateVideoAnswerBtn = document.getElementById("generateVideoAnswerBtn");
+const videoAnswerBtn = document.getElementById("videoAnswerBtn");
+const videoTutorQuestionInput = document.getElementById("videoTutorQuestionInput");
+const tutorRoomBackToTutorBtn = document.getElementById("tutorRoomBackToTutorBtn");
+const tutorRoomTranscriptFeed = document.getElementById("tutorRoomTranscript");
+const tutorChatPanel = document.querySelector(".tutor-chat-panel");
+let tutorFullscreenOverlay = null;
+let tutorFullscreenMessages = null;
+let tutorFullscreenInputArea = null;
+let tutorFullscreenTextarea = null;
+let tutorFullscreenSendButton = null;
+const videoAnswerBriefPanel = document.getElementById("videoAnswerBriefPanel");
+const videoStatusPanel = document.getElementById("video-status-panel");
+const tutorVideoAnswerPlayer = document.getElementById("tutor-video-player");
+const videoTranscriptPanel = document.getElementById("video-transcript");
+const videoRenderStatus = document.getElementById("videoRenderStatus");
+const videoApiBaseUrl = window.__ASTRA_VIDEO_API_BASE__ || "http://127.0.0.1:8001";
+const doubtImageInput = document.getElementById("doubtImageInput");
+const analyzeImageBtn = document.getElementById("analyzeImageBtn");
+const imageUploadStatus = document.getElementById("imageUploadStatus");
+const loungeForm = document.getElementById("loungeForm");
+const loungeMessageInput = document.getElementById("loungeMessageInput");
+const loungeVoiceBtn = document.getElementById("loungeVoiceBtn");
+const loungeVoiceStatus = document.getElementById("loungeVoiceStatus");
+const guideForm = document.getElementById("guideForm");
+const guideMessageInput = document.getElementById("guideMessageInput");
+const practiceForm = document.getElementById("practiceForm");
+const practiceMessageInput = document.getElementById("practiceMessageInput");
+const lastMinuteForm = document.getElementById("lastMinuteForm");
+const lastMinuteMessageInput = document.getElementById("lastMinuteMessageInput");
+const practiceTimeInput = document.getElementById("practiceTimeInput");
+const practiceAccuracyInput = document.getElementById("practiceAccuracyInput");
+const practiceQuestionCountInput = document.getElementById("practiceQuestionCountInput");
+const practiceExamInput = document.getElementById("practiceExamInput");
+const practiceNotesInput = document.getElementById("practiceNotesInput");
+const submitPracticeReviewBtn = document.getElementById("submitPracticeReviewBtn");
+const mockExamInput = document.getElementById("mockExamInput");
+const mockPhysicsInput = document.getElementById("mockPhysicsInput");
+const mockChemistryInput = document.getElementById("mockChemistryInput");
+const mockMathInput = document.getElementById("mockMathInput");
+const saveMockScoresBtn = document.getElementById("saveMockScoresBtn");
+const practiceAnalyticsCard = document.getElementById("practiceAnalyticsCard");
+const mockTestIntroCard = document.getElementById("mockTestIntroCard");
+const startMockTestBtn = document.getElementById("startMockTestBtn");
+const mockTestSetupCard = document.getElementById("mockTestSetupCard");
+const mockTestExamInput = document.getElementById("mockTestExamInput");
+const mockTestCountInput = document.getElementById("mockTestCountInput");
+const mockTestTimer = document.getElementById("mockTestTimer");
+const mockTestProgress = document.getElementById("mockTestProgress");
+const mockTestQuestionCard = document.getElementById("mockTestQuestionCard");
+const mockTestQuestionText = document.getElementById("mockTestQuestionText");
+const mockTestQuestionMeta = document.getElementById("mockTestQuestionMeta");
+const mockTestOptionList = document.getElementById("mockTestOptionList");
+const mockTestIntegerInput = document.getElementById("mockTestIntegerInput");
+const mockTestNavPrev = document.getElementById("mockTestNavPrev");
+const mockTestNavNext = document.getElementById("mockTestNavNext");
+const mockTestSubmitBtn = document.getElementById("mockTestSubmitBtn");
+const mockTestReportCard = document.getElementById("mockTestReportCard");
+const mockTestReportBody = document.getElementById("mockTestReportBody");
+const mockTestStatus = document.getElementById("mockTestStatus");
+const mockTestWeeklyPlanBtn = document.getElementById("mockTestWeeklyPlanBtn");
+const mockTestExitBtn = document.getElementById("mockTestExitBtn");
+const mockTestExitBtnReport = document.getElementById("mockTestExitBtnReport");
+const mockTestTab = document.getElementById("mockTestTab");
+const tipsForm = document.getElementById("tipsForm");
+const tipsMessageInput = document.getElementById("tipsMessageInput");
+const tipsResourceList = document.getElementById("tipsResourceList");
+const learningSourcesList = document.getElementById("learningSourcesList");
+const learningSourcePackBadge = document.getElementById("learningSourcePackBadge");
+const learningSourceRouteNote = document.getElementById("learningSourceRouteNote");
+const networkStats = document.getElementById("networkStats");
+const networkNote = document.getElementById("networkNote");
+const groupStudyStatusPill = document.getElementById("groupStudyStatusPill");
+const groupStudyEnabledToggle = document.getElementById("groupStudyEnabledToggle");
+const groupStudyModeSelect = document.getElementById("groupStudyModeSelect");
+const groupStudySizeSelect = document.getElementById("groupStudySizeSelect");
+const groupStudyMinutesSelect = document.getElementById("groupStudyMinutesSelect");
+const groupStudyFocusInput = document.getElementById("groupStudyFocusInput");
+const saveGroupStudyBtn = document.getElementById("saveGroupStudyBtn");
+const rerollGroupStudyBtn = document.getElementById("rerollGroupStudyBtn");
+const soloGroupStudyBtn = document.getElementById("soloGroupStudyBtn");
+const groupStudySummary = document.getElementById("groupStudySummary");
+const groupStudyRuleChips = document.getElementById("groupStudyRuleChips");
+const groupStudyMembers = document.getElementById("groupStudyMembers");
+const groupStudyPlan = document.getElementById("groupStudyPlan");
+const tutorNetworkInsights = document.getElementById("tutorNetworkInsights");
+const studentMatchesList = document.getElementById("studentMatchesList");
+const studyCircleList = document.getElementById("studyCircleList");
+const refreshNetworkBtn = document.getElementById("refreshNetworkBtn");
+const refreshProgressBtn = document.getElementById("refreshProgressBtn");
+const progressReminderText = document.getElementById("progressReminderText");
+const progressWeekSummary = document.getElementById("progressWeekSummary");
+const progressDoneCount = document.getElementById("progressDoneCount");
+const progressReviseCount = document.getElementById("progressReviseCount");
+const progressPendingCount = document.getElementById("progressPendingCount");
+const progressTotalCount = document.getElementById("progressTotalCount");
+const progressCurrentWeekRate = document.getElementById("progressCurrentWeekRate");
+const progressPreviousWeekRate = document.getElementById("progressPreviousWeekRate");
+const progressImprovementRate = document.getElementById("progressImprovementRate");
+const progressNeedFocus = document.getElementById("progressNeedFocus");
+const progressComparisonText = document.getElementById("progressComparisonText");
+const chapterMasteryCard = document.getElementById("chapter-mastery-board") || document.getElementById("chapter-mastery-card");
+const chapterMasterySummary = document.getElementById("chapterMasterySummary");
+const chapterMasteryGrid = document.getElementById("chapterMasteryGrid");
+const chapterAnalyticsCard = document.getElementById("chapter-analytics-card");
+const chapterAnalyticsSummary = document.getElementById("chapterAnalyticsSummary");
+const chapterAnalyticsList = document.getElementById("chapterAnalyticsList");
+const chapterRevisionCard = document.getElementById("chapter-revision-card");
+const chapterRevisionSummary = document.getElementById("chapterRevisionSummary");
+const chapterRevisionList = document.getElementById("chapterRevisionList");
+const chapterDetailCard = document.getElementById("chapter-detail-card");
+const chapterDetailSummary = document.getElementById("chapterDetailSummary");
+const chapterDetailList = document.getElementById("chapterDetailList");
+const startChapterSessionBtn = document.getElementById("startChapterSessionBtn");
+const progressWeeklyCanvas = document.getElementById("progressWeeklyCanvas");
+const progressExamInput = document.getElementById("progressExamInput");
+const progressSubjectInput = document.getElementById("progressSubjectInput");
+const progressTopicInput = document.getElementById("progressTopicInput");
+const progressStatusSelect = document.getElementById("progressStatusSelect");
+const progressNoteInput = document.getElementById("progressNoteInput");
+const saveProgressItemBtn = document.getElementById("saveProgressItemBtn");
+const progressDoneList = document.getElementById("progressDoneList");
+const progressReviseList = document.getElementById("progressReviseList");
+const progressPendingList = document.getElementById("progressPendingList");
+const loungeTimerStatus = document.getElementById("loungeTimerStatus");
+const stopLoungeTimerBtn = document.getElementById("stopLoungeTimerBtn");
+const personManagerInput = document.getElementById("personManagerInput");
+const addPersonBtn = document.getElementById("addPersonBtn");
+const interestManagerInput = document.getElementById("interestManagerInput");
+const addInterestBtn = document.getElementById("addInterestBtn");
+const lifeNoteInput = document.getElementById("lifeNoteInput");
+const addLifeNoteBtn = document.getElementById("addLifeNoteBtn");
+const examCatalogSelect = document.getElementById("examCatalogSelect");
+const customExamNameInput = document.getElementById("customExamNameInput");
+const examDateInput = document.getElementById("examDateInput");
+const examSubjectsInput = document.getElementById("examSubjectsInput");
+const examPortionInput = document.getElementById("examPortionInput");
+const addExamBtn = document.getElementById("addExamBtn");
+const examManager = document.getElementById("examManager");
+const syllabusTitleInput = document.getElementById("syllabusTitleInput");
+const syllabusTextInput = document.getElementById("syllabusTextInput");
+const syllabusFileInput = document.getElementById("syllabusFileInput");
+const uploadSyllabusBtn = document.getElementById("uploadSyllabusBtn");
+const syllabusStatus = document.getElementById("syllabusStatus");
+const syllabusManager = document.getElementById("syllabusManager");
+const voiceChatMode = document.getElementById("voiceChatMode");
+const nightModeToggle = document.getElementById("nightModeToggle");
+const highContrastMode = document.getElementById("highContrastMode");
+const largeTextMode = document.getElementById("largeTextMode");
+const reducedMotionMode = document.getElementById("reducedMotionMode");
+const readingComfortMode = document.getElementById("readingComfortMode");
+const chunkedReplyMode = document.getElementById("chunkedReplyMode");
+const responsePacingSelect = document.getElementById("responsePacingSelect");
+const autoCaptionMode = document.getElementById("autoCaptionMode");
+const tutorCaptionText = document.getElementById("tutorCaptionText");
+const autoSpeakReplies = document.getElementById("autoSpeakReplies");
+const speakLastReplyBtn = document.getElementById("speakLastReplyBtn");
+const pauseVoiceBtn = document.getElementById("pauseVoiceBtn");
+const resumeVoiceBtn = document.getElementById("resumeVoiceBtn");
+const stopVoiceBtn = document.getElementById("stopVoiceBtn");
+const showTextExplanation = document.getElementById("showTextExplanation");
+const showVideoExplanation = document.getElementById("showVideoExplanation");
+const showVisualExplanation = document.getElementById("showVisualExplanation");
+const showLeagueToggle = document.getElementById("showLeagueToggle");
+const languageSelect = document.getElementById("languageSelect");
+const tabManager = document.getElementById("tabManager");
+const tabBar = document.getElementById("tabBar");
+const authHeroTitle = document.getElementById("authHeroTitle");
+const authHeroQuote = document.getElementById("authHeroQuote");
+const authHeroText = document.getElementById("authHeroText");
+const authHeroBadges = document.getElementById("authHeroBadges");
+const authHeroVideoPlayer = document.getElementById("authHeroVideoPlayer");
+const authHeroVideoTitle = document.getElementById("authHeroVideoTitle");
+const authHeroVideoMeta = document.getElementById("authHeroVideoMeta");
+const authHeroVideoSummary = document.getElementById("authHeroVideoSummary");
+const authHeroVideoTag = document.getElementById("authHeroVideoTag");
+const authHeroVideoToggle = document.getElementById("authHeroVideoToggle");
+const authCardKicker = document.getElementById("authCardKicker");
+const introScreen = document.getElementById("introScreen");
+const introTitle = document.getElementById("introTitle");
+const introQuote = document.getElementById("introQuote");
+const introText = document.getElementById("introText");
+const introHint = document.getElementById("introHint");
+const introVideoPlayer = document.getElementById("introVideoPlayer");
+const introVideoTitle = document.getElementById("introVideoTitle");
+const introVideoMeta = document.getElementById("introVideoMeta");
+const introVideoSummary = document.getElementById("introVideoSummary");
+const introVideoTag = document.getElementById("introVideoTag");
+const introVideoToggle = document.getElementById("introVideoToggle");
+const introContinueBtn = document.getElementById("introContinueBtn");
+const introSoundBtn = document.getElementById("introSoundBtn");
+const studioPaneButtons = Array.from(document.querySelectorAll(".studio-pane-button"));
+const studioPanes = Array.from(document.querySelectorAll(".studio-pane"));
+const fullscreenStudioBtn = document.getElementById("fullscreenStudioBtn");
+const APP_CONFIG = window.APP_CONFIG || {};
+
+let tabButtons = [];
+let tabPanels = [];
+let activeProfile = null;
+let activeUser = null;
+let authSession = null;
+let avatarPresets = [];
+let activeAvatar = null;
+let activeTutorBrain = null;
+let lastTutorReply = "";
+let lastTutorQuestion = "";
+let lastVideoAnswerBrief = null;
+let lastRepliesByMode = { tutor: "", guide: "", lounge: "", practice: "", last_minute: "", tips: "" };
+let activeTutorNarration = null;
+let activeSpeechUtterance = null;
+let tutorReplyCheckpoints = { tutor: null, guide: null, lounge: null, practice: null, last_minute: null, tips: null };
+let activeTutorVideoJobId = "";
+let activeTutorVideoPollInterval = null;
+let browserVoices = [];
+window.astraCurrentTopic = window.astraCurrentTopic || { topic: null, subject: null, source: null };
+let currentVideoTutorWeek = [];
+let currentVideoTutorPlanStatus = [];
+let currentRequestedVideos = [];
+let activeVideoTutorBrief = null;
+let activeVideoTutorRequest = null;
+const dismissedVideoSuggestionTopics = new Set();
+const LoungeSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+let loungeVoiceRecognition = null;
+let loungeVoiceDraft = "";
+let loungeVoicePrefix = "";
+let loungeVoiceActive = false;
+let currentLanguage = APP_CONFIG.default_language || "English";
+let currentTheme = "midnight";
+let currentBackground = "glow";
+let isSidebarCollapsed = false;
+let leagueTabVisible = localStorage.getItem("alt_show_league_tab") !== "0";
+let activeStudioPane = "threeConceptPanel";
+let activeSummaryText = "";
+let walkthroughContext = "signup";
+let walkthroughStepIndex = 0;
+let walkthroughAnswers = {};
+let walkthroughProfileSnapshot = null;
+let walkthroughParticleFrame = null;
+let walkthroughParticleNodes = [];
+let walkthroughTransitionTimer = null;
+const DEFAULT_TAB_ORDER = Array.isArray(APP_CONFIG.default_tab_order) && APP_CONFIG.default_tab_order.length
+  ? APP_CONFIG.default_tab_order
+  : ["overview", "tutor", "tutorroom", "videotutor", "practice", "mocktest", "lastminute", "tips", "weekly", "progress", "lounge", "network", "league", "personalize", "guide", "assist"];
+let currentTabOrder = [...DEFAULT_TAB_ORDER];
+let isSending = false;
+let loungeTimerInterval = null;
+let loungeTimerEndTime = null;
+let examCatalog = [];
+let activeTutorVideo = null;
+let videoLibrarySnapshot = null;
+let authHeroVideoSnapshot = null;
+let introVideoSnapshot = null;
+let introVideoMode = "signin";
+let activeTutorCheckpoint = null;
+let activeVideoTimer = null;
+let activeLessonNarration = null;
+let activeVideoExplanation = null;
+let tutorStageFocusTimer = null;
+let pendingDoubtImage = null;
+let lastPracticeMode = "general";
+let activeConceptAnimation = null;
+let activeTutorConversationId = null;
+let journeyPlanSnapshot = null;
+let journeyWeeklySnapshot = null;
+let todaysFocusSnapshot = null;
+let journeyTimerInterval = null;
+let journeyTimerStartedAt = null;
+let activeJourneySession = null;
+let chapterMasterySnapshot = null;
+let chapterAnalyticsSnapshot = null;
+let chapterRevisionSnapshot = null;
+let selectedChapterSnapshot = null;
+let activeChapterSession = null;
+let activeChapterSubtopic = null;
+let activeChapterTest = null;
+let activeChapterTestStartedAt = null;
+let activeChapterTestInterval = null;
+let activeChapterBreakInterval = null;
+let activeChapterBreakEndAt = null;
+let activeChapterCompletionMode = null;
+let activeChapterTestAnswers = [];
+let activeChapterResumeSummary = null;
+let chapterResumeLoadedFor = "";
+let chapterResumeDismissedFor = "";
+let chapterResumeBannerDismissedFor = "";
+let tutorConversationSearch = "";
+let tutorConversationSnapshot = [];
+let deletedTutorConversationSnapshot = [];
+let activeTutorMode = localStorage.getItem("alt_tutor_mode") || "calm";
+let activeLoungeConversationId = null;
+let loungeConversationSearch = "";
+let selectedTutorTraits = [];
+let activeMockTest = null;
+let activeMockIndex = 0;
+let activeMockAnswers = [];
+let activeMockStartAt = null;
+let activeMockTimerInterval = null;
+let lastNonMockTabId = "practiceTab";
+
+const TUTOR_PERSONALITY_TRAITS = [
+  { key: "patient", label: "Patient" },
+  { key: "strict", label: "Strict" },
+  { key: "friendly", label: "Friendly" },
+  { key: "motivational", label: "Motivational" },
+  { key: "witty", label: "Witty" },
+  { key: "structured", label: "Structured" },
+  { key: "calm", label: "Calm" },
+  { key: "energetic", label: "Energetic" },
+  { key: "exam-focused", label: "Exam-focused" },
+];
+let splashDismissed = false;
+
+const ASTRA_PIXEL_PATTERNS = {
+  A: ["01110", "10001", "10001", "11111", "10001", "10001", "10001"],
+  S: ["01111", "10000", "10000", "01110", "00001", "00001", "11110"],
+  T: ["11111", "00100", "00100", "00100", "00100", "00100", "00100"],
+  R: ["11110", "10001", "10001", "11110", "10100", "10010", "10001"],
+};
+
+const LEAGUE_ORDER = [
+  "Bronze 1",
+  "Bronze 2",
+  "Bronze 3",
+  "Silver 1",
+  "Silver 2",
+  "Silver 3",
+  "Gold 1",
+  "Gold 2",
+  "Gold 3",
+  "Platinum 1",
+  "Platinum 2",
+  "Platinum 3",
+  "Diamond 1",
+  "Diamond 2",
+  "Diamond 3",
+  "Champion",
+];
+
+function safeJsonParse(rawValue, fallback) {
+  try {
+    return JSON.parse(rawValue);
+  } catch (error) {
+    return fallback;
+  }
+}
+
+function getLanguagePrefix(language) {
+  const normalized = String(language || "English").toLowerCase();
+  const map = {
+    english: "en",
+    hindi: "hi",
+    tamil: "ta",
+    telugu: "te",
+    kannada: "kn",
+    malayalam: "ml",
+    marathi: "mr",
+    gujarati: "gu",
+    bengali: "bn",
+    punjabi: "pa",
+    urdu: "ur",
+    spanish: "es",
+    french: "fr",
+  };
+  return map[normalized] || "en";
+}
+
+function normalizeExamName(value) {
+  return String(value || "").trim();
+}
+
+function getProfileExamEntries(profile = activeProfile) {
+  const entries = Array.isArray(profile && profile.exams) ? profile.exams : [];
+  return entries
+    .map((exam) => normalizeExamName(exam && exam.name))
+    .filter(Boolean);
+}
+
+function getPrimaryExamName(profile = activeProfile) {
+  const examEntries = getProfileExamEntries(profile);
+  if (examEntries.length) {
+    return examEntries[0];
+  }
+  const profileExam = normalizeExamName(profile && profile.exam);
+  if (profileExam) {
+    return profileExam;
+  }
+  return normalizeExamName(APP_CONFIG.default_exam) || "your exam";
+}
+
+function getExamFamilyLabel(examName) {
+  const normalized = normalizeExamName(examName).toUpperCase();
+  if (!normalized) {
+    return "JEE";
+  }
+  if (normalized.includes("JEE")) {
+    return "JEE";
+  }
+  return "JEE";
+}
+
+function getActiveExamLabel(profile = activeProfile) {
+  return getExamFamilyLabel(getPrimaryExamName(profile));
+}
+
+function getActiveExamListLabel(profile = activeProfile) {
+  const examEntries = getProfileExamEntries(profile);
+  if (examEntries.length) {
+    return examEntries.join(", ");
+  }
+  return normalizeExamName(APP_CONFIG.default_exam) || "your exam";
+}
+
+function updateExamBrandCopy(profile = activeProfile, mode = "signin") {
+  const examLabel = getActiveExamLabel(profile);
+  const isGenericExam = examLabel === "your exam";
+
+  if (authHeroTitle) {
+    authHeroTitle.textContent = isGenericExam
+      ? "Study for your exam with an AI teacher that feels bright, human, and easy to come back to."
+      : `Study for ${examLabel} with an AI teacher that feels bright, human, and easy to come back to.`;
+  }
+  if (authHeroQuote) {
+    authHeroQuote.textContent = isGenericExam
+      ? "Your journey starts here with Astra."
+      : `Your ${examLabel} journey starts here with Astra.`;
+  }
+  if (authHeroText) {
+    authHeroText.textContent = isGenericExam
+      ? "Personalized tutoring, adaptive planning, revision support, practice drills, and a warm AI guide that helps students feel comfortable before jumping into serious prep."
+      : `Personalized ${examLabel} tutoring, adaptive planning, revision support, practice drills, and a warm AI guide that helps students feel comfortable before jumping into serious prep.`;
+  }
+  if (authCardKicker) {
+    authCardKicker.textContent = isGenericExam ? "Learning Studio Access" : `${examLabel} Learning Studio Access`;
+  }
+  if (authHeroBadges) {
+    const badges = Array.from(authHeroBadges.querySelectorAll("span"));
+    const badgeValues = isGenericExam
+      ? ["Personalized", "Accessible", "Custom Themes", "Personal Tutor"]
+      : [examLabel, "Adaptive", "Custom Themes", "Personal Tutor"];
+    badges.forEach((badge, index) => {
+      if (badgeValues[index]) {
+        badge.textContent = badgeValues[index];
+      }
+    });
+  }
+  if (authTitle) {
+    authTitle.textContent = mode === "signup"
+      ? (isGenericExam
+        ? "Create your account for the learning studio"
+        : `Create your account for the ${examLabel} learning studio`)
+      : (isGenericExam
+        ? "Sign in to the learning studio"
+        : `Sign in to the ${examLabel} learning studio`);
+  }
+  if (authSubtitle) {
+    authSubtitle.textContent = mode === "signup"
+      ? "Use the sign-up form below to create a fresh account and linked student profile."
+      : (isGenericExam
+        ? "Sign in with your account to open your personal learning studio."
+        : `Sign in with your account to open your personal ${examLabel} learning studio.`);
+  }
+}
+
+const TAB_CONFIG = {
+  overview: { buttonTab: "overviewTab", label: "Overview" },
+  tutor: { buttonTab: "tutorTab", label: "Tutor Text" },
+  tutorroom: { buttonTab: "tutorRoomTab", label: "Tutor Room" },
+  videotutor: { buttonTab: "videoTutorTab", label: "Video Tutor" },
+  practice: { buttonTab: "practiceTab", label: "Practice" },
+  mocktest: { buttonTab: "mockTestTab", label: "Mock Test" },
+  lastminute: { buttonTab: "lastMinuteTab", label: "Last Minute" },
+  tips: { buttonTab: "tipsTab", label: "Tips" },
+  weekly: { buttonTab: "weeklyTab", label: "Weekly Plan" },
+  progress: { buttonTab: "progressTab", label: "Progress" },
+  lounge: { buttonTab: "loungeTab", label: "Lounge" },
+  network: { buttonTab: "networkTab", label: "Network" },
+  league: { buttonTab: "leagueTab", label: "League" },
+  personalize: { buttonTab: "personalizeTab", label: "Personalize" },
+  guide: { buttonTab: "guideTab", label: "Guide" },
+  assist: { buttonTab: "assistTab", label: "Assist" },
+};
+
+const MOTIVATIONAL_QUOTES = [
+  "Small wins compound into serious exam momentum.",
+  "Stay steady today and your future self will thank you.",
+  "Master the next step, then the next one gets easier.",
+  "Consistency is a quiet superpower.",
+  "Progress becomes confidence when you keep showing up.",
+  "Astra is here to help you keep moving forward.",
+];
+
+let motivationStories = [];
+let activeMotivationStoryIndex = 0;
+let motivationStoryOpen = false;
+let activeHomeSubtab = "overview";
+let homeSubtabButtons = [];
+let homeSubtabPanels = [];
+
+function refreshTabCollections() {
+  tabButtons = Array.from(document.querySelectorAll(".tab-button"));
+  tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
+  homeSubtabButtons = Array.from(document.querySelectorAll("[data-home-subtab]"));
+  homeSubtabPanels = Array.from(document.querySelectorAll("[data-home-subtab-panel]"));
+  homeSubtabButtons.forEach((button) => {
+    if (button.dataset.homeSubtabBound === "1") {
+      return;
+    }
+    button.dataset.homeSubtabBound = "1";
+    button.addEventListener("click", () => {
+      if (document.querySelector("#overviewTab") && !document.querySelector("#overviewTab").classList.contains("active")) {
+        setActiveTab("overviewTab");
+      }
+      setHomeSubtab(button.dataset.homeSubtab);
+    });
+  });
+}
+
+function setHomeSubtab(subtab = "overview") {
+  const nextSubtab = ["overview", "motivation", "personality", "progress"].includes(String(subtab || "").trim())
+    ? String(subtab || "").trim()
+    : "overview";
+  activeHomeSubtab = nextSubtab;
+  homeSubtabButtons.forEach((button) => {
+    const isActive = button.dataset.homeSubtab === activeHomeSubtab;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
+  });
+  homeSubtabPanels.forEach((panel) => {
+    const isActive = panel.dataset.homeSubtabPanel === activeHomeSubtab;
+    panel.classList.toggle("hidden", !isActive);
+    panel.classList.toggle("active", isActive);
+    panel.hidden = !isActive;
+    panel.setAttribute("aria-hidden", String(!isActive));
+  });
+  if (activeHomeSubtab === "personality") {
+    renderHomeTutorPersonalityGrid();
+  } else if (activeHomeSubtab === "motivation") {
+    renderDailyMotivation(activeProfile?.name || "");
+    if (!motivationStories.length) {
+      void fetchMotivationSection();
+    } else {
+      renderMotivationStory(activeMotivationStoryIndex);
+    }
+  } else if (activeHomeSubtab === "progress") {
+    updateOverviewSnapshotStripFromWeeklyPlan(null);
+  }
+}
+
+function setTutorMode(mode = "calm") {
+  const normalizedMode = ["calm", "motivating", "strict"].includes(String(mode).trim().toLowerCase())
+    ? String(mode).trim().toLowerCase()
+    : "calm";
+  activeTutorMode = normalizedMode;
+  localStorage.setItem("alt_tutor_mode", normalizedMode);
+  if (tutorModePill) {
+    tutorModePill.textContent = normalizedMode.charAt(0).toUpperCase() + normalizedMode.slice(1);
+  }
+  if (tutorModeBadge) {
+    tutorModeBadge.textContent = `${normalizedMode.charAt(0).toUpperCase() + normalizedMode.slice(1)} mode`;
+  }
+  tutorModeButtons.forEach((button) => {
+    const isActive = button.dataset.tutorMode === normalizedMode;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
+function isLeagueTabEnabled() {
+  return leagueTabVisible;
+}
+
+function getVisibleTabOrder() {
+  return currentTabOrder.filter((key) => key !== "league" || isLeagueTabEnabled());
+}
+
+function renderDailyMotivation(studentName = "") {
+  if (!dailyMotivationQuote) {
+    return;
+  }
+
+  const now = new Date();
+  const seed = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${String(studentName || "").toLowerCase()}`;
+  let hash = 0;
+  for (let index = 0; index < seed.length; index += 1) {
+    hash = (hash * 31 + seed.charCodeAt(index)) >>> 0;
+  }
+
+  dailyMotivationQuote.textContent = MOTIVATIONAL_QUOTES[hash % MOTIVATIONAL_QUOTES.length];
+}
+
+function _motivationDateIndex(length) {
+  if (!length) {
+    return 0;
+  }
+  const now = new Date();
+  const seed = now.toISOString().slice(0, 10).replace(/-/g, "");
+  let hash = 0;
+  for (let index = 0; index < seed.length; index += 1) {
+    hash = (hash * 31 + seed.charCodeAt(index)) >>> 0;
+  }
+  return hash % length;
+}
+
+function renderMotivationStory(index = activeMotivationStoryIndex) {
+  if (!motivationStoryTitle || !motivationStoryBody || !motivationStoryStatus) {
+    return;
+  }
+  if (!motivationStories.length) {
+    motivationStoryTitle.textContent = "No story loaded yet";
+    motivationStoryBody.innerHTML = "";
+    motivationStoryBody.hidden = true;
+    motivationStoryStatus.textContent = "0 of 0";
+    if (motivationReadStoryBtn) {
+      motivationReadStoryBtn.textContent = "Read a Story";
+      motivationReadStoryBtn.disabled = true;
+    }
+    if (motivationPrevStoryBtn) motivationPrevStoryBtn.disabled = true;
+    if (motivationNextStoryBtn) motivationNextStoryBtn.disabled = true;
+    return;
+  }
+
+  const safeIndex = ((index % motivationStories.length) + motivationStories.length) % motivationStories.length;
+  activeMotivationStoryIndex = safeIndex;
+  const story = motivationStories[safeIndex] || {};
+  motivationStoryTitle.textContent = story.title || `Story ${safeIndex + 1}`;
+  motivationStoryStatus.textContent = `Story ${safeIndex + 1} of ${motivationStories.length}`;
+  motivationStoryBody.innerHTML = story.story ? marked.parse(story.story) : "";
+  motivationStoryBody.hidden = !motivationStoryOpen;
+  if (motivationReadStoryBtn) {
+    motivationReadStoryBtn.textContent = motivationStoryOpen ? "Hide Story" : "Read a Story";
+    motivationReadStoryBtn.disabled = false;
+  }
+  if (motivationPrevStoryBtn) motivationPrevStoryBtn.disabled = motivationStories.length <= 1;
+  if (motivationNextStoryBtn) motivationNextStoryBtn.disabled = motivationStories.length <= 1;
+}
+
+function renderMotivationBoosts(boosts = []) {
+  if (!motivationBoostTokens) {
+    return;
+  }
+  motivationBoostTokens.innerHTML = "";
+  (boosts || []).slice(0, 3).forEach((token) => {
+    const pill = document.createElement("span");
+    pill.className = "motivation-token";
+    pill.textContent = token;
+    motivationBoostTokens.appendChild(pill);
+  });
+  if (!motivationBoostTokens.children.length) {
+    const fallback = document.createElement("span");
+    fallback.className = "motivation-token";
+    fallback.textContent = "One concept at a time.";
+    motivationBoostTokens.appendChild(fallback);
+  }
+}
+
+async function fetchMotivationSection() {
+  try {
+    const [dailyResponse, storiesResponse] = await Promise.all([
+      fetch("/api/motivation/daily"),
+      fetch("/api/motivation/stories"),
+    ]);
+    const dailyPayload = await dailyResponse.json().catch(() => ({}));
+    const storiesPayload = await storiesResponse.json().catch(() => ({}));
+    if (dailyMotivationQuote) {
+      dailyMotivationQuote.textContent = dailyPayload.quote || dailyMotivationQuote.textContent || "";
+    }
+    renderMotivationBoosts(dailyPayload.boost_tokens || []);
+    motivationStories = Array.isArray(storiesPayload.stories) ? storiesPayload.stories : [];
+    activeMotivationStoryIndex = motivationStories.length ? _motivationDateIndex(motivationStories.length) : 0;
+    motivationStoryOpen = false;
+    renderMotivationStory(activeMotivationStoryIndex);
+  } catch (error) {
+    console.warn("Could not load motivation section:", error);
+    renderMotivationBoosts([]);
+    motivationStories = [];
+    activeMotivationStoryIndex = 0;
+    motivationStoryOpen = false;
+    renderMotivationStory(0);
+  }
+}
+
+function applyLeagueVisibility() {
+  if (showLeagueToggle) {
+    showLeagueToggle.checked = leagueTabVisible;
+  }
+
+  const leagueButton = tabBar ? tabBar.querySelector('[data-tab-key="league"]') : null;
+  const leaguePanel = document.getElementById("leagueTab");
+  if (leagueButton) {
+    leagueButton.classList.toggle("hidden", !leagueTabVisible);
+    leagueButton.setAttribute("aria-hidden", leagueTabVisible ? "false" : "true");
+  }
+  if (leaguePanel) {
+    leaguePanel.classList.toggle("hidden", !leagueTabVisible);
+    leaguePanel.setAttribute("aria-hidden", leagueTabVisible ? "false" : "true");
+  }
+
+  if (!leagueTabVisible) {
+    const activePanel = document.querySelector(".tab-panel.active");
+    if (activePanel && activePanel.id === "leagueTab") {
+      setActiveTab("overviewTab");
+    }
+  }
+
+  localStorage.setItem("alt_show_league_tab", leagueTabVisible ? "1" : "0");
+  refreshTabCollections();
+  renderTabManager();
+}
+
+function setActiveStudioPane(paneId) {
+  activeStudioPane = paneId || "threeConceptPanel";
+  studioPaneButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.studioPane === activeStudioPane);
+    button.setAttribute("aria-selected", button.dataset.studioPane === activeStudioPane ? "true" : "false");
+  });
+  studioPanes.forEach((pane) => {
+    const isActive = pane.id === activeStudioPane;
+    pane.classList.toggle("active", isActive);
+    pane.hidden = !isActive;
+    pane.setAttribute("aria-hidden", isActive ? "false" : "true");
+  });
+  window.dispatchEvent(new CustomEvent("alt:studio-pane-changed", { detail: { paneId: activeStudioPane } }));
+  localStorage.setItem("alt_studio_pane", activeStudioPane);
+}
+
+function focusTutorRoomStage(reason = "") {
+  const videoTab = document.querySelector('.tab-button[data-tab="videoTutorTab"]');
+  if (!videoTab || !videoTab.classList.contains("active")) {
+    return;
+  }
+  if (activeStudioPane !== "threeTutorPanel") {
+    setActiveStudioPane("threeTutorPanel");
+  }
+  ensureTutorRoomPersona();
+
+  const panel = document.getElementById("threeTutorPanel");
+  if (!panel) {
+    return;
+  }
+
+  panel.classList.add("stage-focus-pulse");
+  panel.dataset.focusReason = reason || "tutor";
+  if (tutorStageFocusTimer) {
+    window.clearTimeout(tutorStageFocusTimer);
+  }
+  tutorStageFocusTimer = window.setTimeout(() => {
+    panel.classList.remove("stage-focus-pulse");
+    delete panel.dataset.focusReason;
+    tutorStageFocusTimer = null;
+  }, 1800);
+}
+
+async function toggleStudioFullscreen() {
+  const activePane = studioPanes.find((pane) => pane.id === activeStudioPane);
+  if (!activePane) {
+    return;
+  }
+
+  try {
+    if (document.fullscreenElement === activePane) {
+      await document.exitFullscreen();
+    } else {
+      await activePane.requestFullscreen();
+    }
+  } catch (error) {
+    // Ignore fullscreen failures quietly.
+  }
+}
+
+function _setTutorFullscreenButtonState(isFullscreen) {
+  if (!tutorFullscreenBtn) {
+    return;
+  }
+  tutorFullscreenBtn.textContent = isFullscreen ? "⤢" : "⛶";
+  tutorFullscreenBtn.title = isFullscreen ? "Exit fullscreen" : "Expand to fullscreen";
+  tutorFullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Expand to fullscreen");
+}
+
+function exitTutorFullscreen() {
+  if (!tutorChatPanel) {
+    return;
+  }
+  tutorChatPanel.classList.remove("fullscreen-mode");
+  _setTutorFullscreenButtonState(false);
+  document.body.classList.remove("tutor-chat-fullscreen-active");
+}
+
+function toggleTutorFullscreen() {
+  if (!tutorChatPanel) {
+    return;
+  }
+  const isFullscreen = tutorChatPanel.classList.toggle("fullscreen-mode");
+  document.body.classList.toggle("tutor-chat-fullscreen-active", isFullscreen);
+  _setTutorFullscreenButtonState(isFullscreen);
+}
+
+function _setTutorFullscreenButtonState(isFullscreen) {
+  if (!tutorFullscreenBtn) {
+    return;
+  }
+  tutorFullscreenBtn.textContent = isFullscreen ? "✕ Exit" : "⛶ Fullscreen";
+  tutorFullscreenBtn.title = isFullscreen ? "Exit fullscreen" : "Expand to fullscreen";
+  tutorFullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Expand to fullscreen");
+}
+
+function syncTutorFullscreenOverlay() {
+  if (!tutorFullscreenOverlay || !tutorFullscreenMessages) {
+    return;
+  }
+  if (chatFeed) {
+    tutorFullscreenMessages.innerHTML = "";
+    Array.from(chatFeed.children).forEach((node) => {
+      if (node.classList && node.classList.contains("message")) {
+        tutorFullscreenMessages.appendChild(node.cloneNode(true));
+      }
+    });
+    tutorFullscreenMessages.scrollTop = tutorFullscreenMessages.scrollHeight;
+  }
+  if (tutorFullscreenTextarea && messageInput) {
+    tutorFullscreenTextarea.value = messageInput.value || "";
+  }
+}
+
+function exitTutorFullscreen() {
+  if (!tutorFullscreenOverlay) {
+    return;
+  }
+  tutorFullscreenOverlay.remove();
+  tutorFullscreenOverlay = null;
+  tutorFullscreenMessages = null;
+  tutorFullscreenInputArea = null;
+  tutorFullscreenTextarea = null;
+  tutorFullscreenSendButton = null;
+  _setTutorFullscreenButtonState(false);
+}
+
+function toggleTutorFullscreen() {
+  if (tutorFullscreenOverlay) {
+    exitTutorFullscreen();
+    return;
+  }
+  if (!tutorChatPanel || !chatFeed || !messageInput) {
+    return;
+  }
+
+  const overlay = document.createElement("div");
+  overlay.className = "tutor-fullscreen-overlay";
+
+  const exitButton = document.createElement("button");
+  exitButton.type = "button";
+  exitButton.className = "tutor-fullscreen-exit-btn ghost-button";
+  exitButton.textContent = "✕ Exit";
+  exitButton.addEventListener("click", exitTutorFullscreen);
+
+  const messages = document.createElement("div");
+  messages.className = "fullscreen-chat-messages";
+
+  const inputArea = document.createElement("div");
+  inputArea.className = "fullscreen-input-area";
+
+  const fullscreenInput = messageInput.cloneNode(true);
+  fullscreenInput.removeAttribute("id");
+  fullscreenInput.classList.add("fullscreen-message-input");
+  fullscreenInput.value = messageInput.value || "";
+
+  const sendButtonSource = chatForm ? chatForm.querySelector('button[type="submit"]') : null;
+  const fullscreenSendButton = sendButtonSource ? sendButtonSource.cloneNode(true) : document.createElement("button");
+  fullscreenSendButton.type = "button";
+  fullscreenSendButton.textContent = "Send";
+
+  const sendFromOverlay = async () => {
+    const value = String(fullscreenInput.value || "").trim();
+    if (!value) {
+      return;
+    }
+    messageInput.value = value;
+    fullscreenInput.value = "";
+    await sendMessage(value);
+    syncTutorFullscreenOverlay();
+  };
+
+  fullscreenSendButton.addEventListener("click", sendFromOverlay);
+  fullscreenInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendFromOverlay();
+    }
+  });
+
+  inputArea.append(fullscreenInput, fullscreenSendButton);
+  overlay.append(exitButton, messages, inputArea);
+  document.body.appendChild(overlay);
+
+  tutorFullscreenOverlay = overlay;
+  tutorFullscreenMessages = messages;
+  tutorFullscreenInputArea = inputArea;
+  tutorFullscreenTextarea = fullscreenInput;
+  tutorFullscreenSendButton = fullscreenSendButton;
+  _setTutorFullscreenButtonState(true);
+  syncTutorFullscreenOverlay();
+  window.setTimeout(() => fullscreenInput.focus(), 0);
+}
+
+function setAuthMode(mode) {
+  const signinActive = mode === "signin";
+  signinPanel.classList.toggle("hidden", !signinActive);
+  signupPanel.classList.toggle("hidden", signinActive);
+  showSigninBtn.classList.toggle("active-switch", signinActive);
+  showSignupBtn.classList.toggle("active-switch", !signinActive);
+  updateExamBrandCopy(activeProfile, mode);
+  profileStatus.textContent = signinActive
+    ? "Your dashboard will open after the profile is loaded."
+    : "Create your profile and continue into the app.";
+}
+
+function buildAstraPixels() {
+  if (!astraPixels) {
+    return;
+  }
+
+  const letters = ["A", "S", "T", "R", "A"];
+  const letterWidth = 5;
+  const letterHeight = 7;
+  const gapWidth = 1;
+  const totalColumns = letters.length * letterWidth + (letters.length - 1) * gapWidth;
+  astraPixels.innerHTML = "";
+  astraPixels.style.gridTemplateColumns = `repeat(${totalColumns}, minmax(0, 1fr))`;
+
+  for (let row = 0; row < letterHeight; row += 1) {
+    for (let col = 0; col < totalColumns; col += 1) {
+      const pixel = document.createElement("span");
+      const letterIndex = Math.floor(col / (letterWidth + gapWidth));
+      const offsetWithinBlock = col % (letterWidth + gapWidth);
+      const letter = letters[letterIndex];
+      const isLetterCell = offsetWithinBlock < letterWidth;
+      const active = isLetterCell && ASTRA_PIXEL_PATTERNS[letter][row][offsetWithinBlock] === "1";
+      pixel.className = "astra-pixel is-dim";
+      const spread = Math.min(window.innerWidth || 1600, window.innerHeight || 900) * 0.18;
+      const scatterX = (Math.random() * 2 - 1) * Math.min(spread, 220);
+      const scatterY = (Math.random() * 2 - 1) * Math.min(spread, 220);
+      pixel.style.setProperty("--scatter-x", `${scatterX.toFixed(1)}px`);
+      pixel.style.setProperty("--scatter-y", `${scatterY.toFixed(1)}px`);
+      const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? 0
+        : (row * totalColumns + col) * 8;
+      pixel.style.setProperty("--delay", `${delay}ms`);
+      astraPixels.appendChild(pixel);
+      if (active) {
+        window.setTimeout(() => {
+          if (!pixel.isConnected) {
+            return;
+          }
+          pixel.classList.add("is-active");
+        }, delay);
+      }
+    }
+  }
+}
+
+function revealLoginFromSplash() {
+  if (!splashScreen || splashScreen.classList.contains("hidden") || splashDismissed) {
+    return;
+  }
+
+  splashDismissed = true;
+  splashScreen.classList.add("hidden");
+  loginScreen.classList.remove("hidden");
+  setAuthMode("signin");
+  window.requestAnimationFrame(() => {
+    if (signinEmailInput) {
+      signinEmailInput.focus();
+    }
+  });
+}
+
+function initializeAstraSplash() {
+  if (!splashScreen) {
+    return;
+  }
+
+  buildAstraPixels();
+  window.setTimeout(() => {
+    if (splashScreen && !splashScreen.classList.contains("hidden")) {
+      splashScreen.classList.add("splash-ready");
+    }
+  }, 340);
+  window.setTimeout(() => {
+    if (splashScreen && !splashScreen.classList.contains("hidden")) {
+      splashScreen.classList.add("splash-cta-ready");
+    }
+  }, 1120);
+}
+
+function normalizeTutorTrait(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function renderTutorTraitChips(selectedTraits = []) {
+  if (!tutorTraitChips) {
+    return;
+  }
+
+  const selected = new Set(selectedTraits.map(normalizeTutorTrait).filter(Boolean));
+  tutorTraitChips.innerHTML = "";
+
+  TUTOR_PERSONALITY_TRAITS.forEach((trait) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `soft-chip${selected.has(trait.key) ? " active" : ""}`;
+    button.textContent = trait.label;
+    button.dataset.traitKey = trait.key;
+    button.addEventListener("click", () => {
+      const next = new Set(selectedTutorTraits.map(normalizeTutorTrait).filter(Boolean));
+      if (next.has(trait.key)) {
+        next.delete(trait.key);
+      } else {
+        next.add(trait.key);
+      }
+      selectedTutorTraits = Array.from(next);
+      renderTutorTraitChips(selectedTutorTraits);
+      updateTutorSummary(activeProfile || {});
+    });
+    tutorTraitChips.appendChild(button);
+  });
+}
+
+function applyTutorPersonalityToForm(profile) {
+  if (!profile) {
+    selectedTutorTraits = [];
+    renderTutorTraitChips([]);
+    return;
+  }
+
+  if (tutorPersonaPresetSelect) {
+    tutorPersonaPresetSelect.value = profile.tutor_personality_preset || "balanced";
+  }
+  if (tutorStyleInput) {
+    tutorStyleInput.value = profile.tutor_personality_notes || profile.tutor_style || "";
+  }
+  selectedTutorTraits = Array.isArray(profile.tutor_personality_traits)
+    ? profile.tutor_personality_traits
+    : [];
+  renderTutorTraitChips(selectedTutorTraits);
+}
+
+function buildTutorStyleSummary() {
+  const preset = tutorPersonaPresetSelect ? tutorPersonaPresetSelect.value || "balanced" : "balanced";
+  const traits = selectedTutorTraits.length ? selectedTutorTraits.join(", ") : "none";
+  const notes = (tutorStyleInput && tutorStyleInput.value.trim()) || "";
+  const parts = [`preset: ${preset}`, `traits: ${traits}`];
+  if (notes) {
+    parts.push(`notes: ${notes}`);
+  }
+  return parts.join(" | ");
+}
+
+function updateTutorSummary(profile) {
+  const tutorName = (profile && profile.tutor_name) || "Astra";
+  const tutorStyle = (profile && profile.tutor_style) || "positive, encouraging, and easy to talk to";
+  const appearance = (profile && profile.appearance_description) || "friendly, fun, and human-like";
+  const preset = (profile && profile.tutor_personality_preset) || "balanced";
+  const traits = Array.isArray(profile && profile.tutor_personality_traits)
+    ? profile.tutor_personality_traits.join(", ")
+    : "";
+  const traitLine = traits ? ` Traits: ${traits}.` : "";
+  const examLabel = getActiveExamLabel(profile);
+  const examLine = examLabel && examLabel !== "your exam" ? ` Current focus: ${examLabel}.` : "";
+  const summary = `${tutorName} is set to ${preset} mode.${traitLine}${examLine} Notes: ${tutorStyle}. Looks ${appearance}.`;
+
+  if (tutorStudioSummary) {
+    tutorStudioSummary.textContent = summary;
+  }
+  if (sidebarTutorSummary) {
+    sidebarTutorSummary.textContent = summary;
+  }
+}
+
+function renderTutorBrain(brain) {
+  activeTutorBrain = brain || null;
+  updateTutorRoomLivePanel();
+}
+
+function updateTutorRoomLivePanel() {
+  if (!tutorRoomLivePill || !tutorRoomLiveSummary) {
+    return;
+  }
+
+  const voiceOn = !!(voiceChatMode && voiceChatMode.checked);
+  const speakOn = !!(autoSpeakReplies && autoSpeakReplies.checked);
+  const captionOn = !!(autoCaptionMode && autoCaptionMode.checked);
+  const readingOn = !!(readingComfortMode && readingComfortMode.checked);
+  const chunkedOn = !!(chunkedReplyMode && chunkedReplyMode.checked);
+  const pacingMode = (responsePacingSelect && responsePacingSelect.value) || "standard";
+  const tutorLevel = Number((tutorLevelSelect && tutorLevelSelect.value) || "3");
+  const narration = activeTutorNarration && activeTutorNarration.mode === "tutor" ? activeTutorNarration : null;
+  const checkpoint = tutorReplyCheckpoints.tutor;
+  const lastReply = (lastRepliesByMode.tutor || lastTutorReply || "").trim();
+  const liveState = narration
+    ? (narration.paused ? "Paused" : "Live")
+    : (lastReply ? "Ready" : "Ready");
+  const liveLine = narration
+    ? (narration.paused
+      ? "Astra is paused at a checkpoint. Press Resume or Esc to continue naturally."
+      : "Astra is speaking. Interrupt at any time and keep the checkpoint.")
+    : (lastReply
+      ? "Astra is ready for your next question. You can ask for a follow-up or a different explanation level."
+      : "Speak or type a doubt and Astra will answer here like a live teacher.");
+
+  tutorRoomLivePill.textContent = liveState;
+  const accessibilitySummary = readingOn
+    ? " Reading comfort and pacing controls are active."
+    : "";
+  tutorRoomLiveSummary.textContent = (voiceOn
+    ? "Voice mode is on, so Astra will answer in a more spoken, conversational style."
+    : "Text mode is on, so Astra will keep replies clear and easy to read.") + accessibilitySummary;
+
+  if (tutorRoomVoiceState) {
+    tutorRoomVoiceState.textContent = voiceOn ? "Voice on" : "Voice off";
+  }
+  if (tutorRoomSpeakState) {
+    tutorRoomSpeakState.textContent = speakOn ? "Auto-speak on" : "Auto-speak off";
+  }
+  if (tutorRoomCaptionState) {
+    tutorRoomCaptionState.textContent = captionOn ? "Captions on" : "Captions off";
+  }
+  if (tutorRoomReadState) {
+    tutorRoomReadState.textContent = readingOn ? "Reading comfort on" : "Reading comfort off";
+  }
+  if (tutorRoomPaceState) {
+    const paceLabel = pacingMode === "slow" ? "Pacing slow" : pacingMode === "gentle" ? "Pacing gentle" : "Pacing standard";
+    tutorRoomPaceState.textContent = chunkedOn ? `${paceLabel} • chunked` : paceLabel;
+  }
+  if (tutorRoomLevelState) {
+    tutorRoomLevelState.textContent = `Level ${tutorLevel}`;
+  }
+  if (generateVideoAnswerBtn) {
+    const hasQuestion = !!(lastTutorQuestion.trim() || lastTutorReply.trim());
+    generateVideoAnswerBtn.disabled = !hasQuestion;
+    generateVideoAnswerBtn.textContent = "Generate video answer";
+  }
+  if (tutorRoomLiveHint) {
+    tutorRoomLiveHint.textContent = liveLine;
+  }
+  if (tutorRoomPauseBtn) {
+    tutorRoomPauseBtn.disabled = !(narration && !narration.paused);
+  }
+  if (tutorRoomResumeBtn) {
+    tutorRoomResumeBtn.disabled = !(narration ? narration.paused : !!checkpoint);
+  }
+  if (tutorRoomStopBtn) {
+    tutorRoomStopBtn.disabled = !narration && !lastReply;
+  }
+  if (tutorRoomSpeakLastBtn) {
+    tutorRoomSpeakLastBtn.disabled = !lastReply;
+  }
+  if (tutorRoomMessageInput) {
+    tutorRoomMessageInput.placeholder = voiceOn
+      ? "Talk to Astra like a live tutor. You can interrupt, resume, or ask for a different explanation level..."
+      : "Type your doubt here. Astra will still answer in a direct tutor style...";
+  }
+}
+
+function renderVideoAnswerBrief(brief) {
+  lastVideoAnswerBrief = brief || null;
+  if (!videoAnswerBriefPanel) {
+    return;
+  }
+
+  videoAnswerBriefPanel.innerHTML = "";
+  if (!brief) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Ask a tutor question, then generate a video answer to prepare the speaking tutor video and its live status.";
+    videoAnswerBriefPanel.appendChild(empty);
+    if (videoRenderStatus) {
+      videoRenderStatus.textContent = "Generate a video answer to launch the full tutor video pipeline.";
+    }
+    if (videoStatusPanel) {
+      videoStatusPanel.textContent = "Astra is waiting for a video answer request.";
+    }
+    if (videoTranscriptPanel) {
+      videoTranscriptPanel.textContent = "";
+    }
+    return;
+  }
+
+  const header = document.createElement("div");
+  header.className = "video-answer-brief-header";
+
+  const titleBlock = document.createElement("div");
+  const title = document.createElement("p");
+  title.className = "card-title";
+  title.textContent = `${brief.tutor_face?.name || "Astra Tutor"} video answer`;
+  const meta = document.createElement("p");
+  meta.className = "muted";
+  meta.textContent = `${brief.subject || "JEE"} | ${brief.topic || "Concept"} | Level ${brief.tutor_level || 3} | ${brief.expected_duration_seconds || 0}s`;
+  titleBlock.appendChild(title);
+  titleBlock.appendChild(meta);
+
+  const status = document.createElement("span");
+  status.className = "pill";
+  status.textContent = brief.status || "brief_ready";
+  header.appendChild(titleBlock);
+  header.appendChild(status);
+  videoAnswerBriefPanel.appendChild(header);
+
+  const question = document.createElement("p");
+  question.className = "video-answer-brief-question";
+  question.textContent = brief.question ? `Question: ${brief.question}` : "Question not available.";
+  videoAnswerBriefPanel.appendChild(question);
+
+  const voice = document.createElement("p");
+  voice.className = "muted";
+  const voiceStyle = brief.voice_style || {};
+  voice.textContent = `Voice: ${voiceStyle.avatar_name || "Astra Tutor"} | ${voiceStyle.assistant_voice_family || "female"} | ${voiceStyle.speaking_style || "clear and warm"}`;
+  videoAnswerBriefPanel.appendChild(voice);
+
+  const scriptHeading = document.createElement("p");
+  scriptHeading.className = "memory-heading";
+  scriptHeading.textContent = "Script blocks";
+  videoAnswerBriefPanel.appendChild(scriptHeading);
+
+  const scriptList = document.createElement("div");
+  scriptList.className = "video-answer-brief-list";
+  (brief.script_blocks || []).forEach((block) => {
+    const item = document.createElement("div");
+    item.className = "video-answer-brief-item";
+    const itemTitle = document.createElement("p");
+    itemTitle.className = "memory-heading";
+    itemTitle.textContent = block.label || "Scene";
+    const itemText = document.createElement("p");
+    itemText.className = "muted";
+    itemText.textContent = block.text || "";
+    item.appendChild(itemTitle);
+    item.appendChild(itemText);
+    scriptList.appendChild(item);
+  });
+  videoAnswerBriefPanel.appendChild(scriptList);
+
+  const sceneHeading = document.createElement("p");
+  sceneHeading.className = "memory-heading";
+  sceneHeading.textContent = "Scene and gesture plan";
+  videoAnswerBriefPanel.appendChild(sceneHeading);
+
+  (brief.scene_blocks || []).forEach((scene) => {
+    const sceneItem = document.createElement("p");
+    sceneItem.className = "muted";
+    sceneItem.textContent = `${scene.label || "Scene"}: ${scene.narration || ""}${scene.gesture ? ` | Gesture: ${scene.gesture}` : ""}`;
+    videoAnswerBriefPanel.appendChild(sceneItem);
+  });
+
+  const note = document.createElement("p");
+  note.className = "muted";
+  note.textContent = Array.isArray(brief.gesture_notes) && brief.gesture_notes.length
+    ? `Gesture notes: ${brief.gesture_notes.join(" ")}`
+    : "Gesture notes will appear here.";
+  videoAnswerBriefPanel.appendChild(note);
+  if (videoTranscriptPanel) {
+    videoTranscriptPanel.textContent = brief.recap || brief.caption_text || "The recap will appear here when Astra renders the answer.";
+  }
+  if (videoRenderStatus) {
+    videoRenderStatus.textContent = "The tutor video brief is ready. Astra can now launch the live render pipeline.";
+  }
+  if (videoStatusPanel) {
+    videoStatusPanel.textContent = "Tutor video brief ready. Generate the live video next.";
+  }
+}
+
+function _videoTopicKey(topic, subject = "") {
+  return `${String(topic || "").trim().toLowerCase()}::${String(subject || "").trim().toLowerCase()}`;
+}
+
+function _videoTopicSlug(topic) {
+  return String(topic || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "") || "topic";
+}
+
+function _inferVideoSubjectFromText(text) {
+  const lower = String(text || "").toLowerCase();
+  if (lower.includes("chem") || lower.includes("mole") || lower.includes("reaction") || lower.includes("bond") || lower.includes("equilibrium")) {
+    return "Chemistry";
+  }
+  if (lower.includes("math") || lower.includes("integral") || lower.includes("derivative") || lower.includes("probability") || lower.includes("matrix") || lower.includes("geometry")) {
+    return "Mathematics";
+  }
+  return "Physics";
+}
+
+function _inferVideoTopicFromText(text) {
+  const lower = String(text || "").toLowerCase();
+  const hints = [
+    ["Projectile Motion", ["projectile", "trajectory", "parabola"]],
+    ["Kinematics", ["kinematics", "motion in a straight line", "relative motion", "circular motion"]],
+    ["Electrostatics", ["electrostatics", "electric field", "charge", "field lines"]],
+    ["Current Electricity", ["current electricity", "ohm", "kirchhoff", "resistance"]],
+    ["Chemical Equilibrium", ["equilibrium", "le chatelier", "kc", "kp"]],
+    ["Mole Concept", ["mole", "stoichiometry", "limiting reagent"]],
+    ["Differentiation", ["derivative", "differentiation", "tangent", "slope"]],
+    ["Integration", ["integral", "integration", "area under curve"]],
+    ["Probability", ["probability", "sample space", "event", "bayes"]],
+    ["Matrices and Determinants", ["matrix", "determinant"]],
+  ];
+  for (const [topic, words] of hints) {
+    if (words.some((word) => lower.includes(word))) {
+      return topic;
+    }
+  }
+  return String(text || "").trim().split(/\s+/).slice(0, 4).join(" ") || "the topic";
+}
+
+function updateAstraCurrentTopic(topic, subject, source) {
+  window.astraCurrentTopic = {
+    topic: topic ? String(topic).trim() : null,
+    subject: subject ? String(subject).trim() : null,
+    source: source ? String(source).trim() : null,
+  };
+}
+
+function _topicSubjectColor(subject) {
+  const value = String(subject || "").toLowerCase();
+  if (value.includes("chem")) {
+    return "green";
+  }
+  if (value.includes("math")) {
+    return "orange";
+  }
+  return "blue";
+}
+
+function _findBriefSection(brief, label) {
+  if (!brief || !Array.isArray(brief.script_blocks)) {
+    return "";
+  }
+  const found = brief.script_blocks.find((block) => String(block.label || "").toLowerCase() === String(label || "").toLowerCase());
+  return (found && found.text) || "";
+}
+
+function renderSimpleVideoBrief(panel, brief) {
+  if (!panel) {
+    return;
+  }
+  panel.innerHTML = "";
+  if (!brief) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "The brief preview will appear here after you request a topic.";
+    panel.appendChild(empty);
+    return;
+  }
+
+  const header = document.createElement("div");
+  header.className = "video-answer-brief-header";
+  const titleBlock = document.createElement("div");
+  const title = document.createElement("p");
+  title.className = "card-title";
+  title.textContent = `${brief.topic || "Video topic"} brief`;
+  const meta = document.createElement("p");
+  meta.className = "muted";
+  meta.textContent = `${brief.subject || "JEE"} | ${brief.status || "brief_ready"} | ${brief.topic_slug || _videoTopicSlug(brief.topic || "")}`;
+  titleBlock.appendChild(title);
+  titleBlock.appendChild(meta);
+  const status = document.createElement("span");
+  status.className = "pill";
+  status.textContent = brief.status || "brief_ready";
+  header.appendChild(titleBlock);
+  header.appendChild(status);
+  panel.appendChild(header);
+
+  const opening = document.createElement("p");
+  opening.className = "muted";
+  opening.textContent = _findBriefSection(brief, "Opening") || brief.question || "Opening will appear here.";
+  panel.appendChild(opening);
+
+  const concept = document.createElement("p");
+  concept.className = "muted";
+  concept.textContent = _findBriefSection(brief, "Concept") || brief.caption_text || "Explanation will appear here.";
+  panel.appendChild(concept);
+
+  const workedExample = document.createElement("p");
+  workedExample.className = "muted";
+  workedExample.textContent = _findBriefSection(brief, "Worked Example") || "Worked example will appear here.";
+  panel.appendChild(workedExample);
+
+  const recap = document.createElement("p");
+  recap.className = "muted";
+  recap.textContent = _findBriefSection(brief, "Recap") || brief.recap || "Recap will appear here.";
+  panel.appendChild(recap);
+}
+
+function renderVideoTutorRequestedList(items) {
+  if (!videoTutorRequestedList) {
+    return;
+  }
+  videoTutorRequestedList.innerHTML = "";
+  if (!Array.isArray(items) || !items.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Requested videos will appear here after you ask for a topic.";
+    videoTutorRequestedList.appendChild(empty);
+    return;
+  }
+
+  items.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "video-request-item";
+    const head = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = item.topic || "Requested topic";
+    const meta = document.createElement("p");
+    meta.className = "muted";
+    meta.textContent = `${item.subject || "JEE"} | ${item.status || "requested"}`;
+    head.appendChild(title);
+    head.appendChild(meta);
+
+    const buttons = document.createElement("div");
+    buttons.className = "mini-action-row";
+    const watchBtn = document.createElement("button");
+    watchBtn.type = "button";
+    watchBtn.className = "ghost-button";
+    watchBtn.textContent = "Watch";
+    watchBtn.disabled = !item.video_url;
+    watchBtn.addEventListener("click", () => {
+      openGeneratedVideoForTopic(item.topic, item.subject, item.video_url || "");
+    });
+    buttons.appendChild(watchBtn);
+    card.append(head, buttons);
+    videoTutorRequestedList.appendChild(card);
+  });
+}
+
+function renderVideoTutorWeeklyCards(items) {
+  currentVideoTutorWeek = Array.isArray(items) ? items : [];
+  if (!videoTutorWeeklyVideos) {
+    return;
+  }
+  videoTutorWeeklyVideos.innerHTML = "";
+  if (!currentVideoTutorWeek.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Your weekly videos will appear here after the journey is ready.";
+    videoTutorWeeklyVideos.appendChild(empty);
+    if (videoTutorWeeklyStatus) {
+      videoTutorWeeklyStatus.textContent = "No weekly plan video items yet.";
+    }
+    return;
+  }
+
+  if (videoTutorWeeklyStatus) {
+    const readyCount = currentVideoTutorWeek.filter((item) => item.video_ready).length;
+    const scriptCount = currentVideoTutorWeek.filter((item) => item.script_ready && !item.video_ready).length;
+    videoTutorWeeklyStatus.textContent = `${readyCount} video ready | ${scriptCount} script ready | ${currentVideoTutorWeek.length} planned items`;
+  }
+
+  currentVideoTutorWeek.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "video-week-card";
+    const icon = document.createElement("div");
+    icon.className = `video-week-icon subject-${_topicSubjectColor(item.subject)}`;
+    icon.textContent = (item.subject || "V").slice(0, 1);
+
+    const body = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = item.topic || "Weekly topic";
+    const meta = document.createElement("p");
+    meta.className = "muted";
+    meta.textContent = `${item.day_label || "This week"} | ${item.subject || "JEE"}`;
+    const status = document.createElement("span");
+    status.className = `pill video-week-status ${item.video_ready ? "ready" : item.script_ready ? "script" : "pending"}`;
+    status.textContent = item.status || "Not prepared yet";
+    body.appendChild(title);
+    body.appendChild(meta);
+    body.appendChild(status);
+
+    const actions = document.createElement("div");
+    actions.className = "mini-action-row";
+    const generateBtn = document.createElement("button");
+    generateBtn.type = "button";
+    generateBtn.textContent = "Generate Video";
+    generateBtn.addEventListener("click", () => {
+      openVideoTutorTopic(item.topic, item.subject, "weekly_plan");
+    });
+    actions.appendChild(generateBtn);
+    if (item.video_ready && item.video_url) {
+      const watchBtn = document.createElement("button");
+      watchBtn.type = "button";
+      watchBtn.className = "ghost-button";
+      watchBtn.textContent = "Watch";
+      watchBtn.addEventListener("click", () => {
+        openGeneratedVideoForTopic(item.topic, item.subject, item.video_url);
+      });
+      actions.appendChild(watchBtn);
+    }
+
+    card.appendChild(icon);
+    card.appendChild(body);
+    card.appendChild(actions);
+    videoTutorWeeklyVideos.appendChild(card);
+  });
+}
+
+function buildVideoTutorWeekFromWeeklyPlan(weeklyPayload = {}, statusItems = []) {
+  if (Array.isArray(statusItems) && statusItems.length) {
+    return statusItems;
+  }
+  const built = [];
+  (weeklyPayload.days || []).forEach((day) => {
+    ["morning", "evening"].forEach((slot) => {
+      const session = day && day[slot] ? day[slot] : null;
+      if (!session || !session.topic) {
+        return;
+      }
+      built.push({
+        date: day.date || "",
+        day_label: day.label || day.date || "",
+        slot,
+        subject: session.subject || "",
+        topic: session.topic || "",
+        topic_slug: _videoTopicSlug(session.topic),
+        script_ready: false,
+        video_ready: false,
+        status: "Not prepared yet",
+        brief: {},
+        video_url: "",
+        job_id: "",
+      });
+    });
+  });
+  return built;
+}
+
+async function loadVideoTutorWorkspace() {
+  if (!activeProfile) {
+    return;
+  }
+  if (videoTutorWeeklyStatus) {
+    videoTutorWeeklyStatus.textContent = "Loading this week's video plan...";
+  }
+  try {
+    const [weeklyResponse, statusResponse, requestedResponse] = await Promise.all([
+      fetch(`/api/planner/weekly/${encodeURIComponent(activeProfile.name)}`),
+      fetch(`/api/video/pre-plan/status/${encodeURIComponent(activeProfile.name)}`),
+      fetch(`/api/video/requests/${encodeURIComponent(activeProfile.name)}`),
+    ]);
+    const weeklyPayload = await weeklyResponse.json();
+    const statusPayload = await statusResponse.json();
+    const requestedPayload = await requestedResponse.json();
+    currentVideoTutorPlanStatus = Array.isArray(statusPayload.items) ? statusPayload.items : [];
+    currentRequestedVideos = Array.isArray(requestedPayload.requests) ? requestedPayload.requests : [];
+    renderVideoTutorWeeklyCards(buildVideoTutorWeekFromWeeklyPlan(weeklyPayload || {}, currentVideoTutorPlanStatus));
+    renderVideoTutorRequestedList(currentRequestedVideos);
+    if (videoTutorRequestTopicInput && window.astraCurrentTopic && window.astraCurrentTopic.topic) {
+      videoTutorRequestTopicInput.value = window.astraCurrentTopic.topic;
+    }
+    if (videoTutorRequestSubjectSelect && window.astraCurrentTopic && window.astraCurrentTopic.subject) {
+      const wanted = String(window.astraCurrentTopic.subject).toLowerCase();
+      const option = Array.from(videoTutorRequestSubjectSelect.options).find((item) => String(item.value).toLowerCase() === wanted);
+      if (option) {
+        videoTutorRequestSubjectSelect.value = option.value;
+      }
+    }
+  } catch (error) {
+    if (videoTutorWeeklyStatus) {
+      videoTutorWeeklyStatus.textContent = error.message || "Could not load the weekly video plan right now.";
+    }
+  }
+}
+
+async function saveRequestedVideo(topic, subject, source = "request", status = "requested", jobId = "", videoUrl = "") {
+  if (!activeProfile || !topic) {
+    return null;
+  }
+  try {
+    const response = await fetch("/api/video/request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: activeProfile.name,
+        topic,
+        subject,
+        source,
+        status,
+        job_id: jobId,
+        video_url: videoUrl,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not save that video request.");
+    }
+    currentRequestedVideos = Array.isArray(payload.requests) ? payload.requests : currentRequestedVideos;
+    renderVideoTutorRequestedList(currentRequestedVideos);
+    return payload.request || null;
+  } catch (error) {
+    console.warn("Could not save requested video:", error);
+    return null;
+  }
+}
+
+async function updateRequestedVideoStatus(topicSlug, status, jobId = "", videoUrl = "") {
+  if (!activeProfile || !topicSlug) {
+    return null;
+  }
+  try {
+    const response = await fetch("/api/video/request/status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: activeProfile.name,
+        topic: topicSlug,
+        status,
+        job_id: jobId,
+        video_url: videoUrl,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not update the requested video status.");
+    }
+    currentRequestedVideos = Array.isArray(payload.requests) ? payload.requests : currentRequestedVideos;
+    renderVideoTutorRequestedList(currentRequestedVideos);
+    return payload.request || null;
+  } catch (error) {
+    console.warn("Could not update requested video status:", error);
+    return null;
+  }
+}
+
+async function loadRequestedVideoBrief(topic, subject, source = "request") {
+  if (!activeProfile || !topic) {
+    return null;
+  }
+  const topicSlug = _videoTopicSlug(topic);
+  activeVideoTutorRequest = { topic, subject, source, topic_slug: topicSlug };
+  updateAstraCurrentTopic(topic, subject, source);
+  if (videoTutorRequestStatus) {
+    videoTutorRequestStatus.textContent = "Preparing the script preview...";
+  }
+  await saveRequestedVideo(topic, subject, source, "requested");
+  try {
+    const response = await fetch(`/api/video/brief/${encodeURIComponent(activeProfile.name)}/${encodeURIComponent(topicSlug)}?subject=${encodeURIComponent(subject || "")}`);
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load the requested video brief.");
+    }
+    activeVideoTutorBrief = payload.brief || null;
+    renderSimpleVideoBrief(videoTutorRequestBriefPanel, activeVideoTutorBrief);
+    if (generateRequestedFullVideoBtn) {
+      generateRequestedFullVideoBtn.disabled = false;
+    }
+    if (videoTutorRequestStatus) {
+      videoTutorRequestStatus.textContent = `Brief ready for ${topic}.`;
+    }
+    return activeVideoTutorBrief;
+  } catch (error) {
+    if (videoTutorRequestBriefPanel) {
+      videoTutorRequestBriefPanel.innerHTML = "";
+      const note = document.createElement("p");
+      note.className = "muted";
+      note.textContent = error.message || "Could not load the requested brief right now.";
+      videoTutorRequestBriefPanel.appendChild(note);
+    }
+    if (videoTutorRequestStatus) {
+      videoTutorRequestStatus.textContent = error.message || "Could not load the requested brief right now.";
+    }
+    if (generateRequestedFullVideoBtn) {
+      generateRequestedFullVideoBtn.disabled = true;
+    }
+    return null;
+  }
+}
+
+function openVideoTutorTopic(topic, subject, source = "weekly_plan") {
+  const cleanTopic = String(topic || "").trim();
+  if (!cleanTopic) {
+    return;
+  }
+  updateAstraCurrentTopic(cleanTopic, subject || _inferVideoSubjectFromText(cleanTopic), source);
+  if (videoTutorRequestTopicInput) {
+    videoTutorRequestTopicInput.value = cleanTopic;
+  }
+  if (videoTutorRequestSubjectSelect) {
+    const desired = String(subject || _inferVideoSubjectFromText(cleanTopic)).toLowerCase();
+    const option = Array.from(videoTutorRequestSubjectSelect.options).find((item) => String(item.value).toLowerCase() === desired);
+    if (option) {
+      videoTutorRequestSubjectSelect.value = option.value;
+    }
+  }
+  dismissedVideoSuggestionTopics.add(_videoTopicKey(cleanTopic, subject || ""));
+  setActiveTab("videoTutorTab");
+  void loadRequestedVideoBrief(cleanTopic, subject || _inferVideoSubjectFromText(cleanTopic), source);
+}
+
+function openGeneratedVideoForTopic(topic, subject, videoUrl = "") {
+  const cleanTopic = String(topic || "").trim();
+  if (cleanTopic) {
+    updateAstraCurrentTopic(cleanTopic, subject || _inferVideoSubjectFromText(cleanTopic), "request");
+    if (videoTutorRequestTopicInput) {
+      videoTutorRequestTopicInput.value = cleanTopic;
+    }
+    if (videoTutorRequestSubjectSelect) {
+      const desired = String(subject || _inferVideoSubjectFromText(cleanTopic)).toLowerCase();
+      const option = Array.from(videoTutorRequestSubjectSelect.options).find((item) => String(item.value).toLowerCase() === desired);
+      if (option) {
+        videoTutorRequestSubjectSelect.value = option.value;
+      }
+    }
+  }
+  setActiveTab("videoTutorTab");
+  if (videoUrl) {
+    if (tutorVideoPlayer) {
+      tutorVideoPlayer.src = videoUrl;
+      tutorVideoPlayer.classList.remove("hidden");
+      tutorVideoPlayer.load();
+      const playResult = tutorVideoPlayer.play();
+      if (playResult && typeof playResult.catch === "function") {
+        playResult.catch(() => {});
+      }
+    }
+    if (videoTutorRequestStatus) {
+      videoTutorRequestStatus.textContent = "Playing the generated video.";
+    }
+  }
+}
+
+function renderVideoSuggestionCard(topic, subject) {
+  if (!chatFeed || !topic) {
+    return;
+  }
+  const topicKey = _videoTopicKey(topic, subject);
+  if (dismissedVideoSuggestionTopics.has(topicKey)) {
+    return;
+  }
+  dismissedVideoSuggestionTopics.add(topicKey);
+  const existing = chatFeed.querySelector(`.video-suggestion-card[data-topic-key="${CSS.escape(topicKey)}"]`);
+  if (existing) {
+    return;
+  }
+  const card = document.createElement("div");
+  card.className = "video-suggestion-card";
+  card.dataset.topicKey = topicKey;
+
+  const text = document.createElement("p");
+  text.className = "muted";
+  text.textContent = `Want to watch a video explanation of ${topic}?`;
+
+  const actions = document.createElement("div");
+  actions.className = "mini-action-row";
+  const watchBtn = document.createElement("button");
+  watchBtn.type = "button";
+  watchBtn.textContent = "Watch Video";
+  watchBtn.addEventListener("click", () => {
+    dismissedVideoSuggestionTopics.add(topicKey);
+    openVideoTutorTopic(topic, subject || _inferVideoSubjectFromText(topic), "tutor");
+    card.remove();
+  });
+  const dismissBtn = document.createElement("button");
+  dismissBtn.type = "button";
+  dismissBtn.className = "ghost-button";
+  dismissBtn.textContent = "No thanks";
+  dismissBtn.addEventListener("click", () => {
+    dismissedVideoSuggestionTopics.add(topicKey);
+    card.remove();
+  });
+  actions.appendChild(watchBtn);
+  actions.appendChild(dismissBtn);
+  card.appendChild(text);
+  card.appendChild(actions);
+  chatFeed.appendChild(card);
+  syncTutorFullscreenOverlay();
+}
+
+async function generateVideoAnswerBrief() {
+  if (!activeProfile) {
+    return;
+  }
+  const question = (videoTutorQuestionInput && videoTutorQuestionInput.value.trim())
+    || (lastTutorQuestion || (tutorRoomMessageInput && tutorRoomMessageInput.value) || lastTutorReply || "").trim();
+  if (!question) {
+    if (videoRenderStatus) {
+      videoRenderStatus.textContent = "Ask Astra a question first, then generate the tutor video.";
+      videoRenderStatus.style.display = "block";
+    }
+    if (videoStatusPanel) {
+      videoStatusPanel.textContent = "Ask Astra a question first, then generate the tutor video.";
+      videoStatusPanel.style.display = "block";
+    }
+    return;
+  }
+
+  if (generateVideoAnswerBtn) {
+    generateVideoAnswerBtn.disabled = true;
+    generateVideoAnswerBtn.textContent = "Generating video...";
+  }
+
+  try {
+    const topic = (lastVideoAnswerBrief && lastVideoAnswerBrief.topic) || question;
+    const subject = (lastVideoAnswerBrief && lastVideoAnswerBrief.subject) || activeProfile.exam || "";
+    const briefResponse = await fetch("/api/video-answer/brief", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name: activeProfile.name,
+        question,
+        answer_text: lastTutorReply || "",
+        conversation_mode: "tutor",
+        tutor_level: Number(tutorLevelSelect && tutorLevelSelect.value) || 3,
+      }),
+    });
+    const briefPayload = await briefResponse.json();
+    if (!briefResponse.ok) {
+      throw new Error(briefPayload.detail || "The video answer blueprint could not be created right now.");
+    }
+    if (briefPayload && briefPayload.video_answer_brief) {
+      activeVideoTutorBrief = briefPayload.video_answer_brief;
+      updateAstraCurrentTopic(
+        briefPayload.video_answer_brief.topic || question,
+        briefPayload.video_answer_brief.subject || _inferVideoSubjectFromText(question),
+        "tutor"
+      );
+      renderVideoAnswerBrief(briefPayload.video_answer_brief);
+      if (videoTutorQuestionInput) {
+        videoTutorQuestionInput.value = question;
+      }
+    }
+  } catch (error) {
+    if (videoAnswerBriefPanel) {
+      videoAnswerBriefPanel.innerHTML = "";
+      const errorText = document.createElement("p");
+      errorText.className = "muted";
+      errorText.textContent = error.message || "The video answer could not be created right now.";
+      videoAnswerBriefPanel.appendChild(errorText);
+    }
+  } finally {
+    if (generateVideoAnswerBtn) {
+      generateVideoAnswerBtn.disabled = false;
+      generateVideoAnswerBtn.textContent = "Generate video answer";
+    }
+    updateTutorRoomLivePanel();
+  }
+}
+
+function normalizeVideoSubject(subject) {
+  const value = String(subject || "").toLowerCase();
+  if (value.includes("chem")) {
+    return "chemistry";
+  }
+  if (value.includes("math")) {
+    return "maths";
+  }
+  return "physics";
+}
+
+function inferVideoSubjectFromQuestion(question) {
+  const text = String(question || "").toLowerCase();
+  if (text.includes("chem") || text.includes("mole") || text.includes("reaction") || text.includes("bond")) {
+    return "chemistry";
+  }
+  if (text.includes("math") || text.includes("integral") || text.includes("derivative") || text.includes("probability") || text.includes("calculus")) {
+    return "maths";
+  }
+  return "physics";
+}
+
+function clearTutorVideoPolling() {
+  if (activeTutorVideoPollInterval) {
+    window.clearInterval(activeTutorVideoPollInterval);
+    activeTutorVideoPollInterval = null;
+  }
+}
+
+async function requestTutorVideo(question, topic, subject) {
+  console.log("VIDEO ANSWER CLICKED - calling /api/video/generate");
+  if (!activeProfile) {
+    console.log("Video Answer aborted: no active profile.");
+    return null;
+  }
+
+  const questionText = String(
+    question
+    || (videoTutorQuestionInput && videoTutorQuestionInput.value)
+    || lastTutorQuestion
+    || (tutorRoomMessageInput && tutorRoomMessageInput.value)
+    || lastTutorReply
+    || ""
+  ).trim();
+  if (!questionText) {
+    console.log("Video Answer aborted: no question text.");
+    if (videoStatusPanel) {
+      videoStatusPanel.textContent = "Ask Astra a tutor question first, then request the video answer.";
+      videoStatusPanel.style.display = "block";
+    }
+    return;
+  }
+
+  const activeTutorFace = activeAvatar || avatarPresets.find((avatar) => avatar.id === activeProfile.selected_avatar) || avatarPresets[0] || null;
+  const tutorFaceUrl = (activeTutorFace && activeTutorFace.portrait_url) || (activeProfile && activeProfile.avatar_visuals && activeProfile.avatar_visuals.portrait_url) || "";
+  const tutorPersonality = (activeProfile.tutor_style || activeProfile.tutor_personality_notes || activeTutorFace?.tagline || activeTutorFace?.name || "Warm, clear tutor").trim();
+  const inferredTopic = String(topic || (lastVideoAnswerBrief && lastVideoAnswerBrief.topic) || questionText).trim();
+  const inferredSubject = normalizeVideoSubject(subject || (lastVideoAnswerBrief && lastVideoAnswerBrief.subject) || inferVideoSubjectFromQuestion(questionText) || activeProfile.exam || "");
+
+  clearTutorVideoPolling();
+  activeTutorVideoJobId = "";
+  if (videoStatusPanel) {
+    videoStatusPanel.classList.remove("hidden");
+    videoStatusPanel.textContent = "Astra is preparing your explanation...";
+    videoStatusPanel.style.display = "block";
+  }
+  if (videoRenderStatus) {
+    videoRenderStatus.textContent = "Astra is preparing your explanation...";
+  }
+  if (tutorVideoAnswerPlayer) {
+    tutorVideoAnswerPlayer.classList.add("hidden");
+    tutorVideoAnswerPlayer.removeAttribute("src");
+    tutorVideoAnswerPlayer.load();
+  }
+  try {
+    console.log("Video Answer request payload:", {
+      student_id: activeProfile.name,
+      question: questionText,
+      topic: inferredTopic,
+      subject: inferredSubject,
+      tutor_face_url: tutorFaceUrl,
+      tutor_personality: tutorPersonality,
+    });
+    const response = await fetch(`${videoApiBaseUrl}/api/video/generate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: activeProfile.name,
+        question: questionText,
+        topic: inferredTopic,
+        subject: inferredSubject,
+        tutor_face_url: tutorFaceUrl,
+        tutor_personality: tutorPersonality,
+      }),
+    });
+    const payload = await response.json();
+    console.log("Video Answer generate response:", payload);
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not queue the tutor video request.");
+    }
+    activeTutorVideoJobId = payload.job_id || "";
+    if (activeTutorVideoJobId) {
+      startVideoPolling(activeTutorVideoJobId);
+      if (topic) {
+        void updateRequestedVideoStatus(_videoTopicSlug(topic), "generating", activeTutorVideoJobId, "");
+      }
+    } else if (videoStatusPanel) {
+      videoStatusPanel.textContent = "The video job was queued, but no job id was returned.";
+    }
+    return activeTutorVideoJobId || null;
+  } catch (error) {
+    if (videoStatusPanel) {
+      videoStatusPanel.textContent = error.message || "The video request could not be created right now.";
+      videoStatusPanel.style.display = "block";
+    }
+    if (videoRenderStatus) {
+      videoRenderStatus.textContent = error.message || "The video request could not be created right now.";
+    }
+    updateTutorRoomLivePanel();
+    return null;
+  }
+}
+
+function onVideoReady(videoUrl, recapText = "") {
+  clearTutorVideoPolling();
+  activeTutorVideoJobId = "";
+  if (tutorVideoAnswerPlayer) {
+    tutorVideoAnswerPlayer.src = videoUrl;
+    tutorVideoAnswerPlayer.classList.remove("hidden");
+    tutorVideoAnswerPlayer.load();
+    tutorVideoAnswerPlayer.onpause = () => {
+      pauseTutorNarration();
+      updateTutorRoomLivePanel();
+    };
+    tutorVideoAnswerPlayer.onplay = () => {
+      resumeTutorNarration();
+      updateTutorRoomLivePanel();
+    };
+    tutorVideoAnswerPlayer.onended = () => {
+      updateTutorRoomLivePanel();
+    };
+    try {
+      const playResult = tutorVideoAnswerPlayer.play();
+      if (playResult && typeof playResult.catch === "function") {
+        playResult.catch(() => {});
+      }
+    } catch (error) {
+      // Ignore autoplay failures; controls remain available.
+    }
+  }
+  if (videoStatusPanel) {
+    videoStatusPanel.classList.add("hidden");
+  }
+  if (videoTranscriptPanel) {
+    videoTranscriptPanel.textContent = recapText || (lastVideoAnswerBrief && (lastVideoAnswerBrief.recap || lastVideoAnswerBrief.caption_text)) || "The tutor recap will appear here.";
+  }
+  if (videoRenderStatus) {
+    videoRenderStatus.textContent = "Your tutor video is ready.";
+  }
+  if (activeVideoTutorRequest && activeVideoTutorRequest.topic) {
+    void updateRequestedVideoStatus(
+      activeVideoTutorRequest.topic_slug || _videoTopicSlug(activeVideoTutorRequest.topic),
+      "ready",
+      "",
+      videoUrl || ""
+    );
+  }
+  updateTutorRoomLivePanel();
+}
+
+function startVideoPolling(jobId) {
+  if (!jobId) {
+    return;
+  }
+
+  clearTutorVideoPolling();
+  const statusMessages = {
+    queued: "Astra is preparing your explanation...",
+    generating_script: "Writing the teaching script...",
+    generating_voice: "Recording the tutor voice...",
+    rendering_video: "Generating your tutor video...",
+    processing: "Generating your tutor video...",
+    pending: "Generating your tutor video...",
+  };
+
+  const pollOnce = async () => {
+    try {
+      const response = await fetch(`${videoApiBaseUrl}/api/video/status/${encodeURIComponent(jobId)}`);
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.detail || "Could not read the tutor video status.");
+      }
+      const status = String(payload.status || "pending").toLowerCase();
+      if (status === "ready" && payload.video_url) {
+        onVideoReady(payload.video_url, payload.script?.recap || payload.script?.caption_text || "");
+        return;
+      }
+      if (status === "failed") {
+        clearTutorVideoPolling();
+        if (videoStatusPanel) {
+          videoStatusPanel.classList.remove("hidden");
+          videoStatusPanel.textContent = "Something went wrong. Showing text answer instead.";
+        }
+        if (videoRenderStatus) {
+          videoRenderStatus.textContent = "Something went wrong. Showing text answer instead.";
+        }
+        if (tutorVideoAnswerPlayer) {
+          tutorVideoAnswerPlayer.classList.add("hidden");
+        }
+        updateTutorRoomLivePanel();
+        return;
+      }
+      if (videoStatusPanel) {
+        videoStatusPanel.textContent = statusMessages[status] || "Astra is preparing your explanation...";
+      }
+      if (videoRenderStatus) {
+        videoRenderStatus.textContent = statusMessages[status] || "Astra is preparing your explanation...";
+      }
+    } catch (error) {
+      clearTutorVideoPolling();
+      if (videoStatusPanel) {
+        videoStatusPanel.classList.remove("hidden");
+        videoStatusPanel.textContent = "Something went wrong. Showing text answer instead.";
+      }
+      if (videoRenderStatus) {
+        videoRenderStatus.textContent = error.message || "Something went wrong. Showing text answer instead.";
+      }
+      updateTutorRoomLivePanel();
+    }
+  };
+
+  activeTutorVideoPollInterval = window.setInterval(pollOnce, 4000);
+  pollOnce();
+}
+
+function buildLocalTutorBrain(profile, avatar, mode = "tutor") {
+  const selectedAvatar = avatar || activeAvatar || avatarPresets[0] || null;
+  const femaleMode = !selectedAvatar || ["calm-mentor", "friendly-senior"].includes(selectedAvatar.id);
+  const level = Number((tutorLevelSelect && tutorLevelSelect.value) || (profile && profile.default_tutor_level) || 3);
+  const avatarName = (selectedAvatar && selectedAvatar.name) || "Calm Mentor";
+  const voiceStyle = femaleMode ? "warm, articulate, and easy to interrupt" : "clear and structured";
+  return {
+    brain_label: avatarName,
+    mode,
+    tutor_level: level,
+    identity: femaleMode
+      ? "Female tutor brain: warm, composed, and human-like."
+      : `${avatarName} tutor brain: focused and supportive.`,
+    tone: femaleMode ? "gentle, clear, and reassuring" : "clear and supportive",
+    feel: femaleMode ? "warm and human-like" : "balanced and supportive",
+    pressure: mode === "practice" ? "medium" : "medium",
+    teaching_adjustment: femaleMode
+      ? "Keep the explanation calm, human, and easy to interrupt."
+      : "Keep the explanation small, clear, and check understanding before moving on.",
+    next_step: "Start with the smallest useful action and grow from there.",
+    voice_profile: {
+      assistant_voice_family: femaleMode ? "female" : "neutral",
+      speaking_style: voiceStyle,
+    },
+    resume_hint: "The student can interrupt at any point, then resume from the last useful checkpoint.",
+  };
+}
+
+function renderMemory(memory) {
+  if (!memorySummary) {
+    return;
+  }
+
+  memorySummary.innerHTML = "";
+  const sections = [
+    { label: "People mentioned", items: (memory && memory.known_people) || [] },
+    { label: "Interests and hobbies", items: (memory && memory.interests) || [] },
+    { label: "Life notes", items: (memory && memory.life_notes) || [] },
+    { label: "Recent check-ins", items: (((memory && memory.recent_checkins) || []).map((item) => item.note)) },
+  ];
+
+  const hasItems = sections.some((section) => section.items.length);
+  if (!hasItems) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "As you talk more, this space will gently remember what matters to you.";
+    memorySummary.appendChild(empty);
+    return;
+  }
+
+  sections.forEach((section) => {
+    if (!section.items.length) {
+      return;
+    }
+    const block = document.createElement("div");
+    block.className = "memory-block";
+
+    const heading = document.createElement("p");
+    heading.className = "memory-heading";
+    heading.textContent = section.label;
+    block.appendChild(heading);
+
+    section.items.slice(-4).forEach((item) => {
+      const chip = document.createElement("span");
+      chip.className = "memory-chip";
+      chip.textContent = item;
+      block.appendChild(chip);
+    });
+
+    memorySummary.appendChild(block);
+  });
+}
+
+function renderStudentInsightsLegacy(payload) {
+  if (!studentInsightSummary) {
+    return;
+  }
+
+  const snapshot = payload && payload.insight_snapshot ? payload.insight_snapshot : payload || null;
+  const architecture = payload && payload.architecture_snapshot ? payload.architecture_snapshot : snapshot?.architecture_snapshot || null;
+
+  studentInsightSummary.innerHTML = "";
+  if (!snapshot) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Your adaptive support snapshot will appear here.";
+    studentInsightSummary.appendChild(empty);
+    return;
+  }
+
+  const currentStateCard = document.createElement("div");
+  currentStateCard.className = "insight-note-card";
+
+  const stateTitle = document.createElement("p");
+  stateTitle.className = "memory-heading";
+  stateTitle.textContent = "Current state";
+
+  const statRow = document.createElement("div");
+  statRow.className = "insight-stat-row";
+  [
+    { label: "Emotional state", value: snapshot.emotional_state || "steady" },
+    { label: "Sentiment trend", value: snapshot.sentiment_trend || "mixed" },
+    { label: "Support style", value: snapshot.support_style || "balanced_support" },
+    { label: "Academic risk", value: snapshot.academic_risk || "low" },
+    { label: "Practice trend", value: snapshot.trend_signal || "building" },
+  ].forEach((item) => {
+    const chip = document.createElement("span");
+    chip.className = "focus-pill";
+    chip.textContent = `${item.label}: ${String(item.value).replace(/_/g, " ")}`;
+    statRow.appendChild(chip);
+  });
+  currentStateCard.appendChild(stateTitle);
+  currentStateCard.appendChild(statRow);
+  studentInsightSummary.appendChild(currentStateCard);
+
+  const nextActionCard = document.createElement("div");
+  nextActionCard.className = "insight-note-card";
+
+  const nextActionTitle = document.createElement("p");
+  nextActionTitle.className = "memory-heading";
+  nextActionTitle.textContent = "Next action";
+
+  const nextActionText = document.createElement("p");
+  nextActionText.className = "muted";
+  nextActionText.textContent = (architecture && architecture.next_step)
+    || snapshot.focus_recommendation
+    || "Keep following the current rhythm and take the next small useful step.";
+
+  nextActionCard.appendChild(nextActionTitle);
+  nextActionCard.appendChild(nextActionText);
+
+  if (snapshot.coach_note) {
+    const coachNote = document.createElement("p");
+    coachNote.className = "muted";
+    coachNote.textContent = snapshot.coach_note;
+    nextActionCard.appendChild(coachNote);
+  }
+
+  studentInsightSummary.appendChild(nextActionCard);
+
+  if (architecture) {
+    const arch = architecture;
+    const architectureCard = document.createElement("div");
+    architectureCard.className = "insight-note-card";
+
+    const title = document.createElement("p");
+    title.className = "memory-heading";
+    title.textContent = "Astra architecture snapshot";
+
+    const summary = document.createElement("p");
+    summary.className = "muted";
+    summary.textContent = arch.summary_line || "Astra is combining storage, behavior, progress, analytics, and route logic into one adaptive view.";
+
+    const source = document.createElement("p");
+    source.className = "muted";
+    source.textContent = `Source pack: ${(arch.source_pack && arch.source_pack.label) || "Balanced source pack"} | Storage: ${arch.storage_backend || "local"} | Trend: ${(arch.analytics_trend || "building").replace(/_/g, " ")}`;
+
+    const suggestion = document.createElement("p");
+    suggestion.className = "architecture-suggestion";
+    suggestion.textContent = arch.gentle_suggestion || "Optional suggestion: keep following the current rhythm and adjust only when needed.";
+
+    architectureCard.appendChild(title);
+    architectureCard.appendChild(summary);
+    architectureCard.appendChild(source);
+    architectureCard.appendChild(suggestion);
+    studentInsightSummary.appendChild(architectureCard);
+  }
+
+  if (snapshot.focus_recommendation || snapshot.top_exam_focus || snapshot.top_mode_focus) {
+    const trendCard = document.createElement("div");
+    trendCard.className = "insight-note-card";
+
+    const title = document.createElement("p");
+    title.className = "memory-heading";
+    title.textContent = "Why Astra is adjusting the plan";
+
+    const note = document.createElement("p");
+    note.className = "muted";
+    note.textContent = snapshot.focus_recommendation || "Astra is balancing concept review and practice based on your recent activity.";
+
+    trendCard.appendChild(title);
+    trendCard.appendChild(note);
+
+    if (snapshot.top_exam_focus || snapshot.top_mode_focus) {
+      const detail = document.createElement("p");
+      detail.className = "muted";
+      detail.textContent = `Current pattern: ${snapshot.top_exam_focus || "general"} / ${snapshot.top_mode_focus || "general"}`;
+      trendCard.appendChild(detail);
+    }
+
+    studentInsightSummary.appendChild(trendCard);
+  }
+
+  if ((snapshot.coaching_actions || []).length) {
+    const actionCard = document.createElement("div");
+    actionCard.className = "insight-note-card";
+
+    const title = document.createElement("p");
+    title.className = "memory-heading";
+    title.textContent = "Support moves active in the background";
+    actionCard.appendChild(title);
+
+    (snapshot.coaching_actions || []).slice(0, 4).forEach((item) => {
+      const line = document.createElement("p");
+      line.className = "muted";
+      line.textContent = `• ${item}`;
+      actionCard.appendChild(line);
+    });
+
+    studentInsightSummary.appendChild(actionCard);
+  }
+
+  if ((snapshot.emotion_keywords || []).length) {
+    const keywords = document.createElement("div");
+    keywords.className = "insight-stat-row";
+    snapshot.emotion_keywords.forEach((item) => {
+      const chip = document.createElement("span");
+      chip.className = "memory-chip";
+      chip.textContent = item;
+      keywords.appendChild(chip);
+    });
+    studentInsightSummary.appendChild(keywords);
+  }
+}
+
+function renderStudentInsights(payload) {
+  if (!studentInsightSummary) {
+    return;
+  }
+
+  const snapshot = payload && payload.insight_snapshot ? payload.insight_snapshot : payload || null;
+  const architecture = payload && payload.architecture_snapshot ? payload.architecture_snapshot : snapshot?.architecture_snapshot || null;
+
+  studentInsightSummary.innerHTML = "";
+  if (!snapshot) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Your adaptive support snapshot will appear here.";
+    studentInsightSummary.appendChild(empty);
+    return;
+  }
+
+  const currentStateCard = document.createElement("div");
+  currentStateCard.className = "insight-note-card";
+
+  const stateTitle = document.createElement("p");
+  stateTitle.className = "memory-heading";
+  stateTitle.textContent = "Current position";
+
+  const statRow = document.createElement("div");
+  statRow.className = "insight-stat-row";
+  [
+    { label: "State", value: snapshot.emotional_state || "steady" },
+    { label: "Risk", value: snapshot.academic_risk || "low" },
+    { label: "Trend", value: snapshot.trend_signal || "building" },
+  ].forEach((item) => {
+    const chip = document.createElement("span");
+    chip.className = "focus-pill";
+    chip.textContent = `${item.label}: ${String(item.value).replace(/_/g, " ")}`;
+    statRow.appendChild(chip);
+  });
+  currentStateCard.appendChild(stateTitle);
+  currentStateCard.appendChild(statRow);
+  studentInsightSummary.appendChild(currentStateCard);
+
+  const topicMemory = snapshot.topic_mastery || {};
+  if (topicMemory.mastery_signal || (topicMemory.weak_topics && topicMemory.weak_topics.length) || (topicMemory.strong_topics && topicMemory.strong_topics.length)) {
+    const memoryCard = document.createElement("div");
+    memoryCard.className = "insight-note-card";
+
+    const memoryTitle = document.createElement("p");
+    memoryTitle.className = "memory-heading";
+    memoryTitle.textContent = "Topic memory";
+    memoryCard.appendChild(memoryTitle);
+
+    const masteryLine = document.createElement("p");
+    masteryLine.className = "muted";
+    masteryLine.textContent = `Mastery signal: ${String(topicMemory.mastery_signal || "starting").replace(/_/g, " ")}`;
+    memoryCard.appendChild(masteryLine);
+
+    if (topicMemory.next_teaching_adjustment) {
+      const adjustmentLine = document.createElement("p");
+      adjustmentLine.className = "muted";
+      adjustmentLine.textContent = topicMemory.next_teaching_adjustment;
+      memoryCard.appendChild(adjustmentLine);
+    }
+
+    if (topicMemory.weak_topics && topicMemory.weak_topics.length) {
+      const weakLine = document.createElement("p");
+      weakLine.className = "muted";
+      weakLine.textContent = `Weak topics: ${topicMemory.weak_topics.slice(0, 3).join(", ")}`;
+      memoryCard.appendChild(weakLine);
+    }
+
+    if (topicMemory.strong_topics && topicMemory.strong_topics.length) {
+      const strongLine = document.createElement("p");
+      strongLine.className = "muted";
+      strongLine.textContent = `Strong topics: ${topicMemory.strong_topics.slice(0, 3).join(", ")}`;
+      memoryCard.appendChild(strongLine);
+    }
+
+    studentInsightSummary.appendChild(memoryCard);
+  }
+
+  const goalCard = document.createElement("div");
+  goalCard.className = "insight-note-card";
+
+  const goalTitle = document.createElement("p");
+  goalTitle.className = "memory-heading";
+  goalTitle.textContent = "Goal direction";
+
+  const goalText = document.createElement("p");
+  goalText.className = "muted";
+  goalText.textContent = snapshot.focus_recommendation
+    || (architecture && architecture.summary_line)
+    || "Stay on the current path and keep building one small step at a time.";
+
+  goalCard.appendChild(goalTitle);
+  goalCard.appendChild(goalText);
+
+  if (snapshot.top_exam_focus || snapshot.top_mode_focus) {
+    const detail = document.createElement("p");
+    detail.className = "muted";
+    detail.textContent = `Main pattern: ${snapshot.top_exam_focus || "general"} / ${snapshot.top_mode_focus || "general"}`;
+    goalCard.appendChild(detail);
+  }
+
+  if (snapshot.coach_note) {
+    const coachNote = document.createElement("p");
+    coachNote.className = "muted";
+    coachNote.textContent = snapshot.coach_note;
+    goalCard.appendChild(coachNote);
+  }
+
+  studentInsightSummary.appendChild(goalCard);
+
+  const taskProfiles = snapshot.task_learning_profiles || {};
+  const taskProfileList = Object.values(taskProfiles).sort((a, b) => {
+    return (b.interactions || 0) - (a.interactions || 0);
+  });
+  if (taskProfileList.length) {
+    const taskCard = document.createElement("div");
+    taskCard.className = "insight-note-card";
+
+    const title = document.createElement("p");
+    title.className = "memory-heading";
+    title.textContent = "Task learning signals";
+    taskCard.appendChild(title);
+
+    taskProfileList.slice(0, 3).forEach((item) => {
+      const line = document.createElement("p");
+      line.className = "muted";
+      line.textContent = `${item.mode_label}: recent accuracy ${item.recent_accuracy || 0}% | trend ${String(item.trend_signal || "building").replace(/_/g, " ")} | ${item.adaptation || "Keep the current rhythm."}`;
+      taskCard.appendChild(line);
+    });
+
+    studentInsightSummary.appendChild(taskCard);
+  }
+
+  if ((snapshot.coaching_actions || []).length) {
+    const actionCard = document.createElement("div");
+    actionCard.className = "insight-note-card";
+
+    const title = document.createElement("p");
+    title.className = "memory-heading";
+    title.textContent = "Next steps";
+    actionCard.appendChild(title);
+
+    (snapshot.coaching_actions || []).slice(0, 3).forEach((item) => {
+      const line = document.createElement("p");
+      line.className = "muted";
+      line.textContent = `• ${item}`;
+      actionCard.appendChild(line);
+    });
+
+    studentInsightSummary.appendChild(actionCard);
+  }
+}
+
+function renderEngagement(engagement) {
+  const hasSidebarLeague = leagueName && leaguePoints && leagueNext && leagueRecent && leagueProgressFill && leagueMissions;
+  const hasTabLeague = leagueTabName && leagueTabPoints && leagueTabStreak && leagueTabNext && leagueTabProgressFill && leagueTabLadder && leagueTabMissions && leagueTabRecent;
+  if (!hasSidebarLeague && !hasTabLeague) {
+    return;
+  }
+
+  if (!engagement) {
+    if (hasSidebarLeague) {
+      leagueName.textContent = "Bronze 1";
+      leaguePoints.textContent = "0 points collected so far.";
+      leagueNext.textContent = "Next promotion will appear here.";
+      leagueProgressFill.style.width = "0%";
+      leagueMissions.innerHTML = '<p class="muted">Your quests will appear here.</p>';
+      leagueRecent.innerHTML = '<p class="muted">Your latest point wins will appear here.</p>';
+    }
+    if (hasTabLeague) {
+      leagueTabName.textContent = "Bronze 1";
+      leagueTabPoints.textContent = "0";
+      leagueTabStreak.textContent = "0 days";
+      leagueTabNext.textContent = "Next promotion will appear here.";
+      leagueTabProgressFill.style.width = "0%";
+      leagueTabMissions.innerHTML = '<p class="muted">Your missions will appear here.</p>';
+      leagueTabRecent.innerHTML = '<p class="muted">Your latest point wins will appear here.</p>';
+      leagueTabLadder.innerHTML = "";
+      LEAGUE_ORDER.forEach((leagueNameValue) => {
+        const row = document.createElement("div");
+        row.className = "league-ladder-row";
+        row.innerHTML = `<span>${leagueNameValue}</span><span class="pill">Locked</span>`;
+        leagueTabLadder.appendChild(row);
+      });
+    }
+    return;
+  }
+
+  const currentLeague = engagement.current_league || "Bronze 1";
+  const points = engagement.points || 0;
+  const streak = engagement.current_streak || 0;
+  const nextLeague = engagement.next_league;
+  const pointsNeeded = engagement.points_needed_for_next || 0;
+  const progressPercent = Math.max(0, Math.min(100, engagement.promotion_progress_percent || 0));
+  const leagueIndex = Math.max(0, LEAGUE_ORDER.indexOf(currentLeague));
+
+  if (hasSidebarLeague) {
+    leagueName.textContent = currentLeague;
+    leaguePoints.textContent = `${points} points | Level ${engagement.level || 1} | ${streak}-day streak`;
+    if (pointsNeeded > 0) {
+      leagueNext.textContent = `${pointsNeeded} more points to reach ${nextLeague}.`;
+    } else {
+      leagueNext.textContent = "You are already at the highest available league right now.";
+    }
+    leagueProgressFill.style.width = `${progressPercent}%`;
+
+    leagueMissions.innerHTML = "";
+    const sidebarMissions = engagement.daily_missions || [];
+    if (!sidebarMissions.length) {
+      leagueMissions.innerHTML = '<p class="muted">Your quests will appear here.</p>';
+    } else {
+      sidebarMissions.slice(0, 4).forEach((mission) => {
+        const row = document.createElement("div");
+        row.className = `league-mission-card ${mission.status === "done" ? "mission-done" : "mission-active"}`;
+
+        const title = document.createElement("p");
+        title.className = "memory-heading";
+        title.textContent = mission.title;
+
+        const detail = document.createElement("p");
+        detail.className = "muted";
+        detail.textContent = mission.detail;
+
+        const footer = document.createElement("div");
+        footer.className = "mission-footer";
+        const status = document.createElement("span");
+        status.className = `pill ${mission.status === "done" ? "done-pill" : "pending-pill"}`;
+        status.textContent = mission.status === "done" ? `Done +${mission.reward}` : `Active +${mission.reward}`;
+        footer.appendChild(status);
+
+        row.appendChild(title);
+        row.appendChild(detail);
+        row.appendChild(footer);
+        leagueMissions.appendChild(row);
+      });
+    }
+
+    leagueRecent.innerHTML = "";
+    const milestones = engagement.recent_milestones || [];
+    if (!milestones.length) {
+      leagueRecent.innerHTML = '<p class="muted">Finish tasks, revise topics, and log practice attempts to start climbing the leagues.</p>';
+    } else {
+      milestones.slice().reverse().slice(0, 3).forEach((item) => {
+        const row = document.createElement("p");
+        row.className = "muted";
+        row.textContent = `+${item.points} points for ${item.reason}`;
+        leagueRecent.appendChild(row);
+      });
+    }
+  }
+
+  if (hasTabLeague) {
+    leagueTabName.textContent = currentLeague;
+    leagueTabPoints.textContent = String(points);
+    leagueTabStreak.textContent = `${streak} day${streak === 1 ? "" : "s"}`;
+    leagueTabNext.textContent = pointsNeeded > 0
+      ? `${pointsNeeded} more points to reach ${nextLeague}.`
+      : "You are already at the highest available league right now.";
+    leagueTabProgressFill.style.width = `${progressPercent}%`;
+
+    leagueTabMissions.innerHTML = "";
+    const tabMissions = engagement.daily_missions || [];
+    if (!tabMissions.length) {
+      leagueTabMissions.innerHTML = '<p class="muted">Your missions will appear here.</p>';
+    } else {
+      tabMissions.forEach((mission) => {
+        const row = document.createElement("div");
+        row.className = `league-mission-card ${mission.status === "done" ? "mission-done" : "mission-active"}`;
+
+        const title = document.createElement("p");
+        title.className = "memory-heading";
+        title.textContent = mission.title;
+
+        const detail = document.createElement("p");
+        detail.className = "muted";
+        detail.textContent = mission.detail;
+
+        const footer = document.createElement("div");
+        footer.className = "mission-footer";
+        const status = document.createElement("span");
+        status.className = `pill ${mission.status === "done" ? "done-pill" : "pending-pill"}`;
+        status.textContent = mission.status === "done" ? `Done +${mission.reward}` : `Active +${mission.reward}`;
+        footer.appendChild(status);
+
+        row.appendChild(title);
+        row.appendChild(detail);
+        row.appendChild(footer);
+        leagueTabMissions.appendChild(row);
+      });
+    }
+
+    leagueTabRecent.innerHTML = "";
+    const tabMilestones = engagement.recent_milestones || [];
+    if (!tabMilestones.length) {
+      leagueTabRecent.innerHTML = '<p class="muted">Finish tasks, revise topics, and log practice attempts to start climbing the leagues.</p>';
+    } else {
+      tabMilestones.slice().reverse().slice(0, 5).forEach((item) => {
+        const row = document.createElement("p");
+        row.className = "muted";
+        row.textContent = `+${item.points} points for ${item.reason}`;
+        leagueTabRecent.appendChild(row);
+      });
+    }
+
+    leagueTabLadder.innerHTML = "";
+    LEAGUE_ORDER.forEach((leagueNameValue, index) => {
+      const row = document.createElement("div");
+      const state = index < leagueIndex ? "complete" : index === leagueIndex ? "current" : "locked";
+      row.className = `league-ladder-row league-${state}`;
+      const label = document.createElement("span");
+      label.textContent = leagueNameValue;
+      const meta = document.createElement("span");
+      meta.className = "pill";
+      meta.textContent = state === "current" ? "Current" : state === "complete" ? "Cleared" : "Locked";
+      row.appendChild(label);
+      row.appendChild(meta);
+      leagueTabLadder.appendChild(row);
+    });
+  }
+}
+
+async function fetchEngagement(studentName) {
+  if (!studentName) {
+    renderEngagement(null);
+    return;
+  }
+
+  const response = await fetch(`/api/engagement/${encodeURIComponent(studentName)}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load league progress.");
+  }
+  renderEngagement(payload.engagement || null);
+}
+
+function renderMemoryManager(memory) {
+  if (!memoryManager) {
+    return;
+  }
+
+  memoryManager.innerHTML = "";
+  const sections = [
+    { label: "Hobbies and interests", category: "interests", items: (memory && memory.interests) || [] },
+    { label: "People you mentioned", category: "known_people", items: (memory && memory.known_people) || [] },
+    { label: "Saved life notes", category: "life_notes", items: (memory && memory.life_notes) || [] },
+  ];
+
+  const hasItems = sections.some((section) => section.items.length);
+  if (!hasItems) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Add hobbies or personal notes here, and remove old preferences whenever you want.";
+    memoryManager.appendChild(empty);
+    return;
+  }
+
+  sections.forEach((section) => {
+    if (!section.items.length) {
+      return;
+    }
+
+    const block = document.createElement("div");
+    block.className = "manager-block";
+
+    const heading = document.createElement("p");
+    heading.className = "memory-heading";
+    heading.textContent = section.label;
+    block.appendChild(heading);
+
+    const list = document.createElement("div");
+    list.className = "manager-chip-list";
+
+    section.items.forEach((item) => {
+      const chip = document.createElement("div");
+      chip.className = "editable-chip";
+
+      const text = document.createElement("span");
+      text.textContent = item;
+
+      const removeButton = document.createElement("button");
+      removeButton.type = "button";
+      removeButton.className = "chip-remove";
+      removeButton.textContent = "Remove";
+      removeButton.addEventListener("click", () => removeMemoryItem(section.category, item));
+
+      chip.appendChild(text);
+      chip.appendChild(removeButton);
+      list.appendChild(chip);
+    });
+
+    block.appendChild(list);
+    memoryManager.appendChild(block);
+  });
+}
+
+function normalizeExamEntry(exam) {
+  const name = ((exam && exam.name) || "").trim();
+  const examDate = ((exam && exam.exam_date) || "").trim();
+  const subjects = Array.isArray(exam && exam.subjects)
+    ? exam.subjects.map((subject) => String(subject).trim()).filter(Boolean)
+    : String((exam && exam.subjects) || "")
+        .split(",")
+        .map((subject) => subject.trim())
+        .filter(Boolean);
+  const portion = ((exam && exam.portion) || "").trim();
+
+  return {
+    name,
+    exam_date: examDate,
+    subjects,
+    portion,
+  };
+}
+
+function renderExamManager(exams) {
+  if (!examManager) {
+    return;
+  }
+
+  examManager.innerHTML = "";
+  if (!exams || !exams.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Add at least one exam so your plan can stay adaptive.";
+    examManager.appendChild(empty);
+    return;
+  }
+
+  exams.forEach((exam, index) => {
+    const card = document.createElement("div");
+    card.className = "exam-chip-card";
+
+    const details = document.createElement("div");
+    details.className = "exam-chip-copy";
+
+    const title = document.createElement("p");
+    title.className = "exam-chip-title";
+    title.textContent = exam.name;
+
+    const meta = document.createElement("p");
+    meta.className = "muted";
+    const portionText = exam.portion ? ` • Portion: ${exam.portion}` : "";
+    meta.textContent = `${exam.exam_date} • ${((exam.subjects || []).join(", ")) || "Subjects pending"}${portionText}`;
+
+    details.appendChild(title);
+    details.appendChild(meta);
+
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.className = "ghost-button";
+    removeButton.textContent = "Drop exam";
+    removeButton.addEventListener("click", () => removeExamPlan(index));
+
+    card.appendChild(details);
+    card.appendChild(removeButton);
+    examManager.appendChild(card);
+  });
+}
+
+function getExamNameFromInputs() {
+  if (examCatalogSelect && examCatalogSelect.value && examCatalogSelect.value !== "__custom__") {
+    return examCatalogSelect.value.trim();
+  }
+  return (customExamNameInput && customExamNameInput.value.trim()) || "";
+}
+
+function updateExamInputMode() {
+  if (!examCatalogSelect || !customExamNameInput || !examSubjectsInput) {
+    return;
+  }
+
+  const selected = examCatalogSelect.value;
+  const isCustom = selected === "__custom__";
+  customExamNameInput.classList.toggle("hidden", !isCustom);
+
+  if (!selected) {
+    examSubjectsInput.value = "";
+    examSubjectsInput.readOnly = false;
+    return;
+  }
+
+  if (isCustom) {
+    examSubjectsInput.readOnly = false;
+    return;
+  }
+
+  const matchedExam = examCatalog.find((exam) => exam.name === selected);
+  examSubjectsInput.value = matchedExam ? matchedExam.subjects.join(", ") : "";
+  examSubjectsInput.readOnly = !!matchedExam;
+}
+
+function renderExamCatalogOptions() {
+  if (!examCatalogSelect) {
+    return;
+  }
+
+  const currentValue = examCatalogSelect.value;
+  examCatalogSelect.innerHTML = `
+    <option value="">Choose JEE Main or JEE Advanced</option>
+    <option value="__custom__">My JEE track is not listed</option>
+  `;
+  examCatalog.forEach((exam) => {
+    const option = document.createElement("option");
+    option.value = exam.name;
+    option.textContent = exam.name;
+    examCatalogSelect.appendChild(option);
+  });
+  examCatalogSelect.value = currentValue || APP_CONFIG.default_exam || "JEE MAIN";
+  updateExamInputMode();
+}
+
+function applyExplanationPreferences() {
+  const textEnabled = showTextExplanation ? showTextExplanation.checked : true;
+  const videoEnabled = showVideoExplanation ? showVideoExplanation.checked : false;
+  const visualEnabled = showVisualExplanation ? showVisualExplanation.checked : false;
+  if (chatFeed) {
+    chatFeed.classList.toggle("text-hidden-mode", !textEnabled);
+  }
+  if (videoExplanationPanel) {
+    videoExplanationPanel.classList.toggle("hidden", !videoEnabled);
+  }
+  if (visualLearningPanel) {
+    visualLearningPanel.classList.toggle("hidden", !visualEnabled);
+  }
+  if (conceptCanvasPanel) {
+    conceptCanvasPanel.classList.toggle("hidden", !visualEnabled);
+  }
+  if (reasoningPanel) {
+    reasoningPanel.classList.toggle("hidden", !videoEnabled && !visualEnabled);
+  }
+}
+
+function renderFunFact(funFact) {
+  if (!funFactText || !funFactCategory) {
+    return;
+  }
+  if (!funFact || !funFact.fact) {
+    funFactText.textContent = "Your daily fun fact will appear here.";
+    funFactCategory.textContent = "Today";
+    return;
+  }
+
+  funFactText.textContent = funFact.fact;
+  const label = funFact.category === "default" ? "General" : funFact.category;
+  funFactCategory.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+}
+
+function renderTipsResources(resources) {
+  if (!tipsResourceList) {
+    return;
+  }
+
+  tipsResourceList.innerHTML = "";
+  if (!resources || !resources.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Add exam goals to unlock curated strategy resources here.";
+    tipsResourceList.appendChild(empty);
+    return;
+  }
+
+  resources.forEach((resource) => {
+    const card = document.createElement("a");
+    card.className = "tips-resource-item";
+    card.href = resource.url;
+    card.target = "_blank";
+    card.rel = "noreferrer noopener";
+
+    const title = document.createElement("p");
+    title.className = "exam-chip-title";
+    title.textContent = `${resource.exam}: ${resource.title}`;
+
+    const meta = document.createElement("p");
+    meta.className = "muted";
+    meta.textContent = `${resource.source} • ${resource.tip}`;
+
+    card.appendChild(title);
+    card.appendChild(meta);
+    tipsResourceList.appendChild(card);
+  });
+}
+
+function renderLearningSources(resources) {
+  if (!learningSourcesList) {
+    return;
+  }
+
+  learningSourcesList.innerHTML = "";
+  if (!resources || !resources.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Add exams or subjects to unlock curated learning sources here.";
+    learningSourcesList.appendChild(empty);
+    return;
+  }
+
+  resources.forEach((resource) => {
+    const card = document.createElement("a");
+    card.className = "tips-resource-item";
+    card.href = resource.url;
+    card.target = "_blank";
+    card.rel = "noreferrer noopener";
+
+    const title = document.createElement("p");
+    title.className = "exam-chip-title";
+    title.textContent = `${resource.scope}: ${resource.title}`;
+
+    const meta = document.createElement("p");
+    meta.className = "muted";
+    meta.textContent = `${resource.source} | ${resource.kind}`;
+
+    const why = document.createElement("p");
+    why.className = "muted";
+    why.textContent = resource.why || "Helpful linked source.";
+
+    card.appendChild(title);
+    card.appendChild(meta);
+    card.appendChild(why);
+    learningSourcesList.appendChild(card);
+  });
+}
+
+function renderLearningSourcePack(pack, routeText) {
+  if (learningSourcePackBadge) {
+    learningSourcePackBadge.textContent = (pack && pack.label) || "Open Sources";
+  }
+  if (learningSourceRouteNote) {
+    const packReason = pack && pack.reason ? ` ${pack.reason}` : "";
+    learningSourceRouteNote.textContent = routeText
+      ? `Astra is using ${pack && pack.label ? pack.label : "a compact source pack"} for this route.${packReason} ${routeText}`
+      : `Astra will choose a compact source pack based on your current study state.${packReason}`;
+  }
+}
+
+function renderPracticeAnalytics(summary) {
+  if (!practiceAnalyticsCard) {
+    return;
+  }
+
+  practiceAnalyticsCard.innerHTML = "";
+  if (!summary || !summary.total_attempts) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Your latest speed and accuracy summary will appear here.";
+    practiceAnalyticsCard.appendChild(empty);
+    return;
+  }
+
+  const title = document.createElement("p");
+  title.className = "exam-chip-title";
+  title.textContent = `Attempts logged: ${summary.total_attempts}`;
+
+  const stats = document.createElement("p");
+  stats.className = "muted";
+  stats.textContent = `Average time: ${summary.average_time_minutes} min • Average accuracy: ${summary.average_accuracy}% • Recent speed: ${summary.speed_signal} • Current difficulty signal: ${summary.difficulty_signal}`;
+
+  const note = document.createElement("p");
+  note.className = "muted";
+  note.textContent = summary.coach_note;
+
+  const focus = document.createElement("p");
+  focus.className = "muted";
+  focus.textContent = `Best current focus: ${summary.focus_recommendation || "Keep balancing concept review and practice."}`;
+
+  const trend = document.createElement("p");
+  trend.className = "muted";
+  trend.textContent = `Trend signal: ${summary.trend_signal || "building"} | Top exam focus: ${summary.top_exam_focus || "not enough data yet"} | Top mode focus: ${summary.top_mode_focus || "not enough data yet"}`;
+
+  practiceAnalyticsCard.appendChild(title);
+  practiceAnalyticsCard.appendChild(stats);
+  practiceAnalyticsCard.appendChild(note);
+  practiceAnalyticsCard.appendChild(focus);
+  practiceAnalyticsCard.appendChild(trend);
+}
+
+function clearMockTestTimer() {
+  if (activeMockTimerInterval) {
+    window.clearInterval(activeMockTimerInterval);
+    activeMockTimerInterval = null;
+  }
+}
+
+function normalizeMockValue(value) {
+  return String(value ?? "").trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+function updateMockTimerLabel() {
+  if (!mockTestTimer) {
+    return;
+  }
+  if (!activeMockStartAt) {
+    mockTestTimer.textContent = "60 min";
+    return;
+  }
+  const elapsedMinutes = Math.max(0, Math.round((Date.now() - activeMockStartAt) / 60000));
+  mockTestTimer.textContent = `${elapsedMinutes} min`;
+}
+
+function setMockPanelVisibility({ intro = true, question = false, report = false } = {}) {
+  const sessionActive = !!(question || report);
+  if (mockTestTab) {
+    mockTestTab.classList.toggle("mock-session-active", sessionActive);
+  }
+  document.body.classList.toggle("mock-test-open", sessionActive);
+  if (mockTestIntroCard) {
+    mockTestIntroCard.classList.toggle("hidden", !intro);
+  }
+  if (mockTestQuestionCard) {
+    mockTestQuestionCard.classList.toggle("hidden", !question);
+  }
+  if (mockTestReportCard) {
+    mockTestReportCard.classList.toggle("hidden", !report);
+  }
+}
+
+function exitMockTestRoom() {
+  resetMockTestState();
+  if (mockTestTab) {
+    mockTestTab.classList.remove("mock-session-active");
+  }
+  document.body.classList.remove("mock-test-open");
+  setActiveTab(lastNonMockTabId || "practiceTab");
+}
+
+function resetMockTestState() {
+  clearMockTestTimer();
+  activeMockTest = null;
+  activeMockIndex = 0;
+  activeMockAnswers = [];
+  activeMockStartAt = null;
+  if (mockTestStatus) {
+    mockTestStatus.textContent = "When you start, Astra will open one question at a time and then evaluate the full paper at the end.";
+  }
+  if (mockTestReportBody) {
+    mockTestReportBody.innerHTML = "";
+  }
+  if (mockTestQuestionText) {
+    mockTestQuestionText.textContent = "";
+  }
+  if (mockTestOptionList) {
+    mockTestOptionList.innerHTML = "";
+  }
+  if (mockTestIntegerInput) {
+    mockTestIntegerInput.value = "";
+    mockTestIntegerInput.parentElement.classList.add("hidden");
+  }
+  setMockPanelVisibility({ intro: true, question: false, report: false });
+  if (mockTestTab) {
+    mockTestTab.classList.remove("mock-session-active");
+  }
+  document.body.classList.remove("mock-test-open");
+  updateMockTimerLabel();
+}
+
+function renderMockQuestion() {
+  if (!activeMockTest || !activeMockTest.questions || !activeMockTest.questions.length) {
+    resetMockTestState();
+    return;
+  }
+
+  const question = activeMockTest.questions[activeMockIndex];
+  if (!question) {
+    return;
+  }
+
+  setMockPanelVisibility({ intro: false, question: true, report: false });
+  if (mockTestQuestionText) {
+    mockTestQuestionText.textContent = question.question || "Question unavailable.";
+  }
+  if (mockTestProgress) {
+    mockTestProgress.textContent = `${activeMockIndex + 1}/${activeMockTest.questions.length}`;
+  }
+  if (mockTestQuestionMeta) {
+    mockTestQuestionMeta.textContent = `${question.subject || "General"} • ${question.type || "mcq"} • ${question.difficulty || "medium"}`;
+  }
+  if (mockTestOptionList) {
+    mockTestOptionList.innerHTML = "";
+    if ((question.type || "mcq") === "integer") {
+      if (mockTestIntegerInput) {
+        mockTestIntegerInput.parentElement.classList.remove("hidden");
+        mockTestIntegerInput.value = activeMockAnswers[activeMockIndex] || "";
+      }
+    } else {
+      if (mockTestIntegerInput) {
+        mockTestIntegerInput.parentElement.classList.add("hidden");
+      }
+      (question.options || []).forEach((option, optionIndex) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "mock-option";
+        const selected = normalizeMockValue(activeMockAnswers[activeMockIndex]) === normalizeMockValue(option);
+        if (selected) {
+          button.classList.add("selected");
+        }
+        button.textContent = `${String.fromCharCode(65 + optionIndex)}. ${option}`;
+        button.addEventListener("click", () => {
+          activeMockAnswers[activeMockIndex] = option;
+          renderMockQuestion();
+        });
+        mockTestOptionList.appendChild(button);
+      });
+    }
+  }
+  if (mockTestNavPrev) {
+    mockTestNavPrev.disabled = activeMockIndex === 0;
+  }
+  if (mockTestNavNext) {
+    mockTestNavNext.textContent = activeMockIndex === activeMockTest.questions.length - 1 ? "Finish test" : "Next";
+  }
+  if (mockTestStatus) {
+    mockTestStatus.textContent = "Choose the answer, move forward, and Astra will grade the full paper at the end.";
+  }
+  updateMockTimerLabel();
+}
+
+function renderMockQuestionV2() {
+  if (!activeMockTest || !activeMockTest.questions || !activeMockTest.questions.length) {
+    resetMockTestState();
+    return;
+  }
+
+  const question = activeMockTest.questions[activeMockIndex];
+  if (!question) {
+    return;
+  }
+
+  setMockPanelVisibility({ intro: false, question: true, report: false });
+  if (mockTestQuestionText) {
+    mockTestQuestionText.textContent = question.question || "Question unavailable.";
+  }
+  if (mockTestProgress) {
+    mockTestProgress.textContent = `${activeMockIndex + 1}/${activeMockTest.questions.length}`;
+  }
+  if (mockTestQuestionMeta) {
+    mockTestQuestionMeta.textContent = `${question.subject || "General"} • MCQ • ${question.difficulty || "medium"}`;
+  }
+  if (mockTestOptionList) {
+    mockTestOptionList.innerHTML = "";
+    if (mockTestIntegerInput) {
+      mockTestIntegerInput.parentElement.classList.add("hidden");
+    }
+    const options = Array.isArray(question.options) ? question.options.slice(0, 4) : [];
+    if (!options.length) {
+      const emptyState = document.createElement("p");
+      emptyState.className = "muted";
+      emptyState.textContent = "This question is missing options. Astra will regenerate the paper if needed.";
+      mockTestOptionList.appendChild(emptyState);
+    } else {
+      options.forEach((option, optionIndex) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "mock-option";
+        const selected = normalizeMockValue(activeMockAnswers[activeMockIndex]) === normalizeMockValue(option);
+        if (selected) {
+          button.classList.add("selected");
+        }
+        button.textContent = `${String.fromCharCode(65 + optionIndex)}. ${option}`;
+        button.addEventListener("click", () => {
+          activeMockAnswers[activeMockIndex] = option;
+          renderMockQuestionV2();
+        });
+        mockTestOptionList.appendChild(button);
+      });
+    }
+  }
+  if (mockTestNavPrev) {
+    mockTestNavPrev.disabled = activeMockIndex === 0;
+  }
+  if (mockTestNavNext) {
+    mockTestNavNext.textContent = activeMockIndex === activeMockTest.questions.length - 1 ? "Finish test" : "Next";
+  }
+  if (mockTestStatus) {
+    mockTestStatus.textContent = "Choose the answer, move forward, and Astra will grade the full paper at the end.";
+  }
+  updateMockTimerLabel();
+}
+
+async function startMockTest() {
+  if (!activeProfile) {
+    return;
+  }
+
+  const exam = (mockTestExamInput && mockTestExamInput.value.trim()) || (activeProfile.exams && activeProfile.exams[0] && activeProfile.exams[0].name) || "JEE Main";
+  const questionCount = Number((mockTestCountInput && mockTestCountInput.value) || "9");
+  setActiveTab("mockTestTab");
+  if (mockTestStatus) {
+    mockTestStatus.textContent = "Astra is preparing your mock test room...";
+  }
+  if (startMockTestBtn) {
+    startMockTestBtn.disabled = true;
+  }
+  try {
+    const response = await fetch("/api/mock-test/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name: activeProfile.name,
+        exam,
+        question_count: Number.isFinite(questionCount) ? questionCount : 9,
+        mode: "diagnostic",
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not create the mock test right now.");
+    }
+    activeMockTest = payload;
+    activeMockIndex = 0;
+    activeMockAnswers = new Array((payload.questions || []).length).fill("");
+    activeMockStartAt = Date.now();
+    clearMockTestTimer();
+    activeMockTimerInterval = window.setInterval(updateMockTimerLabel, 1000);
+    setMockPanelVisibility({ intro: false, question: true, report: false });
+    if (mockTestTab) {
+      mockTestTab.scrollTop = 0;
+    }
+    renderMockQuestionV2();
+  } catch (error) {
+    if (mockTestStatus) {
+      mockTestStatus.textContent = error.message;
+    }
+  } finally {
+    if (startMockTestBtn) {
+      startMockTestBtn.disabled = false;
+    }
+  }
+}
+
+function renderMockReport(report) {
+  if (!mockTestReportBody) {
+    return;
+  }
+  mockTestReportBody.innerHTML = "";
+
+  const metrics = document.createElement("div");
+  metrics.className = "mock-report-metrics";
+  [
+    { label: "Overall score", value: `${report.overall_score}%` },
+    { label: "Correct", value: `${report.correct_count}/${report.total_questions}` },
+    { label: "Time taken", value: `${report.time_taken_minutes} min` },
+  ].forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "mock-metric-card";
+    const label = document.createElement("p");
+    label.className = "memory-heading";
+    label.textContent = item.label;
+    const value = document.createElement("strong");
+    value.textContent = item.value;
+    card.appendChild(label);
+    card.appendChild(value);
+    metrics.appendChild(card);
+  });
+  mockTestReportBody.appendChild(metrics);
+
+  const subjectBox = document.createElement("div");
+  subjectBox.className = "mock-metric-card";
+  subjectBox.innerHTML = `<p class="memory-heading">Subject breakdown</p>${Object.entries(report.subject_scores || {})
+    .map(([subject, score]) => `<p class="muted">${subject}: ${score}%</p>`)
+    .join("")}`;
+  mockTestReportBody.appendChild(subjectBox);
+
+  const insight = document.createElement("div");
+  insight.className = "mock-metric-card";
+  insight.innerHTML = `<p class="memory-heading">Astra's read</p><p class="muted">${report.analysis || "Your baseline report will help Astra personalize planning and practice."}</p><p class="muted">${report.next_step || "Return to Tutor or Weekly Plan once you want to improve a weak subject."}</p>`;
+  mockTestReportBody.appendChild(insight);
+
+  setMockPanelVisibility({ intro: false, question: false, report: true });
+}
+
+function evaluateMockTest() {
+  if (!activeMockTest || !activeMockTest.questions || !activeMockTest.questions.length) {
+    return null;
+  }
+
+  const questions = activeMockTest.questions;
+  const subjectStats = {};
+  let correctCount = 0;
+  const answerLines = [];
+
+  questions.forEach((question, index) => {
+    const subject = question.subject || "General";
+    subjectStats[subject] = subjectStats[subject] || { correct: 0, total: 0 };
+    subjectStats[subject].total += 1;
+
+    const given = normalizeMockValue(activeMockAnswers[index]);
+    const expected = normalizeMockValue(question.correct_answer);
+    const isCorrect = given && expected && given === expected;
+    if (isCorrect) {
+      correctCount += 1;
+      subjectStats[subject].correct += 1;
+    }
+    answerLines.push(`${index + 1}. ${subject}: ${isCorrect ? "correct" : "check"}`);
+  });
+
+  const subjectScores = {};
+  Object.entries(subjectStats).forEach(([subject, stats]) => {
+    subjectScores[subject] = Math.round((stats.correct / Math.max(1, stats.total)) * 100);
+  });
+
+  const overallScore = Math.round((correctCount / Math.max(1, questions.length)) * 100);
+  const weakest = Object.entries(subjectScores).sort((a, b) => a[1] - b[1])[0];
+  const strongest = Object.entries(subjectScores).sort((a, b) => b[1] - a[1])[0];
+  const analysis = overallScore >= 75
+    ? "Strong baseline. Astra can push you a little more confidently."
+    : overallScore >= 55
+    ? "Solid starting point. There is enough evidence to plan a targeted improvement path."
+    : "This is a true baseline. Astra should slow down, simplify, and rebuild the foundations gently.";
+  const nextStep = weakest
+    ? `Next best step: spend extra time on ${weakest[0]} while keeping ${strongest ? strongest[0] : "your stronger areas"} active.`
+    : "Next best step: review the areas that felt most uncertain and then return to a short targeted practice set.";
+  return {
+    overall_score: overallScore,
+    correct_count: correctCount,
+    total_questions: questions.length,
+    time_taken_minutes: Math.max(1, Math.round((Date.now() - (activeMockStartAt || Date.now())) / 60000)),
+    subject_scores: subjectScores,
+    analysis,
+    next_step: nextStep,
+    answer_lines: answerLines,
+  };
+}
+
+async function finishMockTest() {
+  const report = evaluateMockTest();
+  if (!report) {
+    return;
+  }
+
+  setActiveTab("mockTestTab");
+  renderMockReport(report);
+  if (mockTestStatus) {
+    mockTestStatus.textContent = `Baseline complete. Overall score ${report.overall_score}%. Astra is now ready to adjust your plan.`;
+  }
+
+  const subjectScores = {};
+  Object.entries(report.subject_scores || {}).forEach(([subject, score]) => {
+    const subjectName = String(subject || "").trim();
+    if (subjectName) {
+      subjectScores[subjectName] = score;
+    }
+  });
+
+  if (Object.keys(subjectScores).length) {
+    try {
+      const response = await fetch("/api/planner/mock-scores", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          student_name: activeProfile.name,
+          exam: (mockTestExamInput && mockTestExamInput.value.trim()) || (activeMockTest && activeMockTest.exam) || "JEE Main",
+          subject_scores: subjectScores,
+        }),
+      });
+      const payload = await response.json();
+      if (response.ok) {
+        renderWeeklyPlan(payload.weekly_plan || null);
+        renderAdaptiveProfile(payload.adaptive_profile || null);
+      }
+    } catch (error) {
+      appendMessage("practice", "tutor", `Astra could not save the baseline yet: ${error.message}`);
+    }
+  }
+
+  await fetchStudentInsights(activeProfile.name);
+  await fetchStorageStatus(activeProfile.name);
+  setMockPanelVisibility({ intro: false, question: false, report: true });
+}
+
+function saveCurrentMockAnswer() {
+  if (!activeMockTest || !activeMockTest.questions || !activeMockTest.questions.length) {
+    return;
+  }
+  const question = activeMockTest.questions[activeMockIndex];
+  if (!question) {
+    return;
+  }
+  if ((question.type || "mcq") === "integer") {
+    activeMockAnswers[activeMockIndex] = mockTestIntegerInput ? mockTestIntegerInput.value.trim() : "";
+  }
+}
+
+function goToMockQuestion(direction) {
+  if (!activeMockTest || !activeMockTest.questions || !activeMockTest.questions.length) {
+    return;
+  }
+  saveCurrentMockAnswer();
+  const nextIndex = activeMockIndex + direction;
+  if (nextIndex < 0 || nextIndex >= activeMockTest.questions.length) {
+    return;
+  }
+  activeMockIndex = nextIndex;
+  renderMockQuestionV2();
+}
+
+function renderNetworkStats(stats) {
+  if (!networkStats) {
+    return;
+  }
+
+  networkStats.innerHTML = "";
+  const items = [
+    { label: "Peers in network", value: stats && stats.peer_count ? stats.peer_count : 0 },
+    { label: "Strong matches", value: stats && stats.match_count ? stats.match_count : 0 },
+    { label: "Study circles", value: stats && stats.circle_count ? stats.circle_count : 0 },
+    { label: "Tutor network", value: (stats && stats.tutor_network_ready) || "starter" },
+  ];
+
+  items.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "network-stat-card";
+
+    const value = document.createElement("strong");
+    value.textContent = item.value;
+
+    const label = document.createElement("span");
+    label.textContent = item.label;
+
+    card.appendChild(value);
+    card.appendChild(label);
+    networkStats.appendChild(card);
+  });
+}
+
+function renderSimpleNetworkList(container, items, emptyText, buildCard) {
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = "";
+  if (!items || !items.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = emptyText;
+    container.appendChild(empty);
+    return;
+  }
+
+  items.forEach((item) => {
+    container.appendChild(buildCard(item));
+  });
+}
+
+function buildTutorInsightCard(item) {
+  const card = document.createElement("div");
+  card.className = "network-item-card";
+
+  const title = document.createElement("p");
+  title.className = "exam-chip-title";
+  title.textContent = item.title;
+
+  const detail = document.createElement("p");
+  detail.className = "muted";
+  detail.textContent = item.detail;
+
+  const signal = document.createElement("span");
+  signal.className = "memory-chip";
+  signal.textContent = item.signal || "network insight";
+
+  card.appendChild(title);
+  card.appendChild(detail);
+  card.appendChild(signal);
+  return card;
+}
+
+function buildStudentMatchCard(item) {
+  const card = document.createElement("div");
+  card.className = "network-item-card";
+
+  const title = document.createElement("p");
+  title.className = "exam-chip-title";
+  title.textContent = `${item.label} - ${item.compatibility_band}`;
+
+  const meta = document.createElement("p");
+  meta.className = "muted";
+  meta.textContent = `Compatibility: ${item.compatibility_score}/100 | ${item.study_style}`;
+
+  const traits = document.createElement("div");
+  traits.className = "manager-chip-list";
+  (item.shared_traits || []).forEach((trait) => {
+    const chip = document.createElement("span");
+    chip.className = "memory-chip";
+    chip.textContent = trait;
+    traits.appendChild(chip);
+  });
+
+  card.appendChild(title);
+  card.appendChild(meta);
+  card.appendChild(traits);
+  return card;
+}
+
+function buildStudyCircleCard(item) {
+  const card = document.createElement("div");
+  card.className = "network-item-card";
+
+  const title = document.createElement("p");
+  title.className = "exam-chip-title";
+  title.textContent = item.title;
+
+  const meta = document.createElement("p");
+  meta.className = "muted";
+  meta.textContent = `${item.fit} | Potential peers: ${item.potential_peers}`;
+
+  const detail = document.createElement("p");
+  detail.className = "muted";
+  detail.textContent = item.reason;
+
+  card.appendChild(title);
+  card.appendChild(meta);
+  card.appendChild(detail);
+  return card;
+}
+
+function getGroupStudyPreferencesFromForm() {
+  return {
+    enabled: !!(groupStudyEnabledToggle && groupStudyEnabledToggle.checked),
+    mode: groupStudyModeSelect ? groupStudyModeSelect.value : "solo",
+    group_size: Number(groupStudySizeSelect && groupStudySizeSelect.value ? groupStudySizeSelect.value : "3"),
+    session_minutes: Number(groupStudyMinutesSelect && groupStudyMinutesSelect.value ? groupStudyMinutesSelect.value : "60"),
+    focus: groupStudyFocusInput ? groupStudyFocusInput.value.trim() : "",
+  };
+}
+
+function applyGroupStudyPreferencesToForm(profile) {
+  const prefs = (profile && profile.group_study_preferences) || {};
+  if (groupStudyEnabledToggle) {
+    groupStudyEnabledToggle.checked = !!prefs.enabled;
+  }
+  if (groupStudyModeSelect) {
+    groupStudyModeSelect.value = prefs.mode || "solo";
+  }
+  if (groupStudySizeSelect) {
+    groupStudySizeSelect.value = String(prefs.group_size || 3);
+  }
+  if (groupStudyMinutesSelect) {
+    groupStudyMinutesSelect.value = String(prefs.session_minutes || 60);
+  }
+  if (groupStudyFocusInput) {
+    groupStudyFocusInput.value = prefs.focus || "";
+  }
+}
+
+function buildGroupStudyMemberCard(item) {
+  const card = document.createElement("div");
+  card.className = "network-item-card";
+
+  const title = document.createElement("p");
+  title.className = "exam-chip-title";
+  title.textContent = `${item.label}${item.role === "You" ? " (You)" : ""}`;
+
+  const meta = document.createElement("p");
+  meta.className = "muted";
+  meta.textContent = `${item.role} | Focus: ${item.focus || "general revision"} | ${item.study_style || "balanced support"}`;
+
+  card.appendChild(title);
+  card.appendChild(meta);
+
+  if (item.compatibility_band && item.role !== "You") {
+    const band = document.createElement("span");
+    band.className = "memory-chip";
+    band.textContent = `${item.compatibility_band}${item.compatibility_score ? ` • ${item.compatibility_score}/100` : ""}`;
+    card.appendChild(band);
+  }
+
+  if (Array.isArray(item.shared_traits) && item.shared_traits.length) {
+    const traits = document.createElement("div");
+    traits.className = "manager-chip-list";
+    item.shared_traits.slice(0, 3).forEach((trait) => {
+      const chip = document.createElement("span");
+      chip.className = "memory-chip";
+      chip.textContent = trait;
+      traits.appendChild(chip);
+    });
+    card.appendChild(traits);
+  }
+
+  return card;
+}
+
+function buildGroupStudyPlanCard(step) {
+  const card = document.createElement("div");
+  card.className = "network-item-card";
+
+  const title = document.createElement("p");
+  title.className = "exam-chip-title";
+  title.textContent = step.title;
+
+  const meta = document.createElement("p");
+  meta.className = "muted";
+  meta.textContent = `${step.minutes} min`;
+
+  const detail = document.createElement("p");
+  detail.className = "muted";
+  detail.textContent = step.detail;
+
+  card.appendChild(title);
+  card.appendChild(meta);
+  card.appendChild(detail);
+  return card;
+}
+
+function renderGroupStudy(groupStudy) {
+  if (!groupStudy) {
+    if (groupStudyStatusPill) {
+      groupStudyStatusPill.textContent = "Solo";
+    }
+    if (groupStudySummary) {
+      groupStudySummary.textContent = "Turn on group study to let Astra build a shared room and a common plan.";
+    }
+    renderSimpleNetworkList(groupStudyMembers, [], "Matched learners will appear here when group study is active.", buildGroupStudyMemberCard);
+    renderSimpleNetworkList(groupStudyPlan, [], "The shared plan for the room will appear here.", buildGroupStudyPlanCard);
+    if (groupStudyRuleChips) {
+      groupStudyRuleChips.innerHTML = "";
+    }
+    return;
+  }
+
+  if (groupStudyStatusPill) {
+    groupStudyStatusPill.textContent = groupStudy.enabled ? "Active" : "Solo";
+  }
+  if (groupStudySummary) {
+    const summaryParts = [];
+    if (groupStudy.room_title) {
+      summaryParts.push(groupStudy.room_title);
+    }
+    if (groupStudy.summary) {
+      summaryParts.push(groupStudy.summary);
+    }
+    if (groupStudy.actions && groupStudy.actions.length) {
+      summaryParts.push(groupStudy.actions.join(" "));
+    }
+    groupStudySummary.textContent = summaryParts.join(" ");
+  }
+  if (groupStudyRuleChips) {
+    groupStudyRuleChips.innerHTML = "";
+    (groupStudy.group_rules || []).forEach((rule) => {
+      const chip = document.createElement("span");
+      chip.className = "memory-chip";
+      chip.textContent = rule;
+      groupStudyRuleChips.appendChild(chip);
+    });
+  }
+  renderSimpleNetworkList(
+    groupStudyMembers,
+    groupStudy.members || [],
+    "Matched learners will appear here when group study is active.",
+    buildGroupStudyMemberCard,
+  );
+  renderSimpleNetworkList(
+    groupStudyPlan,
+    groupStudy.session_plan || [],
+    "The shared plan for the room will appear here.",
+    buildGroupStudyPlanCard,
+  );
+}
+
+function renderNetwork(payload) {
+  if (!payload) {
+    renderNetworkStats(null);
+    renderGroupStudy(null);
+    renderSimpleNetworkList(tutorNetworkInsights, [], "Tutor-network insight cards will appear here.", buildTutorInsightCard);
+    renderSimpleNetworkList(studentMatchesList, [], "No strong learner matches yet.", buildStudentMatchCard);
+    renderSimpleNetworkList(studyCircleList, [], "Suggested circles will appear here.", buildStudyCircleCard);
+    if (networkNote) {
+      networkNote.textContent = "Your tutor stays personal to you. This layer shares anonymized teaching patterns, learner similarity, and opt-in group study without turning the app into distracting social media.";
+    }
+    return;
+  }
+
+  renderNetworkStats(payload.stats || null);
+  renderGroupStudy(payload.group_study || null);
+  renderSimpleNetworkList(
+    tutorNetworkInsights,
+    (payload.tutor_network && payload.tutor_network.insights) || [],
+    "Tutor-network insight cards will appear here.",
+    buildTutorInsightCard,
+  );
+  renderSimpleNetworkList(
+    studentMatchesList,
+    payload.student_matches || [],
+    "The app needs a little more peer overlap before it can suggest similar learners here.",
+    buildStudentMatchCard,
+  );
+  renderSimpleNetworkList(
+    studyCircleList,
+    payload.study_circles || [],
+    "Suggested circles will appear here once enough academic overlap exists.",
+    buildStudyCircleCard,
+  );
+  if (networkNote) {
+    networkNote.textContent = payload.network_note || "This layer shares anonymized teaching patterns, learner similarity, and opt-in group study.";
+  }
+}
+
+function createProgressItemCard(item) {
+  const card = document.createElement("div");
+  card.className = "progress-item-card";
+
+  const top = document.createElement("div");
+  top.className = "progress-item-top";
+
+  const copy = document.createElement("div");
+  const topic = document.createElement("p");
+  topic.className = "progress-topic";
+  topic.textContent = item.topic || "Untitled topic";
+
+  const meta = document.createElement("p");
+  meta.className = "progress-meta";
+  const examBits = [item.exam, item.subject].filter(Boolean);
+  meta.textContent = examBits.length ? examBits.join(" • ") : "General progress item";
+
+  copy.appendChild(topic);
+  copy.appendChild(meta);
+
+  const pill = document.createElement("span");
+  pill.className = `pill progress-pill ${item.status}-pill`;
+  pill.textContent = item.status === "done" ? "Done" : item.status === "revise" ? "Revise" : "Pending";
+
+  top.appendChild(copy);
+  top.appendChild(pill);
+  card.appendChild(top);
+
+  if (item.note) {
+    const note = document.createElement("p");
+    note.className = "muted";
+    note.textContent = item.note;
+    card.appendChild(note);
+  }
+
+  const actions = document.createElement("div");
+  actions.className = "progress-actions";
+  [
+    { status: "done", label: "Green tick" },
+    { status: "revise", label: "Brown mark" },
+    { status: "pending", label: "Red mark" },
+  ].forEach((option) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "progress-mini";
+    button.textContent = option.label;
+    button.dataset.progressId = item.id;
+    button.dataset.progressStatus = option.status;
+    actions.appendChild(button);
+  });
+  card.appendChild(actions);
+  return card;
+}
+
+function renderProgressColumn(target, items, emptyText) {
+  if (!target) {
+    return;
+  }
+  target.innerHTML = "";
+  if (!items || !items.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = emptyText;
+    target.appendChild(empty);
+    return;
+  }
+  items.forEach((item) => target.appendChild(createProgressItemCard(item)));
+}
+
+function formatSignedPercent(value) {
+  const number = Number(value || 0);
+  const sign = number > 0 ? "+" : "";
+  return `${sign}${number}%`;
+}
+
+function drawProgressChart(canvas, weeklyHistory) {
+  if (!canvas) {
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    return;
+  }
+
+  const ratio = Math.min(window.devicePixelRatio || 1, 2);
+  const width = Math.max(canvas.clientWidth || 0, 320);
+  const height = Math.max(canvas.clientHeight || 0, 260);
+  if (canvas.width !== Math.round(width * ratio) || canvas.height !== Math.round(height * ratio)) {
+    canvas.width = Math.round(width * ratio);
+    canvas.height = Math.round(height * ratio);
+  }
+
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+
+  const pad = { top: 24, right: 18, bottom: 54, left: 44 };
+  const chartW = width - pad.left - pad.right;
+  const chartH = height - pad.top - pad.bottom;
+  ctx.fillStyle = "rgba(255,255,255,0.08)";
+  ctx.fillRect(0, 0, width, height);
+
+  if (!weeklyHistory || !weeklyHistory.length) {
+    ctx.fillStyle = "rgba(9, 18, 35, 0.7)";
+    ctx.font = "600 16px Segoe UI, sans-serif";
+    ctx.fillText("Save a few progress updates to see weekly comparisons here.", 24, 48);
+    return;
+  }
+
+  const maxRate = 100;
+  const weekGap = 18;
+  const barCount = weeklyHistory.length;
+  const barWidth = Math.max(38, Math.min(72, (chartW - weekGap * (barCount - 1)) / barCount));
+  const baseY = pad.top + chartH;
+  const gridSteps = [0, 25, 50, 75, 100];
+
+  ctx.strokeStyle = "rgba(55, 78, 112, 0.28)";
+  ctx.fillStyle = "rgba(41, 57, 86, 0.7)";
+  ctx.font = "600 12px Segoe UI, sans-serif";
+  gridSteps.forEach((step) => {
+    const y = pad.top + chartH - (step / maxRate) * chartH;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(width - pad.right, y);
+    ctx.stroke();
+    ctx.fillText(`${step}%`, 10, y + 4);
+  });
+
+  weeklyHistory.forEach((week, index) => {
+    const x = pad.left + index * (barWidth + weekGap);
+    const total = Math.max(Number(week.total || 0), 1);
+    const doneRate = Math.max(0, Math.min(100, (Number(week.done || 0) / total) * 100));
+    const reviseRate = Math.max(0, Math.min(100, (Number(week.revise || 0) / total) * 100));
+    const pendingRate = Math.max(0, Math.min(100, (Number(week.pending || 0) / total) * 100));
+    const stack = [
+      { key: "pending", value: pendingRate, color: "#ef4444" },
+      { key: "revise", value: reviseRate, color: "#b7791f" },
+      { key: "done", value: doneRate, color: "#16a34a" },
+    ];
+
+    let cursorY = baseY;
+    stack.forEach((segment) => {
+      const segmentHeight = chartH * (segment.value / 100);
+      if (segmentHeight <= 0) {
+        return;
+      }
+      cursorY -= segmentHeight;
+      ctx.fillStyle = segment.color;
+      ctx.fillRect(x, cursorY, barWidth, segmentHeight - 2);
+    });
+
+    ctx.fillStyle = "rgba(241, 245, 249, 0.94)";
+    ctx.fillRect(x, pad.top + chartH - chartH * (Number(week.completion_rate || 0) / 100) - 2, barWidth, 2);
+
+    ctx.fillStyle = "rgba(9, 18, 35, 0.8)";
+    ctx.font = "700 12px Segoe UI, sans-serif";
+    ctx.fillText(`${Number(week.completion_rate || 0).toFixed(0)}%`, x + 4, cursorY - 8);
+
+    ctx.fillStyle = "rgba(10, 20, 34, 0.76)";
+    ctx.font = "600 11px Segoe UI, sans-serif";
+    const label = String(week.label || `W${index + 1}`).slice(0, 9);
+    ctx.fillText(label, x, height - 22);
+  });
+}
+
+function renderProgressSnapshot(snapshot) {
+  const counts = (snapshot && snapshot.counts) || {};
+  const topicMomentum = (snapshot && snapshot.topic_momentum) || {};
+  const examTotals = (snapshot && snapshot.exam_totals) || {};
+  const weeklyHistory = (snapshot && snapshot.weekly_history) || [];
+  const weekOverWeek = (snapshot && snapshot.week_over_week) || {};
+  if (progressDoneCount) {
+    progressDoneCount.textContent = counts.done || 0;
+  }
+  if (progressReviseCount) {
+    progressReviseCount.textContent = counts.revise || 0;
+  }
+  if (progressPendingCount) {
+    progressPendingCount.textContent = counts.pending || 0;
+  }
+  if (progressTotalCount) {
+    progressTotalCount.textContent = counts.total || 0;
+  }
+  if (progressReminderText) {
+    const reminders = (snapshot && snapshot.reminders) || [];
+    const extras = [];
+    if (topicMomentum.mastery_signal) {
+      extras.push(`Mastery: ${String(topicMomentum.mastery_signal).replace(/_/g, " ")}`);
+    }
+    if (topicMomentum.next_focus) {
+      extras.push(topicMomentum.next_focus);
+    }
+    const examNames = Object.keys(examTotals || {});
+    if (examNames.length) {
+      const examSummary = examNames
+        .slice(0, 2)
+        .map((examName) => `${examName}: ${examTotals[examName].total || 0}`)
+        .join(" | ");
+      extras.push(`Exam spread: ${examSummary}`);
+    }
+    progressReminderText.textContent = reminders.length
+      ? `${reminders.join(" ")}${extras.length ? ` ${extras.join(" ")}` : ""}`
+      : `Track what is done, what still needs revision, and what is still pending so nothing silently slips through.${extras.length ? ` ${extras.join(" ")}` : ""}`;
+  }
+
+  if (progressWeekSummary) {
+    progressWeekSummary.textContent = weekOverWeek.summary || "Weekly comparison will appear here.";
+  }
+  if (progressCurrentWeekRate) {
+    progressCurrentWeekRate.textContent = `${Number((weekOverWeek.current && weekOverWeek.current.completion_rate) || counts.completion_rate || 0).toFixed(1)}%`;
+  }
+  if (progressPreviousWeekRate) {
+    progressPreviousWeekRate.textContent = `${Number((weekOverWeek.previous && weekOverWeek.previous.completion_rate) || 0).toFixed(1)}%`;
+  }
+  if (progressImprovementRate) {
+    progressImprovementRate.textContent = formatSignedPercent((weekOverWeek.delta && weekOverWeek.delta.completion_rate) || 0);
+  }
+  if (progressNeedFocus) {
+    const focusText = topicMomentum.next_focus || "Keep reviewing weak topics.";
+    const pendingCount = counts.pending || 0;
+    progressNeedFocus.textContent = pendingCount ? `${pendingCount} pending` : focusText;
+  }
+  if (progressComparisonText) {
+    const delta = weekOverWeek.delta || {};
+    const focus = topicMomentum.next_focus || "Keep a steady revision loop.";
+    progressComparisonText.textContent = weekOverWeek.summary
+      ? `${weekOverWeek.summary} This week: ${counts.done || 0} done, ${counts.revise || 0} revise, ${counts.pending || 0} pending. Delta: done ${formatSignedPercent(delta.done || 0)}, revise ${formatSignedPercent(delta.revise || 0)}, pending ${formatSignedPercent(delta.pending || 0)}. ${focus}`
+      : `This week: ${counts.done || 0} done, ${counts.revise || 0} revise, ${counts.pending || 0} pending. ${focus}`;
+  }
+  drawProgressChart(progressWeeklyCanvas, weeklyHistory);
+
+  const grouped = (snapshot && snapshot.grouped) || {};
+  renderProgressColumn(progressDoneList, grouped.done || [], "Done topics will appear here.");
+  renderProgressColumn(progressReviseList, grouped.revise || [], "Revision-needed topics will appear here.");
+  renderProgressColumn(progressPendingList, grouped.pending || [], "Pending topics will appear here.");
+}
+
+function renderChapterMasteryBoard(payload) {
+  chapterMasterySnapshot = payload || null;
+  if (!chapterMasteryCard || !chapterMasteryGrid) {
+    return;
+  }
+  const chapters = (payload && payload.chapters) || [];
+  chapterMasteryCard.classList.toggle("hidden", !chapters.length);
+  if (chapterMasterySummary) {
+    chapterMasterySummary.textContent = chapters.length
+      ? `${chapters.length} chapters tracked across Physics, Chemistry, and Mathematics.`
+      : "Your chapters will be color-coded by mastery level here.";
+  }
+  chapterMasteryGrid.innerHTML = "";
+  if (!chapters.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "No chapter mastery data yet.";
+    chapterMasteryGrid.appendChild(empty);
+    return;
+  }
+  chapters.forEach((chapter) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `chapter-chip chapter-${String(chapter.color || "grey").toLowerCase()}`;
+    const scoreText = chapter.chapter_test_score !== null && chapter.chapter_test_score !== undefined ? `${Math.round(Number(chapter.chapter_test_score) || 0)}%` : "Not started";
+    button.innerHTML = `
+      <strong>${escapeHtml(chapter.chapter_name || "Chapter")}</strong>
+      <span>${escapeHtml(String(chapter.subject || "").toUpperCase() || "GENERAL")} · ${escapeHtml(chapter.mastery_level || "not_started")} · ${escapeHtml(scoreText)}</span>
+    `;
+    button.addEventListener("click", () => {
+      renderChapterDetailPanel(chapter);
+    });
+    chapterMasteryGrid.appendChild(button);
+  });
+}
+
+function renderChapterDetailPanel(chapter) {
+  if (!chapterDetailCard || !chapterDetailList) {
+    return;
+  }
+  selectedChapterSnapshot = chapter || null;
+  chapterDetailCard.classList.remove("hidden");
+  chapterDetailCard.classList.add("chapter-summary-modal");
+  chapterDetailList.innerHTML = "";
+  if (chapterDetailSummary) {
+    const score = chapter.chapter_test_score !== null && chapter.chapter_test_score !== undefined ? `${Math.round(Number(chapter.chapter_test_score) || 0)}%` : "Not started";
+    chapterDetailSummary.textContent = `${chapter.chapter_name || "Chapter"} • Mastery: ${chapter.mastery_level || "not_started"} • Score: ${score}`;
+  }
+  const rows = [
+    `Subject: ${chapter.subject || "-"}`,
+    `Time spent: ${chapter.time_spent_total_minutes || 0} min`,
+    `Revision count: ${chapter.revision_count || 0}`,
+    `Weak subtopics: ${(chapter.weak_subtopics || []).join(", ") || "None"}`,
+    `Strong subtopics: ${(chapter.strong_subtopics || []).join(", ") || "None"}`,
+    `Revision scheduled: ${(chapter.revision_scheduled || []).join(", ") || "None"}`,
+  ];
+  rows.forEach((line) => {
+    const row = document.createElement("div");
+    row.className = "weekly-strategy-item";
+    const text = document.createElement("p");
+    text.className = "muted";
+    text.textContent = line;
+    row.appendChild(text);
+    chapterDetailList.appendChild(row);
+  });
+}
+
+function renderChapterAnalytics(payload) {
+  chapterAnalyticsSnapshot = payload || null;
+  if (!chapterAnalyticsCard || !chapterAnalyticsList) {
+    return;
+  }
+  const averageScore = Number(payload && payload.average_score || 0).toFixed(1);
+  const subjectAverages = payload && payload.subject_averages ? payload.subject_averages : {};
+  chapterAnalyticsCard.classList.toggle("hidden", !Object.keys(subjectAverages).length && !averageScore);
+  if (chapterAnalyticsSummary) {
+    chapterAnalyticsSummary.textContent = `Average chapter score: ${averageScore}%`;
+  }
+  chapterAnalyticsList.innerHTML = "";
+  const best = document.createElement("p");
+  best.className = "muted";
+  best.textContent = `Best chapter: ${payload && payload.best_chapter ? payload.best_chapter : "-"}`;
+  chapterAnalyticsList.appendChild(best);
+  Object.entries(subjectAverages || {}).forEach(([subject, score]) => {
+    const row = document.createElement("div");
+    row.className = "weekly-strategy-item";
+    const title = document.createElement("strong");
+    title.textContent = subject;
+    const meta = document.createElement("p");
+    meta.className = "muted";
+    meta.textContent = `Average score: ${Number(score || 0).toFixed(1)}%`;
+    row.append(title, meta);
+    chapterAnalyticsList.appendChild(row);
+  });
+}
+
+function renderChapterRevisionTracker(payload) {
+  chapterRevisionSnapshot = payload || null;
+  if (!chapterRevisionCard || !chapterRevisionList) {
+    return;
+  }
+  const dueToday = [];
+  const upcoming = [];
+  (payload && payload.chapters ? payload.chapters : []).forEach((chapter) => {
+    const level = String(chapter.mastery_level || "not_started").toLowerCase();
+    if (level === "needs_revision" || level === "developing") {
+      dueToday.push(chapter);
+    } else if (level === "proficient") {
+      upcoming.push(chapter);
+    }
+  });
+  chapterRevisionCard.classList.toggle("hidden", !dueToday.length && !upcoming.length);
+  if (chapterRevisionSummary) {
+    chapterRevisionSummary.textContent = dueToday.length
+      ? `${dueToday.length} chapter(s) need revision attention now.`
+      : "Revision schedule is clear right now.";
+  }
+  chapterRevisionList.innerHTML = "";
+  const combined = [...dueToday, ...upcoming].slice(0, 8);
+  if (!combined.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Revision schedule will appear here.";
+    chapterRevisionList.appendChild(empty);
+    return;
+  }
+  combined.forEach((chapter) => {
+    const row = document.createElement("div");
+    row.className = "weekly-strategy-item";
+    const title = document.createElement("strong");
+    title.textContent = chapter.chapter_name || "Chapter";
+    const meta = document.createElement("p");
+    meta.className = "muted";
+    meta.textContent = `${chapter.mastery_level || "not_started"} · ${chapter.chapter_test_score !== null && chapter.chapter_test_score !== undefined ? `${Math.round(Number(chapter.chapter_test_score) || 0)}%` : "No test yet"}`;
+    row.append(title, meta);
+    chapterRevisionList.appendChild(row);
+  });
+}
+
+function hideChapterResumeUI() {
+  chapterResumeBannerDismissedFor = "";
+  if (chapterResumeBanner) {
+    chapterResumeBanner.classList.add("hidden");
+    chapterResumeBanner.innerHTML = "";
+  }
+  if (chapterResumeCard) {
+    chapterResumeCard.classList.add("hidden");
+    chapterResumeCard.innerHTML = "";
+  }
+}
+
+function renderChapterResumeCard(summary) {
+  if (!chapterResumeCard || !summary || !summary.resuming) {
+    hideChapterResumeUI();
+    return;
+  }
+  activeChapterResumeSummary = summary;
+  const completed = Array.isArray(summary.subtopics_completed) ? summary.subtopics_completed : [];
+  const remaining = Array.isArray(summary.subtopics_remaining) ? summary.subtopics_remaining : [];
+  const current = summary.current_subtopic || {};
+  const total = Number(current.total_subtopics || completed.length + remaining.length || 1);
+  const done = Number(completed.length || 0);
+  const percent = Math.max(0, Math.min(100, Number(summary.chapter_progress_percent || (done / Math.max(total, 1)) * 100)));
+  const completedHtml = completed.length
+    ? completed.map((item) => `<li><strong>${escapeHtml(item.name || "")}</strong> <span class="muted">(${escapeHtml(String(item.score ?? 0))}%)</span><br><span class="muted">${escapeHtml(item.completed_at || "")}</span></li>`).join("")
+    : "<li class=\"muted\">No subtopics completed yet.</li>";
+  const remainingHtml = remaining.length
+    ? remaining.map((item) => `<li>${escapeHtml(item)}</li>`).join("")
+    : "<li class=\"muted\">No remaining subtopics.</li>";
+  const currentName = current.name || "Current subtopic";
+  const currentNumber = current.subtopic_number || done + 1;
+  const totalSubtopics = current.total_subtopics || total || 1;
+  chapterResumeCard.classList.remove("hidden");
+  chapterResumeCard.innerHTML = `
+    <div class="chapter-completion-shell">
+      <div class="card-header">
+        <div>
+          <p class="card-title">Resume ${escapeHtml(summary.unit_name || "Chapter")}</p>
+          <p class="muted">${escapeHtml(String(summary.subject || "").toUpperCase() || "GENERAL")} • ${done} of ${totalSubtopics} subtopics complete</p>
+        </div>
+        <span class="pill">Resume</span>
+      </div>
+      <div class="chapter-progress-bar">
+        <div class="chapter-progress-fill" style="width:${percent}%;"></div>
+      </div>
+      <div class="chapter-resume-grid">
+        <div class="weekly-strategy-item">
+          <strong>Completed subtopics</strong>
+          <ul class="chapter-resume-list">${completedHtml}</ul>
+        </div>
+        <div class="weekly-strategy-item">
+          <strong>Current subtopic</strong>
+          <p class="memory-heading">${escapeHtml(currentName)}</p>
+          <p class="muted">Subtopic ${currentNumber} of ${totalSubtopics}</p>
+        </div>
+        <div class="weekly-strategy-item">
+          <strong>Remaining subtopics</strong>
+          <ul class="chapter-resume-list">${remainingHtml}</ul>
+        </div>
+        <div class="weekly-strategy-item">
+          <strong>Time spent so far</strong>
+          <p class="memory-heading">${Number(summary.time_spent_so_far_minutes || 0).toFixed(1)} minutes</p>
+          <p class="muted">Chapter test taken: ${summary.chapter_test_taken ? "Yes" : "No"}</p>
+        </div>
+      </div>
+      <p class="chapter-resume-message">${escapeHtml(summary.resume_message || "")}</p>
+      <div class="chapter-completion-actions">
+        <button type="button" id="chapterResumeContinueBtn">Continue from where I left off</button>
+      </div>
+    </div>
+  `;
+  const showBanner = chapterResumeBannerDismissedFor !== (activeProfile ? activeProfile.name : "");
+  if (showBanner) {
+    chapterResumeBanner.classList.remove("hidden");
+    chapterResumeBanner.innerHTML = `
+      <div class="chapter-resume-banner-inner">
+        <span>You have an active session: ${escapeHtml(summary.unit_name || "Chapter")} - ${done} of ${totalSubtopics} subtopics complete. Continue?</span>
+        <div class="chapter-resume-banner-actions">
+          <button type="button" id="chapterResumeGoBtn" class="ghost-button">Go to session</button>
+          <button type="button" id="chapterResumeCloseBtn" class="ghost-button chapter-resume-close-btn" aria-label="Close resume notice">✕</button>
+        </div>
+      </div>
+    `;
+  } else {
+    hideChapterResumeBanner();
+  }
+  const continueBtn = chapterResumeCard.querySelector("#chapterResumeContinueBtn");
+  const goBtn = chapterResumeBanner ? chapterResumeBanner.querySelector("#chapterResumeGoBtn") : null;
+  const closeBtn = chapterResumeBanner ? chapterResumeBanner.querySelector("#chapterResumeCloseBtn") : null;
+  const continueSession = () => {
+    chapterResumeDismissedFor = activeProfile ? activeProfile.name : chapterResumeDismissedFor;
+    hideChapterResumeUI();
+    setActiveTab("tutorTab");
+    if (summary.resume_message) {
+      appendMessage("tutor", "tutor", summary.resume_message);
+    }
+  };
+  if (continueBtn) {
+    continueBtn.addEventListener("click", async () => {
+      await refreshActiveChapterSession();
+      continueSession();
+    });
+  }
+  if (goBtn) {
+    goBtn.addEventListener("click", async () => {
+      await refreshActiveChapterSession();
+      setActiveTab("tutorTab");
+      chapterResumeCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      chapterResumeBannerDismissedFor = activeProfile ? activeProfile.name : chapterResumeBannerDismissedFor;
+      hideChapterResumeBanner();
+    });
+  }
+}
+
+function hideChapterResumeBanner() {
+  if (chapterResumeBanner) {
+    chapterResumeBanner.classList.add("hidden");
+    chapterResumeBanner.innerHTML = "";
+  }
+}
+
+async function loadChapterResumeState(force = false) {
+  if (!activeProfile) {
+    hideChapterResumeUI();
+    return null;
+  }
+  const studentId = activeProfile.name;
+  if (!force && chapterResumeDismissedFor === studentId) {
+    hideChapterResumeUI();
+    return activeChapterResumeSummary;
+  }
+  if (!force && chapterResumeLoadedFor === studentId && activeChapterResumeSummary) {
+    if (activeChapterResumeSummary.resuming) {
+      renderChapterResumeCard(activeChapterResumeSummary);
+    }
+    return activeChapterResumeSummary;
+  }
+  try {
+    const response = await fetch(`/api/session/resume-summary/${encodeURIComponent(studentId)}`);
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load the resume summary.");
+    }
+    chapterResumeLoadedFor = studentId;
+    activeChapterResumeSummary = payload || null;
+    if (payload && payload.resuming) {
+      renderChapterResumeCard(payload);
+      return payload;
+    }
+    hideChapterResumeUI();
+    return payload;
+  } catch (error) {
+    console.warn("Could not load chapter resume summary:", error);
+    hideChapterResumeUI();
+    return null;
+  }
+}
+
+async function resetChapterFromUI(chapter) {
+  if (!activeProfile || !chapter) {
+    return;
+  }
+  const chapterName = chapter.unit_name || chapter.chapter_name || chapter.topic || "this chapter";
+  const confirmReset = window.confirm(`Are you sure you want to restart ${chapterName}? Your previous scores will be saved in history but your current progress will be cleared.`);
+  if (!confirmReset) {
+    return;
+  }
+  try {
+    const response = await fetch("/api/session/reset-chapter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: activeProfile.name,
+        unit_name: chapter.unit_name || chapterName,
+        subject: chapter.subject || "",
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not reset that chapter.");
+    }
+    activeChapterSession = null;
+    activeChapterSubtopic = null;
+    selectedChapterSnapshot = null;
+    activeChapterResumeSummary = null;
+    chapterResumeLoadedFor = "";
+    chapterResumeDismissedFor = "";
+    hideChapterResumeUI();
+    closeChapterDetailPanel();
+    if (chapterCompletionCard) {
+      chapterCompletionCard.classList.add("hidden");
+      chapterCompletionCard.innerHTML = "";
+    }
+    clearChapterTestContainer();
+    appendMessage("tutor", "tutor", `Chapter reset. You can start ${chapterName} fresh whenever you are ready.`);
+    await refreshWeeklyPlan();
+    await refreshJourneyDashboard();
+    await fetchProgress(activeProfile.name);
+    await loadChapterResumeState(true);
+  } catch (error) {
+    appendMessage("tutor", "tutor", `Could not reset that chapter right now: ${error.message}`);
+  }
+}
+
+function clearChapterTimers() {
+  if (activeChapterTestInterval) {
+    window.clearInterval(activeChapterTestInterval);
+    activeChapterTestInterval = null;
+  }
+  if (activeChapterBreakInterval) {
+    window.clearInterval(activeChapterBreakInterval);
+    activeChapterBreakInterval = null;
+  }
+  activeChapterBreakEndAt = null;
+}
+
+function formatChapterClock(totalSeconds) {
+  const safeSeconds = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+  const minutes = String(Math.floor(safeSeconds / 60)).padStart(2, "0");
+  const seconds = String(safeSeconds % 60).padStart(2, "0");
+  return `${minutes}:${seconds}`;
+}
+
+function getActiveChapterTitle() {
+  return String(
+    (selectedChapterSnapshot && selectedChapterSnapshot.chapter_name) ||
+    (activeChapterSession && activeChapterSession.unit_name) ||
+    (activeChapterSubtopic && activeChapterSubtopic.chapter_name) ||
+    "this chapter"
+  ).trim();
+}
+
+function getActiveChapterSubject() {
+  return String(
+    (selectedChapterSnapshot && selectedChapterSnapshot.subject) ||
+    (activeChapterSession && activeChapterSession.subject) ||
+    (activeChapterSubtopic && activeChapterSubtopic.subject) ||
+    ""
+  ).trim();
+}
+
+function closeChapterDetailPanel() {
+  if (!chapterDetailCard) {
+    return;
+  }
+  chapterDetailCard.classList.add("hidden");
+  chapterDetailCard.classList.remove("chapter-summary-modal");
+}
+
+function renderChapterCompletionCard({ unitName, questionCount = 15, durationMinutes = 30, breakMode = false } = {}) {
+  if (!chapterCompletionCard) {
+    return;
+  }
+  activeChapterCompletionMode = {
+    unitName: unitName || getActiveChapterTitle(),
+    questionCount,
+    durationMinutes,
+    breakMode,
+  };
+  chapterCompletionCard.classList.remove("hidden");
+  chapterCompletionCard.innerHTML = `
+    <div class="chapter-completion-shell">
+      <div class="card-header">
+        <div>
+          <p class="card-title">Chapter Test Ready</p>
+          <p class="muted">You have completed all subtopics in ${escapeHtml(activeChapterCompletionMode.unitName)}. Time for your Chapter Test - ${questionCount} questions, ${durationMinutes} minutes, JEE Main format.</p>
+        </div>
+        <span class="pill">Ready</span>
+      </div>
+      <div class="chapter-completion-actions">
+        <button type="button" id="chapterTestNowBtn">Take Chapter Test Now</button>
+        <button type="button" id="chapterTestBreakBtn" class="ghost-button">Take a 5 minute break first</button>
+      </div>
+      <p class="muted chapter-completion-timer" id="chapterCompletionTimer">Break not started.</p>
+    </div>
+  `;
+  const nowBtn = chapterCompletionCard.querySelector("#chapterTestNowBtn");
+  const breakBtn = chapterCompletionCard.querySelector("#chapterTestBreakBtn");
+  const timerLine = chapterCompletionCard.querySelector("#chapterCompletionTimer");
+  if (nowBtn) {
+    nowBtn.addEventListener("click", async () => {
+      await loadChapterTestForCurrentSession({ immediate: true });
+    });
+  }
+  if (breakBtn) {
+    breakBtn.addEventListener("click", () => {
+      startChapterBreakCountdown(timerLine, breakBtn);
+    });
+  }
+}
+
+function startChapterBreakCountdown(timerLine, breakBtn) {
+  clearChapterTimers();
+  activeChapterBreakEndAt = Date.now() + 5 * 60 * 1000;
+  const tick = () => {
+    const remaining = Math.max(0, Math.ceil((activeChapterBreakEndAt - Date.now()) / 1000));
+    if (timerLine) {
+      timerLine.textContent = remaining > 0
+        ? `Break time remaining: ${formatChapterClock(remaining)}`
+        : "Break complete. Loading your chapter test...";
+    }
+    if (breakBtn) {
+      breakBtn.disabled = remaining > 0;
+      breakBtn.textContent = remaining > 0 ? `Take a 5 minute break first (${formatChapterClock(remaining)})` : "Loading...";
+    }
+    if (remaining <= 0) {
+      clearChapterTimers();
+      window.setTimeout(() => {
+        loadChapterTestForCurrentSession({ immediate: false });
+      }, 200);
+    }
+  };
+  tick();
+  activeChapterBreakInterval = window.setInterval(tick, 1000);
+}
+
+function updateChapterTestTimer() {
+  if (!chapterTestContainer) {
+    return;
+  }
+  const timer = chapterTestContainer.querySelector("[data-chapter-test-timer]");
+  if (!timer) {
+    return;
+  }
+  if (!activeChapterTestStartedAt) {
+    timer.textContent = "30:00";
+    return;
+  }
+  const totalSeconds = Math.max(0, 30 * 60 - Math.floor((Date.now() - activeChapterTestStartedAt) / 1000));
+  timer.textContent = formatChapterClock(totalSeconds);
+  if (totalSeconds <= 0) {
+    const submitBtn = chapterTestContainer.querySelector("#chapterTestSubmitBtn");
+    if (submitBtn && !submitBtn.disabled) {
+      submitBtn.click();
+    }
+  }
+}
+
+function clearChapterTestContainer() {
+  if (!chapterTestContainer) {
+    return;
+  }
+  chapterTestContainer.classList.add("hidden");
+  chapterTestContainer.innerHTML = "";
+  activeChapterTest = null;
+  activeChapterTestStartedAt = null;
+  activeChapterTestAnswers = [];
+  clearChapterTimers();
+}
+
+function renderChapterTestReport(report, summary) {
+  if (!chapterTestContainer) {
+    return;
+  }
+  const chapterSummary = (report && report.chapter_summary) || {};
+  const weakSubtopics = Array.isArray(report && report.weak_subtopics) ? report.weak_subtopics : [];
+  const strongSubtopics = Array.isArray(report && report.strong_subtopics) ? report.strong_subtopics : [];
+  const revisionScheduled = Array.isArray(report && report.revision_scheduled) ? report.revision_scheduled : [];
+  const nextSteps = Array.isArray(summary && summary.next_steps) ? summary.next_steps : revisionScheduled;
+  const subtopicScores = chapterSummary.subtopic_scores || {};
+  const masteryLevel = String((report && report.mastery_level) || "needs_revision").trim();
+  const score = Number((report && report.score) || (summary && summary.score) || 0);
+  const scoreLabel = `${Math.round(score)}%`;
+  chapterTestContainer.classList.remove("hidden");
+  chapterTestContainer.innerHTML = `
+    <div class="chapter-test-shell">
+      <div class="card-header">
+        <div>
+          <p class="card-title">Chapter Test Result</p>
+          <p class="muted">Score ${scoreLabel} • ${escapeHtml(masteryLevel.replace(/_/g, " "))}</p>
+        </div>
+        <span class="pill">${escapeHtml(masteryLevel)}</span>
+      </div>
+      <div class="chapter-test-list">
+        <div class="weekly-strategy-item">
+          <strong>Subtopic breakdown</strong>
+          ${Object.keys(subtopicScores).length ? Object.entries(subtopicScores).map(([name, value]) => `<p class="muted">${escapeHtml(name)}: ${Number(value || 0).toFixed(1)}%</p>`).join("") : '<p class="muted">No subtopic breakdown was returned.</p>'}
+        </div>
+        <div class="weekly-strategy-item">
+          <strong>Weak areas</strong>
+          ${weakSubtopics.length ? weakSubtopics.map((item) => `<p class="muted">${escapeHtml(item)}</p>`).join("") : '<p class="muted">None flagged.</p>'}
+        </div>
+        <div class="weekly-strategy-item">
+          <strong>Strong areas</strong>
+          ${strongSubtopics.length ? strongSubtopics.map((item) => `<p class="muted">${escapeHtml(item)}</p>`).join("") : '<p class="muted">No strong areas recorded yet.</p>'}
+        </div>
+        <div class="weekly-strategy-item">
+          <strong>Revision schedule</strong>
+          ${revisionScheduled.length ? revisionScheduled.map((item) => `<p class="muted">${escapeHtml(item)}</p>`).join("") : '<p class="muted">No revision scheduled right now.</p>'}
+        </div>
+        <div class="weekly-strategy-item">
+          <strong>Next steps</strong>
+          ${nextSteps.length ? nextSteps.map((item) => `<p class="muted">${escapeHtml(item)}</p>`).join("") : '<p class="muted">Move on to the next chapter or request more practice.</p>'}
+        </div>
+      </div>
+      <div class="chapter-test-actions">
+        <button type="button" class="ghost-button" id="chapterTestBackToBoardBtn">Back to chapter board</button>
+        <button type="button" id="chapterTestStartNextPracticeBtn">Want more practice?</button>
+      </div>
+    </div>
+  `;
+  const backBtn = chapterTestContainer.querySelector("#chapterTestBackToBoardBtn");
+  const nextPracticeBtn = chapterTestContainer.querySelector("#chapterTestStartNextPracticeBtn");
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      setActiveTab("progressTab");
+      refreshProgress(activeProfile ? activeProfile.name : "");
+    });
+  }
+  if (nextPracticeBtn) {
+    nextPracticeBtn.addEventListener("click", async () => {
+      if (!activeProfile) {
+        return;
+      }
+      try {
+        const response = await fetch("/api/session/extend-practice", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            student_id: activeProfile.name,
+            unit_name: getActiveChapterTitle(),
+            practice_type: "5_questions",
+          }),
+        });
+        const payload = await response.json();
+        if (!response.ok) {
+          throw new Error(payload.detail || "Could not load more practice.");
+        }
+        appendMessage("tutor", "tutor", `Here are five more JEE questions for ${getActiveChapterTitle()}.`);
+        renderTutorPracticeSet(payload.questions || [], null, { chapterMode: true });
+      } catch (error) {
+        appendMessage("tutor", "tutor", `Could not load more practice right now: ${error.message}`);
+      }
+    });
+  }
+  chapterTestContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderChapterTest(questions, meta = {}) {
+  if (!chapterTestContainer) {
+    return;
+  }
+  clearChapterTimers();
+  activeChapterTest = {
+    questions: Array.isArray(questions) ? questions.slice(0, 15) : [],
+    unit_name: meta.unit_name || getActiveChapterTitle(),
+    subject: meta.subject || getActiveChapterSubject(),
+    duration_minutes: Number(meta.duration_minutes || 30),
+    marking: meta.marking || "+4 correct, -1 wrong",
+  };
+  activeChapterTestAnswers = new Array(activeChapterTest.questions.length).fill("");
+  activeChapterTestStartedAt = Date.now();
+  chapterTestContainer.classList.remove("hidden");
+  chapterTestContainer.innerHTML = `
+    <div class="chapter-test-shell">
+      <div class="card-header">
+        <div>
+          <p class="card-title">Chapter Test - ${escapeHtml(activeChapterTest.unit_name)}</p>
+          <p class="muted">All questions are shown at once. JEE Main format • ${activeChapterTest.questions.length} questions • ${activeChapterTest.duration_minutes} minutes • ${escapeHtml(activeChapterTest.marking)}</p>
+        </div>
+        <span class="pill chapter-test-timer" data-chapter-test-timer>30:00</span>
+      </div>
+      <div class="chapter-test-list" id="chapterTestQuestionList"></div>
+      <div class="chapter-test-actions">
+        <button type="button" id="chapterTestSubmitBtn">Submit Test</button>
+        <button type="button" class="ghost-button" id="chapterTestCancelBtn">Hide test</button>
+      </div>
+      <div class="chapter-test-report hidden" id="chapterTestReport"></div>
+    </div>
+  `;
+  const questionList = chapterTestContainer.querySelector("#chapterTestQuestionList");
+  const submitBtn = chapterTestContainer.querySelector("#chapterTestSubmitBtn");
+  const cancelBtn = chapterTestContainer.querySelector("#chapterTestCancelBtn");
+  const reportPanel = chapterTestContainer.querySelector("#chapterTestReport");
+  activeChapterTest.questions.forEach((question, index) => {
+    const card = document.createElement("div");
+    card.className = "chapter-test-question-card";
+    card.dataset.questionIndex = String(index);
+
+    const header = document.createElement("div");
+    const title = document.createElement("p");
+    title.className = "card-title";
+    title.textContent = `Question ${index + 1}`;
+    const metaLine = document.createElement("p");
+    metaLine.className = "muted";
+    metaLine.textContent = `${question.subtopic || activeChapterTest.unit_name} • ${question.difficulty || "medium"}`;
+    header.append(title, metaLine);
+
+    const questionBody = document.createElement("div");
+    questionBody.className = "chapter-test-question";
+    renderMarkdownElement(questionBody, question.question || "Question unavailable.");
+
+    const options = document.createElement("div");
+    options.className = "chapter-test-options";
+    const questionName = `chapter-test-${index}`;
+    (question.options || []).slice(0, 4).forEach((option, optionIndex) => {
+      const letter = _checkpointOptionLabel(optionIndex);
+      const optionLabel = document.createElement("label");
+      optionLabel.className = "chapter-test-option";
+      optionLabel.dataset.option = letter;
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = questionName;
+      input.value = letter;
+      input.checked = activeChapterTestAnswers[index] === letter;
+      const optionText = document.createElement("span");
+      optionText.textContent = `${letter}. ${option}`;
+      input.addEventListener("change", () => {
+        activeChapterTestAnswers[index] = letter;
+        options.querySelectorAll(".chapter-test-option").forEach((label) => {
+          label.classList.toggle("selected", label.dataset.option === letter);
+        });
+      });
+      optionLabel.append(input, optionText);
+      if (input.checked) {
+        optionLabel.classList.add("selected");
+      }
+      options.appendChild(optionLabel);
+    });
+
+    card.append(header, questionBody, options);
+    questionList.appendChild(card);
+  });
+
+  const updateTimer = () => {
+    if (!activeChapterTestStartedAt || !chapterTestContainer) {
+      return;
+    }
+    const remainingSeconds = Math.max(0, Math.round((activeChapterTest.duration_minutes * 60) - ((Date.now() - activeChapterTestStartedAt) / 1000)));
+    const timer = chapterTestContainer.querySelector("[data-chapter-test-timer]");
+    if (timer) {
+      timer.textContent = formatChapterClock(remainingSeconds);
+    }
+    if (remainingSeconds <= 0) {
+      if (submitBtn && !submitBtn.disabled) {
+        submitBtn.click();
+      }
+    }
+  };
+  updateTimer();
+  activeChapterTestInterval = window.setInterval(updateTimer, 1000);
+
+  const submitChapterTest = async () => {
+    if (!activeProfile || !activeChapterTest) {
+      return;
+    }
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+    }
+    const questions = activeChapterTest.questions || [];
+    const selectedAnswers = questions.map((question, index) => activeChapterTestAnswers[index] || "");
+    let correctCount = 0;
+    questions.forEach((question, index) => {
+      const correct = String(question.correct || question.correct_answer || "").trim().toUpperCase();
+      if (selectedAnswers[index] && selectedAnswers[index] === correct) {
+        correctCount += 1;
+      }
+    });
+    const wrongCount = Math.max(0, questions.length - correctCount);
+    const rawMarks = (correctCount * 4) - wrongCount;
+    const maxMarks = Math.max(1, questions.length * 4);
+    const score = Math.max(0, Math.round((rawMarks / maxMarks) * 100));
+    const body = {
+      student_id: activeProfile.name,
+      unit_name: activeChapterTest.unit_name || getActiveChapterTitle(),
+      subject: activeChapterTest.subject || getActiveChapterSubject(),
+      score,
+      answers: selectedAnswers,
+      time_taken_minutes: Math.max(1, Math.round((Date.now() - activeChapterTestStartedAt) / 60000)),
+    };
+    console.log("CHAPTER TEST SUBMIT REQUEST:", body);
+    try {
+      const response = await fetch("/api/session/submit-chapter-test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.detail || "Could not submit chapter test.");
+      }
+      const masteryReport = payload.mastery_report || payload;
+      renderChapterTestReport(masteryReport, {
+        score,
+        correctCount,
+        wrongCount,
+        answers: selectedAnswers,
+        next_steps: payload.next_steps || masteryReport.revision_scheduled || [],
+      });
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submitted";
+      }
+      await refreshJourneyDashboard();
+    } catch (error) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Test";
+      }
+      if (reportPanel) {
+        reportPanel.classList.remove("hidden");
+        reportPanel.innerHTML = `<p class="muted">Could not submit the chapter test: ${escapeHtml(error.message)}</p>`;
+      }
+    } finally {
+      clearChapterTimers();
+    }
+  };
+
+  if (submitBtn) {
+    submitBtn.addEventListener("click", submitChapterTest);
+  }
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", () => {
+      clearChapterTimers();
+      chapterTestContainer.classList.add("hidden");
+      chapterTestContainer.innerHTML = "";
+    });
+  }
+  chapterTestContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function loadChapterTestForCurrentSession({ immediate = true } = {}) {
+  if (!activeProfile) {
+    return;
+  }
+  const unitName = getActiveChapterTitle();
+  if (!unitName) {
+    return;
+  }
+  setActiveTab("progressTab");
+  if (chapterTestContainer) {
+    chapterTestContainer.classList.remove("hidden");
+    chapterTestContainer.innerHTML = `<p class="muted">Loading chapter test for ${escapeHtml(unitName)}...</p>`;
+  }
+  try {
+    const response = await fetch(`/api/session/generate-chapter-test/${encodeURIComponent(activeProfile.name)}/${encodeURIComponent(unitName)}`);
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load the chapter test.");
+    }
+    if (chapterCompletionCard) {
+      chapterCompletionCard.classList.add("hidden");
+    }
+    renderChapterTest(payload.questions || [], payload);
+  } catch (error) {
+    if (chapterTestContainer) {
+      chapterTestContainer.classList.remove("hidden");
+      chapterTestContainer.innerHTML = `<p class="muted">Could not load the chapter test: ${escapeHtml(error.message)}</p>`;
+    }
+  }
+}
+
+async function startSelectedChapterSession() {
+  if (!activeProfile || !selectedChapterSnapshot) {
+    return;
+  }
+  try {
+    const response = await fetch("/api/session/start-chapter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: activeProfile.name,
+        unit_name: selectedChapterSnapshot.chapter_name || "",
+        subject: selectedChapterSnapshot.subject || "",
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not start chapter session.");
+    }
+    activeChapterSession = payload.session || null;
+    activeChapterSubtopic = payload.first_subtopic || null;
+    activeChapterResumeSummary = null;
+    chapterResumeLoadedFor = "";
+    chapterResumeDismissedFor = "";
+    selectedChapterSnapshot = {
+      ...(selectedChapterSnapshot || {}),
+      active_session: payload.session || {},
+      first_subtopic: payload.first_subtopic || {},
+    };
+    if (chapterDetailSummary && payload.first_subtopic) {
+      chapterDetailSummary.textContent = `${selectedChapterSnapshot.chapter_name || "Chapter"} • Starting ${payload.first_subtopic.subtopic_name || "the first subtopic"}`;
+    }
+    setActiveTab("tutorTab");
+    appendMessage("tutor", "tutor", `We are starting ${selectedChapterSnapshot.chapter_name || "this chapter"} from ${payload.first_subtopic.subtopic_name || "the first subtopic"}. I will teach the full chapter one subtopic at a time and checkpoint after each part.`);
+  } catch (error) {
+    appendMessage("tutor", "tutor", `Could not start the chapter session: ${error.message}`);
+  }
+}
+
+async function refreshActiveChapterSession() {
+  if (!activeProfile) {
+    return null;
+  }
+  try {
+    const response = await fetch(`/api/session/current-subtopic/${encodeURIComponent(activeProfile.name)}`);
+    const payload = await response.json();
+    if (!response.ok) {
+      return null;
+    }
+    const current = (payload && payload.current_subtopic) || null;
+    activeChapterSubtopic = current && current.subtopic_id ? current : null;
+    activeChapterSession = activeChapterSubtopic ? {
+      student_id: activeProfile.name,
+      unit_name: activeChapterSubtopic.chapter_name || activeChapterSubtopic.unit_name || "",
+      subject: activeChapterSubtopic.subject || "",
+      status: "in_progress",
+    } : null;
+    return activeChapterSubtopic;
+  } catch (error) {
+    console.warn("Could not refresh chapter session:", error);
+    return null;
+  }
+}
+
+function isChapterCheckpointActive() {
+  return Boolean(activeChapterSubtopic && activeChapterSubtopic.subtopic_id);
+}
+
+async function completeChapterSubtopicFromCheckpoint(checkpointScore, timeSpentMinutes = 0) {
+  if (!activeProfile || !isChapterCheckpointActive()) {
+    return null;
+  }
+  try {
+    const body = {
+      student_id: activeProfile.name,
+      subtopic_id: activeChapterSubtopic.subtopic_id || "",
+      checkpoint_score: checkpointScore,
+      time_spent_minutes: timeSpentMinutes || Math.max(1, Math.round(((activeChapterSubtopic.estimated_minutes || 0) || 1))),
+    };
+    console.log("CHAPTER SUBTOPIC COMPLETE REQUEST:", body);
+    const response = await fetch("/api/session/complete-subtopic", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not complete the subtopic checkpoint.");
+    }
+    activeChapterSession = payload.session || activeChapterSession;
+    activeChapterSubtopic = payload.next_subtopic || null;
+    if (selectedChapterSnapshot) {
+      selectedChapterSnapshot = {
+        ...(selectedChapterSnapshot || {}),
+        active_session: payload.session || activeChapterSession || {},
+        first_subtopic: activeChapterSubtopic || selectedChapterSnapshot.first_subtopic || {},
+      };
+    }
+    if (payload.ready_for_chapter_test) {
+      appendMessage("tutor", "tutor", `${payload.encouragement || "That subtopic is complete."} The chapter test is ready whenever you are.`);
+      setActiveTab("progressTab");
+      renderChapterCompletionCard({
+        unitName: selectedChapterSnapshot && selectedChapterSnapshot.chapter_name ? selectedChapterSnapshot.chapter_name : (activeChapterSession && activeChapterSession.unit_name) || getActiveChapterTitle(),
+        questionCount: 15,
+        durationMinutes: 30,
+      });
+    } else if (payload.next_subtopic) {
+      appendMessage("tutor", "tutor", `${payload.encouragement || "Good work."} Next we move to ${payload.next_subtopic.subtopic_name || "the next subtopic"}.`);
+    }
+    await refreshJourneyDashboard();
+    await fetchStorageStatus(activeProfile.name);
+    return payload;
+  } catch (error) {
+    console.warn("Could not complete chapter subtopic:", error);
+    appendMessage("tutor", "tutor", `I saved the checkpoint, but the chapter session needs another pass: ${error.message}`);
+    return null;
+  }
+}
+
+function renderSummaryPanel(summaryText) {
+  if (!summaryPanel) {
+    return;
+  }
+  summaryPanel.innerHTML = "";
+  activeSummaryText = summaryText || "";
+  if (!summaryText) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "A quick crisp summary of the latest explanation will appear here.";
+    summaryPanel.appendChild(empty);
+    return;
+  }
+
+  const heading = document.createElement("h3");
+  heading.textContent = "Quick Summary";
+  summaryPanel.appendChild(heading);
+
+  const lines = String(summaryText)
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const list = document.createElement("div");
+  list.className = "reasoning-list";
+  lines.forEach((line) => {
+    const item = document.createElement("div");
+    item.className = "reasoning-card";
+    item.textContent = line.replace(/^[-*]\s*/, "");
+    list.appendChild(item);
+  });
+  summaryPanel.appendChild(list);
+}
+
+function renderLiveSources(sources) {
+  if (!liveSourcesList) {
+    return;
+  }
+
+  liveSourcesList.innerHTML = "";
+  if (!sources || !sources.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "No live sources yet.";
+    liveSourcesList.appendChild(empty);
+    return;
+  }
+
+  sources.forEach((source) => {
+    const link = document.createElement("a");
+    link.className = "source-chip";
+    link.href = source.url || "#";
+    link.target = "_blank";
+    link.rel = "noreferrer noopener";
+    link.textContent = source.label || source.kind || "Source";
+    liveSourcesList.appendChild(link);
+  });
+}
+
+function renderVisualLearning(visual) {
+  if (!visualLearningPanel) {
+    return;
+  }
+
+  visualLearningPanel.innerHTML = "";
+  if (!visual) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Ask the tutor to explain a concept, and the visual scene will appear here.";
+    visualLearningPanel.appendChild(empty);
+    renderConceptCanvas({
+      title: "Concept Bridge",
+      scenario: "Ask a concept question and I will map it into cause, rule, and effect.",
+      animation: { type: "concept_flow", duration_ms: 3600, axes: { x: "cause", y: "effect" } },
+      scene_config: { interaction_hint: "Try a concept prompt like 'Teach this concept visually'." },
+      frames: [
+        "Frame 1: Start with the cause or starting point.",
+        "Frame 2: Identify the rule that connects the idea.",
+        "Frame 3: Watch the effect or result appear.",
+        "Frame 4: Retell the full chain in your own words.",
+      ],
+      case_study: "This fallback keeps the 3D board useful even before a topic-specific scene loads.",
+      mastery: { mastery_tier: "Concept Bridge", chapter_unlock: "General concept mapping", reward_points: 16 },
+    });
+    window.dispatchEvent(new CustomEvent("alt:concept-visual", { detail: null }));
+    return;
+  }
+
+  if (visual.mastery) {
+    const masteryRow = document.createElement("div");
+    masteryRow.className = "weekly-strategy-chip-row";
+
+    const masteryChip = document.createElement("span");
+    masteryChip.className = "focus-pill strength-pill";
+    masteryChip.textContent = visual.mastery.mastery_tier || "Concept Bridge";
+    masteryRow.appendChild(masteryChip);
+
+    const unlockChip = document.createElement("span");
+    unlockChip.className = "focus-pill";
+    unlockChip.textContent = visual.mastery.chapter_unlock || "Chapter unlock";
+    masteryRow.appendChild(unlockChip);
+
+    const rewardChip = document.createElement("span");
+    rewardChip.className = "focus-pill warning-pill";
+    rewardChip.textContent = `+${visual.mastery.reward_points || 0} points`;
+    masteryRow.appendChild(rewardChip);
+
+    visualLearningPanel.appendChild(masteryRow);
+  }
+
+  const title = document.createElement("h3");
+  title.textContent = visual.title;
+
+  const scenario = document.createElement("p");
+  scenario.className = "caption-text";
+  scenario.textContent = visual.scenario;
+
+  const interactionHint = visual.scene_config && visual.scene_config.interaction_hint ? document.createElement("p") : null;
+  if (interactionHint) {
+    interactionHint.className = "muted visual-hint";
+    interactionHint.textContent = visual.scene_config.interaction_hint;
+  }
+
+  const frames = document.createElement("div");
+  frames.className = "visual-frames";
+  (visual.frames || []).forEach((frame) => {
+    const card = document.createElement("div");
+    card.className = "visual-frame-card";
+    card.textContent = frame;
+    frames.appendChild(card);
+  });
+
+  const caseStudy = document.createElement("p");
+  caseStudy.className = "muted";
+  caseStudy.textContent = visual.case_study;
+
+  visualLearningPanel.appendChild(title);
+  visualLearningPanel.appendChild(scenario);
+  if (interactionHint) {
+    visualLearningPanel.appendChild(interactionHint);
+  }
+  visualLearningPanel.appendChild(frames);
+  visualLearningPanel.appendChild(caseStudy);
+  renderSummaryPanel("");
+  setActiveStudioPane("threeConceptPanel");
+  window.requestAnimationFrame(() => {
+    renderConceptCanvas(visual);
+    window.dispatchEvent(new CustomEvent("alt:concept-visual", { detail: visual || null }));
+  });
+}
+
+function stopConceptAnimation() {
+  if (activeConceptAnimation) {
+    window.cancelAnimationFrame(activeConceptAnimation);
+    activeConceptAnimation = null;
+  }
+}
+
+function drawCanvasLabel(ctx, text, x, y, align = "left") {
+  ctx.save();
+  ctx.fillStyle = "rgba(247, 247, 247, 0.92)";
+  ctx.font = "12px 'Segoe UI', sans-serif";
+  ctx.textAlign = align;
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+function renderConceptCanvas(visual) {
+  if (!conceptCanvas) {
+    return;
+  }
+
+  stopConceptAnimation();
+  const ctx = conceptCanvas.getContext("2d");
+  if (!ctx) {
+    return;
+  }
+
+  const width = conceptCanvas.width;
+  const height = conceptCanvas.height;
+
+  const clearBoard = (title, subtitle) => {
+    ctx.clearRect(0, 0, width, height);
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, "#14213d");
+    gradient.addColorStop(1, "#1f3b73");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, width, height);
+    drawCanvasLabel(ctx, title, 18, 24);
+    drawCanvasLabel(ctx, subtitle, 18, 42);
+  };
+
+  if (!visual || !visual.animation) {
+    clearBoard("Concept Motion Board", "Ask for a concept and this space will animate the idea.");
+    const nodes = [
+      { x: 110, y: 130, label: "Cause", color: "#60a5fa" },
+      { x: 260, y: 88, label: "Rule", color: "#7dd3fc" },
+      { x: 410, y: 150, label: "Effect", color: "#fbbf24" },
+    ];
+    ctx.strokeStyle = "rgba(219, 234, 254, 0.48)";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(nodes[0].x + 20, nodes[0].y);
+    ctx.lineTo(nodes[1].x - 20, nodes[1].y);
+    ctx.lineTo(nodes[2].x - 20, nodes[2].y);
+    ctx.stroke();
+    nodes.forEach((node, index) => {
+      ctx.fillStyle = node.color;
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, 22, 0, Math.PI * 2);
+      ctx.fill();
+      drawCanvasLabel(ctx, node.label, node.x, node.y + 42, "center");
+    });
+    return;
+  }
+
+  const animation = visual.animation;
+  const duration = animation.duration_ms || 3600;
+  const start = performance.now();
+
+  const drawScene = (timestamp) => {
+    const progress = ((timestamp - start) % duration) / duration;
+    clearBoard(visual.title, visual.scenario || "Visual scene");
+
+    if (animation.type === "projectile") {
+      ctx.strokeStyle = "rgba(255,255,255,0.2)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(52, 208);
+      ctx.lineTo(470, 208);
+      ctx.moveTo(82, 32);
+      ctx.lineTo(82, 208);
+      ctx.stroke();
+
+      ctx.fillStyle = "#2f4858";
+      ctx.fillRect(72, 88, 34, 120);
+      ctx.fillStyle = "#ffd166";
+      ctx.beginPath();
+      ctx.arc(420, 198, 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      const x = 96 + progress * 300;
+      const y = 98 + 118 * Math.pow(progress - 0.12, 2);
+      ctx.strokeStyle = "rgba(255, 209, 102, 0.35)";
+      ctx.beginPath();
+      for (let step = 0; step <= 1; step += 0.02) {
+        const curveX = 96 + step * 300;
+        const curveY = 98 + 118 * Math.pow(step - 0.12, 2);
+        if (step === 0) {
+          ctx.moveTo(curveX, curveY);
+        } else {
+          ctx.lineTo(curveX, curveY);
+        }
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = "#ff7f50";
+      ctx.beginPath();
+      ctx.arc(x, y, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      drawCanvasLabel(ctx, "horizontal distance", 455, 226, "right");
+      drawCanvasLabel(ctx, "height", 58, 48);
+    } else if (animation.type === "probability_bag") {
+      ctx.fillStyle = "#f7fbff";
+      ctx.beginPath();
+      ctx.moveTo(182, 58);
+      ctx.quadraticCurveTo(160, 140, 192, 214);
+      ctx.lineTo(326, 214);
+      ctx.quadraticCurveTo(358, 140, 336, 58);
+      ctx.closePath();
+      ctx.fill();
+
+      const balls = [
+        { x: 222, y: 112, color: "#ff6b6b" },
+        { x: 262, y: 96, color: "#4dabf7" },
+        { x: 302, y: 116, color: "#51cf66" },
+        { x: 242, y: 148, color: "#ffd43b" },
+        { x: 286, y: 154, color: "#f783ac" },
+      ];
+      balls.forEach((ball, index) => {
+        const lift = index === Math.floor(progress * balls.length) ? -42 * Math.sin(progress * Math.PI) : 0;
+        ctx.fillStyle = ball.color;
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y + lift, 16, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      drawCanvasLabel(ctx, "one outcome is selected each time", 20, 226);
+      drawCanvasLabel(ctx, "probability = favorable / total", 500, 226, "right");
+    } else if (animation.type === "shop_percentages") {
+      const bars = [
+        { label: "Cost", value: 0.58, color: "#8ecae6" },
+        { label: "Sell", value: 0.78 + 0.1 * Math.sin(progress * Math.PI * 2), color: "#90be6d" },
+        { label: "Discount", value: 0.34 + 0.08 * Math.cos(progress * Math.PI * 2), color: "#f94144" },
+      ];
+      bars.forEach((bar, index) => {
+        const x = 110 + index * 110;
+        const barHeight = 120 * bar.value;
+        ctx.fillStyle = bar.color;
+        ctx.fillRect(x, 188 - barHeight, 54, barHeight);
+        drawCanvasLabel(ctx, bar.label, x + 27, 208, "center");
+      });
+      drawCanvasLabel(ctx, "watch how the reference value changes before profit or loss is judged", 24, 30);
+    } else if (animation.type === "field_lines") {
+      ctx.fillStyle = "#ff9f1c";
+      ctx.beginPath();
+      ctx.arc(180, 130, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#4cc9f0";
+      ctx.beginPath();
+      ctx.arc(340, 130, 16, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "rgba(255,255,255,0.4)";
+      for (let i = 0; i < 8; i += 1) {
+        const offset = i * 14 - 48;
+        ctx.beginPath();
+        ctx.moveTo(196, 130 + offset);
+        ctx.bezierCurveTo(240, 92 + offset * 0.3, 280, 92 + offset * 0.3, 324, 130 + offset);
+        ctx.stroke();
+      }
+      drawCanvasLabel(ctx, "space itself carries the influence", 24, 30);
+    } else if (animation.type === "concept_flow") {
+      const nodes = [
+        { x: 110, y: 130, label: "Cause", color: "#60a5fa" },
+        { x: 260, y: 88, label: "Rule", color: "#7dd3fc" },
+        { x: 410, y: 150, label: "Effect", color: "#fbbf24" },
+      ];
+      ctx.strokeStyle = "rgba(219, 234, 254, 0.48)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(nodes[0].x + 20, nodes[0].y);
+      ctx.lineTo(nodes[1].x - 20, nodes[1].y);
+      ctx.lineTo(nodes[2].x - 20, nodes[2].y);
+      ctx.stroke();
+      nodes.forEach((node, index) => {
+        const bobble = Math.sin(progress * Math.PI * 2 + index * 0.8) * 6;
+        ctx.fillStyle = node.color;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y + bobble, 22, 0, Math.PI * 2);
+        ctx.fill();
+        drawCanvasLabel(ctx, node.label, node.x, node.y + bobble + 42, "center");
+      });
+      drawCanvasLabel(ctx, "connect the starting point, the rule, and the result", 24, 30);
+    } else {
+      const nodes = [
+        { x: 110, y: 130, label: "Cause" },
+        { x: 260, y: 88, label: "Rule" },
+        { x: 410, y: 150, label: "Effect" },
+      ];
+      ctx.strokeStyle = "rgba(255,255,255,0.45)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(nodes[0].x, nodes[0].y);
+      ctx.lineTo(nodes[1].x, nodes[1].y);
+      ctx.lineTo(nodes[2].x, nodes[2].y);
+      ctx.stroke();
+      nodes.forEach((node, index) => {
+        ctx.fillStyle = index === Math.floor(progress * nodes.length) ? "#ffd166" : "#f1f5f9";
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 22, 0, Math.PI * 2);
+        ctx.fill();
+        drawCanvasLabel(ctx, node.label, node.x, node.y + 42, "center");
+      });
+    }
+
+    activeConceptAnimation = window.requestAnimationFrame(drawScene);
+  };
+
+  activeConceptAnimation = window.requestAnimationFrame(drawScene);
+}
+
+function renderAdaptiveProfile(profile) {
+  if (!adaptiveProfileNote) {
+    return;
+  }
+  if (!profile) {
+    adaptiveProfileNote.textContent = "Challenge and teaching speed will adapt gradually as your accuracy, consistency, and behavior pattern evolve.";
+    return;
+  }
+  adaptiveProfileNote.textContent = `Current adaptive mode: ${profile.question_difficulty} difficulty, ${profile.concept_depth} concept depth, ${profile.teaching_speed} teaching speed, ${String(profile.percentile_band || "").split("_").join(" ")}.`;
+}
+
+function renderReasoningPanel(video) {
+  if (!reasoningPanel) {
+    return;
+  }
+
+  reasoningPanel.innerHTML = "";
+  if (!video) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Reasoning and calculations will appear here when the tutor explains a concept.";
+    reasoningPanel.appendChild(empty);
+    return;
+  }
+
+  const heading = document.createElement("h3");
+  heading.textContent = "Reasoning And Calculations";
+  reasoningPanel.appendChild(heading);
+
+  const reasoningList = document.createElement("div");
+  reasoningList.className = "reasoning-list";
+  (video.reasoning || []).forEach((item) => {
+    const line = document.createElement("div");
+    line.className = "reasoning-card";
+    line.textContent = item;
+    reasoningList.appendChild(line);
+  });
+  reasoningPanel.appendChild(reasoningList);
+
+  const calcHeading = document.createElement("p");
+  calcHeading.className = "memory-heading";
+  calcHeading.textContent = "Calculation flow";
+  reasoningPanel.appendChild(calcHeading);
+
+  const calcList = document.createElement("div");
+  calcList.className = "reasoning-list";
+  (video.calculations || []).forEach((item) => {
+    const line = document.createElement("div");
+    line.className = "reasoning-card";
+    line.textContent = item;
+    calcList.appendChild(line);
+  });
+  reasoningPanel.appendChild(calcList);
+}
+
+function clearVideoTimer() {
+  if (activeVideoTimer) {
+    window.clearInterval(activeVideoTimer);
+    activeVideoTimer = null;
+  }
+}
+
+function stopLessonNarration(keepCaption = false) {
+  clearVideoTimer();
+  if (supportsSpeech()) {
+    window.speechSynthesis.cancel();
+  }
+  if (activeLessonNarration) {
+    activeLessonNarration.cancelled = true;
+    activeLessonNarration = null;
+  }
+  if (!keepCaption) {
+    if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
+    stopTalkingFace();
+  }
+}
+
+function startLessonNarration(video, paintScene) {
+  const scenes = (video && video.scenes) || [];
+  if (!scenes.length) {
+    return;
+  }
+
+  stopLessonNarration(true);
+  const controller = { cancelled: false };
+  activeLessonNarration = controller;
+  let sceneIndex = 0;
+
+  const speakScene = () => {
+    if (controller.cancelled) {
+      return;
+    }
+    if (sceneIndex >= scenes.length) {
+      activeLessonNarration = null;
+      if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
+      stopTalkingFace();
+      return;
+    }
+
+    const scene = scenes[sceneIndex];
+    paintScene(sceneIndex);
+    setCaption(scene.subtitle || "");
+
+    if (!supportsSpeech()) {
+      sceneIndex += 1;
+      activeVideoTimer = window.setTimeout(speakScene, 2400);
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(scene.subtitle || "");
+    const avatar = activeAvatar || avatarPresets[0] || null;
+    const chosenVoice = findVoiceForAvatar(avatar);
+    if (chosenVoice) {
+      utterance.voice = chosenVoice;
+    }
+    utterance.rate = ((avatar && avatar.voice_rate) || 0.96) * 0.94;
+    utterance.pitch = (avatar && avatar.voice_pitch) || 1.0;
+    if (avatarStageStatus) avatarStageStatus.textContent = "Explaining Live";
+    updateTalkingFace(1);
+
+    utterance.onboundary = (event) => {
+      const index = typeof event.charIndex === "number" ? event.charIndex : 0;
+      updateTalkingFace((Math.floor(index / 5) % 3) + 1);
+    };
+    utterance.onend = () => {
+      if (controller.cancelled) {
+        return;
+      }
+      sceneIndex += 1;
+      window.setTimeout(speakScene, 180);
+    };
+    utterance.onerror = () => {
+      if (controller.cancelled) {
+        return;
+      }
+      sceneIndex += 1;
+      window.setTimeout(speakScene, 180);
+    };
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  speakScene();
+}
+
+function renderVideoExplanation(video) {
+  if (!videoExplanationPanel) {
+    return;
+  }
+
+  stopLessonNarration();
+  videoExplanationPanel.innerHTML = "";
+  activeVideoExplanation = video;
+  if (!video) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Ask for a concept and the lesson video storyboard will appear here.";
+    videoExplanationPanel.appendChild(empty);
+    return;
+  }
+
+  setActiveStudioPane("videoExplanationPanel");
+
+  const title = document.createElement("h3");
+  title.textContent = video.title;
+  const languageTag = document.createElement("p");
+  languageTag.className = "memory-heading";
+  languageTag.textContent = `Subtitle language: ${video.subtitle_language}`;
+
+  const controls = document.createElement("div");
+  controls.className = "video-controls";
+  const playAudioBtn = document.createElement("button");
+  playAudioBtn.type = "button";
+  playAudioBtn.className = "ghost-button";
+  playAudioBtn.textContent = "Play lesson audio";
+  const stopAudioBtn = document.createElement("button");
+  stopAudioBtn.type = "button";
+  stopAudioBtn.className = "ghost-button";
+  stopAudioBtn.textContent = "Stop lesson audio";
+  controls.appendChild(playAudioBtn);
+  controls.appendChild(stopAudioBtn);
+
+  const frame = document.createElement("div");
+  frame.className = "video-stage";
+  const sceneLabel = document.createElement("p");
+  sceneLabel.className = "video-scene-label";
+  const subtitle = document.createElement("p");
+  subtitle.className = "video-subtitle";
+  frame.appendChild(sceneLabel);
+  frame.appendChild(subtitle);
+
+  videoExplanationPanel.appendChild(title);
+  videoExplanationPanel.appendChild(languageTag);
+  videoExplanationPanel.appendChild(controls);
+  videoExplanationPanel.appendChild(frame);
+
+  const scenes = video.scenes || [];
+  if (!scenes.length) {
+    subtitle.textContent = "No scenes available yet.";
+    return;
+  }
+
+  let sceneIndex = 0;
+  const paintScene = (index = sceneIndex) => {
+    const scene = scenes[index];
+    sceneLabel.textContent = scene.label || `Scene ${index + 1}`;
+    subtitle.textContent = scene.subtitle || "";
+    if (autoCaptionMode.checked) {
+      setCaption(scene.subtitle || "");
+    }
+    sceneIndex = (index + 1) % scenes.length;
+  };
+  paintScene();
+
+  playAudioBtn.addEventListener("click", () => startLessonNarration(video, paintScene));
+  stopAudioBtn.addEventListener("click", () => stopLessonNarration());
+
+  if (scenes.length > 1) {
+    activeVideoTimer = window.setInterval(paintScene, 2600);
+  }
+
+  if (autoSpeakReplies.checked) {
+    startLessonNarration(video, paintScene);
+  }
+}
+
+function getFeedForMode(mode) {
+  if (mode === "guide") {
+    return guideFeed;
+  }
+  if (mode === "lounge") {
+    return loungeFeed;
+  }
+  if (mode === "practice") {
+    return practiceFeed;
+  }
+  if (mode === "last_minute") {
+    return lastMinuteFeed;
+  }
+  if (mode === "tips") {
+    return tipsFeed;
+  }
+  return chatFeed;
+}
+
+function getDefaultFeedMessage(mode) {
+  if (mode === "lounge") {
+    return "This space is for casual talk, not pressure. We can chat first and study later.";
+  }
+  if (mode === "practice") {
+    return "Ask for quick drills, PYQ-style questions, timed sets, or a full mini paper and I will keep the focus strictly on practice.";
+  }
+  return "Ask for explanations, quizzes, recovery support, or just start talking. I will help from wherever you are.";
+}
+
+function resetFeed(mode) {
+  const feed = getFeedForMode(mode);
+  if (!feed) {
+    return;
+  }
+  feed.innerHTML = "";
+  appendMessage(mode, "tutor", getDefaultFeedMessage(mode));
+  if (mode === "tutor" && tutorRoomTranscriptFeed) {
+    tutorRoomTranscriptFeed.innerHTML = "";
+    appendFeedMessage(tutorRoomTranscriptFeed, mode, "tutor", getDefaultFeedMessage(mode));
+    clearTutorCheckpointWidget();
+  }
+}
+
+function appendFeedMessage(feed, mode, role, text) {
+  if (!feed) {
+    return null;
+  }
+  const wrapper = document.createElement("div");
+  wrapper.className = `message ${role}`;
+  if (mode === "practice") {
+    wrapper.classList.add("practice-message");
+  }
+  const paragraph = document.createElement("p");
+  if (role === "tutor") {
+    // MARKED RENDERING FIXED
+    window.marked.setOptions({ breaks: true, gfm: true });
+    paragraph.innerHTML = marked.parse(text || "");
+  } else {
+    paragraph.textContent = text;
+  }
+  wrapper.appendChild(paragraph);
+  feed.appendChild(wrapper);
+  feed.scrollTop = feed.scrollHeight;
+  return paragraph;
+}
+
+function syncTutorRoomTranscript() {
+  if (!tutorRoomTranscriptFeed || !chatFeed) {
+    return;
+  }
+  tutorRoomTranscriptFeed.innerHTML = "";
+  Array.from(chatFeed.children).forEach((node) => {
+    tutorRoomTranscriptFeed.appendChild(node.cloneNode(true));
+  });
+  tutorRoomTranscriptFeed.scrollTop = tutorRoomTranscriptFeed.scrollHeight;
+}
+
+function renderTutorConversations(conversations) {
+  if (!tutorConversationList) {
+    return;
+  }
+  tutorConversationSnapshot = sortTutorConversations(Array.isArray(conversations) ? conversations : []);
+  tutorConversationList.innerHTML = "";
+  const previewConversations = tutorConversationSnapshot.slice(0, 3);
+  if (!previewConversations.length) {
+    tutorConversationList.innerHTML = `<p class="muted">No saved tutor chats yet. Click "New chat" to start one.</p>`;
+    renderTutorConversationDrawer();
+    return;
+  }
+
+  previewConversations.forEach((conversation) => {
+    tutorConversationList.appendChild(buildTutorConversationRow(conversation, { includeDelete: false }));
+  });
+  renderTutorConversationDrawer();
+}
+
+function renderDeletedTutorConversations(conversations) {
+
+  if (!deletedTutorConversationList) {
+    return;
+  }
+  deletedTutorConversationList.innerHTML = "";
+  if (!conversations || !conversations.length) {
+    deletedTutorConversationList.innerHTML = `<p class="muted">Deleted tutor chats will appear here when available.</p>`;
+    return;
+  }
+
+  conversations.forEach((conversation) => {
+    const row = document.createElement("div");
+    row.className = "conversation-row deleted";
+
+    const copy = document.createElement("div");
+    copy.className = "conversation-copy";
+
+    const title = document.createElement("strong");
+    title.textContent = conversation.title || "Deleted chat";
+    const meta = document.createElement("span");
+    meta.className = "conversation-meta";
+    meta.textContent = conversation.deleted_at || conversation.updated_at || "";
+    copy.appendChild(title);
+    copy.appendChild(meta);
+
+    const restoreButton = document.createElement("button");
+    restoreButton.type = "button";
+    restoreButton.className = "ghost-button";
+    restoreButton.textContent = "Restore";
+    restoreButton.addEventListener("click", async () => {
+      await restoreTutorConversation(conversation.id);
+    });
+
+    row.appendChild(copy);
+    row.appendChild(restoreButton);
+    deletedTutorConversationList.appendChild(row);
+  });
+}
+
+function buildTutorConversationRow(conversation, { includeDelete = false } = {}) {
+  const row = document.createElement("div");
+  row.className = `conversation-row${Number(conversation.id) === Number(activeTutorConversationId) ? " active" : ""}`;
+
+  const copy = document.createElement("div");
+  copy.className = "conversation-copy";
+
+  const openButton = document.createElement("button");
+  openButton.type = "button";
+  openButton.className = "conversation-open";
+  openButton.textContent = `${conversation.pinned_at ? "Pinned: " : ""}${conversation.title || "New chat"}`;
+  openButton.addEventListener("click", async () => {
+    activeTutorConversationId = conversation.id;
+    renderTutorConversations(tutorConversationSnapshot);
+    await fetchChatHistory("tutor", activeTutorConversationId);
+  });
+
+  const meta = document.createElement("span");
+  meta.className = "conversation-meta";
+  meta.textContent = conversation.updated_at || "";
+
+  copy.appendChild(openButton);
+  copy.appendChild(meta);
+
+  const actions = document.createElement("div");
+  actions.className = "conversation-actions";
+
+  const renameButton = document.createElement("button");
+  renameButton.type = "button";
+  renameButton.className = "ghost-button conversation-icon-button";
+  renameButton.textContent = "\u270E";
+  renameButton.title = "Rename";
+  renameButton.setAttribute("aria-label", "Rename");
+  renameButton.addEventListener("click", async () => {
+    const nextTitle = window.prompt("Rename this chat", conversation.title || "New chat");
+    if (nextTitle === null) {
+      return;
+    }
+    await updateTutorConversation(conversation.id, { title: nextTitle });
+  });
+
+  const pinButton = document.createElement("button");
+  pinButton.type = "button";
+  pinButton.className = "ghost-button conversation-icon-button";
+  pinButton.textContent = conversation.pinned_at ? "\u{1F4CC}" : "\u{1F4CD}";
+  pinButton.title = conversation.pinned_at ? "Unpin" : "Pin";
+  pinButton.setAttribute("aria-label", conversation.pinned_at ? "Unpin" : "Pin");
+  pinButton.addEventListener("click", async () => {
+    await updateTutorConversation(conversation.id, { pinned: !conversation.pinned_at });
+  });
+
+  actions.appendChild(renameButton);
+  actions.appendChild(pinButton);
+
+  if (includeDelete) {
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "ghost-button conversation-icon-button danger";
+    deleteButton.textContent = "\u{1F5D1}";
+    deleteButton.title = "Delete";
+    deleteButton.setAttribute("aria-label", "Delete");
+    deleteButton.addEventListener("click", async () => {
+      await deleteTutorConversation(conversation.id);
+    });
+    actions.appendChild(deleteButton);
+  }
+
+  row.appendChild(copy);
+  row.appendChild(actions);
+  return row;
+}
+
+async function deleteTutorConversation(conversationId) {
+  if (!activeProfile || !activeProfile.name || !conversationId) {
+    return;
+  }
+  const response = await fetch("/api/chat-history/delete", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      conversation_mode: "tutor",
+      conversation_id: conversationId,
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not delete that chat.");
+  }
+  activeTutorConversationId = payload.conversations && payload.conversations.length ? payload.conversations[0].id : null;
+  tutorConversationSnapshot = payload.conversations || [];
+  deletedTutorConversationSnapshot = payload.deleted_conversations || [];
+  renderTutorConversations(tutorConversationSnapshot);
+  renderDeletedTutorConversations(deletedTutorConversationSnapshot);
+  if (activeTutorConversationId) {
+    await fetchChatHistory("tutor", activeTutorConversationId);
+  } else {
+    resetFeed("tutor");
+  }
+  renderStorageStatus(payload.storage_status || null);
+}
+
+function sortTutorConversations(conversations = []) {
+  return [...conversations].sort((left, right) => {
+    const leftPinned = left && left.pinned_at ? 1 : 0;
+    const rightPinned = right && right.pinned_at ? 1 : 0;
+    if (leftPinned !== rightPinned) {
+      return rightPinned - leftPinned;
+    }
+    const leftTime = new Date(left && (left.updated_at || left.created_at || 0)).getTime() || 0;
+    const rightTime = new Date(right && (right.updated_at || right.created_at || 0)).getTime() || 0;
+    if (rightTime !== leftTime) {
+      return rightTime - leftTime;
+    }
+    return String(right && right.title || "").localeCompare(String(left && left.title || ""));
+  });
+}
+
+function getTutorConversationBucket(conversation) {
+  const timeText = conversation && (conversation.updated_at || conversation.created_at || conversation.deleted_at || "");
+  const time = new Date(timeText);
+  if (Number.isNaN(time.getTime())) {
+    return "Older";
+  }
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfTarget = new Date(time.getFullYear(), time.getMonth(), time.getDate());
+  const diffDays = Math.floor((startOfToday.getTime() - startOfTarget.getTime()) / 86400000);
+  if (diffDays <= 0) {
+    return "Today";
+  }
+  if (diffDays === 1) {
+    return "Yesterday";
+  }
+  if (diffDays <= 7) {
+    return "This Week";
+  }
+  return "Older";
+}
+
+function renderTutorConversationDrawer() {
+  if (!tutorConversationDrawer) {
+    return;
+  }
+  if (tutorConversationDrawer.classList.contains("hidden")) {
+    return;
+  }
+
+  const buckets = {
+    Today: tutorConversationDrawerToday,
+    Yesterday: tutorConversationDrawerYesterday,
+    "This Week": tutorConversationDrawerWeek,
+    Older: tutorConversationDrawerOlder,
+  };
+  Object.values(buckets).forEach((container) => {
+    if (container) {
+      container.innerHTML = "";
+    }
+  });
+
+  const conversations = sortTutorConversations(tutorConversationSnapshot);
+  if (!conversations.length) {
+    if (tutorConversationDrawerToday) {
+      tutorConversationDrawerToday.innerHTML = `<p class="muted">No saved tutor chats yet.</p>`;
+    }
+  } else {
+    conversations.forEach((conversation) => {
+      const bucketName = getTutorConversationBucket(conversation);
+      const container = buckets[bucketName] || tutorConversationDrawerOlder;
+      if (!container) {
+        return;
+      }
+      container.appendChild(buildTutorConversationRow(conversation, { includeDelete: true }));
+    });
+  }
+
+  renderDeletedTutorConversations(deletedTutorConversationSnapshot);
+}
+
+function openTutorConversationDrawer() {
+  if (!tutorConversationDrawer) {
+    return;
+  }
+  tutorConversationDrawer.classList.remove("hidden");
+  tutorConversationDrawer.setAttribute("aria-hidden", "false");
+  if (tutorConversationDrawerBackdrop) {
+    tutorConversationDrawerBackdrop.classList.remove("hidden");
+  }
+  renderTutorConversationDrawer();
+}
+
+function closeTutorConversationDrawer() {
+  if (tutorConversationDrawer) {
+    tutorConversationDrawer.classList.add("hidden");
+    tutorConversationDrawer.setAttribute("aria-hidden", "true");
+  }
+  if (tutorConversationDrawerBackdrop) {
+    tutorConversationDrawerBackdrop.classList.add("hidden");
+  }
+}
+
+function renderLoungeConversations(conversations) {
+  if (!loungeConversationList) {
+    return;
+  }
+  loungeConversationList.innerHTML = "";
+  if (!conversations || !conversations.length) {
+    loungeConversationList.innerHTML = `<p class="muted">No saved lounge chats yet. Click "New chat" to start one.</p>`;
+    return;
+  }
+
+  conversations.forEach((conversation) => {
+    const row = document.createElement("div");
+    row.className = `conversation-row${Number(conversation.id) === Number(activeLoungeConversationId) ? " active" : ""}`;
+
+    const copy = document.createElement("div");
+    copy.className = "conversation-copy";
+
+    const openButton = document.createElement("button");
+    openButton.type = "button";
+    openButton.className = "conversation-open";
+    openButton.textContent = `${conversation.pinned_at ? "Pinned: " : ""}${conversation.title || "New chat"}`;
+    openButton.addEventListener("click", async () => {
+      activeLoungeConversationId = conversation.id;
+      renderLoungeConversations(conversations);
+      await fetchChatHistory("lounge", activeLoungeConversationId);
+    });
+
+    const meta = document.createElement("span");
+    meta.className = "conversation-meta";
+    meta.textContent = conversation.updated_at || "";
+    copy.appendChild(openButton);
+    copy.appendChild(meta);
+
+    const actions = document.createElement("div");
+    actions.className = "conversation-actions";
+
+    const renameButton = document.createElement("button");
+    renameButton.type = "button";
+    renameButton.className = "ghost-button";
+    renameButton.textContent = "Rename";
+    renameButton.addEventListener("click", async () => {
+      const nextTitle = window.prompt("Rename this lounge chat", conversation.title || "New chat");
+      if (nextTitle === null) {
+        return;
+      }
+      await updateConversationByMode("lounge", conversation.id, { title: nextTitle });
+    });
+
+    const pinButton = document.createElement("button");
+    pinButton.type = "button";
+    pinButton.className = "ghost-button";
+    pinButton.textContent = conversation.pinned_at ? "Unpin" : "Pin";
+    pinButton.addEventListener("click", async () => {
+      await updateConversationByMode("lounge", conversation.id, { pinned: !conversation.pinned_at });
+    });
+
+    actions.appendChild(renameButton);
+    actions.appendChild(pinButton);
+    row.appendChild(copy);
+    row.appendChild(actions);
+    loungeConversationList.appendChild(row);
+  });
+}
+
+function renderDeletedLoungeConversations(conversations) {
+  if (!deletedLoungeConversationList) {
+    return;
+  }
+  deletedLoungeConversationList.innerHTML = "";
+  if (!conversations || !conversations.length) {
+    deletedLoungeConversationList.innerHTML = `<p class="muted">Deleted lounge chats will appear here when available.</p>`;
+    return;
+  }
+
+  conversations.forEach((conversation) => {
+    const row = document.createElement("div");
+    row.className = "conversation-row deleted";
+
+    const copy = document.createElement("div");
+    copy.className = "conversation-copy";
+    const title = document.createElement("strong");
+    title.textContent = conversation.title || "Deleted lounge chat";
+    const meta = document.createElement("span");
+    meta.className = "conversation-meta";
+    meta.textContent = conversation.deleted_at || conversation.updated_at || "";
+    copy.appendChild(title);
+    copy.appendChild(meta);
+
+    const restoreButton = document.createElement("button");
+    restoreButton.type = "button";
+    restoreButton.className = "ghost-button";
+    restoreButton.textContent = "Restore";
+    restoreButton.addEventListener("click", async () => {
+      await restoreConversationByMode("lounge", conversation.id);
+    });
+
+    row.appendChild(copy);
+    row.appendChild(restoreButton);
+    deletedLoungeConversationList.appendChild(row);
+  });
+}
+
+function renderChatHistory(mode, messages) {
+  const feed = getFeedForMode(mode);
+  if (!feed) {
+    return;
+  }
+  feed.innerHTML = "";
+  if (mode === "tutor" && tutorRoomTranscriptFeed) {
+    tutorRoomTranscriptFeed.innerHTML = "";
+  }
+  if (!messages || !messages.length) {
+    appendMessage(mode, "tutor", getDefaultFeedMessage(mode));
+    return;
+  }
+  messages.forEach((message) => {
+    appendMessage(mode, message.role === "student" ? "student" : "tutor", message.message_text || "");
+  });
+}
+
+async function fetchChatHistory(mode, conversationId = null) {
+  if (!activeProfile || !activeProfile.name) {
+    return;
+  }
+  const query = new URLSearchParams({ conversation_mode: mode });
+  if (conversationId) {
+    query.set("conversation_id", String(conversationId));
+  }
+  const response = await fetch(`/api/chat-history/${encodeURIComponent(activeProfile.name)}?${query.toString()}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load saved chat history.");
+  }
+  if (mode === "tutor" && payload.conversation_id) {
+    activeTutorConversationId = payload.conversation_id;
+  } else if (mode === "lounge" && payload.conversation_id) {
+    activeLoungeConversationId = payload.conversation_id;
+  }
+  renderChatHistory(mode, payload.messages || []);
+}
+
+async function deleteChatHistory(mode) {
+  if (!activeProfile || !activeProfile.name) {
+    return;
+  }
+  const response = await fetch("/api/chat-history/delete", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      conversation_mode: mode,
+      conversation_id: mode === "tutor" ? activeTutorConversationId : null,
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not delete that chat.");
+  }
+  if (mode === "tutor") {
+    activeTutorConversationId = null;
+    renderTutorConversations(payload.conversations || []);
+    renderDeletedTutorConversations(payload.deleted_conversations || []);
+    if (payload.conversations && payload.conversations.length) {
+      activeTutorConversationId = payload.conversations[0].id;
+      await fetchChatHistory("tutor", activeTutorConversationId);
+    } else {
+      resetFeed("tutor");
+    }
+  } else if (mode === "lounge") {
+    activeLoungeConversationId = null;
+    renderLoungeConversations(payload.conversations || []);
+    renderDeletedLoungeConversations(payload.deleted_conversations || []);
+    if (payload.conversations && payload.conversations.length) {
+      activeLoungeConversationId = payload.conversations[0].id;
+      await fetchChatHistory("lounge", activeLoungeConversationId);
+    } else {
+      resetFeed("lounge");
+    }
+  } else {
+    resetFeed(mode);
+  }
+  renderStorageStatus(payload.storage_status || null);
+}
+
+async function fetchTutorConversations(selectConversationId = null) {
+  if (!activeProfile || !activeProfile.name) {
+    renderTutorConversations([]);
+    return;
+  }
+  const query = new URLSearchParams({ conversation_mode: "tutor" });
+  if (tutorConversationSearch) {
+    query.set("q", tutorConversationSearch);
+  }
+  const response = await fetch(`/api/conversations/${encodeURIComponent(activeProfile.name)}?${query.toString()}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load tutor chats.");
+  }
+  const conversations = payload.conversations || [];
+  if (selectConversationId) {
+    activeTutorConversationId = selectConversationId;
+  } else if (!activeTutorConversationId && conversations.length) {
+    activeTutorConversationId = conversations[0].id;
+  }
+  renderTutorConversations(conversations);
+  if (activeTutorConversationId) {
+    await fetchChatHistory("tutor", activeTutorConversationId);
+  } else {
+    resetFeed("tutor");
+  }
+  await fetchDeletedTutorConversations();
+}
+
+async function fetchConversationsByMode(mode, searchQuery = "") {
+  if (!activeProfile || !activeProfile.name) {
+    return [];
+  }
+  const query = new URLSearchParams({ conversation_mode: mode });
+  if (searchQuery) {
+    query.set("q", searchQuery);
+  }
+  const response = await fetch(`/api/conversations/${encodeURIComponent(activeProfile.name)}?${query.toString()}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || `Could not load ${mode} chats.`);
+  }
+  return payload.conversations || [];
+}
+
+async function fetchDeletedConversationsByMode(mode) {
+  if (!activeProfile || !activeProfile.name) {
+    return [];
+  }
+  const response = await fetch(`/api/conversations/deleted/${encodeURIComponent(activeProfile.name)}?conversation_mode=${encodeURIComponent(mode)}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || `Could not load deleted ${mode} chats.`);
+  }
+  return payload.conversations || [];
+}
+
+async function createTutorConversation() {
+  if (!activeProfile || !activeProfile.name) {
+    return;
+  }
+  const response = await fetch("/api/conversations/new", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      conversation_mode: "tutor",
+      title: "New chat",
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not create a new chat.");
+  }
+  activeTutorConversationId = payload.conversation ? payload.conversation.id : null;
+  renderTutorConversations(payload.conversations || []);
+  resetFeed("tutor");
+  await fetchDeletedTutorConversations();
+}
+
+async function fetchLoungeConversations(selectConversationId = null) {
+  if (!activeProfile || !activeProfile.name) {
+    renderLoungeConversations([]);
+    return;
+  }
+  const conversations = await fetchConversationsByMode("lounge", loungeConversationSearch);
+  if (selectConversationId) {
+    activeLoungeConversationId = selectConversationId;
+  } else if (!activeLoungeConversationId && conversations.length) {
+    activeLoungeConversationId = conversations[0].id;
+  }
+  renderLoungeConversations(conversations);
+  if (activeLoungeConversationId) {
+    await fetchChatHistory("lounge", activeLoungeConversationId);
+  } else {
+    resetFeed("lounge");
+  }
+  renderDeletedLoungeConversations(await fetchDeletedConversationsByMode("lounge"));
+}
+
+async function createLoungeConversation() {
+  if (!activeProfile || !activeProfile.name) {
+    return;
+  }
+  const response = await fetch("/api/conversations/new", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      conversation_mode: "lounge",
+      title: "New chat",
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not create a new lounge chat.");
+  }
+  activeLoungeConversationId = payload.conversation ? payload.conversation.id : null;
+  renderLoungeConversations(payload.conversations || []);
+  resetFeed("lounge");
+  renderDeletedLoungeConversations(await fetchDeletedConversationsByMode("lounge"));
+}
+
+async function fetchDeletedTutorConversations() {
+  if (!activeProfile || !activeProfile.name) {
+    deletedTutorConversationSnapshot = [];
+    renderDeletedTutorConversations([]);
+    return;
+  }
+  const response = await fetch(`/api/conversations/deleted/${encodeURIComponent(activeProfile.name)}?conversation_mode=tutor`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load deleted tutor chats.");
+  }
+  deletedTutorConversationSnapshot = payload.conversations || [];
+  renderDeletedTutorConversations(deletedTutorConversationSnapshot);
+}
+
+async function restoreTutorConversation(conversationId) {
+  if (!activeProfile || !activeProfile.name) {
+    return;
+  }
+  const response = await fetch("/api/conversations/restore", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      conversation_mode: "tutor",
+      conversation_id: conversationId,
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not restore that chat.");
+  }
+  activeTutorConversationId = conversationId;
+  renderTutorConversations(payload.conversations || []);
+  renderDeletedTutorConversations(payload.deleted_conversations || []);
+  await fetchChatHistory("tutor", activeTutorConversationId);
+}
+
+async function updateTutorConversation(conversationId, updates) {
+  await updateConversationByMode("tutor", conversationId, updates);
+}
+
+async function updateConversationByMode(mode, conversationId, updates) {
+  if (!activeProfile || !activeProfile.name) {
+    return;
+  }
+  const response = await fetch("/api/conversations/update", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      conversation_mode: mode,
+      conversation_id: conversationId,
+      title: Object.prototype.hasOwnProperty.call(updates, "title") ? updates.title : null,
+      pinned: Object.prototype.hasOwnProperty.call(updates, "pinned") ? updates.pinned : null,
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not update that chat.");
+  }
+  if (mode === "tutor") {
+    renderTutorConversations(payload.conversations || []);
+    renderDeletedTutorConversations(payload.deleted_conversations || []);
+  } else if (mode === "lounge") {
+    renderLoungeConversations(payload.conversations || []);
+    renderDeletedLoungeConversations(payload.deleted_conversations || []);
+  }
+}
+
+async function restoreConversationByMode(mode, conversationId) {
+  if (!activeProfile || !activeProfile.name) {
+    return;
+  }
+  const response = await fetch("/api/conversations/restore", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      conversation_mode: mode,
+      conversation_id: conversationId,
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not restore that chat.");
+  }
+  if (mode === "tutor") {
+    activeTutorConversationId = conversationId;
+    renderTutorConversations(payload.conversations || []);
+    renderDeletedTutorConversations(payload.deleted_conversations || []);
+    await fetchChatHistory("tutor", activeTutorConversationId);
+  } else if (mode === "lounge") {
+    activeLoungeConversationId = conversationId;
+    renderLoungeConversations(payload.conversations || []);
+    renderDeletedLoungeConversations(payload.deleted_conversations || []);
+    await fetchChatHistory("lounge", activeLoungeConversationId);
+  }
+}
+
+function renderStorageStatus(status) {
+  if (!dataSaveStatus || !dataSaveCounts) {
+    return;
+  }
+  if (!status) {
+    dataSaveStatus.textContent = "Waiting for saved profile, progress, and chat details...";
+    dataSaveCounts.textContent = "No storage summary loaded yet.";
+    return;
+  }
+  dataSaveStatus.textContent = status.profile_saved
+    ? "Your profile is saved automatically, and this app is now tracking saved progress and chats too."
+    : "Your profile has not been saved yet.";
+  dataSaveCounts.textContent = `Progress items: ${status.progress_items || 0} | Saved chat messages: ${status.chat_messages || 0} | Practice attempts: ${status.practice_attempts || 0} | Memory items: ${status.memory_items || 0} | Behavior events: ${status.behavior_events || 0} | Outcome records: ${status.outcome_records || 0} | Trend: ${(status.analytics_trend || "building").replace(/_/g, " ")} | Syllabus docs: ${status.syllabus_documents || 0}`;
+}
+
+function renderFeatureHealth(snapshot) {
+  if (!featureHealthList) {
+    return;
+  }
+
+  featureHealthList.innerHTML = "";
+  if (!snapshot || !Array.isArray(snapshot.checks)) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Feature health will appear here after a profile loads.";
+    featureHealthList.appendChild(empty);
+    return;
+  }
+
+  const header = document.createElement("p");
+  header.className = "muted";
+  header.textContent = `Overall health: ${snapshot.health_score || 0}%`;
+  featureHealthList.appendChild(header);
+
+  snapshot.checks.forEach((check) => {
+    const row = document.createElement("div");
+    row.className = "source-chip";
+    row.style.display = "block";
+    row.style.marginBottom = "0.6rem";
+
+    const title = document.createElement("strong");
+    title.textContent = `${String(check.feature || "feature").replace(/_/g, " ")}: ${String(check.status || "unknown").toUpperCase()}`;
+
+    const detail = document.createElement("p");
+    detail.className = "muted";
+    detail.style.margin = "0.35rem 0 0";
+    detail.textContent = check.detail || "";
+
+    row.appendChild(title);
+    row.appendChild(detail);
+    featureHealthList.appendChild(row);
+  });
+}
+
+async function fetchStorageStatus(studentName) {
+  if (!studentName) {
+    renderStorageStatus(null);
+    return;
+  }
+  const response = await fetch(`/api/storage-status/${encodeURIComponent(studentName)}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load saved-data status.");
+  }
+  renderStorageStatus(payload);
+}
+
+async function fetchFeatureHealth(studentName) {
+  if (!studentName) {
+    renderFeatureHealth(null);
+    return;
+  }
+  const response = await fetch(`/api/feature-health/${encodeURIComponent(studentName)}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load feature health.");
+  }
+  renderFeatureHealth(payload);
+}
+
+function renderTutorVideoBridge(video) {
+  if (!tutorVideoBridgeCues) {
+    return;
+  }
+
+  tutorVideoBridgeCues.innerHTML = "";
+  if (!video) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Choose a tutor video to see its 3D bridge, cue points, and lesson flow.";
+    tutorVideoBridgeCues.appendChild(empty);
+    return;
+  }
+
+  const cueGroups = [];
+  if (video.match_reasons && video.match_reasons.length) {
+    cueGroups.push(`Why it is ranked here: ${video.match_reasons.slice(0, 2).join(" ")}`);
+  }
+  if (video.visual_learning && video.visual_learning.scenario) {
+    cueGroups.push(`3D scene: ${video.visual_learning.scenario}`);
+  }
+  const visualFrames = video.visual_learning && Array.isArray(video.visual_learning.frames) ? video.visual_learning.frames : [];
+  if (visualFrames.length) {
+    cueGroups.push(`First visual step: ${visualFrames[0]}`);
+  }
+  const calculationSteps = video.video_explanation && Array.isArray(video.video_explanation.calculations)
+    ? video.video_explanation.calculations
+    : [];
+  if (calculationSteps.length) {
+    cueGroups.push(`First calculation step: ${calculationSteps[0]}`);
+  }
+  if (Array.isArray(video.cue_points) && video.cue_points.length) {
+    cueGroups.push(`Creator cue: ${video.cue_points[0]}`);
+  }
+
+  if (!cueGroups.length) {
+    cueGroups.push("This video can be used to seed a Tutor explanation and a 3D concept board.");
+  }
+
+  cueGroups.forEach((cue) => {
+    const item = document.createElement("p");
+    item.className = "video-library-cue";
+    item.textContent = cue;
+    tutorVideoBridgeCues.appendChild(item);
+  });
+}
+
+function renderVideoLibrary(snapshot) {
+  videoLibrarySnapshot = snapshot || null;
+  if (!tutorVideoList) {
+    return;
+  }
+
+  tutorVideoList.innerHTML = "";
+  if (!snapshot || !Array.isArray(snapshot.videos) || !snapshot.videos.length) {
+    if (tutorVideoPlayer) {
+      tutorVideoPlayer.removeAttribute("src");
+      tutorVideoPlayer.load();
+    }
+    if (openVideoBridgeBtn) {
+      openVideoBridgeBtn.disabled = true;
+    }
+    if (useVideoInTutorBtn) {
+      useVideoInTutorBtn.disabled = true;
+    }
+    activeTutorVideo = null;
+    if (tutorVideoTitle) {
+      tutorVideoTitle.textContent = "No video selected";
+    }
+    if (tutorVideoMeta) {
+      tutorVideoMeta.textContent = "Add videos to the tutor media folder or manifest and they will appear in the tutor room.";
+    }
+    if (tutorVideoSummary) {
+      tutorVideoSummary.textContent = "Once videos are available, Astra will rank them by exam relevance and topic weakness inside the tutor room.";
+    }
+    renderTutorVideoBridge(null);
+    const mediaRoot = APP_CONFIG.video_library_media_root || "web/media/tutor-videos";
+    const manifestPath = APP_CONFIG.video_library_manifest_path || "data/tutor_video_library.json";
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = `No tutor videos found yet. Drop mp4 or webm files into ${mediaRoot}, or add manifest entries in ${manifestPath}. They will appear inside the tutor room.`;
+    tutorVideoList.appendChild(empty);
+    return;
+  }
+
+  const videoItems = snapshot.videos;
+  const selectedVideoId = activeTutorVideo && activeTutorVideo.id ? activeTutorVideo.id : "";
+  const selectedVideo = videoItems.find((item) => item.id === selectedVideoId) || videoItems[0];
+  activeTutorVideo = selectedVideo || null;
+  if (openVideoBridgeBtn) {
+    openVideoBridgeBtn.disabled = !selectedVideo;
+  }
+  if (useVideoInTutorBtn) {
+    useVideoInTutorBtn.disabled = !selectedVideo;
+  }
+
+  if (tutorVideoPlayer && selectedVideo && selectedVideo.url) {
+    tutorVideoPlayer.src = selectedVideo.url;
+    tutorVideoPlayer.load();
+  }
+  if (tutorVideoTitle) {
+    tutorVideoTitle.textContent = selectedVideo ? selectedVideo.title || "Tutor Video" : "No video selected";
+  }
+  if (tutorVideoMeta) {
+    const metaBits = [];
+    if (selectedVideo && selectedVideo.topic) {
+      metaBits.push(selectedVideo.topic);
+    }
+    if (selectedVideo && selectedVideo.duration_label) {
+      metaBits.push(selectedVideo.duration_label);
+    }
+    if (selectedVideo && selectedVideo.level) {
+      metaBits.push(selectedVideo.level);
+    }
+    if (selectedVideo && selectedVideo.relevance_score !== undefined) {
+      metaBits.push(`Relevance ${selectedVideo.relevance_score}`);
+    }
+    tutorVideoMeta.textContent = metaBits.length
+      ? metaBits.join(" | ")
+      : "A video will appear here once it is added to the library.";
+  }
+  if (tutorVideoSummary) {
+    tutorVideoSummary.textContent = selectedVideo && selectedVideo.summary
+      ? selectedVideo.summary
+      : "Use this video as the seed for a visual recap, a 3D concept bridge, or a tutor follow-up prompt.";
+  }
+
+  renderTutorVideoBridge(selectedVideo);
+
+  videoItems.forEach((video) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `video-library-item${selectedVideo && video.id === selectedVideo.id ? " active" : ""}`;
+    button.addEventListener("click", () => {
+      activeTutorVideo = video;
+      focusTutorRoomStage("video-selection");
+      renderVideoLibrary(videoLibrarySnapshot);
+    });
+
+    const title = document.createElement("strong");
+    title.textContent = video.title || "Tutor Video";
+    button.appendChild(title);
+
+    const description = document.createElement("p");
+    description.className = "muted";
+    description.textContent = video.summary || "A lesson clip that can be bridged into the 3D concept board.";
+    button.appendChild(description);
+
+    const badges = document.createElement("div");
+    badges.className = "video-library-badges";
+    const badgeValues = [];
+    if (video.topic) {
+      badgeValues.push(video.topic);
+    }
+    if (video.source_type) {
+      badgeValues.push(video.source_type === "local_file" ? "Local file" : "Manifest");
+    }
+    if (Array.isArray(video.tags) && video.tags.length) {
+      badgeValues.push(...video.tags.slice(0, 3));
+    }
+    if (video.relevance_score !== undefined) {
+      badgeValues.push(`Score ${video.relevance_score}`);
+    }
+    badgeValues.slice(0, 4).forEach((value) => {
+      const chip = document.createElement("span");
+      chip.className = "video-library-chip";
+      chip.textContent = value;
+      badges.appendChild(chip);
+    });
+    button.appendChild(badges);
+
+    tutorVideoList.appendChild(button);
+  });
+}
+
+function preferTutorVideosForAvatar(avatar) {
+  if (!avatar || !videoLibrarySnapshot || !Array.isArray(videoLibrarySnapshot.videos) || !videoLibrarySnapshot.videos.length) {
+    return;
+  }
+
+  const featuredIds = Array.isArray(avatar.featured_video_ids) ? avatar.featured_video_ids : [];
+  if (!featuredIds.length) {
+    return;
+  }
+
+  const featuredVideo = videoLibrarySnapshot.videos.find((video) => featuredIds.includes(video.id));
+  if (!featuredVideo) {
+    return;
+  }
+
+  activeTutorVideo = featuredVideo;
+  renderVideoLibrary(videoLibrarySnapshot);
+}
+
+function pickAuthHeroVideo(snapshot) {
+  if (!snapshot || !Array.isArray(snapshot.videos) || !snapshot.videos.length) {
+    return null;
+  }
+  return snapshot.videos.find((video) => video.id === "female-homepage-hero")
+    || snapshot.videos.find((video) => (video.tags || []).some((tag) => String(tag || "").toLowerCase().includes("homepage")))
+    || snapshot.videos[0]
+    || null;
+}
+
+function renderAuthHeroVideo(snapshot) {
+  authHeroVideoSnapshot = snapshot || null;
+  if (!authHeroVideoPlayer) {
+    return;
+  }
+
+  const selectedVideo = pickAuthHeroVideo(snapshot);
+  if (!selectedVideo) {
+    authHeroVideoPlayer.removeAttribute("src");
+    authHeroVideoPlayer.load();
+    if (authHeroVideoTitle) {
+      authHeroVideoTitle.textContent = "Homepage hero video";
+    }
+    if (authHeroVideoMeta) {
+      authHeroVideoMeta.textContent = "A warm opening video will appear here when the library loads.";
+    }
+    if (authHeroVideoSummary) {
+      authHeroVideoSummary.textContent = "This preview is intentionally subtle so it feels like part of the brand, not an interruption.";
+    }
+    if (authHeroVideoTag) {
+      authHeroVideoTag.textContent = "Preview";
+    }
+    if (authHeroVideoToggle) {
+      authHeroVideoToggle.textContent = "Play preview";
+      authHeroVideoToggle.disabled = true;
+    }
+    return;
+  }
+
+  authHeroVideoPlayer.src = selectedVideo.url || "";
+  authHeroVideoPlayer.muted = true;
+  authHeroVideoPlayer.loop = true;
+  authHeroVideoPlayer.playsInline = true;
+  authHeroVideoPlayer.autoplay = true;
+  authHeroVideoPlayer.load();
+  const playPromise = authHeroVideoPlayer.play();
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(() => {});
+  }
+
+  if (authHeroVideoTitle) {
+    authHeroVideoTitle.textContent = selectedVideo.title || "Homepage hero video";
+  }
+  if (authHeroVideoMeta) {
+    const metaParts = [];
+    if (selectedVideo.topic) {
+      metaParts.push(selectedVideo.topic);
+    }
+    if (selectedVideo.level) {
+      metaParts.push(selectedVideo.level);
+    }
+    if (selectedVideo.duration_label) {
+      metaParts.push(selectedVideo.duration_label);
+    }
+    authHeroVideoMeta.textContent = metaParts.length
+      ? metaParts.join(" | ")
+      : "Homepage welcome preview";
+  }
+  if (authHeroVideoSummary) {
+    authHeroVideoSummary.textContent = selectedVideo.summary || "A warm opening video for the homepage.";
+  }
+  if (authHeroVideoTag) {
+    authHeroVideoTag.textContent = selectedVideo.source_type === "local_file" ? "Local hero" : "Manifest hero";
+  }
+  if (authHeroVideoToggle) {
+    authHeroVideoToggle.disabled = false;
+    authHeroVideoToggle.textContent = "Pause preview";
+  }
+}
+
+async function toggleAuthHeroVideoPlayback() {
+  if (!authHeroVideoPlayer || authHeroVideoPlayer.disabled) {
+    return;
+  }
+  if (authHeroVideoPlayer.paused) {
+    try {
+      await authHeroVideoPlayer.play();
+    } catch (error) {
+      console.warn("Could not play homepage hero video:", error);
+      return;
+    }
+    if (authHeroVideoToggle) {
+      authHeroVideoToggle.textContent = "Pause preview";
+    }
+    return;
+  }
+  authHeroVideoPlayer.pause();
+  if (authHeroVideoToggle) {
+    authHeroVideoToggle.textContent = "Play preview";
+  }
+}
+
+function pickIntroVideo(snapshot, mode = "signin") {
+  if (!snapshot || !Array.isArray(snapshot.videos) || !snapshot.videos.length) {
+    return null;
+  }
+  if (mode === "signup") {
+    return snapshot.videos.find((video) => video.id === "female-homepage-hero")
+      || snapshot.videos.find((video) => (video.tags || []).some((tag) => String(tag || "").toLowerCase().includes("homepage")))
+      || snapshot.videos[0]
+      || null;
+  }
+  return snapshot.videos.find((video) => video.id === "welcome-back-female-tutor")
+    || snapshot.videos.find((video) => (video.tags || []).some((tag) => String(tag || "").toLowerCase().includes("welcome")))
+    || snapshot.videos[0]
+    || null;
+}
+
+function renderIntroVideo(snapshot, mode = introVideoMode) {
+  introVideoSnapshot = snapshot || null;
+  if (!introVideoPlayer) {
+    return;
+  }
+
+  const selectedVideo = pickIntroVideo(snapshot, mode);
+  if (!selectedVideo) {
+    introVideoPlayer.removeAttribute("src");
+    introVideoPlayer.load();
+    if (introVideoTitle) {
+      introVideoTitle.textContent = "Welcome video";
+    }
+    if (introVideoMeta) {
+      introVideoMeta.textContent = "Your Astra intro video will appear here after sign-in or sign-up.";
+    }
+    if (introVideoSummary) {
+      introVideoSummary.textContent = "A calm, branded introduction that feels like part of the website flow.";
+    }
+    if (introVideoTag) {
+      introVideoTag.textContent = "Intro";
+    }
+    if (introVideoToggle) {
+      introVideoToggle.textContent = "Pause";
+      introVideoToggle.disabled = true;
+    }
+    return;
+  }
+
+  introVideoPlayer.src = selectedVideo.url || "";
+  introVideoPlayer.muted = true;
+  introVideoPlayer.loop = true;
+  introVideoPlayer.playsInline = true;
+  introVideoPlayer.autoplay = true;
+  introVideoPlayer.load();
+  const playPromise = introVideoPlayer.play();
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(() => {});
+  }
+
+  if (introVideoTitle) {
+    introVideoTitle.textContent = selectedVideo.title || "Welcome video";
+  }
+  if (introVideoMeta) {
+    const metaParts = [];
+    if (selectedVideo.topic) metaParts.push(selectedVideo.topic);
+    if (selectedVideo.level) metaParts.push(selectedVideo.level);
+    if (selectedVideo.duration_label) metaParts.push(selectedVideo.duration_label);
+    introVideoMeta.textContent = metaParts.length ? metaParts.join(" | ") : "Astra intro preview";
+  }
+  if (introVideoSummary) {
+    introVideoSummary.textContent = selectedVideo.summary || "A calm, branded introduction that leads cleanly into the studio.";
+  }
+  if (introVideoTag) {
+    introVideoTag.textContent = mode === "signup" ? "New user intro" : "Welcome back";
+  }
+  if (introVideoToggle) {
+    introVideoToggle.disabled = false;
+    introVideoToggle.textContent = introVideoPlayer.paused ? "Play" : "Pause";
+  }
+}
+
+async function toggleIntroVideoPlayback() {
+  if (!introVideoPlayer || introVideoPlayer.disabled) {
+    return;
+  }
+  if (introVideoPlayer.paused) {
+    try {
+      await introVideoPlayer.play();
+    } catch (error) {
+      console.warn("Could not play intro video:", error);
+      return;
+    }
+    if (introVideoToggle) {
+      introVideoToggle.textContent = "Pause";
+    }
+    if (introSoundBtn) {
+      introSoundBtn.textContent = "Mute sound";
+    }
+    return;
+  }
+  introVideoPlayer.pause();
+  if (introVideoToggle) {
+    introVideoToggle.textContent = "Play";
+  }
+  if (introSoundBtn) {
+    introSoundBtn.textContent = "Play with sound";
+  }
+}
+
+async function toggleIntroVideoSound() {
+  if (!introVideoPlayer) {
+    return;
+  }
+  introVideoPlayer.muted = !introVideoPlayer.muted;
+  if (!introVideoPlayer.paused) {
+    try {
+      await introVideoPlayer.play();
+    } catch (error) {
+      console.warn("Could not adjust intro sound:", error);
+    }
+  }
+  if (introSoundBtn) {
+    introSoundBtn.textContent = introVideoPlayer.muted ? "Play with sound" : "Mute sound";
+  }
+}
+
+function openIntroScreen(profile, mode = "signin") {
+  introVideoMode = mode;
+  if (introScreen) {
+    introScreen.classList.remove("hidden");
+  }
+  if (loginScreen) {
+    loginScreen.classList.add("hidden");
+  }
+  if (appShell) {
+    appShell.classList.add("hidden");
+  }
+  if (introTitle) {
+    introTitle.textContent = mode === "signup"
+      ? `Welcome to Astra, ${profile && profile.name ? profile.name : "student"}`
+      : `Welcome back to Astra, ${profile && profile.name ? profile.name : "student"}`;
+  }
+  if (introQuote) {
+    introQuote.textContent = mode === "signup"
+      ? "A clean welcome, then a smooth move into your learning studio."
+      : "A short reset, then right back into your learning rhythm.";
+  }
+  if (introText) {
+    introText.textContent = mode === "signup"
+      ? "This introduction is designed to feel calm, premium, and intentional. The video helps set the tone, then the studio opens without breaking the flow."
+      : "Astra keeps the transition soft and focused so your return feels natural. You get a quick welcome, a branded video moment, and then the learning studio opens.";
+  }
+  if (introHint) {
+    introHint.textContent = "When you're ready, continue into the studio and keep moving.";
+  }
+  renderIntroVideo(videoLibrarySnapshot || authHeroVideoSnapshot, mode);
+  if (introVideoPlayer) {
+    try {
+      introVideoPlayer.currentTime = 0;
+    } catch (error) {
+      void error;
+    }
+  }
+}
+
+function enterStudioFromIntro() {
+  if (introVideoPlayer) {
+    introVideoPlayer.pause();
+    introVideoPlayer.muted = true;
+  }
+  if (introVideoToggle) {
+    introVideoToggle.textContent = "Play";
+  }
+  if (introSoundBtn) {
+    introSoundBtn.textContent = "Play with sound";
+  }
+  if (introScreen) {
+    introScreen.classList.add("hidden");
+  }
+  if (appShell) {
+    appShell.classList.remove("hidden");
+  }
+  setActiveTab("tutorTab");
+}
+
+async function fetchVideoLibrary(studentName = "") {
+  const suffix = studentName ? `?student_name=${encodeURIComponent(studentName)}` : "";
+  const response = await fetch(`/api/video-library${suffix}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load the video library.");
+  }
+  renderAuthHeroVideo(payload);
+  renderVideoLibrary(payload);
+  if (introScreen && !introScreen.classList.contains("hidden")) {
+    renderIntroVideo(payload, introVideoMode);
+  }
+}
+
+function openActiveTutorVideoBridge() {
+  if (!activeTutorVideo) {
+    return;
+  }
+  renderVisualLearning(activeTutorVideo.visual_learning || null);
+  renderVideoExplanation(activeTutorVideo.video_explanation || null);
+  renderReasoningPanel(activeTutorVideo.video_explanation || null);
+  renderSummaryPanel(activeTutorVideo.summary || "");
+  ensureTutorRoomPersona();
+  if (document.querySelector('.tab-panel.active')?.id !== "videoTutorTab") {
+    setActiveTab("videoTutorTab");
+  }
+  setActiveStudioPane("threeTutorPanel");
+}
+
+function useActiveTutorVideoInTutor() {
+  if (!activeTutorVideo) {
+    return;
+  }
+  const promptSeed = activeTutorVideo.topic || activeTutorVideo.title || "this concept";
+  const targetInput = tutorRoomMessageInput || messageInput;
+  if (targetInput) {
+    targetInput.value = `Teach me ${promptSeed} using the same style as the selected tutor video and then connect it to a 3D visual explanation.`;
+  }
+  setActiveTab("tutorRoomTab");
+  if (targetInput) {
+    targetInput.focus();
+  }
+}
+
+async function fetchLearningSources(studentName) {
+  if (!studentName) {
+    renderLearningSources([]);
+    renderLearningSourcePack(null, "");
+    return;
+  }
+  const response = await fetch(`/api/learning-sources/${encodeURIComponent(studentName)}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load learning sources.");
+  }
+  renderLearningSourcePack(payload.source_pack || null, payload.student_state_route_text || "");
+  renderLearningSources(payload.resources || []);
+}
+
+function renderSyllabusDocuments(documents) {
+  if (!syllabusManager) {
+    return;
+  }
+  syllabusManager.innerHTML = "";
+  if (!documents || !documents.length) {
+    syllabusManager.innerHTML = `<p class="muted">No syllabus documents saved yet. Add a course portion to help the tutor prepare around your actual topics.</p>`;
+    return;
+  }
+
+  documents.forEach((documentItem) => {
+    const card = document.createElement("div");
+    card.className = "exam-card";
+    const title = document.createElement("strong");
+    title.textContent = documentItem.title || "Syllabus";
+    const meta = document.createElement("p");
+    meta.className = "muted";
+    meta.textContent = `${documentItem.source_type === "document" ? "Uploaded file" : "Pasted text"}${documentItem.file_name ? ` | ${documentItem.file_name}` : ""}`;
+    const summary = document.createElement("p");
+    summary.className = "muted";
+    summary.textContent = documentItem.topic_summary || "No summary available yet.";
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.className = "ghost-button";
+    removeBtn.textContent = "Delete";
+    removeBtn.addEventListener("click", () => deleteSyllabusDocument(documentItem.id));
+    card.append(title, meta, summary, removeBtn);
+    syllabusManager.appendChild(card);
+  });
+}
+
+async function fetchSyllabusDocuments(studentName) {
+  if (!studentName) {
+    renderSyllabusDocuments([]);
+    return;
+  }
+  const response = await fetch(`/api/syllabus/${encodeURIComponent(studentName)}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load syllabus documents.");
+  }
+  renderSyllabusDocuments(payload.documents || []);
+}
+
+async function deleteSyllabusDocument(documentId) {
+  if (!activeProfile) {
+    return;
+  }
+  const response = await fetch("/api/syllabus/delete", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      document_id: documentId,
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not delete that syllabus document.");
+  }
+  renderSyllabusDocuments(payload.documents || []);
+  renderStorageStatus(payload.storage_status || null);
+  if (syllabusStatus) {
+    syllabusStatus.textContent = "The selected syllabus document was deleted.";
+  }
+}
+
+function readLocalFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const base64 = result.includes(",") ? result.split(",")[1] : result;
+      resolve(base64);
+    };
+    reader.onerror = () => reject(new Error("Could not read that file."));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadSyllabusMaterial() {
+  if (!activeProfile) {
+    return;
+  }
+
+  const title = (syllabusTitleInput && syllabusTitleInput.value.trim()) || "";
+  const textContent = (syllabusTextInput && syllabusTextInput.value.trim()) || "";
+  const file = syllabusFileInput && syllabusFileInput.files && syllabusFileInput.files[0];
+
+  if (!textContent && !file) {
+    if (syllabusStatus) {
+      syllabusStatus.textContent = "Paste some syllabus text or choose a file first.";
+    }
+    return;
+  }
+
+  let fileBase64 = "";
+  let fileName = "";
+  let mimeType = "";
+  if (file) {
+    fileBase64 = await readLocalFileAsBase64(file);
+    fileName = file.name || "";
+    mimeType = file.type || "";
+  }
+
+  if (uploadSyllabusBtn) {
+    uploadSyllabusBtn.disabled = true;
+  }
+  if (syllabusStatus) {
+    syllabusStatus.textContent = "Saving and analyzing your syllabus...";
+  }
+
+  try {
+    const response = await fetch("/api/syllabus/upload", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name: activeProfile.name,
+        title,
+        text_content: textContent,
+        file_base64: fileBase64,
+        file_name: fileName,
+        mime_type: mimeType,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not save that syllabus.");
+    }
+    renderSyllabusDocuments(payload.documents || []);
+    renderStorageStatus(payload.storage_status || null);
+    if (syllabusTitleInput) {
+      syllabusTitleInput.value = "";
+    }
+    if (syllabusTextInput) {
+      syllabusTextInput.value = "";
+    }
+    if (syllabusFileInput) {
+      syllabusFileInput.value = "";
+    }
+    if (syllabusStatus) {
+      syllabusStatus.textContent = "Syllabus saved. The tutor and revision planner will use it from now on.";
+    }
+  } catch (error) {
+    if (syllabusStatus) {
+      syllabusStatus.textContent = error.message;
+    }
+  } finally {
+    if (uploadSyllabusBtn) {
+      uploadSyllabusBtn.disabled = false;
+    }
+  }
+}
+
+function appendMessage(mode, role, text) {
+  const feed = getFeedForMode(mode);
+  if (!feed) {
+    return null;
+  }
+  const paragraph = appendFeedMessage(feed, mode, role, text);
+  if (mode === "tutor" && tutorRoomTranscriptFeed) {
+    appendFeedMessage(tutorRoomTranscriptFeed, mode, role, text);
+  }
+  syncTutorFullscreenOverlay();
+  return paragraph;
+}
+
+function clearTutorCheckpointWidget() {
+  const feed = getFeedForMode("tutor");
+  if (!feed) {
+    return;
+  }
+  const existing = feed.querySelector(".checkpoint-card");
+  if (existing) {
+    existing.remove();
+  }
+  const existingPractice = feed.querySelector(".checkpoint-practice-stack");
+  if (existingPractice) {
+    existingPractice.remove();
+  }
+  if (tutorRoomTranscriptFeed) {
+    const transcriptExisting = tutorRoomTranscriptFeed.querySelector(".checkpoint-card");
+    if (transcriptExisting) {
+      transcriptExisting.remove();
+    }
+    const transcriptPractice = tutorRoomTranscriptFeed.querySelector(".checkpoint-practice-stack");
+    if (transcriptPractice) {
+      transcriptPractice.remove();
+    }
+  }
+  syncTutorFullscreenOverlay();
+  activeTutorCheckpoint = null;
+}
+
+function _checkpointOptionLabel(index) {
+  return String.fromCharCode(65 + index);
+}
+
+function renderTutorCheckpointWidget(checkpoint, { practiceMode = false } = {}) {
+  const feed = getFeedForMode("tutor");
+  if (!feed || !checkpoint) {
+    return null;
+  }
+
+  const card = document.createElement("div");
+  card.className = `checkpoint-card${practiceMode ? " practice-mode" : ""}`;
+  card.dataset.checkpointMode = practiceMode ? "practice" : "checkpoint";
+
+  const header = document.createElement("div");
+  header.className = "checkpoint-header";
+  const headingCopy = document.createElement("div");
+  const heading = document.createElement("p");
+  heading.className = "card-title";
+  heading.textContent = checkpoint.heading || (practiceMode ? "More practice" : "Quick Check — let's see if this clicked");
+  const meta = document.createElement("p");
+  meta.className = "muted checkpoint-meta";
+  const metaBits = [];
+  if (checkpoint.subject) {
+    metaBits.push(checkpoint.subject);
+  }
+  if (checkpoint.difficulty) {
+    metaBits.push(checkpoint.difficulty);
+  }
+  if (checkpoint.explanation_level) {
+    metaBits.push(`Level ${checkpoint.explanation_level}`);
+  }
+  meta.textContent = metaBits.length ? metaBits.join(" • ") : "JEE checkpoint";
+  headingCopy.append(heading, meta);
+  const badge = document.createElement("span");
+  badge.className = "pill";
+  badge.textContent = practiceMode ? "Practice" : "Checkpoint";
+  header.append(headingCopy, badge);
+
+  const question = document.createElement("p");
+  question.className = "checkpoint-question";
+  question.textContent = checkpoint.question || "Question unavailable.";
+
+  const options = document.createElement("div");
+  options.className = "checkpoint-options";
+
+  const result = document.createElement("div");
+  result.className = "checkpoint-result hidden";
+
+  const supportRow = document.createElement("div");
+  supportRow.className = "checkpoint-support-row";
+  const morePracticeBtn = document.createElement("button");
+  morePracticeBtn.type = "button";
+  morePracticeBtn.className = "ghost-button hidden";
+  morePracticeBtn.textContent = "More practice";
+  supportRow.appendChild(morePracticeBtn);
+
+  const optionButtons = [];
+  const lockOptions = () => {
+    optionButtons.forEach((button) => {
+      button.disabled = true;
+    });
+  };
+
+  const showResult = (evaluation, selectedAnswer) => {
+    result.classList.remove("hidden");
+    result.innerHTML = "";
+    const resultHeading = document.createElement("strong");
+    resultHeading.textContent = evaluation.is_correct ? "Correct" : "Let’s fix that together";
+    const feedback = document.createElement("p");
+    feedback.className = "muted";
+    feedback.textContent = evaluation.feedback || (evaluation.is_correct ? "Nice work — that clicked." : "That needs one more pass.");
+    result.append(resultHeading, feedback);
+
+    if (evaluation.is_correct) {
+      const practiceHint = document.createElement("p");
+      practiceHint.className = "muted";
+      practiceHint.textContent = evaluation.more_practice_heading || "You can open three extra questions on the same topic if you want a stronger grip.";
+      result.appendChild(practiceHint);
+      morePracticeBtn.classList.remove("hidden");
+      morePracticeBtn.disabled = false;
+      morePracticeBtn.onclick = async () => {
+        morePracticeBtn.disabled = true;
+        morePracticeBtn.textContent = "Loading...";
+        try {
+          const practice = await fetchCheckpointSet({
+            topic: checkpoint.topic,
+            subject: checkpoint.subject,
+            explanation_level: checkpoint.explanation_level,
+            original_explanation: checkpoint.original_explanation || checkpoint.correct_explanation || checkpoint.question,
+            practice_count: 3,
+          });
+          renderCheckpointPracticeSet(practice.practice_questions || [], card);
+          morePracticeBtn.classList.add("hidden");
+        } catch (error) {
+          result.appendChild(createMutedLine(`Could not load more practice: ${error.message}`));
+          morePracticeBtn.disabled = false;
+          morePracticeBtn.textContent = "More practice";
+        }
+      };
+    } else {
+      const wrongReason = document.createElement("p");
+      wrongReason.className = "checkpoint-detail";
+      wrongReason.textContent = evaluation.wrong_reason || "That choice misses the exact rule from the explanation.";
+      const reExplain = document.createElement("p");
+      reExplain.className = "checkpoint-detail";
+      reExplain.textContent = evaluation.re_explanation || "Try the same concept through a different example.";
+      const correctAnswer = document.createElement("p");
+      correctAnswer.className = "checkpoint-detail";
+      correctAnswer.textContent = `Correct answer: ${evaluation.correct_answer || checkpoint.correct_answer} — ${evaluation.correct_explanation || checkpoint.correct_explanation || ""}`;
+      result.append(wrongReason, reExplain, correctAnswer);
+      morePracticeBtn.classList.add("hidden");
+    }
+  };
+
+  const handleSelection = async (optionLabel, optionText) => {
+    lockOptions();
+    result.classList.remove("hidden");
+    result.innerHTML = "";
+    result.appendChild(createMutedLine("Checking your answer..."));
+    try {
+      const evaluation = await evaluateCheckpointAnswer({
+        question: checkpoint.question,
+        correct_answer: checkpoint.correct_answer,
+        student_answer: optionLabel,
+        topic: checkpoint.topic,
+        subject: checkpoint.subject,
+        explanation_level: checkpoint.explanation_level,
+        original_explanation: checkpoint.original_explanation || checkpoint.correct_explanation || checkpoint.question,
+      });
+      showResult(evaluation, optionText);
+      if (!practiceMode && activeJourneySession) {
+        const checkpointScore = evaluation.is_correct ? 100 : 45;
+        await completeJourneySessionFromCheckpoint(checkpointScore);
+      }
+    } catch (error) {
+      result.innerHTML = "";
+      result.appendChild(createMutedLine(`Could not check that answer: ${error.message}`));
+    }
+    syncTutorRoomTranscript();
+  };
+
+  (checkpoint.options || []).slice(0, 4).forEach((option, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "mock-option checkpoint-option";
+    button.textContent = `${_checkpointOptionLabel(index)}. ${option}`;
+    button.addEventListener("click", () => handleSelection(_checkpointOptionLabel(index), option));
+    optionButtons.push(button);
+    options.appendChild(button);
+  });
+
+  card.append(header, question, options, result, supportRow);
+  feed.appendChild(card);
+  feed.scrollTop = feed.scrollHeight;
+  syncTutorFullscreenOverlay();
+  syncTutorRoomTranscript();
+  return card;
+}
+
+function renderTutorPracticeSet(practiceQuestions, anchorCard, options = {}) {
+  const feed = getFeedForMode("tutor");
+  if (!feed || !Array.isArray(practiceQuestions) || !practiceQuestions.length) {
+    return;
+  }
+
+  const existingPractice = feed.querySelector(".checkpoint-practice-stack");
+  if (existingPractice) {
+    existingPractice.remove();
+  }
+
+  const container = document.createElement("div");
+  container.className = "checkpoint-practice-stack";
+  const answerStates = new Array(practiceQuestions.length).fill(null);
+  let completionStarted = false;
+
+  const maybeCompleteChapterCheckpoint = async () => {
+    if (!options.chapterMode || completionStarted) {
+      return;
+    }
+    if (answerStates.some((item) => item === null)) {
+      return;
+    }
+    completionStarted = true;
+    const correctCount = answerStates.filter(Boolean).length;
+    const totalCount = answerStates.length || 1;
+    const checkpointScore = Math.round((correctCount * 100) / totalCount);
+    const summary = document.createElement("div");
+    summary.className = "checkpoint-result";
+    summary.innerHTML = "";
+    summary.appendChild(createMutedLine(`Subtopic checkpoint score: ${checkpointScore}% (${correctCount}/${totalCount})`));
+    container.appendChild(summary);
+    if (typeof options.onComplete === "function") {
+      await options.onComplete({ correctCount, totalCount, checkpointScore, answers: answerStates.slice() });
+    }
+  };
+
+  practiceQuestions.slice(0, 3).forEach((question, index) => {
+    const card = document.createElement("div");
+    card.className = "checkpoint-card practice-mode";
+    const header = document.createElement("div");
+    header.className = "checkpoint-header";
+    const headingCopy = document.createElement("div");
+    const heading = document.createElement("p");
+    heading.className = "card-title";
+    heading.textContent = question.heading || `More practice ${index + 1}`;
+    const meta = document.createElement("p");
+    meta.className = "muted checkpoint-meta";
+    const metaBits = [];
+    if (question.subject) {
+      metaBits.push(question.subject);
+    }
+    if (question.difficulty) {
+      metaBits.push(question.difficulty);
+    }
+    meta.textContent = metaBits.length ? metaBits.join(" • ") : "Practice question";
+    headingCopy.append(heading, meta);
+    const badge = document.createElement("span");
+    badge.className = "pill";
+    badge.textContent = `Practice ${index + 1}`;
+    header.append(headingCopy, badge);
+
+    const prompt = document.createElement("p");
+    prompt.className = "checkpoint-question";
+    renderMarkdownElement(prompt, question.question || "Question unavailable.");
+
+    const options = document.createElement("div");
+    options.className = "checkpoint-options";
+    const result = document.createElement("div");
+    result.className = "checkpoint-result hidden";
+    const optionButtons = [];
+    const lockOptions = () => optionButtons.forEach((button) => { button.disabled = true; });
+
+    const showResult = (evaluation) => {
+      result.classList.remove("hidden");
+      result.innerHTML = "";
+      const feedback = document.createElement("strong");
+      feedback.textContent = evaluation.is_correct ? "Correct" : "Review this one";
+      const detail = document.createElement("p");
+      detail.className = "muted";
+      detail.textContent = evaluation.feedback || (evaluation.is_correct ? "Nice work." : "Let’s use the explanation to tighten the idea.");
+      const explanation = document.createElement("p");
+      explanation.className = "checkpoint-detail";
+      explanation.textContent = evaluation.correct_explanation || question.correct_explanation || "";
+      result.append(feedback, detail, explanation);
+      if (!evaluation.is_correct && evaluation.wrong_reason) {
+        const wrong = document.createElement("p");
+        wrong.className = "checkpoint-detail";
+        wrong.textContent = evaluation.wrong_reason;
+        result.appendChild(wrong);
+      }
+      answerStates[index] = Boolean(evaluation.is_correct);
+      void maybeCompleteChapterCheckpoint();
+    };
+
+    const handleSelection = async (optionLabel) => {
+      lockOptions();
+      result.classList.remove("hidden");
+      result.innerHTML = "";
+      result.appendChild(createMutedLine("Checking your answer..."));
+      try {
+        const evaluation = await evaluateCheckpointAnswer({
+          question: question.question,
+          correct_answer: question.correct_answer,
+          student_answer: optionLabel,
+          topic: question.topic,
+          subject: question.subject,
+          explanation_level: question.explanation_level,
+          original_explanation: question.correct_explanation || question.question,
+        });
+        showResult(evaluation);
+      } catch (error) {
+        result.innerHTML = "";
+        result.appendChild(createMutedLine(`Could not check that answer: ${error.message}`));
+      }
+      syncTutorRoomTranscript();
+    };
+
+    (question.options || []).slice(0, 4).forEach((option, optionIndex) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "mock-option checkpoint-option";
+      button.textContent = `${_checkpointOptionLabel(optionIndex)}. ${option}`;
+      button.addEventListener("click", () => handleSelection(_checkpointOptionLabel(optionIndex)));
+      optionButtons.push(button);
+      options.appendChild(button);
+    });
+
+    card.append(header, prompt, options, result);
+    container.appendChild(card);
+  });
+
+  if (anchorCard && anchorCard.parentElement === feed) {
+    anchorCard.insertAdjacentElement("afterend", container);
+  } else {
+    feed.appendChild(container);
+  }
+  feed.scrollTop = feed.scrollHeight;
+  syncTutorFullscreenOverlay();
+  syncTutorRoomTranscript();
+}
+
+async function fetchCheckpointSet(payload) {
+  console.log("CHECKPOINT TRIGGERED - fetching question");
+  const response = await fetch("/api/checkpoint/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json();
+  console.log("CHECKPOINT RESPONSE:", data);
+  if (!response.ok) {
+    throw new Error(data.detail || "Could not build a checkpoint.");
+  }
+  return data;
+}
+
+async function loadTutorCheckpoint(topic, subject, explanationLevel, originalExplanation, options = {}) {
+  if (!activeProfile) {
+    return;
+  }
+  try {
+    clearTutorCheckpointWidget();
+    const chapterMode = Boolean(options.chapterMode) || isChapterCheckpointActive();
+    const practiceCount = chapterMode ? 3 : Number(options.practiceCount || 0);
+    const chapterCheckpointStartedAt = Date.now();
+    const checkpoint = await fetchCheckpointSet({
+      student_name: activeProfile.name,
+      topic,
+      subject,
+      explanation_level: explanationLevel,
+      original_explanation: originalExplanation,
+      practice_count: practiceCount,
+    });
+    activeTutorCheckpoint = checkpoint;
+    if (chapterMode && Array.isArray(checkpoint.practice_questions) && checkpoint.practice_questions.length) {
+      renderTutorPracticeSet(checkpoint.practice_questions, null, {
+        chapterMode: true,
+        onComplete: async ({ correctCount, totalCount }) => {
+          const score = totalCount ? Math.round((Number(correctCount || 0) * 100) / totalCount) : 0;
+          const elapsedMinutes = Math.max(1, Math.round((Date.now() - chapterCheckpointStartedAt) / 60000));
+          await completeChapterSubtopicFromCheckpoint(score, elapsedMinutes);
+        },
+      });
+    } else {
+      renderTutorCheckpointWidget(checkpoint);
+    }
+    return checkpoint;
+  } catch (error) {
+    console.warn("Checkpoint generation skipped:", error);
+    return null;
+  }
+}
+
+async function evaluateCheckpointAnswer(payload) {
+  const response = await fetch("/api/checkpoint/evaluate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.detail || "Could not evaluate that checkpoint.");
+  }
+  return data;
+}
+
+function createMutedLine(text) {
+  const paragraph = document.createElement("p");
+  paragraph.className = "muted";
+  paragraph.textContent = text;
+  return paragraph;
+}
+
+function escapeHtml(text) {
+  return String(text || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function renderMarkdownElement(element, text) {
+  if (!element) {
+    return;
+  }
+  const source = String(text || "").trim();
+  if (!source) {
+    element.textContent = "";
+    return;
+  }
+  if (window.marked && typeof window.marked.parse === "function") {
+    window.marked.setOptions({ breaks: true, gfm: true });
+    element.innerHTML = window.marked.parse(source);
+    return;
+  }
+  element.textContent = source;
+}
+
+function normalizePracticeReply(text) {
+  if (!text) {
+    return "";
+  }
+
+  let formatted = String(text).trim();
+  formatted = formatted.replace(/\r\n/g, "\n");
+  formatted = formatted.replace(/(Time Limit:|Instructions:|Questions:|Answer Format:|Answer Key:|Section [A-Z]:|Section \d+:)/gi, "\n$1");
+  formatted = formatted.replace(/(\d+\.\s+)/g, "\n$1");
+  formatted = formatted.replace(/(Question\s+\d+:)/gi, "\n$1");
+  formatted = formatted.replace(/\n{3,}/g, "\n\n");
+  return formatted.trim();
+}
+
+async function streamTutorReply(mode, text) {
+  const preparedText = mode === "practice" ? normalizePracticeReply(text) : text;
+  const textEnabled = mode !== "tutor" || (showTextExplanation ? showTextExplanation.checked : true);
+  const paragraph = appendMessage(mode, "tutor", textEnabled ? "" : "Text explanation hidden. Video and reasoning panels are still active.");
+  if (!paragraph || !textEnabled) {
+    if (mode === "tutor" && autoCaptionMode.checked) {
+      setCaption(preparedText);
+    }
+    return;
+  }
+
+  const chunks = preparedText.match(/\S+|\s+/g) || [];
+  const narration = {
+    id: `${mode}-${Date.now()}`,
+    mode,
+    paragraph,
+    chunks,
+    output: "",
+    index: 0,
+    paused: false,
+    cancelled: false,
+    text: preparedText,
+    checkpoint: preparedText,
+    resumed: false,
+    voiceStarted: false,
+  };
+  activeTutorNarration = narration;
+  updateTutorRoomLivePanel();
+
+  const updateResumeControls = () => {
+    if (pauseVoiceBtn) {
+      pauseVoiceBtn.textContent = narration.paused ? "Paused" : "Pause reply";
+      pauseVoiceBtn.disabled = narration.cancelled || narration.index >= narration.chunks.length;
+    }
+    if (resumeVoiceBtn) {
+      resumeVoiceBtn.disabled = !narration.paused;
+    }
+  };
+
+  updateResumeControls();
+  const activeTabId = document.querySelector(".tab-panel.active")?.id || "";
+  const stepDelay = mode === "tutor" && activeTabId === "tutorRoomTab" ? 10 : 22;
+  while (narration.index < narration.chunks.length) {
+    if (narration.cancelled) {
+      break;
+    }
+    if (narration.paused) {
+      await new Promise((resolve) => window.setTimeout(resolve, 80));
+      continue;
+    }
+    narration.output += narration.chunks[narration.index];
+    paragraph.textContent = narration.output;
+    if (mode === "tutor" && autoCaptionMode.checked) {
+      setCaption(narration.output);
+    }
+    const feed = getFeedForMode(mode);
+    if (feed) {
+      feed.scrollTop = feed.scrollHeight;
+    }
+    syncTutorFullscreenOverlay();
+    narration.index += 1;
+    updateResumeControls();
+    await new Promise((resolve) => window.setTimeout(resolve, stepDelay));
+  }
+
+  if (!narration.cancelled && narration.index >= narration.chunks.length) {
+    narration.paused = false;
+    narration.resumed = false;
+    // MARKED RENDERING FIXED
+    window.marked.setOptions({ breaks: true, gfm: true });
+    paragraph.innerHTML = marked.parse(narration.output || "");
+    if (mode === "tutor" && autoCaptionMode.checked) {
+      setCaption(narration.output || preparedText);
+    }
+    syncTutorFullscreenOverlay();
+    saveTutorCheckpoint(mode, preparedText, narration.output || preparedText);
+  }
+  if (activeTutorNarration === narration) {
+    activeTutorNarration = narration.cancelled ? narration : null;
+  }
+  updateResumeControls();
+  updateTutorRoomLivePanel();
+}
+
+function setActiveTab(tabId) {
+  if (tabId !== "loungeTab") {
+    stopLoungeVoiceInput();
+  }
+  if (tabId === "leagueTab" && !isLeagueTabEnabled()) {
+    tabId = "overviewTab";
+  }
+  if (tabId === "videoTutorTab" && activeStudioPane !== "threeConceptPanel") {
+    setActiveStudioPane("threeConceptPanel");
+  }
+  if (tabId === "tutorRoomTab" && voiceChatMode && !voiceChatMode.checked) {
+    voiceChatMode.checked = true;
+    applyAccessibilityPreferences();
+  }
+  if (tabId === "weeklyTab" && activeProfile) {
+    window.setTimeout(() => {
+      refreshWeeklyPlan();
+      refreshJourneyDashboard();
+      refreshActiveChapterSession();
+    }, 0);
+  }
+  if (tabId === "progressTab" && activeProfile) {
+    window.setTimeout(() => {
+      fetchProgress(activeProfile.name);
+    }, 0);
+  }
+  if (tabId !== "mockTestTab") {
+    lastNonMockTabId = tabId;
+  }
+  refreshTabCollections();
+  tabButtons.forEach((button) => {
+    const isActive = button.dataset.tab === tabId;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
+  });
+
+  tabPanels.forEach((panel) => {
+    panel.classList.toggle("active", panel.id === tabId);
+  });
+
+  if (tabId === "overviewTab") {
+    setHomeSubtab("overview");
+  }
+
+  if (tabId === "tutorRoomTab" && tutorRoomMessageInput) {
+    window.setTimeout(() => tutorRoomMessageInput.focus(), 0);
+    syncTutorRoomTranscript();
+    ensureTutorRoomPersona();
+  } else if (tabId === "tutorTab" && messageInput) {
+    window.setTimeout(() => messageInput.focus(), 0);
+    if (activeProfile) {
+      window.setTimeout(() => {
+        void refreshActiveChapterSession();
+        void loadChapterResumeState();
+      }, 0);
+    }
+  } else if (tabId === "videoTutorTab" && videoTutorQuestionInput) {
+    window.setTimeout(() => videoTutorQuestionInput.focus(), 0);
+    window.setTimeout(() => {
+      if (videoTutorRequestTopicInput && window.astraCurrentTopic && window.astraCurrentTopic.topic) {
+        videoTutorRequestTopicInput.value = window.astraCurrentTopic.topic;
+      }
+      if (videoTutorRequestSubjectSelect && window.astraCurrentTopic && window.astraCurrentTopic.subject) {
+        const wanted = String(window.astraCurrentTopic.subject).toLowerCase();
+        const option = Array.from(videoTutorRequestSubjectSelect.options).find((item) => String(item.value).toLowerCase() === wanted);
+        if (option) {
+          videoTutorRequestSubjectSelect.value = option.value;
+        }
+      }
+      void loadVideoTutorWorkspace();
+    }, 0);
+  }
+  updateTutorRoomLivePanel();
+}
+
+function applyAccessibilityPreferences() {
+  document.body.classList.toggle("high-contrast", highContrastMode.checked);
+  document.body.classList.toggle("large-text", largeTextMode.checked);
+  document.body.classList.toggle("reduced-motion", reducedMotionMode.checked);
+  document.body.classList.toggle("reading-comfort", readingComfortMode && readingComfortMode.checked);
+  document.body.classList.toggle("chunked-replies", chunkedReplyMode && chunkedReplyMode.checked);
+  const pacingMode = (responsePacingSelect && responsePacingSelect.value) || "standard";
+  document.body.classList.toggle("slow-pacing", pacingMode === "slow");
+  document.body.classList.toggle("gentle-pacing", pacingMode === "gentle");
+
+  localStorage.setItem("alt_high_contrast", highContrastMode.checked ? "1" : "0");
+  localStorage.setItem("alt_large_text", largeTextMode.checked ? "1" : "0");
+  localStorage.setItem("alt_reduced_motion", reducedMotionMode.checked ? "1" : "0");
+  localStorage.setItem("alt_reading_comfort", readingComfortMode && readingComfortMode.checked ? "1" : "0");
+  localStorage.setItem("alt_chunked_replies", chunkedReplyMode && chunkedReplyMode.checked ? "1" : "0");
+  localStorage.setItem("alt_response_pacing", pacingMode);
+  localStorage.setItem("alt_auto_caption", autoCaptionMode.checked ? "1" : "0");
+  localStorage.setItem("alt_auto_speak", autoSpeakReplies.checked ? "1" : "0");
+  localStorage.setItem("alt_voice_chat_mode", voiceChatMode && voiceChatMode.checked ? "1" : "0");
+}
+
+function applyThemePreferences() {
+  document.body.dataset.theme = currentTheme;
+  document.body.dataset.background = currentBackground;
+  document.body.classList.toggle("night-mode", currentTheme === "midnight");
+  localStorage.setItem("alt_theme", currentTheme);
+  localStorage.setItem("alt_background", currentBackground);
+  localStorage.setItem("alt_night_mode", currentTheme === "midnight" ? "1" : "0");
+  if (nightModeToggle) {
+    nightModeToggle.checked = currentTheme === "midnight";
+  }
+
+  document.querySelectorAll("[data-theme]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.theme === currentTheme);
+  });
+  document.querySelectorAll("[data-background]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.background === currentBackground);
+  });
+}
+
+function loadAccessibilityPreferences() {
+  highContrastMode.checked = localStorage.getItem("alt_high_contrast") === "1";
+  largeTextMode.checked = localStorage.getItem("alt_large_text") === "1";
+  reducedMotionMode.checked = localStorage.getItem("alt_reduced_motion") === "1";
+  if (readingComfortMode) {
+    readingComfortMode.checked = localStorage.getItem("alt_reading_comfort") === "1";
+  }
+  if (chunkedReplyMode) {
+    chunkedReplyMode.checked = localStorage.getItem("alt_chunked_replies") !== "0";
+  }
+  if (responsePacingSelect) {
+    const storedPacing = localStorage.getItem("alt_response_pacing");
+    responsePacingSelect.value = ["standard", "gentle", "slow"].includes(storedPacing) ? storedPacing : "gentle";
+  }
+  autoCaptionMode.checked = localStorage.getItem("alt_auto_caption") !== "0";
+  autoSpeakReplies.checked = localStorage.getItem("alt_auto_speak") === "1";
+  if (voiceChatMode) {
+    voiceChatMode.checked = localStorage.getItem("alt_voice_chat_mode") === "1";
+  }
+  const storedTheme = localStorage.getItem("alt_theme");
+  currentTheme = storedTheme && storedTheme !== "sunrise" ? storedTheme : "midnight";
+  if (localStorage.getItem("alt_night_mode") === "1") {
+    currentTheme = "midnight";
+  }
+  currentBackground = localStorage.getItem("alt_background") || "glow";
+  currentLanguage = localStorage.getItem("alt_language") || "English";
+  leagueTabVisible = localStorage.getItem("alt_show_league_tab") !== "0";
+  const savedOrder = safeJsonParse(localStorage.getItem("alt_tab_order") || "[]", []);
+  const savedOrderList = Array.isArray(savedOrder) ? savedOrder : [];
+  const validSavedOrder = savedOrderList.filter((key) => TAB_CONFIG[key]);
+  const missingKeys = Object.keys(TAB_CONFIG).filter((key) => !validSavedOrder.includes(key));
+  currentTabOrder = [...validSavedOrder, ...missingKeys];
+  if (currentTabOrder.includes("tutor") && currentTabOrder.includes("tutorroom")) {
+    currentTabOrder = currentTabOrder.filter((key) => key !== "tutorroom");
+    const tutorIndex = currentTabOrder.indexOf("tutor");
+    currentTabOrder.splice(Math.max(0, tutorIndex + 1), 0, "tutorroom");
+  }
+  if (currentTabOrder.includes("tutorroom") && currentTabOrder.includes("videotutor")) {
+    currentTabOrder = currentTabOrder.filter((key) => key !== "videotutor");
+    const roomIndex = currentTabOrder.indexOf("tutorroom");
+    currentTabOrder.splice(Math.max(0, roomIndex + 1), 0, "videotutor");
+  }
+
+  if (languageSelect) {
+    languageSelect.value = currentLanguage;
+  }
+  if (nightModeToggle) {
+    nightModeToggle.checked = currentTheme === "midnight";
+  }
+  applyAccessibilityPreferences();
+  applyThemePreferences();
+  applyLanguage();
+  applyLeagueVisibility();
+}
+
+function applySidebarState() {
+  if (!appShell) {
+    return;
+  }
+  appShell.classList.toggle("sidebar-collapsed", !!isSidebarCollapsed);
+  if (studioMenuToggleBtn) {
+    studioMenuToggleBtn.textContent = isSidebarCollapsed ? "Show studio menu" : "Hide studio menu";
+  }
+  localStorage.setItem("alt_sidebar_collapsed", isSidebarCollapsed ? "1" : "0");
+}
+
+function loadSidebarPreference() {
+  isSidebarCollapsed = localStorage.getItem("alt_sidebar_collapsed") === "1";
+  applySidebarState();
+}
+
+function loadStudioPanePreference() {
+  const savedPane = localStorage.getItem("alt_studio_pane");
+  const validPane = studioPanes.find((pane) => pane.id === savedPane);
+  setActiveStudioPane(validPane ? savedPane : "threeConceptPanel");
+}
+
+function persistAuthSession(session, user) {
+  authSession = session || null;
+  activeUser = user || null;
+  if (session && session.access_token) {
+    localStorage.setItem("alt_auth_token", session.access_token);
+  } else {
+    localStorage.removeItem("alt_auth_token");
+  }
+  if (user) {
+    localStorage.setItem("alt_auth_user", JSON.stringify(user));
+  } else {
+    localStorage.removeItem("alt_auth_user");
+  }
+}
+
+function logoutAndShowAuth() {
+  persistAuthSession(null, null);
+  activeProfile = null;
+  activeTutorConversationId = null;
+  activeLoungeConversationId = null;
+  activeTutorVideo = null;
+  videoLibrarySnapshot = null;
+  lastTutorReply = "";
+  lastTutorQuestion = "";
+  lastVideoAnswerBrief = null;
+  activeTutorVideoJobId = "";
+  if (activeTutorVideoPollInterval) {
+    window.clearInterval(activeTutorVideoPollInterval);
+    activeTutorVideoPollInterval = null;
+  }
+  activeChapterResumeSummary = null;
+  chapterResumeLoadedFor = "";
+  chapterResumeDismissedFor = "";
+  activeChapterSession = null;
+  activeChapterSubtopic = null;
+  activeChapterTest = null;
+  activeHomeSubtab = "overview";
+  clearChapterTimers();
+  hideChapterResumeUI();
+  if (chapterCompletionCard) {
+    chapterCompletionCard.classList.add("hidden");
+    chapterCompletionCard.innerHTML = "";
+  }
+  clearChapterTestContainer();
+  lastRepliesByMode = { tutor: "", guide: "", lounge: "", practice: "", last_minute: "", tips: "" };
+  loginScreen.classList.remove("hidden");
+  if (introScreen) {
+    introScreen.classList.add("hidden");
+  }
+  appShell.classList.add("hidden");
+  profileStatus.textContent = "Sign in or create a fresh JEE account to continue.";
+  if (signinPasswordInput) {
+    signinPasswordInput.value = "";
+  }
+  renderStorageStatus(null);
+  renderTutorConversations([]);
+  renderDeletedTutorConversations([]);
+  renderLoungeConversations([]);
+  renderDeletedLoungeConversations([]);
+  renderVideoLibrary(null);
+  renderVideoAnswerBrief(null);
+  if (videoStatusPanel) {
+    videoStatusPanel.textContent = "Astra is waiting for a video answer request.";
+  }
+  if (tutorVideoAnswerPlayer) {
+    tutorVideoAnswerPlayer.pause();
+    tutorVideoAnswerPlayer.removeAttribute("src");
+    tutorVideoAnswerPlayer.load();
+    tutorVideoAnswerPlayer.classList.add("hidden");
+  }
+  if (videoTranscriptPanel) {
+    videoTranscriptPanel.textContent = "";
+  }
+  if (videoRenderStatus) {
+    videoRenderStatus.textContent = "Astra is waiting for a video answer request.";
+  }
+  renderAuthHeroVideo(authHeroVideoSnapshot || videoLibrarySnapshot || null);
+  if (introVideoPlayer) {
+    introVideoPlayer.pause();
+    introVideoPlayer.muted = true;
+  }
+  setAuthMode("signin");
+  renderDailyMotivation("");
+  setHomeSubtab("overview");
+  setTutorMode("calm");
+}
+
+async function restoreSessionIfAvailable() {
+  const token = localStorage.getItem("alt_auth_token");
+  if (!token) {
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/auth/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      persistAuthSession(null, null);
+      return;
+    }
+
+    persistAuthSession({ access_token: token, token_type: "bearer" }, payload.user || null);
+    await enterLearningStudio((payload.profile && payload.profile.name) || (payload.user && payload.user.student_name) || "", { introMode: "signin" });
+  } catch (error) {
+    persistAuthSession(null, null);
+  }
+}
+
+function applyLanguage() {
+  localStorage.setItem("alt_language", currentLanguage);
+  if (languageBadge) {
+    languageBadge.textContent = currentLanguage;
+  }
+}
+
+const WALKTHROUGH_STEPS = [
+  {
+    key: "intro",
+    type: "intro",
+    prompt: "Welcome to Astra.",
+      helper:
+      "Astra begins with a guided walk so it can understand your goals, comfort, and interests before tutoring starts. Your answers become Astra's starting defaults for the app, and you can change them anytime in Personalize. You will answer the short questions below and then get one final chance to ask Astra anything. This is not an interview. It is the first step in building a real connection.",
+    placeholder: "",
+  },
+  {
+    key: "why_astra",
+    prompt: "Why do you want Astra in your corner?",
+    helper: "This helps Astra understand what you hope Astra will do for you and what support you want first.",
+    placeholder: "Tell Astra what made you choose this mentor.",
+  },
+  {
+    key: "interests",
+    prompt: "What do you enjoy outside studies?",
+    helper: "Hobbies, music, sports, movies, games, books, or anything that makes you feel like yourself.",
+    placeholder: "Share the things you naturally enjoy.",
+  },
+  {
+    key: "dislikes",
+    prompt: "What should Astra avoid or never do?",
+    helper: "This keeps Astra away from habits, tones, or patterns that make you uncomfortable.",
+    placeholder: "Tell Astra what to avoid.",
+  },
+  {
+    key: "conversation_style",
+    prompt: "What kind of conversation style feels best to you?",
+    helper: "You can say calm, strict, friendly, funny, direct, motivational, or anything else that feels right.",
+    placeholder: "Describe the way you want Astra to talk to you.",
+  },
+  {
+    key: "preferred_language",
+    prompt: "What language should Astra use by default?",
+    helper: "This becomes the starting language for replies, summaries, and voice when Astra can support it.",
+    placeholder: "Tell Astra the language you are most comfortable with.",
+  },
+  {
+    key: "explanation_depth",
+    prompt: "How detailed should Astra be by default?",
+    helper: "This helps Astra choose short, balanced, or deep explanations whenever it starts a new conversation.",
+    placeholder: "Tell Astra whether you want short, balanced, or deep answers.",
+  },
+  {
+    key: "stress_support",
+    prompt: "What helps you when you feel stressed or overloaded?",
+    helper: "This helps Astra know when to slow down, reassure you, push gently, or give you a break.",
+    placeholder: "Tell Astra what support feels best when you are under pressure.",
+  },
+  {
+    key: "goals_summary",
+    prompt: "When do you learn best?",
+    helper: "Tell Astra about the environment, time, pace, and conditions where you actually understand things well, trust the process, and start enjoying learning.",
+    placeholder: "Describe the situations where learning feels natural for you.",
+  },
+  {
+    key: "astra_question",
+    prompt: "Do you have any doubts about Astra or the website?",
+    helper: "You can ask how Astra works, how it learns, how it stays private, or anything else you want to clear before starting.",
+    placeholder: "Ask Astra anything about the app, the tutor, or the website.",
+  },
+];
+
+function buildWalkthroughAstraAnswer(question) {
+  const text = String(question || "").toLowerCase();
+  if (!text) {
+    return "Ask me anything about how Astra works, and I’ll answer in a simple, honest way.";
+  }
+  if (text.includes("private") || text.includes("privacy")) {
+    return "Astra only uses what you choose to share, and you can change or remove those settings later.";
+  }
+  if (text.includes("tutor") || text.includes("teach")) {
+    return "Tutor stays academic, Lounge stays casual, Practice stays drill-focused, and your planner adapts from your profile defaults.";
+  }
+  if (text.includes("learn") || text.includes("adapt")) {
+    return "Astra learns from the answers you give, your progress, your behavior signals, and the way you use the app so the defaults feel personal.";
+  }
+  if (text.includes("group") || text.includes("friends")) {
+    return "Group study is opt-in. You can study solo, study with friends, or use matched study rooms and switch back anytime.";
+  }
+  if (text.includes("change") || text.includes("later")) {
+    return "Yes, you can edit these answers later in Personalize, so the setup can evolve with you.";
+  }
+  if (text.includes("why") || text.includes("what is")) {
+    return "Astra is built to understand your style first, then use those answers as the starting defaults for tutoring, planning, and support in a way that feels personal.";
+  }
+  return "Astra is meant to be a mentor-companion: personal, academic, and easy to adjust as you learn what works best for you.";
+}
+
+function applyWalkthroughAnswersToSignupFields() {
+  if (signupWhyAstra) {
+    signupWhyAstra.value = walkthroughAnswers.why_astra || "";
+  }
+  if (signupInterests) {
+    signupInterests.value = walkthroughAnswers.interests || "";
+  }
+  if (signupDislikes) {
+    signupDislikes.value = walkthroughAnswers.dislikes || "";
+  }
+  if (signupConversationStyle) {
+    signupConversationStyle.value = walkthroughAnswers.conversation_style || "";
+  }
+  if (signupStressSupport) {
+    signupStressSupport.value = walkthroughAnswers.stress_support || "";
+  }
+  if (signupGoalsSummary) {
+    signupGoalsSummary.value = walkthroughAnswers.goals_summary || "";
+  }
+}
+
+function inferTutorLevelFromExplanationDepth(depthText) {
+  const text = String(depthText || "").toLowerCase();
+  if (!text) {
+    return 3;
+  }
+  if (text.includes("short") || text.includes("brief") || text.includes("quick")) {
+    return 1;
+  }
+  if (text.includes("simple") || text.includes("easy")) {
+    return 2;
+  }
+  if (text.includes("deep") || text.includes("detailed") || text.includes("expert")) {
+    return 5;
+  }
+  if (text.includes("balanced") || text.includes("normal") || text.includes("medium")) {
+    return 3;
+  }
+  return 3;
+}
+
+function applyOnboardingDefaultsToApp(profile) {
+  if (!profile) {
+    return;
+  }
+
+  const onboarding = profile.onboarding_profile || {};
+  const preferredLanguage = profile.default_response_language || onboarding.preferred_language || "";
+  if (preferredLanguage) {
+    currentLanguage = preferredLanguage;
+    if (languageSelect) {
+      languageSelect.value = currentLanguage;
+    }
+    localStorage.setItem("alt_language", currentLanguage);
+    applyLanguage();
+  }
+
+  const defaultTutorLevel = Number(profile.default_tutor_level || inferTutorLevelFromExplanationDepth(onboarding.explanation_depth));
+  if (tutorLevelSelect && defaultTutorLevel) {
+    tutorLevelSelect.value = String(defaultTutorLevel);
+    updateTutorLevelHint();
+  }
+
+  updateExamBrandCopy(profile);
+}
+
+function populateWalkthroughFromProfile(profile) {
+  const onboarding = (profile && profile.onboarding_profile) || {};
+  walkthroughAnswers = {
+    why_astra: onboarding.why_astra || "",
+    interests: onboarding.interests || "",
+    dislikes: onboarding.dislikes || "",
+    conversation_style: onboarding.conversation_style || "",
+    preferred_language: onboarding.preferred_language || "",
+    explanation_depth: onboarding.explanation_depth || "",
+    stress_support: onboarding.stress_support || "",
+    goals_summary: onboarding.goals_summary || "",
+    astra_question: onboarding.astra_question || "",
+    astra_question_answer: onboarding.astra_question_answer || "",
+  };
+}
+
+function setWalkthroughAnswerText(text) {
+  if (walkthroughAstraAnswer) {
+    walkthroughAstraAnswer.textContent = text;
+  }
+}
+
+function resetWalkthroughParticle(node, forceDelay = false) {
+  const lane = Math.random() > 0.5 ? 1 : -1;
+  const depth = 0.25 + Math.random() * 0.75;
+  const spread = 60 + Math.random() * 220;
+  const rise = -45 - Math.random() * 180;
+  const size = 6 + Math.random() * 14;
+  node.state = {
+    x: (Math.random() - 0.5) * 120,
+    y: (Math.random() - 0.5) * 120,
+    lane,
+    depth,
+    spread,
+    rise,
+    size,
+    life: 180 + Math.random() * 160,
+    age: forceDelay ? Math.random() * 120 : 0,
+  };
+  node.el.style.width = `${size}px`;
+  node.el.style.height = `${size}px`;
+}
+
+function updateWalkthroughParticles() {
+  if (!walkthroughParticles || !walkthroughParticleNodes.length) {
+    walkthroughParticleFrame = null;
+    return;
+  }
+
+  walkthroughParticleNodes.forEach((node) => {
+    const state = node.state;
+    state.age += 1;
+    if (state.age >= state.life) {
+      resetWalkthroughParticle(node, true);
+      return;
+    }
+
+    const progress = state.age / state.life;
+    const drift = progress * progress;
+    const outward = state.spread * progress * 1.5;
+    const horizontal = state.x + (outward + 24 * progress) * state.lane;
+    const vertical = state.y + state.rise * progress - 38 * drift;
+    const depthShift = -260 * progress - 48 * Math.sin(progress * Math.PI);
+    const scale = Math.max(0.16, 1 - progress * 0.8);
+    const opacity = progress < 0.16 ? progress / 0.16 : progress > 0.82 ? Math.max(0, (1 - progress) / 0.18) : 1;
+
+    node.el.style.transform = `translate3d(${horizontal}px, ${vertical}px, ${depthShift}px) scale(${scale})`;
+    node.el.style.opacity = `${opacity}`;
+  });
+
+  walkthroughParticleFrame = window.requestAnimationFrame(updateWalkthroughParticles);
+}
+
+function startWalkthroughParticles() {
+  if (!walkthroughParticles) {
+    return;
+  }
+
+  walkthroughParticles.innerHTML = "";
+  walkthroughParticleNodes = [];
+  const count = window.matchMedia("(max-width: 760px)").matches ? 32 : 64;
+  for (let index = 0; index < count; index += 1) {
+    const el = document.createElement("span");
+    el.className = "walkthrough-particle";
+    walkthroughParticles.appendChild(el);
+    const node = { el, state: null };
+    resetWalkthroughParticle(node, index > 0);
+    walkthroughParticleNodes.push(node);
+  }
+
+  if (walkthroughParticleFrame) {
+    window.cancelAnimationFrame(walkthroughParticleFrame);
+  }
+  walkthroughParticleFrame = window.requestAnimationFrame(updateWalkthroughParticles);
+}
+
+function stopWalkthroughParticles() {
+  if (walkthroughParticleFrame) {
+    window.cancelAnimationFrame(walkthroughParticleFrame);
+    walkthroughParticleFrame = null;
+  }
+  walkthroughParticleNodes = [];
+  if (walkthroughParticles) {
+    walkthroughParticles.innerHTML = "";
+  }
+}
+
+function renderWalkthroughStepLegacy() {
+  if (!walkthroughModal) {
+    return;
+  }
+  const step = WALKTHROUGH_STEPS[walkthroughStepIndex] || WALKTHROUGH_STEPS[0];
+  if (walkthroughStepLabel) {
+    walkthroughStepLabel.textContent = `Step ${walkthroughStepIndex + 1}`;
+  }
+  if (walkthroughStepCount) {
+    walkthroughStepCount.textContent = `${walkthroughStepIndex + 1} of ${WALKTHROUGH_STEPS.length}`;
+  }
+  if (walkthroughPrompt) {
+    walkthroughPrompt.textContent = step.prompt;
+  }
+  if (walkthroughHelper) {
+    walkthroughHelper.textContent = step.helper;
+  }
+  if (walkthroughInput) {
+    walkthroughInput.value = walkthroughAnswers[step.key] || "";
+    walkthroughInput.placeholder = step.placeholder || "Type your answer here...";
+  }
+  if (walkthroughModePill) {
+    walkthroughModePill.textContent = walkthroughContext === "signup" ? "New user" : "Saved profile";
+  }
+  if (walkthroughSaveBtn) {
+    walkthroughSaveBtn.textContent = walkthroughContext === "signup" ? "Save to sign up" : "Save answers";
+  }
+  if (walkthroughNextBtn) {
+    walkthroughNextBtn.textContent = walkthroughStepIndex === WALKTHROUGH_STEPS.length - 1 ? "Finish" : "Next";
+  }
+  if (walkthroughBackBtn) {
+    walkthroughBackBtn.disabled = walkthroughStepIndex === 0;
+  }
+  setWalkthroughAnswerText("Ask Astra a question about how it works, and I’ll answer it here.");
+}
+
+function renderWalkthroughStep() {
+  if (!walkthroughModal) {
+    return;
+  }
+  const step = WALKTHROUGH_STEPS[walkthroughStepIndex] || WALKTHROUGH_STEPS[0];
+  const isIntro = step.type === "intro";
+  const isAstraQuestion = step.key === "astra_question";
+  const stageClass = isIntro ? "walkthrough-stage-intro" : "walkthrough-stage-question";
+  const questionNumber = Math.max(0, walkthroughStepIndex);
+  const totalQuestions = WALKTHROUGH_STEPS.length - 1;
+
+  walkthroughModal.classList.add("walkthrough-stage-transition");
+  walkthroughModal.classList.toggle("walkthrough-stage-intro", isIntro);
+  walkthroughModal.classList.toggle("walkthrough-stage-question", !isIntro);
+  if (walkthroughTransitionTimer) {
+    window.clearTimeout(walkthroughTransitionTimer);
+  }
+  walkthroughTransitionTimer = window.setTimeout(() => {
+    if (walkthroughModal) {
+      walkthroughModal.classList.remove("walkthrough-stage-transition");
+      walkthroughModal.dataset.walkthroughStage = stageClass;
+    }
+  }, isIntro ? 260 : 320);
+
+  if (walkthroughStepLabel) {
+    walkthroughStepLabel.textContent = isIntro ? "Welcome" : isAstraQuestion ? "Final step" : `Question ${questionNumber}`;
+  }
+  if (walkthroughStepCount) {
+    walkthroughStepCount.textContent = isIntro
+      ? `${totalQuestions} questions ahead`
+      : isAstraQuestion
+        ? `Question ${questionNumber} of ${totalQuestions}`
+        : `Question ${questionNumber} of ${totalQuestions}`;
+  }
+  if (walkthroughPrompt) {
+    walkthroughPrompt.textContent = isIntro ? step.prompt : `Question ${questionNumber} of ${totalQuestions}: ${step.prompt}`;
+  }
+  if (walkthroughHelper) {
+    walkthroughHelper.textContent = step.helper;
+  }
+  if (walkthroughInput) {
+    walkthroughInput.classList.toggle("hidden", isIntro);
+    walkthroughInput.value = isIntro ? "" : (walkthroughAnswers[step.key] || "");
+    walkthroughInput.placeholder = step.placeholder || "Type your answer here...";
+  }
+  if (walkthroughQuestionBlock) {
+    walkthroughQuestionBlock.classList.toggle("hidden", isIntro);
+  }
+  if (walkthroughModePill) {
+    walkthroughModePill.textContent = walkthroughContext === "signup" ? "New user" : "Saved profile";
+  }
+  if (walkthroughSaveBtn) {
+    walkthroughSaveBtn.classList.toggle("hidden", isIntro);
+    walkthroughSaveBtn.textContent = walkthroughContext === "signup" ? "Save to sign up" : "Save answers";
+  }
+  if (walkthroughNextBtn) {
+    walkthroughNextBtn.textContent = isIntro
+      ? "Next"
+      : walkthroughStepIndex === WALKTHROUGH_STEPS.length - 1
+        ? "Finish"
+        : "Next";
+  }
+  if (walkthroughBackBtn) {
+    walkthroughBackBtn.classList.toggle("hidden", isIntro);
+    walkthroughBackBtn.disabled = walkthroughStepIndex === 0;
+  }
+  if (isAstraQuestion && walkthroughAnswers.astra_question_answer) {
+    setWalkthroughAnswerText(walkthroughAnswers.astra_question_answer);
+  } else if (isIntro) {
+    setWalkthroughAnswerText("Read the message, then press Next when you are ready.");
+  } else {
+    setWalkthroughAnswerText("Ask Astra a question about how it works, and I’ll answer it here.");
+  }
+}
+
+function openWalkthrough(context = "signup", profile = null) {
+  walkthroughContext = context === "existing" ? "existing" : "signup";
+  walkthroughStepIndex = 0;
+  walkthroughProfileSnapshot = profile || activeProfile || null;
+  walkthroughAnswers = {
+    why_astra: signupWhyAstra ? signupWhyAstra.value.trim() : "",
+    interests: signupInterests ? signupInterests.value.trim() : "",
+    dislikes: signupDislikes ? signupDislikes.value.trim() : "",
+    conversation_style: signupConversationStyle ? signupConversationStyle.value.trim() : "",
+    preferred_language: languageSelect ? languageSelect.value.trim() : currentLanguage,
+    explanation_depth: tutorLevelSelect ? String(tutorLevelSelect.value || "3") : "3",
+    stress_support: signupStressSupport ? signupStressSupport.value.trim() : "",
+    goals_summary: signupGoalsSummary ? signupGoalsSummary.value.trim() : "",
+    astra_question: "",
+    astra_question_answer: "",
+  };
+  if (walkthroughContext === "existing" && walkthroughProfileSnapshot) {
+    populateWalkthroughFromProfile(walkthroughProfileSnapshot);
+  }
+  if (walkthroughModal) {
+    walkthroughModal.classList.remove("hidden");
+    walkthroughModal.setAttribute("aria-hidden", "false");
+    walkthroughModal.dataset.walkthroughStage = "walkthrough-stage-intro";
+    walkthroughModal.scrollTop = 0;
+  }
+  document.body.classList.add("walkthrough-lock");
+  startWalkthroughParticles();
+  renderWalkthroughStep();
+  if (walkthroughInput) {
+    walkthroughInput.focus();
+  }
+}
+
+function closeWalkthrough() {
+  if (walkthroughTransitionTimer) {
+    window.clearTimeout(walkthroughTransitionTimer);
+    walkthroughTransitionTimer = null;
+  }
+  if (walkthroughModal) {
+    walkthroughModal.scrollTop = 0;
+    walkthroughModal.classList.add("hidden");
+    walkthroughModal.setAttribute("aria-hidden", "true");
+    walkthroughModal.classList.remove("walkthrough-stage-intro", "walkthrough-stage-question", "walkthrough-stage-transition");
+  }
+  document.body.classList.remove("walkthrough-lock");
+  stopWalkthroughParticles();
+}
+
+async function saveWalkthroughToExistingProfile() {
+  if (!activeProfile) {
+    return;
+  }
+  const payload = {
+    student_name: activeProfile.name,
+    onboarding_why_astra: walkthroughAnswers.why_astra || "",
+    onboarding_interests: walkthroughAnswers.interests || "",
+    onboarding_dislikes: walkthroughAnswers.dislikes || "",
+    onboarding_conversation_style: walkthroughAnswers.conversation_style || "",
+    onboarding_preferred_language: walkthroughAnswers.preferred_language || "",
+    onboarding_explanation_depth: walkthroughAnswers.explanation_depth || "",
+    onboarding_stress_support: walkthroughAnswers.stress_support || "",
+    onboarding_goals_summary: walkthroughAnswers.goals_summary || "",
+    onboarding_astra_question: walkthroughAnswers.astra_question || "",
+    onboarding_astra_question_answer: walkthroughAnswers.astra_question_answer || "",
+    intro_completed: true,
+  };
+  const response = await fetch("/api/profile/onboarding", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.detail || "Could not save the Astra walkthrough yet.");
+  }
+  activeProfile = result.profile || activeProfile;
+  applyTutorPersonalityToForm(activeProfile);
+  updateTutorSummary(activeProfile);
+}
+
+async function saveWalkthrough() {
+  const step = WALKTHROUGH_STEPS[walkthroughStepIndex] || WALKTHROUGH_STEPS[0];
+  if (walkthroughInput) {
+    walkthroughAnswers[step.key] = walkthroughInput.value.trim();
+  }
+  if (step.key === "astra_question") {
+    walkthroughAnswers.astra_question_answer = buildWalkthroughAstraAnswer(walkthroughAnswers.astra_question);
+    setWalkthroughAnswerText(walkthroughAnswers.astra_question_answer);
+  }
+  applyWalkthroughAnswersToSignupFields();
+  if (walkthroughContext === "existing" && activeProfile) {
+    const response = await fetch("/api/profile/onboarding", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name: activeProfile.name,
+        onboarding_why_astra: walkthroughAnswers.why_astra || "",
+        onboarding_interests: walkthroughAnswers.interests || "",
+        onboarding_dislikes: walkthroughAnswers.dislikes || "",
+        onboarding_conversation_style: walkthroughAnswers.conversation_style || "",
+        onboarding_preferred_language: walkthroughAnswers.preferred_language || "",
+        onboarding_explanation_depth: walkthroughAnswers.explanation_depth || "",
+        onboarding_stress_support: walkthroughAnswers.stress_support || "",
+        onboarding_goals_summary: walkthroughAnswers.goals_summary || "",
+        onboarding_astra_question: walkthroughAnswers.astra_question || "",
+        onboarding_astra_question_answer: walkthroughAnswers.astra_question_answer || "",
+        intro_completed: true,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not save the Astra walkthrough yet.");
+    }
+    activeProfile = payload.profile || activeProfile;
+    updateTutorSummary(activeProfile);
+    const profileRefresh = await fetch(`/api/profile/${encodeURIComponent(activeProfile.name)}`);
+    const profilePayload = await profileRefresh.json();
+    if (profileRefresh.ok) {
+      renderMemory(profilePayload.personal_memory || {});
+      renderMemoryManager(profilePayload.personal_memory || {});
+    }
+  }
+  closeWalkthrough();
+}
+
+function advanceWalkthrough(direction) {
+  const currentStep = WALKTHROUGH_STEPS[walkthroughStepIndex] || WALKTHROUGH_STEPS[0];
+  if (walkthroughInput) {
+    walkthroughAnswers[currentStep.key] = walkthroughInput.value.trim();
+  }
+  if (currentStep.key === "astra_question") {
+    walkthroughAnswers.astra_question_answer = buildWalkthroughAstraAnswer(walkthroughAnswers.astra_question);
+    setWalkthroughAnswerText(walkthroughAnswers.astra_question_answer);
+  }
+  walkthroughStepIndex = Math.max(0, Math.min(WALKTHROUGH_STEPS.length - 1, walkthroughStepIndex + direction));
+  renderWalkthroughStep();
+}
+
+async function askAstraAboutItself() {
+  const text = walkthroughInput ? walkthroughInput.value.trim() : "";
+  const answer = buildWalkthroughAstraAnswer(text);
+  walkthroughAnswers.astra_question = text;
+  walkthroughAnswers.astra_question_answer = answer;
+  setWalkthroughAnswerText(answer);
+}
+
+function updateTutorLevelHint() {
+  if (!tutorLevelSelect || !tutorLevelHint) {
+    return;
+  }
+  const level = Number(tutorLevelSelect.value || "3");
+  const hints = {
+    1: "Level 1 keeps everything simple and in layman terms.",
+    2: "Level 2 adds a little more detail while staying easy to follow.",
+    3: "Level 3 gives a balanced explanation with clarity and depth.",
+    4: "Level 4 goes deeper into the logic and reasoning.",
+    5: "Level 5 gives a detailed expert-style explanation for deeper understanding.",
+  };
+  tutorLevelHint.textContent = hints[level] || hints[3];
+}
+
+function setCaption(text) {
+  if (!tutorCaptionText) {
+    return;
+  }
+  tutorCaptionText.textContent = autoCaptionMode.checked ? text : "Captions are currently off.";
+}
+
+function updateLoungeTimerLabel() {
+  if (!loungeTimerStatus) {
+    return;
+  }
+
+  if (!loungeTimerEndTime) {
+    loungeTimerStatus.textContent = "No timer running.";
+    return;
+  }
+
+  const remainingMs = loungeTimerEndTime - Date.now();
+  if (remainingMs <= 0) {
+    clearLoungeTimer();
+    loungeTimerStatus.textContent = "Time is up. Wrap up the lounge chat and head back when you are ready.";
+    appendMessage("lounge", "tutor", "Our casual-talk timer just wrapped up. If you feel lighter now, we can gently move back to what matters next.");
+    return;
+  }
+
+  const totalSeconds = Math.ceil(remainingMs / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  loungeTimerStatus.textContent = `Relax timer running: ${minutes}:${String(seconds).padStart(2, "0")} left`;
+}
+
+function clearLoungeTimer() {
+  if (loungeTimerInterval) {
+    window.clearInterval(loungeTimerInterval);
+    loungeTimerInterval = null;
+  }
+  loungeTimerEndTime = null;
+}
+
+function startLoungeTimer(minutes) {
+  clearLoungeTimer();
+  loungeTimerEndTime = Date.now() + minutes * 60 * 1000;
+  updateLoungeTimerLabel();
+  loungeTimerInterval = window.setInterval(updateLoungeTimerLabel, 1000);
+}
+
+function updateLoungeVoiceStatus(text) {
+  if (loungeVoiceStatus) {
+    loungeVoiceStatus.textContent = text;
+  }
+}
+
+function setLoungeVoiceButtonState(active) {
+  if (!loungeVoiceBtn) {
+    return;
+  }
+  loungeVoiceBtn.textContent = active ? "Stop voice" : "Voice message";
+  loungeVoiceBtn.classList.toggle("active", !!active);
+  loungeVoiceBtn.setAttribute("aria-pressed", active ? "true" : "false");
+}
+
+function stopLoungeVoiceInput() {
+  if (loungeVoiceRecognition && loungeVoiceActive) {
+    try {
+      loungeVoiceRecognition.stop();
+    } catch (error) {
+      // Ignore stop errors from browsers that cancel recognition on their own.
+    }
+  }
+}
+
+function initLoungeVoiceInput() {
+  if (!loungeVoiceBtn) {
+    return;
+  }
+
+  if (!LoungeSpeechRecognition) {
+    loungeVoiceBtn.disabled = true;
+    updateLoungeVoiceStatus("Voice messages are not supported in this browser.");
+    return;
+  }
+
+  loungeVoiceRecognition = new LoungeSpeechRecognition();
+  loungeVoiceRecognition.lang = navigator.language || "en-US";
+  loungeVoiceRecognition.interimResults = true;
+  loungeVoiceRecognition.continuous = false;
+  loungeVoiceRecognition.maxAlternatives = 1;
+
+  loungeVoiceRecognition.onstart = () => {
+    loungeVoiceActive = true;
+    loungeVoiceDraft = "";
+    loungeVoicePrefix = loungeMessageInput ? loungeMessageInput.value.trim() : "";
+    setLoungeVoiceButtonState(true);
+    updateLoungeVoiceStatus("Listening for your lounge message...");
+  };
+
+  loungeVoiceRecognition.onresult = (event) => {
+    const transcript = Array.from(event.results)
+      .map((result) => (result[0] && result[0].transcript ? result[0].transcript : ""))
+      .join(" ")
+      .trim();
+    loungeVoiceDraft = transcript;
+    if (loungeMessageInput) {
+      const combined = [loungeVoicePrefix, transcript].filter(Boolean).join(" ").trim();
+      loungeMessageInput.value = combined;
+    }
+    updateLoungeVoiceStatus(transcript ? `Heard: ${transcript}` : "Listening for your lounge message...");
+  };
+
+  loungeVoiceRecognition.onerror = (event) => {
+    loungeVoiceActive = false;
+    setLoungeVoiceButtonState(false);
+    const errorType = event && event.error ? event.error : "unknown issue";
+    updateLoungeVoiceStatus(`Voice messages paused: ${errorType}.`);
+  };
+
+  loungeVoiceRecognition.onend = () => {
+    loungeVoiceActive = false;
+    setLoungeVoiceButtonState(false);
+    const transcript = [loungeVoicePrefix, loungeVoiceDraft].filter(Boolean).join(" ").trim();
+    loungeVoicePrefix = "";
+    loungeVoiceDraft = "";
+    if (transcript) {
+      if (loungeMessageInput) {
+        loungeMessageInput.value = transcript;
+      }
+      updateLoungeVoiceStatus("Voice message captured. Sending it to the lounge...");
+      if (loungeForm) {
+        loungeForm.requestSubmit();
+      }
+    } else {
+      updateLoungeVoiceStatus("No voice message captured. Try again when you are ready.");
+    }
+  };
+
+  setLoungeVoiceButtonState(false);
+  updateLoungeVoiceStatus("Press Voice message to dictate into the lounge.");
+}
+
+function toggleLoungeVoiceInput() {
+  if (!LoungeSpeechRecognition || !loungeVoiceRecognition) {
+    return;
+  }
+  if (loungeVoiceActive) {
+    stopLoungeVoiceInput();
+    return;
+  }
+  try {
+    loungeVoiceRecognition.start();
+  } catch (error) {
+    updateLoungeVoiceStatus("Voice messages could not start right now. Try again.");
+  }
+}
+
+function setAvatarStage(avatar) {
+  if (!avatar) {
+    return;
+  }
+
+  activeAvatar = avatar;
+  if (!avatarStageTitle || !avatarStageTagline || !avatarStageStatus || !avatarFace || !avatarMouth || !avatarGlasses || !avatarShoulders || !avatarAppearanceText) {
+    updateTutorSummary(activeProfile || {});
+    return;
+  }
+  avatarStageTitle.textContent = avatar.name;
+  avatarStageTagline.textContent = avatar.tagline;
+  if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
+  avatarFace.classList.toggle("portrait-mode", !!avatar.portrait_url);
+  avatarShoulders.classList.toggle("hidden", !!avatar.portrait_url);
+  if (avatarPortrait) {
+    avatarPortrait.src = avatar.portrait_url || "";
+    avatarPortrait.alt = `${avatar.name} tutor portrait`;
+    avatarPortrait.classList.toggle("hidden", !avatar.portrait_url);
+  }
+  avatarFace.style.setProperty("--avatar-accent", avatar.accent);
+  avatarFace.style.setProperty("--avatar-secondary", avatar.secondary_accent);
+  const visuals = (activeProfile && activeProfile.avatar_visuals) || {};
+  avatarFace.style.setProperty("--avatar-skin", visuals.skin || "#f4d1b4");
+  avatarFace.style.setProperty("--avatar-hair", visuals.hair || "#3b2a22");
+  avatarFace.style.setProperty("--avatar-eyes", visuals.eyes || "#2a2017");
+  avatarShoulders.style.setProperty("--avatar-outfit", visuals.outfit || avatar.accent);
+  avatarShoulders.classList.toggle("hoodie", !!visuals.hoodie);
+  avatarGlasses.classList.toggle("hidden", !visuals.glasses);
+  avatarAppearanceText.textContent = (activeProfile && activeProfile.appearance_description) || "Friendly, fun, and human-like.";
+  updateTutorSummary(activeProfile || {});
+  window.dispatchEvent(new CustomEvent("alt:tutor-appearance", { detail: { avatar, visuals } }));
+}
+
+function renderWeeklyPreview(plan) {
+  weeklyPreviewCards.innerHTML = "";
+  if (!plan || plan.message) {
+    const emptyCard = document.createElement("div");
+    emptyCard.className = "preview-card";
+    emptyCard.textContent = (plan && plan.message) || "No weekly preview available yet.";
+    weeklyPreviewCards.appendChild(emptyCard);
+    return;
+  }
+
+  plan.days.slice(0, 3).forEach((day) => {
+    const card = document.createElement("div");
+    card.className = "preview-card";
+
+    const dayRow = document.createElement("div");
+    dayRow.className = "preview-day";
+    dayRow.innerHTML = `<span>${day.date}</span><span>${day.total_hours}h</span>`;
+
+    const focusRow = document.createElement("div");
+    focusRow.className = "preview-focus";
+    day.tasks.slice(0, 4).forEach((task) => {
+      const pill = document.createElement("span");
+      pill.className = "focus-pill";
+      const topic = task.topic || task.subject;
+      pill.textContent = `${task.exam} ${task.subject} · ${topic}`;
+      focusRow.appendChild(pill);
+    });
+
+    card.appendChild(dayRow);
+    card.appendChild(focusRow);
+    weeklyPreviewCards.appendChild(card);
+  });
+}
+
+function renderSectionProgress(items) {
+  if (!sectionProgressList) {
+    return;
+  }
+
+  sectionProgressList.innerHTML = "";
+  if (!items || !items.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Your section summaries will appear here once your schedule starts moving.";
+    sectionProgressList.appendChild(empty);
+    return;
+  }
+
+  items.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "section-progress-item";
+
+    const title = document.createElement("p");
+    title.className = "exam-chip-title";
+    title.textContent = `${item.exam} | ${item.subject}`;
+
+    const summary = document.createElement("p");
+    summary.className = "muted";
+    summary.textContent = item.summary;
+
+    const stats = document.createElement("p");
+    stats.className = "muted";
+    stats.textContent = `Completed: ${item.completed_hours}h across ${item.completed_sessions} sessions | Mock: ${item.mock_score !== null && item.mock_score !== undefined ? item.mock_score : "not set"} | Backlog: ${item.backlog_hours}h`;
+
+    const strengths = document.createElement("p");
+    strengths.className = "memory-heading";
+    strengths.textContent = `Strengths: ${(item.strengths || []).join(", ")}`;
+
+    const weaknesses = document.createElement("p");
+    weaknesses.className = "memory-heading";
+    weaknesses.textContent = `Watch-outs: ${(item.weaknesses || []).join(", ")}`;
+
+    card.appendChild(title);
+    card.appendChild(summary);
+    card.appendChild(stats);
+    card.appendChild(strengths);
+    card.appendChild(weaknesses);
+    sectionProgressList.appendChild(card);
+  });
+}
+
+function renderWeeklyStrategy(plan) {
+  if (!weeklyStrategyList) {
+    return;
+  }
+
+  weeklyStrategyList.innerHTML = "";
+  if (!plan || plan.message) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = (plan && plan.message) || "Your weekly strategy notes will appear here.";
+    weeklyStrategyList.appendChild(empty);
+    return;
+  }
+
+  const plannerLens = document.createElement("div");
+  plannerLens.className = "weekly-strategy-chip-row";
+
+  const plannerTitle = document.createElement("p");
+  plannerTitle.className = "memory-heading";
+  plannerTitle.textContent = "Planner lens";
+  plannerLens.appendChild(plannerTitle);
+
+  const plannerChips = [
+    `Bias: ${String(plan.planner_bias_label || "balanced").replace(/_/g, " ")}`,
+    `Practice blocks: ${plan.weekly_test_blocks || 4}`,
+  ];
+  if (plan.task_learning_notes && plan.task_learning_notes.length) {
+    plannerChips.push(plan.task_learning_notes[0]);
+  } else if (plan.notes && plan.notes.length) {
+    plannerChips.push(plan.notes[0]);
+  }
+
+  plannerChips.forEach((item) => {
+    const chip = document.createElement("span");
+    chip.className = "focus-pill";
+    chip.textContent = item;
+    plannerLens.appendChild(chip);
+  });
+
+  weeklyStrategyList.appendChild(plannerLens);
+
+  if (plan.task_learning_notes && plan.task_learning_notes.length) {
+    const taskNotes = document.createElement("div");
+    taskNotes.className = "weekly-strategy-item";
+
+    const taskTitle = document.createElement("p");
+    taskTitle.className = "exam-chip-title";
+    taskTitle.textContent = "Task learning notes";
+    taskNotes.appendChild(taskTitle);
+
+    plan.task_learning_notes.slice(0, 4).forEach((item) => {
+      const detail = document.createElement("p");
+      detail.className = "muted";
+      detail.textContent = item;
+      taskNotes.appendChild(detail);
+    });
+
+    weeklyStrategyList.appendChild(taskNotes);
+  }
+
+  if (plan.task_learning_context) {
+    const taskContext = document.createElement("div");
+    taskContext.className = "weekly-strategy-item";
+
+    const contextTitle = document.createElement("p");
+    contextTitle.className = "exam-chip-title";
+    contextTitle.textContent = "Mode learning context";
+    taskContext.appendChild(contextTitle);
+
+    plan.task_learning_context.split(/\n+/).slice(0, 6).forEach((line) => {
+      const detail = document.createElement("p");
+      detail.className = "muted";
+      detail.textContent = line;
+      taskContext.appendChild(detail);
+    });
+
+    weeklyStrategyList.appendChild(taskContext);
+  }
+
+  const strongest = document.createElement("div");
+  strongest.className = "weekly-strategy-chip-row";
+  const strongestTitle = document.createElement("p");
+  strongestTitle.className = "memory-heading";
+  strongestTitle.textContent = "Strong areas to maintain";
+  strongest.appendChild(strongestTitle);
+  ((plan.strongest_sections && plan.strongest_sections.length ? plan.strongest_sections : ["Still being established"]) || []).forEach((item) => {
+    const chip = document.createElement("span");
+    chip.className = "focus-pill strength-pill";
+    chip.textContent = item;
+    strongest.appendChild(chip);
+  });
+
+  const weakest = document.createElement("div");
+  weakest.className = "weekly-strategy-chip-row";
+  const weakestTitle = document.createElement("p");
+  weakestTitle.className = "memory-heading";
+  weakestTitle.textContent = "Weak areas to attack";
+  weakest.appendChild(weakestTitle);
+  ((plan.weakest_sections && plan.weakest_sections.length ? plan.weakest_sections : ["No clear weak section yet"]) || []).forEach((item) => {
+    const chip = document.createElement("span");
+    chip.className = "focus-pill warning-pill";
+    chip.textContent = item;
+    weakest.appendChild(chip);
+  });
+
+  weeklyStrategyList.appendChild(strongest);
+  weeklyStrategyList.appendChild(weakest);
+
+  if (plan.jee_track_mode && plan.jee_track_mode !== "not_jee") {
+    const trackRow = document.createElement("div");
+    trackRow.className = "weekly-strategy-chip-row";
+
+    const trackTitle = document.createElement("p");
+    trackTitle.className = "memory-heading";
+    trackTitle.textContent = "JEE track";
+    trackRow.appendChild(trackTitle);
+
+    const trackChip = document.createElement("span");
+    trackChip.className = "focus-pill";
+    trackChip.textContent = String(plan.jee_track_mode).replace(/_/g, " ");
+    trackRow.appendChild(trackChip);
+
+    weeklyStrategyList.appendChild(trackRow);
+  }
+
+  if (plan.practice_rules && plan.practice_rules.length) {
+    const practiceRow = document.createElement("div");
+    practiceRow.className = "weekly-strategy-chip-row";
+
+    const practiceTitle = document.createElement("p");
+    practiceTitle.className = "memory-heading";
+    practiceTitle.textContent = "Weekly rules";
+    practiceRow.appendChild(practiceTitle);
+
+    plan.practice_rules.forEach((item) => {
+      const chip = document.createElement("span");
+      chip.className = "focus-pill";
+      chip.textContent = item;
+      practiceRow.appendChild(chip);
+    });
+
+    weeklyStrategyList.appendChild(practiceRow);
+  }
+
+  (plan.weekly_strategy || []).forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "weekly-strategy-item";
+
+    const title = document.createElement("p");
+    title.className = "exam-chip-title";
+    title.textContent = item.title;
+
+    const detail = document.createElement("p");
+    detail.className = "muted";
+    detail.textContent = item.detail;
+
+    card.appendChild(title);
+    card.appendChild(detail);
+    weeklyStrategyList.appendChild(card);
+  });
+
+  if (plan.strategy_sources && plan.strategy_sources.length) {
+    const sourcesRow = document.createElement("div");
+    sourcesRow.className = "weekly-strategy-chip-row";
+
+    const sourceTitle = document.createElement("p");
+    sourceTitle.className = "memory-heading";
+    sourceTitle.textContent = "Trusted source blend";
+    sourcesRow.appendChild(sourceTitle);
+
+    plan.strategy_sources.forEach((item) => {
+      const chip = document.createElement("a");
+      chip.className = "source-chip";
+      chip.href = item.url || "#";
+      chip.target = "_blank";
+      chip.rel = "noreferrer";
+      chip.textContent = item.label || "Learning source";
+      sourcesRow.appendChild(chip);
+    });
+
+    weeklyStrategyList.appendChild(sourcesRow);
+  }
+}
+
+function updateOverviewSnapshotStripFromWeeklyPlan(plan) {
+  if (!overviewTodayText || !overviewWeekText || !overviewNextText) {
+    return;
+  }
+
+  if (!plan || plan.message) {
+    overviewTodayText.textContent = "Steady start";
+    overviewWeekText.textContent = "-";
+    overviewNextText.textContent = "Open your weekly plan";
+    return;
+  }
+
+  const todayTask = (plan.days && plan.days[0] && plan.days[0].tasks && plan.days[0].tasks[0]) || null;
+  overviewTodayText.textContent = todayTask
+    ? `${todayTask.exam} ${todayTask.subject}`
+    : "Steady start";
+  overviewWeekText.textContent = `${plan.weekly_scheduled_hours}h planned | ${plan.weekly_test_blocks || 4} practice blocks | ${String(plan.planner_bias_label || "balanced").replace(/_/g, " ")}`;
+  overviewNextText.textContent = (plan.weekly_strategy && plan.weekly_strategy[0] && plan.weekly_strategy[0].title)
+    || (plan.notes && plan.notes[0])
+    || "Open the weekly plan";
+}
+
+function renderWeeklyPlan(plan) {
+  weeklyPlanTableBody.innerHTML = "";
+  if (!plan || plan.message) {
+    weeklyCoreHours.textContent = "-";
+    weeklyScheduledHours.textContent = "-";
+    weeklyFocusSplit.textContent = "-";
+    updateOverviewSnapshotStripFromWeeklyPlan(plan);
+    renderSectionProgress([]);
+    renderWeeklyStrategy(plan);
+    renderWeeklyPreview(plan);
+
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 5;
+    cell.textContent = (plan && plan.message) || "No weekly plan available yet.";
+    row.appendChild(cell);
+    weeklyPlanTableBody.appendChild(row);
+    if (plan && plan.mock_notice) {
+      const noticeRow = document.createElement("tr");
+      const noticeCell = document.createElement("td");
+      noticeCell.colSpan = 5;
+      noticeCell.className = "muted";
+      noticeCell.textContent = plan.mock_notice;
+      noticeRow.appendChild(noticeCell);
+      weeklyPlanTableBody.appendChild(noticeRow);
+    }
+    return;
+  }
+
+  weeklyCoreHours.textContent = `${plan.weekly_core_hours}h`;
+  weeklyScheduledHours.textContent = `${plan.weekly_scheduled_hours}h`;
+  weeklyFocusSplit.textContent = plan.exam_totals.map((item) => `${item.exam} ${item.hours}h`).join(" | ");
+  updateOverviewSnapshotStripFromWeeklyPlan(plan);
+  renderSectionProgress(plan.section_progress || []);
+  renderWeeklyStrategy(plan);
+  renderWeeklyPreview(plan);
+
+  plan.days.forEach((day) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td><strong>${day.label || day.date}</strong><div class="weekly-date">${day.date}</div></td><td><strong>${day.theme || "Study day"}</strong><div class="weekly-date">${day.strategy || ""}</div></td><td>${day.main_focus || "-"}</td><td></td><td><strong>${day.total_hours}h</strong></td>`;
+    const focusCell = row.querySelectorAll("td")[3];
+    day.tasks.forEach((task) => {
+      const pill = document.createElement("span");
+      pill.className = "focus-pill";
+      const topic = task.topic || task.subject;
+      const revisionTopic = task.revision_topic ? `, revise ${task.revision_topic}` : "";
+      pill.textContent = `${task.exam} ${task.subject} | ${topic}${revisionTopic} | ${task.session_type || "study"} | ${task.hours}h`;
+      focusCell.appendChild(pill);
+    });
+    weeklyPlanTableBody.appendChild(row);
+  });
+
+  if (plan.mock_notice) {
+    const noticeRow = document.createElement("tr");
+    const noticeCell = document.createElement("td");
+    noticeCell.colSpan = 5;
+    noticeCell.className = "muted";
+    noticeCell.textContent = plan.mock_notice;
+    noticeRow.appendChild(noticeCell);
+    weeklyPlanTableBody.appendChild(noticeRow);
+  }
+}
+
+function _toggleJourneyPanels(show) {
+  [journeySetupCard, todaysFocusCard, sessionTimerCard, sessionSummaryCard, journeyProgressSidebar, journeyMasteryCard].forEach((panel) => {
+    if (!panel) {
+      return;
+    }
+    panel.classList.toggle("hidden", !show);
+  });
+}
+
+function _formatJourneyHours(value) {
+  const hours = Math.max(2, Math.min(10, Number(value || 6)));
+  return `${hours} hours/day`;
+}
+
+function renderJourneySetup(planSummary = null) {
+  if (!journeySetupCard) {
+    return;
+  }
+  const hasJourney = !!(planSummary && (planSummary.topics || planSummary.days || planSummary.first_topic));
+  journeySetupCard.classList.toggle("hidden", hasJourney);
+  if (journeyHoursLabel) {
+    journeyHoursLabel.textContent = _formatJourneyHours(journeyHoursInput ? journeyHoursInput.value : 6);
+  }
+  if (journeySetupStatus && planSummary && planSummary.message) {
+    journeySetupStatus.textContent = planSummary.message;
+  }
+}
+
+function renderTodaysFocusCard(focus) {
+  todaysFocusSnapshot = focus || null;
+  const hasFocus = !!(focus && (focus.primary || focus.morning));
+  if (!todaysFocusCard) {
+    return;
+  }
+  todaysFocusCard.classList.toggle("hidden", !hasFocus);
+  if (!hasFocus) {
+    return;
+  }
+  const morning = focus.primary || focus.morning || {};
+  const sessionType = String(morning.session_type || "learn").toUpperCase();
+  const subject = String(morning.subject || "").trim() || "Physics";
+  const subjectColor = subject.toLowerCase().includes("chem") ? "green" : subject.toLowerCase().includes("math") ? "orange" : "blue";
+  todaysSubjectBadge.textContent = subject;
+  todaysSubjectBadge.className = `focus-pill subject-${subjectColor}`;
+  todaysUnitText.textContent = morning.unit || morning.unit_name || "Unit";
+  todaysTopicText.textContent = morning.topic || "Topic";
+  todaysSessionBadge.textContent = sessionType;
+  todaysConfidenceText.textContent = `Confidence: ${String(focus.confidence_level || morning.confidence_level || "new")}`;
+  todaysWeightageText.textContent = `${Number(morning.weightage_percent || morning.jee_weightage_percent || 0)}% of JEE Main`;
+  todaysGoalText.textContent = morning.daily_goal || "Daily goal will appear here.";
+  todaysFocusSummary.textContent = focus.daily_motivation || "Your session is ready.";
+}
+
+function renderJourneyProgressSidebar(planSummary = null, focus = null, masteryMap = null, revisionDue = null) {
+  const covered = planSummary && planSummary.topics ? planSummary.topics : [];
+  const totalTopics = covered.length || (masteryMap ? Object.keys(masteryMap).length : 0);
+  const doneTopics = masteryMap ? Object.values(masteryMap).filter((item) => ["good", "strong"].includes(String(item.confidence_level || "").toLowerCase())).length : 0;
+  const currentStreak = activeProfile && activeProfile.current_streak ? activeProfile.current_streak : 0;
+  const percent = totalTopics ? Math.round((doneTopics / Math.max(totalTopics, 1)) * 100) : 0;
+  if (!journeyProgressSidebar) {
+    return;
+  }
+  journeyProgressSidebar.classList.remove("hidden");
+  if (journeyCoveredText) journeyCoveredText.textContent = `Topics covered: ${doneTopics}/${totalTopics || 0}`;
+  if (journeyStreakText) journeyStreakText.textContent = `Current streak: ${currentStreak} day(s)`;
+  if (journeyOverallText) journeyOverallText.textContent = `Overall journey: ${percent}% complete`;
+  const nextMilestone = focus && focus.primary ? `Complete ${focus.primary.unit || focus.primary.unit_name || "today's unit"} in 2 more sessions` : "Complete the next topic in 2 more sessions";
+  if (journeyMilestoneText) journeyMilestoneText.textContent = `Next milestone: ${nextMilestone}`;
+}
+
+function renderJourneyMasterySummary(masteryMap = null) {
+  if (!journeyMasteryCard) {
+    return;
+  }
+  const entries = masteryMap && typeof masteryMap === "object" ? Object.entries(masteryMap) : [];
+  const counts = entries.reduce((acc, [, item]) => {
+    const label = String(item && item.confidence_level ? item.confidence_level : "new").toLowerCase();
+    acc[label] = (acc[label] || 0) + 1;
+    return acc;
+  }, { new: 0, low: 0, medium: 0, good: 0, strong: 0 });
+  const summaryText = entries.length
+    ? `New: ${counts.new || 0} • Low: ${counts.low || 0} • Medium: ${counts.medium || 0} • Good: ${counts.good || 0} • Strong: ${counts.strong || 0}`
+    : "No mastery data yet. Start a session to build this map.";
+  journeyMasteryCard.classList.remove("hidden");
+  if (journeyMasterySummary) {
+    journeyMasterySummary.textContent = summaryText;
+  }
+  if (journeyMasteryList) {
+    journeyMasteryList.innerHTML = "";
+    if (!entries.length) {
+      const empty = document.createElement("p");
+      empty.className = "muted";
+      empty.textContent = "Mastery details will appear after the first few sessions.";
+      journeyMasteryList.appendChild(empty);
+      return;
+    }
+    entries.slice(0, 8).forEach(([key, item]) => {
+      const row = document.createElement("div");
+      row.className = "weekly-strategy-item";
+      row.classList.add("chapter-mastery-row");
+      const title = document.createElement("strong");
+      title.textContent = item.topic || key.replace("::", " - ");
+      const meta = document.createElement("p");
+      meta.className = "muted";
+      const score = item.best_score !== undefined ? `${Math.round(Number(item.best_score) || 0)}%` : "n/a";
+      const studied = item.times_studied !== undefined ? item.times_studied : 0;
+      meta.textContent = `Confidence: ${item.confidence_level || "new"} • Best score: ${score} • Studied: ${studied} time(s)`;
+      const actions = document.createElement("div");
+      actions.className = "chapter-mastery-actions";
+      if (String(item.status || "not_started").toLowerCase() !== "not_started") {
+        const resetBtn = document.createElement("button");
+        resetBtn.type = "button";
+        resetBtn.className = "ghost-button chapter-reset-btn";
+        resetBtn.title = "Restart this chapter from the beginning";
+        resetBtn.textContent = "↺";
+        resetBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          resetChapterFromUI({
+            unit_name: item.unit_name || item.unit || item.topic || title.textContent,
+            subject: item.subject || "",
+          });
+        });
+        actions.appendChild(resetBtn);
+      }
+      row.append(title, meta, actions);
+      journeyMasteryList.appendChild(row);
+    });
+  }
+}
+
+function renderSessionTimer(startedAt = null) {
+  journeyTimerStartedAt = startedAt || journeyTimerStartedAt;
+  if (!sessionTimerCard) {
+    return;
+  }
+  sessionTimerCard.classList.toggle("hidden", !journeyTimerStartedAt);
+  if (journeyTimerInterval) {
+    window.clearInterval(journeyTimerInterval);
+    journeyTimerInterval = null;
+  }
+  if (!journeyTimerStartedAt) {
+    if (sessionTimerText) sessionTimerText.textContent = "Session timer idle.";
+    if (sessionTimerPill) sessionTimerPill.textContent = "00:00";
+    return;
+  }
+  const tick = () => {
+    const elapsed = Math.max(0, Math.floor((Date.now() - journeyTimerStartedAt) / 1000));
+    const minutes = String(Math.floor(elapsed / 60)).padStart(2, "0");
+    const seconds = String(elapsed % 60).padStart(2, "0");
+    const text = `${minutes}:${seconds}`;
+    if (sessionTimerPill) sessionTimerPill.textContent = text;
+    if (sessionTimerText) sessionTimerText.textContent = `Session running for ${text}.`;
+  };
+  tick();
+  journeyTimerInterval = window.setInterval(tick, 1000);
+}
+
+function renderSessionSummary(summary = null) {
+  if (!sessionSummaryCard) {
+    return;
+  }
+  const show = !!summary;
+  sessionSummaryCard.classList.toggle("hidden", !show);
+  if (!show) {
+    return;
+  }
+  if (sessionSummaryText) sessionSummaryText.textContent = summary.message || "Session complete.";
+  if (sessionSummaryBadge) sessionSummaryBadge.textContent = summary.updated_confidence || "Complete";
+  if (sessionScoreText) sessionScoreText.textContent = `Score: ${summary.checkpoint_score !== undefined ? `${summary.checkpoint_score}%` : "-"}`;
+  if (sessionNextRevisionText) {
+    const revision = (summary.next_revision_dates && summary.next_revision_dates[0]) || "-";
+    sessionNextRevisionText.textContent = `Next revision: ${revision}`;
+  }
+  if (sessionTomorrowText) {
+    const nextTopic = summary.next_topic_preview && (summary.next_topic_preview.topic || summary.next_topic_preview.unit || summary.next_topic_preview.unit_name)
+      ? (summary.next_topic_preview.topic || summary.next_topic_preview.unit || summary.next_topic_preview.unit_name)
+      : "-";
+    sessionTomorrowText.textContent = `Tomorrow's topic: ${nextTopic}`;
+  }
+}
+
+async function refreshJourneyDashboard() {
+  if (!activeProfile) {
+    return;
+  }
+  try {
+    const response = await fetch(`/api/tutor/todays-session/${encodeURIComponent(activeProfile.name)}`);
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load today's focus.");
+    }
+    const focus = payload.todays_focus || payload.focus || null;
+    const masteryMap = payload.student_state || payload.mastery_map || null;
+    todaysFocusSnapshot = focus || null;
+    renderTodaysFocusCard(focus);
+    renderJourneyProgressSidebar(journeyPlanSnapshot, focus || null, masteryMap, payload.revision_due || []);
+    renderJourneyMasterySummary(masteryMap);
+    if (focus && focus.primary) {
+      _toggleJourneyPanels(true);
+      if (journeySetupCard) journeySetupCard.classList.add("hidden");
+    } else {
+      _toggleJourneyPanels(false);
+      if (journeySetupCard) journeySetupCard.classList.remove("hidden");
+      renderJourneySetup(null);
+    }
+  } catch (error) {
+    console.warn("Journey dashboard could not refresh:", error);
+  }
+}
+
+async function setupJourneyFromUI() {
+  if (!activeProfile) {
+    return;
+  }
+  const currentStudentId = activeProfile.name;
+  const examDate = journeyExamDateInput && journeyExamDateInput.value ? journeyExamDateInput.value : "";
+  const hours = Number(journeyHoursInput && journeyHoursInput.value ? journeyHoursInput.value : "6");
+  if (!examDate) {
+    alert("Please select your exam date before continuing");
+    if (journeySetupStatus) journeySetupStatus.textContent = "Please select your exam date before continuing.";
+    return;
+  }
+  const body = {
+    student_id: currentStudentId,
+    exam_date: examDate,
+    hours_per_day: hours,
+  };
+  console.log("JOURNEY SETUP REQUEST:", body);
+  if (journeySetupStatus) journeySetupStatus.textContent = "Mapping your JEE journey...";
+  if (setupJourneyBtn) setupJourneyBtn.disabled = true;
+  try {
+    const response = await fetch("/api/planner/setup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not build the journey.");
+    }
+    journeyPlanSnapshot = payload.plan_summary || null;
+    journeyWeeklySnapshot = payload.weekly_plan || null;
+    renderJourneySetup(payload.plan_summary || null);
+    renderWeeklyPlan(payload.weekly_plan || null);
+    renderTodaysFocusCard(payload.todays_focus || null);
+    renderJourneyProgressSidebar(payload.plan_summary || null, payload.todays_focus || null, null, payload.todays_focus ? payload.todays_focus.revision_due : []);
+    renderJourneyMasterySummary(payload.todays_focus ? payload.todays_focus.student_state : null);
+    appendMessage("tutor", "tutor", payload.opening_message || "Your JEE journey is ready.");
+    if (journeySetupStatus) journeySetupStatus.textContent = payload.message || "Your journey is ready.";
+    if (setupJourneyBtn) setupJourneyBtn.textContent = "Journey ready";
+    const focusTopic = payload.todays_focus && payload.todays_focus.primary ? payload.todays_focus.primary.topic : "";
+    const focusSubject = payload.todays_focus && payload.todays_focus.primary ? payload.todays_focus.primary.subject : "";
+    if (focusTopic) {
+      updateAstraCurrentTopic(focusTopic, focusSubject, "weekly_plan");
+    }
+    await refreshJourneyDashboard();
+  } catch (error) {
+    if (journeySetupStatus) journeySetupStatus.textContent = error.message;
+  } finally {
+    if (setupJourneyBtn) setupJourneyBtn.disabled = false;
+  }
+}
+
+async function startJourneySession() {
+  if (!activeProfile) {
+    return;
+  }
+  try {
+    const response = await fetch(`/api/tutor/todays-session/${encodeURIComponent(activeProfile.name)}`);
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not start today's session.");
+    }
+    if (todaysFocusCard) {
+      todaysFocusCard.classList.add("pulse-focus");
+    }
+    const morningTopic = payload.todays_focus && payload.todays_focus.primary ? payload.todays_focus.primary.topic : "";
+    const morningSubject = payload.todays_focus && payload.todays_focus.primary ? payload.todays_focus.primary.subject : "";
+    if (morningTopic) {
+      updateAstraCurrentTopic(morningTopic, morningSubject, "weekly_plan");
+    }
+    appendMessage("tutor", "tutor", payload.opening_message || "Let's begin your session.");
+    renderJourneyProgressSidebar(journeyPlanSnapshot || null, payload.todays_focus || null, payload.student_state || null, payload.revision_due || []);
+    renderSessionTimer(Date.now());
+    setTimeout(() => {
+      if (todaysFocusCard) {
+        todaysFocusCard.classList.remove("pulse-focus");
+      }
+    }, 1200);
+    activeJourneySession = payload;
+    setActiveTab("tutorTab");
+  } catch (error) {
+    appendMessage("tutor", "tutor", `I could not start the session right now: ${error.message}`);
+  }
+}
+
+async function completeJourneySessionFromCheckpoint(checkpointScore) {
+  if (!activeProfile || !todaysFocusSnapshot) {
+    return;
+  }
+  const morning = todaysFocusSnapshot.primary || todaysFocusSnapshot.morning || {};
+  try {
+    const response = await fetch("/api/tutor/complete-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: activeProfile.name,
+        topic: morning.topic || "",
+        subject: morning.subject || "",
+        unit_name: morning.unit || morning.unit_name || "",
+        checkpoint_score: checkpointScore,
+        duration_minutes: journeyTimerStartedAt ? Math.max(1, Math.round((Date.now() - journeyTimerStartedAt) / 60000)) : 0,
+        session_type: morning.session_type || "learn",
+        understood: checkpointScore >= 60,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not complete the session.");
+    }
+    const nextTopic = payload.next_topic_preview || {};
+    if (nextTopic.topic) {
+      updateAstraCurrentTopic(nextTopic.topic, nextTopic.subject || "", "weekly_plan");
+    }
+    activeJourneySession = null;
+    renderSessionTimer(null);
+    renderSessionSummary({
+      ...payload,
+      message: payload.encouragement_message || "Great work.",
+      checkpoint_score: checkpointScore,
+    });
+    renderJourneyProgressSidebar(journeyPlanSnapshot, payload.next_topic_preview || null, payload.result || null, payload.result ? payload.result.next_revision_dates || [] : []);
+    if (payload.weekly_plan_updated) {
+      await refreshWeeklyPlan();
+    }
+    await refreshJourneyDashboard();
+  } catch (error) {
+    console.warn("Could not complete journey session:", error);
+  }
+}
+
+function renderAvatars(selectedAvatarId) {
+  avatarGrid.innerHTML = "";
+  avatarPresets.forEach((avatar) => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = `avatar-card ${selectedAvatarId === avatar.id ? "active" : ""}`;
+
+    const portrait = document.createElement("img");
+    portrait.className = "avatar-card-portrait";
+    portrait.src = getTutorPersonalityPortrait(avatar);
+    portrait.alt = `${avatar.name} portrait`;
+    portrait.loading = "eager";
+    portrait.decoding = "async";
+    card.appendChild(portrait);
+
+    const accent = document.createElement("div");
+    accent.className = "avatar-accent";
+    accent.style.background = `linear-gradient(145deg, ${avatar.accent}, ${avatar.secondary_accent})`;
+
+    const title = document.createElement("h3");
+    title.textContent = avatar.name;
+
+    const tagline = document.createElement("p");
+    tagline.className = "muted";
+    tagline.textContent = avatar.tagline;
+
+    card.appendChild(accent);
+    card.appendChild(title);
+    card.appendChild(tagline);
+    card.addEventListener("click", () => selectAvatar(avatar.id));
+    avatarGrid.appendChild(card);
+  });
+}
+
+function getTutorPersonalityPortrait(avatar) {
+  if (!avatar) {
+    return "/media/tutor-faces/GeniusStrategistGuideFemaleMain1.png";
+  }
+  if (avatar.portrait_url) {
+    return avatar.portrait_url;
+  }
+  if (avatar.id === "friendly-senior") {
+    return "/media/tutor-faces/EnergeticGuideFemaleMain1.png";
+  }
+  return "/media/tutor-faces/GeniusStrategistGuideFemaleMain1.png";
+}
+
+function renderHomeTutorPersonalityGrid() {
+  if (!homeTutorPersonalityGrid) {
+    return;
+  }
+
+  homeTutorPersonalityGrid.innerHTML = "";
+  const selectedAvatarId = activeProfile?.selected_avatar || activeAvatar?.id || "";
+  const avatars = avatarPresets.length ? avatarPresets : [];
+
+  if (!avatars.length) {
+    const emptyState = document.createElement("p");
+    emptyState.className = "muted";
+    emptyState.textContent = "Tutor personalities will appear here once the avatar profiles are ready.";
+    homeTutorPersonalityGrid.appendChild(emptyState);
+    return;
+  }
+
+  avatars.forEach((avatar) => {
+    const card = document.createElement("article");
+    card.className = `home-tutor-card ${selectedAvatarId === avatar.id ? "selected" : ""}`;
+
+    const portrait = document.createElement("img");
+    portrait.className = "home-tutor-card-image";
+    portrait.src = getTutorPersonalityPortrait(avatar);
+    portrait.alt = `${avatar.name} face`;
+    portrait.loading = "lazy";
+    portrait.decoding = "async";
+
+    const body = document.createElement("div");
+    body.className = "home-tutor-card-body";
+
+    const name = document.createElement("h3");
+    name.className = "home-tutor-card-title";
+    name.textContent = avatar.name;
+
+    const description = document.createElement("p");
+    description.className = "home-tutor-card-description";
+    description.textContent = `${avatar.tagline} ${avatar.sample_line || ""}`.trim();
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "home-tutor-select-btn";
+    button.textContent = "Select this tutor";
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      selectAvatar(avatar.id);
+    });
+
+    body.appendChild(name);
+    body.appendChild(description);
+    body.appendChild(button);
+    card.appendChild(portrait);
+    card.appendChild(body);
+    homeTutorPersonalityGrid.appendChild(card);
+  });
+}
+
+function supportsSpeech() {
+  return "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+}
+
+function loadBrowserVoices() {
+  if (supportsSpeech()) {
+    browserVoices = window.speechSynthesis.getVoices();
+  }
+}
+
+function findVoiceForAvatar(avatar) {
+  if (!avatar || !browserVoices.length) {
+    return null;
+  }
+
+  const keywords = avatar.voice_keywords || [];
+  for (const keyword of keywords) {
+    const match = browserVoices.find((voice) => voice.name.toLowerCase().includes(keyword));
+    if (match) {
+      return match;
+    }
+  }
+
+  const languagePrefix = getLanguagePrefix(currentLanguage);
+  return browserVoices.find((voice) => voice.lang.toLowerCase().startsWith(languagePrefix))
+    || browserVoices.find((voice) => voice.lang.toLowerCase().startsWith("en"))
+    || browserVoices[0]
+    || null;
+}
+
+function getFemaleTutorAvatar() {
+  const femaleAvatar = avatarPresets.find((avatar) => ["calm-mentor", "friendly-senior"].includes(avatar.id));
+  return femaleAvatar || avatarPresets[0] || activeAvatar || null;
+}
+
+function getSpeechAvatarForMode(mode = "tutor") {
+  if (mode === "tutor") {
+    return getFemaleTutorAvatar();
+  }
+  return activeAvatar || avatarPresets[0] || getFemaleTutorAvatar();
+}
+
+function ensureTutorRoomPersona() {
+  const femaleAvatar = getFemaleTutorAvatar();
+  if (femaleAvatar && (!activeAvatar || activeAvatar.id !== femaleAvatar.id)) {
+    setAvatarStage(femaleAvatar);
+  }
+}
+
+function updateTalkingFace(step = 0) {
+  if (!avatarFace || !avatarMouth) {
+    return;
+  }
+  avatarFace.classList.add("speaking");
+  avatarMouth.className = "mouth";
+  avatarMouth.classList.add(`open-${step}`);
+}
+
+function stopTalkingFace() {
+  if (!avatarFace || !avatarMouth) {
+    return;
+  }
+  avatarFace.classList.remove("speaking");
+  avatarMouth.className = "mouth";
+}
+
+function speakText(text) {
+  if (!supportsSpeech() || !text) {
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  const currentMode = getActiveConversationModeFromUI();
+  const avatar = getSpeechAvatarForMode(currentMode) || activeAvatar || avatarPresets[0] || null;
+  const chosenVoice = findVoiceForAvatar(avatar);
+
+  if (chosenVoice) {
+    utterance.voice = chosenVoice;
+  }
+  const pacingMode = responsePacingSelect ? responsePacingSelect.value : "standard";
+  const pacingScale = pacingMode === "slow" ? 0.86 : pacingMode === "gentle" ? 0.93 : 1;
+  utterance.rate = ((avatar && avatar.voice_rate) || 0.96) * pacingScale;
+  utterance.pitch = (avatar && avatar.voice_pitch) || 1.0;
+  setCaption(text);
+  if (avatarStageStatus) avatarStageStatus.textContent = "Speaking";
+  updateTalkingFace(1);
+  activeSpeechUtterance = utterance;
+
+  utterance.onboundary = (event) => {
+    if (typeof event.charIndex === "number") {
+      updateTalkingFace((Math.floor(event.charIndex / 5) % 3) + 1);
+      if (autoCaptionMode.checked) {
+        const nextCaption = text.slice(event.charIndex, Math.min(text.length, event.charIndex + 160)).trim();
+        if (nextCaption) {
+          setCaption(nextCaption);
+        }
+      }
+    }
+  };
+
+  utterance.onend = () => {
+    if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
+    stopTalkingFace();
+    if (activeSpeechUtterance === utterance) {
+      activeSpeechUtterance = null;
+    }
+    if (autoCaptionMode.checked) {
+      setCaption(text);
+    }
+    updateTutorRoomLivePanel();
+  };
+
+  utterance.onerror = () => {
+    if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
+    stopTalkingFace();
+    if (activeSpeechUtterance === utterance) {
+      activeSpeechUtterance = null;
+    }
+    updateTutorRoomLivePanel();
+  };
+
+  window.speechSynthesis.speak(utterance);
+  updateTutorRoomLivePanel();
+}
+
+function pauseSpeaking() {
+  if (!supportsSpeech()) {
+    return;
+  }
+  if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+    window.speechSynthesis.pause();
+    if (avatarStageStatus) avatarStageStatus.textContent = "Voice Paused";
+    setCaption("Speech paused.");
+  }
+}
+
+function resumeSpeaking() {
+  if (!supportsSpeech()) {
+    return;
+  }
+  if (window.speechSynthesis.paused) {
+    window.speechSynthesis.resume();
+    if (avatarStageStatus) avatarStageStatus.textContent = "Speaking";
+    setCaption("Speech resumed.");
+  }
+}
+
+function stopSpeaking() {
+  if (!supportsSpeech()) {
+    updateTutorRoomLivePanel();
+    return;
+  }
+  window.speechSynthesis.cancel();
+  activeSpeechUtterance = null;
+  if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
+  stopTalkingFace();
+  setCaption("Speech stopped.");
+  updateTutorRoomLivePanel();
+}
+
+function pauseTutorNarration() {
+  if (activeTutorNarration) {
+    activeTutorNarration.paused = true;
+    if (!activeTutorNarration.checkpoint) {
+      activeTutorNarration.checkpoint = activeTutorNarration.text || "";
+    }
+  }
+  pauseSpeaking();
+  updateTutorRoomLivePanel();
+}
+
+function resumeTutorNarration() {
+  if (activeTutorNarration) {
+    activeTutorNarration.paused = false;
+    if (activeTutorNarration.mode === "tutor" && autoCaptionMode.checked) {
+      setCaption(activeTutorNarration.output || activeTutorNarration.text || "Resuming reply...");
+    }
+  }
+  resumeSpeaking();
+  updateTutorRoomLivePanel();
+}
+
+function saveTutorCheckpoint(mode, sourceText, replyText) {
+  const normalizedMode = mode || "tutor";
+  tutorReplyCheckpoints[normalizedMode] = {
+    mode: normalizedMode,
+    source_text: sourceText || "",
+    reply_text: replyText || "",
+    created_at: new Date().toISOString(),
+  };
+}
+
+function interruptTutorOutput(mode) {
+  const activeMode = mode || (activeTutorNarration && activeTutorNarration.mode) || "tutor";
+  if (activeTutorNarration && activeTutorNarration.mode === activeMode) {
+    saveTutorCheckpoint(activeMode, activeTutorNarration.text, activeTutorNarration.output || activeTutorNarration.text);
+    pauseTutorNarration();
+    updateTutorRoomLivePanel();
+    return;
+  }
+  if (lastRepliesByMode[activeMode] || lastTutorReply) {
+    saveTutorCheckpoint(activeMode, "", lastRepliesByMode[activeMode] || lastTutorReply);
+  }
+  pauseSpeaking();
+  updateTutorRoomLivePanel();
+}
+
+async function resumeTutorCheckpoint(mode = "tutor") {
+  const checkpoint = tutorReplyCheckpoints[mode];
+  if (activeTutorNarration && activeTutorNarration.mode === mode && activeTutorNarration.paused) {
+    resumeTutorNarration();
+    return true;
+  }
+  if (!activeProfile || !checkpoint || !checkpoint.reply_text) {
+    return false;
+  }
+  const continuationPrompt = checkpoint.source_text
+    ? `Continue from the last checkpoint without repeating the earlier parts. The student interrupted the explanation, so resume naturally from here: ${checkpoint.reply_text}`
+    : `Continue from the last checkpoint without repeating the earlier parts. Resume naturally from this prior answer: ${checkpoint.reply_text}`;
+  await sendMessage(continuationPrompt);
+  return true;
+}
+
+function getActiveConversationModeFromUI() {
+  const activeTabElement = document.querySelector(".tab-panel.active");
+  const activeTab = activeTabElement ? activeTabElement.id : "tutorTab";
+  return activeTab === "guideTab"
+    ? "guide"
+    : activeTab === "loungeTab"
+    ? "lounge"
+    : activeTab === "practiceTab"
+    ? "practice"
+    : activeTab === "lastMinuteTab"
+    ? "last_minute"
+    : activeTab === "tipsTab"
+    ? "tips"
+    : activeTab === "tutorRoomTab"
+    ? "tutor"
+    : "tutor";
+}
+
+function renderTabManager() {
+  if (!tabManager) {
+    return;
+  }
+
+  tabManager.innerHTML = "";
+  getVisibleTabOrder().forEach((key, index, visibleOrder) => {
+    const row = document.createElement("div");
+    row.className = "tab-manager-row";
+
+    const label = document.createElement("span");
+    label.textContent = TAB_CONFIG[key].label;
+
+    const controls = document.createElement("div");
+    controls.className = "tab-manager-controls";
+
+    const leftButton = document.createElement("button");
+    leftButton.type = "button";
+    leftButton.className = "ghost-button mini-button";
+    leftButton.textContent = "Left";
+    leftButton.disabled = index === 0;
+    leftButton.addEventListener("click", () => moveTab(key, -1));
+
+    const rightButton = document.createElement("button");
+    rightButton.type = "button";
+    rightButton.className = "ghost-button mini-button";
+    rightButton.textContent = "Right";
+    rightButton.disabled = index === visibleOrder.length - 1;
+    rightButton.addEventListener("click", () => moveTab(key, 1));
+
+    controls.appendChild(leftButton);
+    controls.appendChild(rightButton);
+    row.appendChild(label);
+    row.appendChild(controls);
+    tabManager.appendChild(row);
+  });
+}
+
+function applyTabOrder() {
+  currentTabOrder.forEach((key) => {
+    const config = TAB_CONFIG[key];
+    const button = tabBar.querySelector(`[data-tab-key="${key}"]`);
+    const panel = document.getElementById(config.buttonTab);
+    const groupContainer = button ? tabBar.querySelector(`[data-nav-group-container="${button.dataset.navGroup || "home"}"] .nav-hub-buttons`) : null;
+    if (button) {
+      if (groupContainer) {
+        groupContainer.appendChild(button);
+      } else {
+        tabBar.appendChild(button);
+      }
+    }
+    if (panel) {
+      panel.parentElement.appendChild(panel);
+    }
+  });
+  localStorage.setItem("alt_tab_order", JSON.stringify(currentTabOrder));
+  refreshTabCollections();
+  renderTabManager();
+  applyLeagueVisibility();
+}
+
+function moveTab(key, direction) {
+  const index = currentTabOrder.indexOf(key);
+  const nextIndex = index + direction;
+  if (index < 0 || nextIndex < 0 || nextIndex >= currentTabOrder.length) {
+    return;
+  }
+  const nextOrder = [...currentTabOrder];
+  [nextOrder[index], nextOrder[nextIndex]] = [nextOrder[nextIndex], nextOrder[index]];
+  currentTabOrder = nextOrder;
+  applyTabOrder();
+}
+
+async function fetchAvatarPresets() {
+  const response = await fetch("/api/avatar-presets");
+  const payload = await response.json();
+  avatarPresets = payload.avatars || [];
+}
+
+async function fetchExamCatalog() {
+  const response = await fetch("/api/exam-catalog");
+  const payload = await response.json();
+  examCatalog = payload.exams || [];
+  renderExamCatalogOptions();
+}
+
+async function fetchTipsResources(studentName) {
+  if (!studentName) {
+    renderTipsResources([]);
+    return;
+  }
+  const response = await fetch(`/api/tips/${encodeURIComponent(studentName)}`);
+  const payload = await response.json();
+  renderTipsResources(payload.resources || []);
+}
+
+async function fetchNetwork(studentName) {
+  if (!studentName) {
+    renderNetwork(null);
+    return;
+  }
+  const response = await fetch(`/api/network/${encodeURIComponent(studentName)}`);
+  const payload = await response.json();
+  renderNetwork(payload);
+}
+
+async function fetchProgress(studentName) {
+  if (!studentName) {
+    renderProgressSnapshot(null);
+    renderChapterMasteryBoard(null);
+    renderChapterAnalytics(null);
+    renderChapterRevisionTracker(null);
+    return;
+  }
+  const [progressResponse, masteryResponse, analyticsResponse, summariesResponse] = await Promise.all([
+    fetch(`/api/progress/${encodeURIComponent(studentName)}`),
+    fetch(`/api/progress/chapter-mastery/${encodeURIComponent(studentName)}`),
+    fetch(`/api/progress/analytics/${encodeURIComponent(studentName)}`),
+    fetch(`/api/session/chapter-summaries/${encodeURIComponent(studentName)}`),
+  ]);
+  const [progressPayload, masteryPayload, analyticsPayload, summariesPayload] = await Promise.all([
+    progressResponse.json(),
+    masteryResponse.json(),
+    analyticsResponse.json(),
+    summariesResponse.json(),
+  ]).catch((error) => {
+    throw error;
+  });
+  if (!progressResponse.ok) {
+    throw new Error(progressPayload.detail || "Could not load progress.");
+  }
+  renderProgressSnapshot(progressPayload);
+  renderChapterMasteryBoard(masteryPayload);
+  renderChapterAnalytics(analyticsPayload);
+  renderChapterRevisionTracker(summariesPayload);
+}
+
+async function fetchStudentInsights(studentName) {
+  if (!studentName) {
+    renderStudentInsights(null);
+    return;
+  }
+  const response = await fetch(`/api/student-insights/${encodeURIComponent(studentName)}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load student insights.");
+  }
+  renderStudentInsights(payload || null);
+}
+
+async function summarizeLatestTutorAnswer() {
+  if (!activeProfile) {
+    return;
+  }
+
+  const answerText = (lastRepliesByMode.tutor || lastTutorReply || "").trim();
+  if (!answerText) {
+    renderSummaryPanel("There is no tutor answer to summarize yet. Ask the tutor something first.");
+    setActiveStudioPane("summaryPanel");
+    return;
+  }
+
+  if (summarizeTutorBtn) {
+    summarizeTutorBtn.disabled = true;
+  }
+  if (quickSummaryBtn) {
+    quickSummaryBtn.disabled = true;
+  }
+
+  try {
+    const response = await fetch("/api/summarize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name: activeProfile.name,
+        answer_text: answerText,
+        response_language: currentLanguage,
+        conversation_mode: "tutor",
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not summarize that answer.");
+    }
+    renderSummaryPanel(payload.summary || "");
+    setActiveStudioPane("summaryPanel");
+  } catch (error) {
+    renderSummaryPanel(`Could not summarize right now: ${error.message}`);
+    setActiveStudioPane("summaryPanel");
+  } finally {
+    if (summarizeTutorBtn) {
+      summarizeTutorBtn.disabled = false;
+    }
+    if (quickSummaryBtn) {
+      quickSummaryBtn.disabled = false;
+    }
+  }
+}
+
+async function saveProgressItem() {
+  if (!activeProfile) {
+    return;
+  }
+
+  const topic = (progressTopicInput && progressTopicInput.value.trim()) || "";
+  if (!topic) {
+    if (progressReminderText) {
+      progressReminderText.textContent = "Add at least a topic or chapter name before saving.";
+    }
+    return;
+  }
+
+  saveProgressItemBtn.disabled = true;
+  try {
+    const response = await fetch("/api/progress/item", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name: activeProfile.name,
+        exam: (progressExamInput && progressExamInput.value.trim()) || "",
+        subject: (progressSubjectInput && progressSubjectInput.value.trim()) || "",
+        topic,
+        status: (progressStatusSelect && progressStatusSelect.value) || "pending",
+        note: (progressNoteInput && progressNoteInput.value.trim()) || "",
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not save that progress item.");
+    }
+    renderProgressSnapshot(payload);
+    await fetchStudentInsights(activeProfile.name);
+    await fetchEngagement(activeProfile.name);
+    await fetchVideoLibrary(activeProfile.name);
+    progressTopicInput.value = "";
+    progressNoteInput.value = "";
+    await fetchStorageStatus(activeProfile.name);
+    await fetchFeatureHealth(activeProfile.name);
+  } catch (error) {
+    if (progressReminderText) {
+      progressReminderText.textContent = error.message;
+    }
+  } finally {
+    saveProgressItemBtn.disabled = false;
+  }
+}
+
+async function updateProgressItemStatus(itemId, status) {
+  if (!activeProfile || !itemId) {
+    return;
+  }
+  try {
+    const response = await fetch("/api/progress/status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name: activeProfile.name,
+        item_id: itemId,
+        status,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not update that progress item.");
+    }
+    renderProgressSnapshot(payload);
+    await fetchStudentInsights(activeProfile.name);
+    await fetchEngagement(activeProfile.name);
+    await fetchVideoLibrary(activeProfile.name);
+    await fetchStorageStatus(activeProfile.name);
+    await fetchFeatureHealth(activeProfile.name);
+  } catch (error) {
+    if (progressReminderText) {
+      progressReminderText.textContent = error.message;
+    }
+  }
+}
+
+async function fetchPracticeAnalytics(studentName) {
+  if (!studentName) {
+    renderPracticeAnalytics(null);
+    return;
+  }
+  const response = await fetch(`/api/analytics/${encodeURIComponent(studentName)}`);
+  const payload = await response.json();
+  renderPracticeAnalytics(payload);
+}
+
+async function selectAvatar(avatarId) {
+  if (!activeProfile) {
+    return;
+  }
+
+  const response = await fetch("/api/avatar/select", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      avatar_id: avatarId,
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    appendMessage("tutor", "tutor", payload.detail || "Could not select that avatar.");
+    return;
+  }
+
+  activeProfile = payload.profile;
+  setAvatarStage(payload.avatar);
+  renderTutorBrain(payload.tutor_brain || buildLocalTutorBrain(activeProfile, payload.avatar, "tutor"));
+  renderAvatars(activeProfile.selected_avatar);
+  renderHomeTutorPersonalityGrid();
+  preferTutorVideosForAvatar(payload.avatar);
+  studentSubcopy.textContent = `Current AI teacher style: ${payload.avatar.name}.`;
+  appendMessage("tutor", "tutor", `I will now guide you with the ${payload.avatar.name} persona.`);
+  speakText(payload.avatar.sample_line);
+}
+
+async function saveTutorName() {
+  if (!activeProfile) {
+    return;
+  }
+
+  const response = await fetch("/api/tutor/customize", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      tutor_name: tutorNameInput.value.trim(),
+      tutor_personality_preset: tutorPersonaPresetSelect ? tutorPersonaPresetSelect.value : "",
+      tutor_personality_traits: selectedTutorTraits,
+      tutor_personality_notes: tutorStyleInput.value.trim(),
+      tutor_style: buildTutorStyleSummary(),
+      appearance_description: tutorAppearanceInput.value.trim(),
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    appendMessage("tutor", "tutor", payload.detail || "I could not save that tutor setup.");
+    return;
+  }
+
+  activeProfile = payload.profile;
+  tutorNameInput.value = activeProfile.tutor_name || "";
+  applyTutorPersonalityToForm(activeProfile);
+  tutorAppearanceInput.value = activeProfile.appearance_description || "";
+  setAvatarStage(activeAvatar || avatarPresets[0]);
+  renderTutorBrain(buildLocalTutorBrain(activeProfile, activeAvatar || avatarPresets[0], "tutor"));
+  updateTutorSummary(activeProfile);
+  await fetchNetwork(activeProfile.name);
+  appendMessage("tutor", "tutor", `Perfect. I will show up as ${activeProfile.tutor_name} with the style you described.`);
+}
+
+async function saveGroupStudyPreferences(action = "save") {
+  if (!activeProfile) {
+    return;
+  }
+
+  const currentPrefs = (activeProfile.group_study_preferences && typeof activeProfile.group_study_preferences === "object")
+    ? activeProfile.group_study_preferences
+    : {};
+  const formPrefs = getGroupStudyPreferencesFromForm();
+  const payload = {
+    student_name: activeProfile.name,
+    enabled: action === "solo" ? false : formPrefs.enabled,
+    mode: action === "solo" ? "solo" : formPrefs.mode,
+    group_size: formPrefs.group_size || currentPrefs.group_size || 3,
+    session_minutes: formPrefs.session_minutes || currentPrefs.session_minutes || 60,
+    focus: formPrefs.focus || currentPrefs.focus || "",
+    rotation_index: Number(currentPrefs.rotation_index || 0),
+    action,
+  };
+
+  if (action === "reroll") {
+    payload.enabled = true;
+  }
+
+  const response = await fetch("/api/network/group-study/preferences", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    appendMessage("tutor", "tutor", result.detail || "I could not update the group study room yet.");
+    return;
+  }
+
+  activeProfile = result.profile || activeProfile;
+  applyGroupStudyPreferencesToForm(activeProfile);
+  await fetchNetwork(activeProfile.name);
+}
+
+async function saveExamPlans(exams, successMessage) {
+  if (!activeProfile) {
+    return;
+  }
+
+  const response = await fetch("/api/profile/exams", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      exams,
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    appendMessage("tutor", "tutor", payload.detail || "I could not update your exams.");
+    return;
+  }
+
+  activeProfile = payload.profile;
+  renderExamManager(activeProfile.exams || []);
+  await refreshWeeklyPlan();
+  await fetchTipsResources(activeProfile.name);
+  await fetchLearningSources(activeProfile.name);
+  await fetchVideoLibrary(activeProfile.name);
+  await fetchNetwork(activeProfile.name);
+  await fetchStudentInsights(activeProfile.name);
+  await fetchFeatureHealth(activeProfile.name);
+  updateExamBrandCopy(activeProfile);
+  const examsLabel = getActiveExamListLabel(activeProfile);
+  studentSubcopy.textContent = examsLabel
+    ? `Start with your tutor first, then move into ${examsLabel} at your own pace.`
+    : `Start with your tutor first, then add ${getActiveExamLabel(activeProfile)} whenever you are ready.`;
+  appendMessage("tutor", "tutor", successMessage || "Your exam list has been updated and your schedule will adapt from the next plan refresh.");
+}
+
+async function addExamPlan() {
+  if (!activeProfile) {
+    return;
+  }
+
+  const newExam = normalizeExamEntry({
+    name: getExamNameFromInputs(),
+    exam_date: examDateInput.value,
+    subjects: examSubjectsInput.value,
+    portion: examPortionInput.value,
+  });
+  if (!newExam.name || !newExam.exam_date || !newExam.subjects.length) {
+    appendMessage("tutor", "tutor", "Add the exam name, exam date, and at least one subject so I can plan it properly.");
+    return;
+  }
+
+  const updatedExams = [...(activeProfile.exams || []), newExam];
+  if (examCatalogSelect) {
+    examCatalogSelect.value = "";
+  }
+  if (customExamNameInput) {
+    customExamNameInput.value = "";
+  }
+  examDateInput.value = "";
+  examSubjectsInput.value = "";
+  examPortionInput.value = "";
+  examSubjectsInput.readOnly = false;
+  updateExamInputMode();
+  await saveExamPlans(updatedExams, `${newExam.name} has been added. I will rebalance your upcoming schedules around it.`);
+}
+
+async function removeExamPlan(index) {
+  if (!activeProfile) {
+    return;
+  }
+  const currentExams = [...(activeProfile.exams || [])];
+  const removedExam = currentExams[index];
+  const updatedExams = currentExams.filter((_, examIndex) => examIndex !== index);
+  await saveExamPlans(
+    updatedExams,
+    updatedExams.length
+      ? `${removedExam.name} has been removed. Your future plans will now focus on the remaining exams.`
+      : `${removedExam.name} has been removed. Add a new exam whenever you are ready and I will rebuild your plan.`,
+  );
+}
+
+async function updateMemory(category, value, action) {
+  if (!activeProfile) {
+    return;
+  }
+
+  const endpoint = action === "remove" ? "/api/memory/remove" : "/api/memory/add";
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      student_name: activeProfile.name,
+      category,
+      value,
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    appendMessage("tutor", "tutor", payload.detail || "I could not update that preference.");
+    return;
+  }
+
+  renderMemory(payload.personal_memory || {});
+  renderMemoryManager(payload.personal_memory || {});
+  renderFunFact(payload.fun_fact);
+  await fetchStudentInsights(activeProfile.name);
+  await fetchNetwork(activeProfile.name);
+  await fetchFeatureHealth(activeProfile.name);
+}
+
+async function addInterest() {
+  const text = interestManagerInput.value.trim();
+  if (!text) {
+    return;
+  }
+  interestManagerInput.value = "";
+  await updateMemory("interests", text, "add");
+}
+
+async function addPerson() {
+  const text = personManagerInput.value.trim();
+  if (!text) {
+    return;
+  }
+  personManagerInput.value = "";
+  await updateMemory("known_people", text, "add");
+}
+
+async function addLifeNote() {
+  const text = lifeNoteInput.value.trim();
+  if (!text) {
+    return;
+  }
+  lifeNoteInput.value = "";
+  await updateMemory("life_notes", text, "add");
+}
+
+async function removeMemoryItem(category, value) {
+  await updateMemory(category, value, "remove");
+}
+
+async function refreshWeeklyPlan() {
+  if (!activeProfile) {
+    return;
+  }
+  const response = await fetch(`/api/weekly-plan/${encodeURIComponent(activeProfile.name)}`);
+  const payload = await response.json();
+  renderWeeklyPlan(payload);
+}
+
+async function safeStudioStep(stepFn) {
+  try {
+    await stepFn();
+  } catch (error) {
+    console.warn("Astra studio step skipped:", error);
+  }
+}
+
+async function enterLearningStudio(studentName, options = {}) {
+  const showIntro = options.showIntro !== false;
+  const introMode = options.introMode || "signin";
+  profileStatus.textContent = "Loading profile...";
+  await fetchAvatarPresets();
+  await fetchExamCatalog();
+  loadBrowserVoices();
+
+  const response = await fetch(`/api/profile/${encodeURIComponent(studentName)}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load profile.");
+  }
+
+  activeProfile = payload.profile;
+  renderDailyMotivation(activeProfile.name || "");
+  applyOnboardingDefaultsToApp(activeProfile);
+  if (progressExamInput && (activeProfile.exams || []).length) {
+    progressExamInput.value = activeProfile.exams[0].name || "";
+  }
+  tutorNameInput.value = activeProfile.tutor_name || "Astra";
+  applyTutorPersonalityToForm(activeProfile);
+  applyGroupStudyPreferencesToForm(activeProfile);
+  tutorAppearanceInput.value = activeProfile.appearance_description || "";
+  updateTutorSummary(activeProfile);
+  setTutorMode(activeTutorMode);
+  setAvatarStage(payload.active_avatar || avatarPresets[0]);
+  renderTutorBrain(payload.tutor_brain || buildLocalTutorBrain(activeProfile, payload.active_avatar || avatarPresets[0], "tutor"));
+  renderMemory(payload.personal_memory || {});
+  renderMemoryManager(payload.personal_memory || {});
+  renderExamManager(activeProfile.exams || []);
+  renderFunFact(payload.fun_fact);
+  await safeStudioStep(() => fetchMotivationSection());
+  await safeStudioStep(() => fetchTipsResources(activeProfile.name));
+  await safeStudioStep(() => fetchLearningSources(activeProfile.name));
+  await safeStudioStep(() => fetchVideoLibrary(activeProfile.name));
+  await safeStudioStep(() => fetchNetwork(activeProfile.name));
+  await safeStudioStep(() => fetchProgress(activeProfile.name));
+  await safeStudioStep(() => fetchPracticeAnalytics(activeProfile.name));
+  await safeStudioStep(() => fetchEngagement(activeProfile.name));
+  await safeStudioStep(() => fetchStudentInsights(activeProfile.name));
+  await safeStudioStep(() => fetchStorageStatus(activeProfile.name));
+  await safeStudioStep(() => fetchFeatureHealth(activeProfile.name));
+  await safeStudioStep(() => fetchSyllabusDocuments(activeProfile.name));
+  await safeStudioStep(() => fetchTutorConversations());
+  await safeStudioStep(() => fetchLoungeConversations());
+  await safeStudioStep(() => fetchChatHistory("practice"));
+  await safeStudioStep(() => refreshActiveChapterSession());
+  await safeStudioStep(() => loadChapterResumeState(true));
+  renderJourneySetup(journeyPlanSnapshot);
+  renderLiveSources([]);
+  renderVisualLearning(null);
+  renderVideoExplanation(null);
+  renderReasoningPanel(null);
+  renderSummaryPanel("");
+  preferTutorVideosForAvatar(payload.active_avatar || avatarPresets[0]);
+  renderAdaptiveProfile((payload.weekly_plan && payload.weekly_plan.adaptive_profile) || null);
+  renderAvatars(activeProfile.selected_avatar);
+  renderHomeTutorPersonalityGrid();
+  await refreshWeeklyPlan();
+  applyTabOrder();
+  setHomeSubtab("overview");
+  setCaption("No speech playing right now.");
+  applyExplanationPreferences();
+  applyLeagueVisibility();
+  updateExamBrandCopy(activeProfile);
+  if (journeyHoursInput && activeProfile.max_study_hours_per_day) {
+    journeyHoursInput.value = String(activeProfile.max_study_hours_per_day);
+  }
+  renderJourneySetup(journeyPlanSnapshot);
+
+  studentWelcome.textContent = `Welcome, ${activeProfile.name}`;
+  const exams = getActiveExamListLabel(activeProfile);
+  studentSubcopy.textContent = exams
+    ? `Start with your tutor first, then move into ${exams} at your own pace.`
+    : `Start with your tutor first, then add ${getActiveExamLabel(activeProfile)} in Personalize whenever you are ready.`;
+  if (showIntro) {
+    openIntroScreen(activeProfile, introMode);
+  } else {
+    if (introScreen) {
+      introScreen.classList.add("hidden");
+    }
+    loginScreen.classList.add("hidden");
+    appShell.classList.remove("hidden");
+    setActiveTab("tutorTab");
+  }
+  if (activeProfile.jee_mvp_initialized && activeProfile.legacy_exam_scope && activeProfile.legacy_exam_scope.length) {
+    appendMessage(
+      "tutor",
+      "tutor",
+      `This MVP is currently running in ${getActiveExamLabel(activeProfile)}-first mode, so I have switched your active study scope to the active exam flow for the demo. Your older exam setup is preserved in the background and can be restored later.`
+    );
+  }
+  if (!(activeProfile.exams || []).length) {
+    appendMessage("tutor", "tutor", `Welcome in. Whenever you are ready, open Personalize and add ${getActiveExamLabel(activeProfile)} so I can build your prep plan properly.`);
+  }
+}
+
+async function loadProfile() {
+  const email = signinEmailInput.value.trim();
+  const password = signinPasswordInput.value;
+  if (!email || !password) {
+    profileStatus.textContent = "Enter your email and password first.";
+    return;
+  }
+
+  profileStatus.textContent = "Signing you in...";
+  loadProfileBtn.disabled = true;
+  try {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not sign in.");
+    }
+
+    persistAuthSession(payload.session || null, payload.user || null);
+    await enterLearningStudio((payload.profile && payload.profile.name) || (payload.user && payload.user.student_name) || "", { showIntro: false });
+  } catch (error) {
+    profileStatus.textContent = error.message;
+  } finally {
+    loadProfileBtn.disabled = false;
+  }
+}
+
+async function createWebProfile() {
+  const displayName = signupName.value.trim();
+  const email = signupEmail.value.trim();
+  const password = signupPassword.value;
+  const studentName = signupStudentName.value.trim();
+  const maxStudyHours = Number(signupHours.value || "4");
+
+  if (!displayName || !email || !password) {
+    profileStatus.textContent = "Enter your name, email, and password first.";
+    return;
+  }
+
+  profileStatus.textContent = "Creating your account...";
+  createProfileBtn.disabled = true;
+  try {
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        display_name: displayName,
+        email,
+        password,
+        student_name: studentName,
+        max_study_hours_per_day: maxStudyHours,
+        onboarding_why_astra: signupWhyAstra ? signupWhyAstra.value.trim() : "",
+        onboarding_interests: signupInterests ? signupInterests.value.trim() : "",
+        onboarding_dislikes: signupDislikes ? signupDislikes.value.trim() : "",
+        onboarding_conversation_style: signupConversationStyle ? signupConversationStyle.value.trim() : "",
+        onboarding_preferred_language: languageSelect ? languageSelect.value.trim() : currentLanguage,
+        onboarding_explanation_depth: tutorLevelSelect ? String(tutorLevelSelect.value || "3") : "3",
+        onboarding_stress_support: signupStressSupport ? signupStressSupport.value.trim() : "",
+        onboarding_goals_summary: signupGoalsSummary ? signupGoalsSummary.value.trim() : "",
+        onboarding_astra_question: walkthroughAnswers.astra_question || "",
+        onboarding_astra_question_answer: walkthroughAnswers.astra_question_answer || "",
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not create account.");
+    }
+
+    persistAuthSession(payload.session || null, payload.user || null);
+    signinEmailInput.value = email;
+    signinPasswordInput.value = "";
+    await enterLearningStudio((payload.profile && payload.profile.name) || (payload.user && payload.user.student_name) || displayName, { introMode: "signup" });
+  } catch (error) {
+    profileStatus.textContent = error.message;
+  } finally {
+    createProfileBtn.disabled = false;
+  }
+}
+
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const base64 = result.includes(",") ? result.split(",")[1] : result;
+      resolve(base64);
+    };
+    reader.onerror = () => reject(new Error("Could not read that image file."));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleDoubtImageSelection() {
+  const file = doubtImageInput && doubtImageInput.files && doubtImageInput.files[0];
+  if (!file) {
+    pendingDoubtImage = null;
+    imageUploadStatus.textContent = "Upload a picture of your doubt, worksheet, or handwritten solution.";
+    return;
+  }
+
+  imageUploadStatus.textContent = `Preparing ${file.name}...`;
+  const base64 = await readFileAsBase64(file);
+  pendingDoubtImage = {
+    base64,
+    mimeType: file.type || "image/png",
+    fileName: file.name,
+  };
+  imageUploadStatus.textContent = `${file.name} is ready. Click "Scan doubt image" to send it to the tutor.`;
+}
+
+async function analyzeDoubtImage() {
+  if (!activeProfile) {
+    return;
+  }
+  if (!pendingDoubtImage) {
+    imageUploadStatus.textContent = "Choose an image first.";
+    return;
+  }
+
+  const prompt = messageInput.value.trim();
+  interruptTutorOutput("tutor");
+  appendMessage("tutor", "student", prompt || `Uploaded image: ${pendingDoubtImage.fileName}`);
+  analyzeImageBtn.disabled = true;
+  imageUploadStatus.textContent = "Analyzing your doubt image...";
+  try {
+    const response = await fetch("/api/chat/image", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name: activeProfile.name,
+        message: prompt,
+        image_base64: pendingDoubtImage.base64,
+        mime_type: pendingDoubtImage.mimeType,
+        response_language: currentLanguage,
+        conversation_id: activeTutorConversationId,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not analyze that image.");
+    }
+
+    lastTutorReply = payload.reply;
+    lastRepliesByMode.tutor = payload.reply;
+    if (payload.conversation_id) {
+      activeTutorConversationId = payload.conversation_id;
+      renderTutorConversations(payload.conversations || []);
+    }
+    streamTutorReply("tutor", payload.reply);
+    renderTutorBrain(payload.tutor_brain || buildLocalTutorBrain(activeProfile, payload.active_avatar || activeAvatar, "tutor"));
+    renderVisualLearning(payload.visual_learning || null);
+    renderVideoExplanation(payload.video_explanation || null);
+    renderReasoningPanel(payload.video_explanation || null);
+    renderAdaptiveProfile(payload.adaptive_profile || null);
+    renderFunFact(payload.fun_fact);
+    renderMemory(payload.personal_memory || {});
+    renderMemoryManager(payload.personal_memory || {});
+    if (autoSpeakReplies.checked && !payload.video_explanation) {
+      speakText(payload.reply);
+    }
+    await fetchStorageStatus(activeProfile.name);
+    messageInput.value = "";
+    doubtImageInput.value = "";
+    pendingDoubtImage = null;
+    imageUploadStatus.textContent = "Image analyzed. You can upload another doubt whenever you want.";
+  } catch (error) {
+    appendMessage("tutor", "tutor", `Something went wrong: ${error.message}`);
+    imageUploadStatus.textContent = error.message;
+  } finally {
+    analyzeImageBtn.disabled = false;
+  }
+}
+
+async function submitPracticeReview() {
+  if (!activeProfile) {
+    return;
+  }
+
+  const timeTaken = Number(practiceTimeInput.value || "0");
+  const accuracy = Number(practiceAccuracyInput.value || "0");
+  const questionCount = Number(practiceQuestionCountInput.value || "0");
+  const exam = practiceExamInput.value.trim();
+  const notes = practiceNotesInput.value.trim();
+
+  if (!(timeTaken > 0) || accuracy < 0 || accuracy > 100) {
+    renderPracticeAnalytics({
+      total_attempts: 0,
+      coach_note: "Enter a valid time taken and an accuracy value between 0 and 100.",
+    });
+    return;
+  }
+
+  submitPracticeReviewBtn.disabled = true;
+  try {
+    const response = await fetch("/api/analytics/practice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name: activeProfile.name,
+        mode: lastPracticeMode,
+        time_taken_minutes: timeTaken,
+        accuracy_percent: accuracy,
+        exam,
+        question_count: questionCount,
+        notes,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not save that attempt.");
+    }
+
+    renderPracticeAnalytics(payload);
+    await fetchStudentInsights(activeProfile.name);
+    await fetchNetwork(activeProfile.name);
+    await fetchEngagement(activeProfile.name);
+    practiceTimeInput.value = "";
+    practiceAccuracyInput.value = "";
+    practiceQuestionCountInput.value = "";
+    practiceExamInput.value = "";
+    practiceNotesInput.value = "";
+    appendMessage("practice", "tutor", "Practice analytics saved. I will use this speed and accuracy pattern to guide tougher or slower drills more intelligently.");
+    await fetchStorageStatus(activeProfile.name);
+    await fetchFeatureHealth(activeProfile.name);
+  } catch (error) {
+    appendMessage("practice", "tutor", `Something went wrong: ${error.message}`);
+  } finally {
+    submitPracticeReviewBtn.disabled = false;
+  }
+}
+
+async function saveMockBaseline() {
+  if (!activeProfile) {
+    return;
+  }
+
+  const exam = (mockExamInput && mockExamInput.value.trim()) || "JEE Main";
+  const physics = Number(mockPhysicsInput && mockPhysicsInput.value ? mockPhysicsInput.value : "NaN");
+  const chemistry = Number(mockChemistryInput && mockChemistryInput.value ? mockChemistryInput.value : "NaN");
+  const mathematics = Number(mockMathInput && mockMathInput.value ? mockMathInput.value : "NaN");
+
+  if ([physics, chemistry, mathematics].every((value) => Number.isNaN(value))) {
+    appendMessage("practice", "tutor", "Please enter at least one mock subject score before saving the baseline.");
+    return;
+  }
+
+  if (saveMockScoresBtn) {
+    saveMockScoresBtn.disabled = true;
+  }
+
+  try {
+    const response = await fetch("/api/planner/mock-scores", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name: activeProfile.name,
+        exam,
+        physics: Number.isNaN(physics) ? null : physics,
+        chemistry: Number.isNaN(chemistry) ? null : chemistry,
+        mathematics: Number.isNaN(mathematics) ? null : mathematics,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not save the mock baseline.");
+    }
+
+    if (mockExamInput) mockExamInput.value = "";
+    if (mockPhysicsInput) mockPhysicsInput.value = "";
+    if (mockChemistryInput) mockChemistryInput.value = "";
+    if (mockMathInput) mockMathInput.value = "";
+    appendMessage(
+      "practice",
+      "tutor",
+      `Mock baseline saved for ${payload.exam}. I will now use those subject signals to adjust planning and practice more accurately.`
+    );
+    renderWeeklyPlan(payload.weekly_plan || null);
+    renderAdaptiveProfile(payload.adaptive_profile || null);
+    await fetchStudentInsights(activeProfile.name);
+    await fetchStorageStatus(activeProfile.name);
+    await fetchFeatureHealth(activeProfile.name);
+  } catch (error) {
+    appendMessage("practice", "tutor", `Something went wrong: ${error.message}`);
+  } finally {
+    if (saveMockScoresBtn) {
+      saveMockScoresBtn.disabled = false;
+    }
+  }
+}
+
+async function sendMessage(message) {
+  if (!activeProfile || isSending) {
+    return;
+  }
+
+  isSending = true;
+  lastTutorQuestion = message;
+  const activeTabElement = document.querySelector(".tab-panel.active");
+  const activeTab = activeTabElement ? activeTabElement.id : "tutorTab";
+  const mode = activeTab === "guideTab"
+    ? "guide"
+    : activeTab === "loungeTab"
+    ? "lounge"
+    : activeTab === "practiceTab"
+    ? "practice"
+    : activeTab === "lastMinuteTab"
+    ? "last_minute"
+    : activeTab === "tipsTab"
+    ? "tips"
+    : "tutor";
+  interruptTutorOutput(mode);
+  appendMessage(mode, "student", message);
+  if (mode === "tutor") {
+    renderVideoAnswerBrief(null);
+  }
+  if (messageInput) {
+    messageInput.disabled = true;
+  }
+  if (guideMessageInput) {
+    guideMessageInput.disabled = true;
+  }
+  if (loungeMessageInput) {
+    loungeMessageInput.disabled = true;
+  }
+  if (lastMinuteMessageInput) {
+    lastMinuteMessageInput.disabled = true;
+  }
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_name: activeProfile.name,
+        message,
+        voice_chat_mode: voiceChatMode.checked,
+        response_language: currentLanguage,
+        conversation_mode: mode,
+        tutor_mode: activeTutorMode,
+        tutor_level: Number((tutorLevelSelect && tutorLevelSelect.value) || "3"),
+        reading_comfort_mode: !!(readingComfortMode && readingComfortMode.checked),
+        chunked_reply_mode: !!(chunkedReplyMode && chunkedReplyMode.checked),
+        response_pacing: (responsePacingSelect && responsePacingSelect.value) || "gentle",
+        conversation_id: mode === "tutor" ? activeTutorConversationId : mode === "lounge" ? activeLoungeConversationId : null,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not get tutor response.");
+    }
+
+    lastTutorReply = payload.reply;
+    lastRepliesByMode[mode] = payload.reply;
+    if (mode === "tutor" && payload.conversation_id) {
+      activeTutorConversationId = payload.conversation_id;
+      renderTutorConversations(payload.conversations || []);
+    } else if (mode === "lounge" && payload.conversation_id) {
+      activeLoungeConversationId = payload.conversation_id;
+      renderLoungeConversations(payload.conversations || []);
+    }
+    const replyStream = streamTutorReply(mode, payload.reply);
+
+    if (payload.active_avatar) {
+      setAvatarStage(payload.active_avatar);
+      renderAvatars(activeProfile.selected_avatar);
+      renderHomeTutorPersonalityGrid();
+    }
+    renderTutorBrain(payload.tutor_brain || buildLocalTutorBrain(activeProfile, payload.active_avatar || activeAvatar, mode));
+    renderMemory(payload.personal_memory || {});
+    renderMemoryManager(payload.personal_memory || {});
+    renderFunFact(payload.fun_fact);
+    renderLiveSources(payload.live_sources || []);
+    if (mode === "tutor") {
+      const suggestedTopic = _inferVideoTopicFromText(
+        (payload.visual_learning && payload.visual_learning.title)
+        || (payload.video_explanation && payload.video_explanation.title)
+        || payload.reply
+        || message
+      );
+      const suggestedSubject = _inferVideoSubjectFromText(
+        (payload.visual_learning && payload.visual_learning.title)
+        || (payload.video_explanation && payload.video_explanation.title)
+        || message
+      );
+      if (suggestedTopic && suggestedTopic !== "the topic" && suggestedTopic !== "this topic") {
+        updateAstraCurrentTopic(suggestedTopic, suggestedSubject, "tutor");
+      }
+      renderVisualLearning(payload.visual_learning || null);
+      renderVideoExplanation(payload.video_explanation || null);
+      renderReasoningPanel(payload.video_explanation || null);
+      if (activeTab === "tutorRoomTab") {
+        focusTutorRoomStage("fresh-reply");
+      }
+    } else if (mode === "practice" || mode === "tips" || mode === "guide" || mode === "last_minute") {
+      renderVisualLearning(null);
+      renderVideoExplanation(null);
+      renderReasoningPanel(null);
+    }
+    if (payload.reply_type === "weekly_plan" && payload.weekly_plan) {
+      renderWeeklyPlan(payload.weekly_plan);
+    }
+    if (mode === "tutor") {
+      renderAdaptiveProfile(payload.adaptive_profile || ((payload.weekly_plan && payload.weekly_plan.adaptive_profile) || null));
+    }
+    await fetchStudentInsights(activeProfile.name);
+    const shouldSpeakReply = autoSpeakReplies.checked || activeTab === "tutorRoomTab";
+    if (shouldSpeakReply) {
+      speakText(payload.reply);
+    } else if (autoCaptionMode.checked && mode === "tutor") {
+      setCaption(payload.reply);
+    }
+    await replyStream;
+    if (mode === "tutor") {
+      const suggestedTopic = _inferVideoTopicFromText(
+        (payload.visual_learning && payload.visual_learning.title)
+        || (payload.video_explanation && payload.video_explanation.title)
+        || payload.reply
+        || message
+      );
+      const suggestedSubject = _inferVideoSubjectFromText(
+        (payload.visual_learning && payload.visual_learning.title)
+        || (payload.video_explanation && payload.video_explanation.title)
+        || message
+      );
+      if (suggestedTopic && suggestedTopic !== "the topic" && suggestedTopic !== "this topic") {
+        renderVideoSuggestionCard(suggestedTopic, suggestedSubject);
+      }
+      await refreshActiveChapterSession();
+      const explanationLevel = Number((tutorLevelSelect && tutorLevelSelect.value) || activeProfile.default_tutor_level || "3");
+      const chapterActive = isChapterCheckpointActive();
+      const checkpointTopic = chapterActive
+        ? (activeChapterSubtopic.subtopic_name || activeChapterSubtopic.chapter_name || message)
+        : ((payload.visual_learning && payload.visual_learning.title)
+          || (payload.video_explanation && payload.video_explanation.topic)
+          || message);
+      const checkpointSubject = chapterActive
+        ? (activeChapterSubtopic.subject || ((activeProfile.exams && activeProfile.exams[0] && activeProfile.exams[0].subjects && activeProfile.exams[0].subjects[0]) || ""))
+        : ((payload.visual_learning && payload.visual_learning.subject)
+          || (payload.video_explanation && payload.video_explanation.subject)
+          || ((activeProfile.exams && activeProfile.exams[0] && activeProfile.exams[0].subjects && activeProfile.exams[0].subjects[0]) || ""));
+      await new Promise((resolve) => window.setTimeout(resolve, 1000));
+      await loadTutorCheckpoint(
+        checkpointTopic,
+        checkpointSubject,
+        explanationLevel,
+        payload.reply,
+        chapterActive ? { chapterMode: true } : {},
+      );
+    }
+    await fetchStorageStatus(activeProfile.name);
+  } catch (error) {
+    appendMessage(mode, "tutor", `Something went wrong: ${error.message}`);
+  } finally {
+    isSending = false;
+    if (messageInput) {
+      messageInput.disabled = false;
+    }
+    if (loungeMessageInput) {
+      loungeMessageInput.disabled = false;
+    }
+    if (guideMessageInput) {
+      guideMessageInput.disabled = false;
+    }
+    if (lastMinuteMessageInput) {
+      lastMinuteMessageInput.disabled = false;
+    }
+  }
+}
+
+document.body.addEventListener("click", (event) => {
+  const studioPaneButton = event.target.closest(".studio-pane-button");
+  if (studioPaneButton) {
+    setActiveStudioPane(studioPaneButton.dataset.studioPane);
+  }
+
+  const homeSubtabButton = event.target.closest("[data-home-subtab]");
+  if (homeSubtabButton) {
+    if (document.querySelector("#overviewTab") && !document.querySelector("#overviewTab").classList.contains("active")) {
+      setActiveTab("overviewTab");
+    }
+    setHomeSubtab(homeSubtabButton.dataset.homeSubtab);
+  }
+
+  const tabButton = event.target.closest(".tab-button");
+  if (tabButton) {
+    setActiveTab(tabButton.dataset.tab);
+  }
+
+  if (event.target.closest("#openTutorRoomBtn")) {
+    setActiveTab("tutorRoomTab");
+  }
+
+  if (event.target.closest("#backToTutorTextBtn")) {
+    setActiveTab("tutorTab");
+  }
+
+  if (event.target.closest("#motivationQuickAccessBtn") && motivationSection) {
+    setActiveTab("overviewTab");
+    setHomeSubtab("motivation");
+    if (motivationSection) {
+      motivationSection.open = true;
+      motivationSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  if (event.target.closest("#talkToAstraInLoungeBtn")) {
+    setActiveTab("loungeTab");
+    if (loungeMessageInput) {
+      loungeMessageInput.value = "I am feeling overwhelmed and need some support";
+      window.setTimeout(() => loungeMessageInput.focus(), 0);
+    }
+  }
+
+  if (event.target.closest("#motivationReadStoryBtn")) {
+    motivationStoryOpen = !motivationStoryOpen;
+    renderMotivationStory(activeMotivationStoryIndex);
+  }
+
+  if (event.target.closest("#motivationPrevStoryBtn")) {
+    motivationStoryOpen = true;
+    renderMotivationStory(activeMotivationStoryIndex - 1);
+  }
+
+  if (event.target.closest("#motivationNextStoryBtn")) {
+    motivationStoryOpen = true;
+    renderMotivationStory(activeMotivationStoryIndex + 1);
+  }
+
+  const commandButton = event.target.closest("[data-command]");
+  if (commandButton) {
+    if (commandButton.dataset.command === "Show weekly plan") {
+      setActiveTab("weeklyTab");
+    }
+    sendMessage(commandButton.dataset.command);
+  }
+
+  const checkinButton = event.target.closest("[data-checkin]");
+  if (checkinButton) {
+    setActiveTab("tutorTab");
+    sendMessage(checkinButton.dataset.checkin);
+  }
+
+  const starterButton = event.target.closest("[data-starter]");
+  if (starterButton) {
+    setActiveTab("loungeTab");
+    sendMessage(starterButton.dataset.starter);
+  }
+
+  const practicePromptButton = event.target.closest("[data-practice-prompt]");
+  if (practicePromptButton) {
+    lastPracticeMode = (practicePromptButton.dataset.practiceMode || practicePromptButton.textContent.trim().toLowerCase()).trim();
+    if (practicePromptButton.dataset.practiceMode === "diagnostic mock") {
+      if (mockTestExamInput && activeProfile && activeProfile.exams && activeProfile.exams.length) {
+        mockTestExamInput.value = activeProfile.exams[0].name || mockTestExamInput.value || APP_CONFIG.default_exam || "JEE Main";
+      }
+      setActiveTab("mockTestTab");
+      if (mockTestStatus) {
+        mockTestStatus.textContent = "Astra has opened the mock test room. Start the baseline when you are ready.";
+      }
+      return;
+    }
+    setActiveTab("practiceTab");
+    sendMessage(practicePromptButton.dataset.practicePrompt);
+  }
+
+  const lastMinutePromptButton = event.target.closest("[data-last-minute-prompt]");
+  if (lastMinutePromptButton) {
+    setActiveTab("lastMinuteTab");
+    sendMessage(lastMinutePromptButton.dataset.lastMinutePrompt);
+  }
+
+  const guidePromptButton = event.target.closest("[data-guide-prompt]");
+  if (guidePromptButton) {
+    setActiveTab("guideTab");
+    sendMessage(guidePromptButton.dataset.guidePrompt);
+  }
+
+  const tipsPromptButton = event.target.closest("[data-tips-prompt]");
+  if (tipsPromptButton) {
+    setActiveTab("tipsTab");
+    sendMessage(tipsPromptButton.dataset.tipsPrompt);
+  }
+
+  const tutorPromptButton = event.target.closest("[data-tutor-prompt]");
+  if (tutorPromptButton) {
+    setActiveTab("tutorTab");
+    sendMessage(tutorPromptButton.dataset.tutorPrompt);
+  }
+
+  const hobbyButton = event.target.closest("[data-hobby]");
+  if (hobbyButton) {
+    setActiveTab("loungeTab");
+    sendMessage(hobbyButton.dataset.hobby);
+  }
+
+  const themeButton = event.target.closest("[data-theme]");
+  if (themeButton) {
+    currentTheme = themeButton.dataset.theme;
+    applyThemePreferences();
+  }
+
+  const backgroundButton = event.target.closest("[data-background]");
+  if (backgroundButton) {
+    currentBackground = backgroundButton.dataset.background;
+    applyThemePreferences();
+  }
+
+  const timerButton = event.target.closest("[data-timer-minutes]");
+  if (timerButton) {
+    const minutes = Number(timerButton.dataset.timerMinutes || "0");
+    if (minutes > 0) {
+      startLoungeTimer(minutes);
+    }
+  }
+
+  const progressButton = event.target.closest("[data-progress-id][data-progress-status]");
+  if (progressButton) {
+    updateProgressItemStatus(progressButton.dataset.progressId, progressButton.dataset.progressStatus);
+  }
+});
+
+loadProfileBtn.addEventListener("click", loadProfile);
+showSigninBtn.addEventListener("click", () => setAuthMode("signin"));
+showSignupBtn.addEventListener("click", () => {
+  setAuthMode("signup");
+  openWalkthrough("signup");
+});
+if (openSignupWalkthroughBtn) {
+  openSignupWalkthroughBtn.addEventListener("click", () => openWalkthrough("signup"));
+}
+if (skipSignupWalkthroughBtn) {
+  skipSignupWalkthroughBtn.addEventListener("click", closeWalkthrough);
+}
+createProfileBtn.addEventListener("click", createWebProfile);
+if (jumpToTutorBtn) {
+  jumpToTutorBtn.addEventListener("click", () => setActiveTab("tutorTab"));
+}
+if (startWalkWithAstraBtn) {
+  startWalkWithAstraBtn.addEventListener("click", () => openWalkthrough("existing", activeProfile));
+}
+if (editWalkWithAstraBtn) {
+  editWalkWithAstraBtn.addEventListener("click", () => openWalkthrough("existing", activeProfile));
+}
+if (walkthroughBackBtn) {
+  walkthroughBackBtn.addEventListener("click", () => advanceWalkthrough(-1));
+}
+if (walkthroughNextBtn) {
+  walkthroughNextBtn.addEventListener("click", async () => {
+    if (walkthroughStepIndex >= WALKTHROUGH_STEPS.length - 1) {
+      try {
+        await saveWalkthrough();
+        if (walkthroughContext === "signup") {
+          profileStatus.textContent = "Walkthrough saved. You can now create your account or continue editing.";
+        } else if (activeProfile) {
+          await fetchNetwork(activeProfile.name);
+          await fetchStudentInsights(activeProfile.name);
+          profileStatus.textContent = "Walkthrough saved to your profile.";
+        }
+      } catch (error) {
+        if (profileStatus) {
+          profileStatus.textContent = error.message;
+        }
+      }
+      return;
+    }
+    advanceWalkthrough(1);
+  });
+}
+if (walkthroughSaveBtn) {
+  walkthroughSaveBtn.addEventListener("click", async () => {
+    try {
+      await saveWalkthrough();
+      if (walkthroughContext === "signup") {
+        applyWalkthroughAnswersToSignupFields();
+        profileStatus.textContent = "Walkthrough saved. You can now create your account or continue editing.";
+      } else if (activeProfile) {
+        await fetchNetwork(activeProfile.name);
+        await fetchStudentInsights(activeProfile.name);
+        profileStatus.textContent = "Walkthrough saved to your profile.";
+      }
+    } catch (error) {
+      if (profileStatus) {
+        profileStatus.textContent = error.message;
+      }
+    }
+  });
+}
+if (walkthroughSkipBtn) {
+  walkthroughSkipBtn.addEventListener("click", closeWalkthrough);
+}
+if (walkthroughCloseBtn) {
+  walkthroughCloseBtn.addEventListener("click", closeWalkthrough);
+}
+if (walkthroughBackdrop) {
+  walkthroughBackdrop.addEventListener("click", closeWalkthrough);
+}
+if (walkthroughInput) {
+  walkthroughInput.addEventListener("input", () => {
+    const currentStep = WALKTHROUGH_STEPS[walkthroughStepIndex] || WALKTHROUGH_STEPS[0];
+    walkthroughAnswers[currentStep.key] = walkthroughInput.value;
+    if (currentStep.key === "astra_question") {
+      walkthroughAnswers.astra_question_answer = buildWalkthroughAstraAnswer(walkthroughInput.value);
+      setWalkthroughAnswerText(walkthroughAnswers.astra_question_answer);
+    }
+  });
+}
+if (askAstraBtn) {
+  askAstraBtn.addEventListener("click", askAstraAboutItself);
+}
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", logoutAndShowAuth);
+}
+if (studioMenuToggleBtn) {
+  studioMenuToggleBtn.addEventListener("click", () => {
+    isSidebarCollapsed = !isSidebarCollapsed;
+    applySidebarState();
+  });
+}
+if (openVideoBridgeBtn) {
+  openVideoBridgeBtn.addEventListener("click", () => {
+    openActiveTutorVideoBridge();
+  });
+}
+if (useVideoInTutorBtn) {
+  useVideoInTutorBtn.addEventListener("click", () => {
+    useActiveTutorVideoInTutor();
+  });
+}
+if (authHeroVideoToggle) {
+  authHeroVideoToggle.addEventListener("click", toggleAuthHeroVideoPlayback);
+}
+if (introContinueBtn) {
+  introContinueBtn.addEventListener("click", enterStudioFromIntro);
+}
+if (introSoundBtn) {
+  introSoundBtn.addEventListener("click", toggleIntroVideoSound);
+}
+if (introVideoToggle) {
+  introVideoToggle.addEventListener("click", toggleIntroVideoPlayback);
+}
+if (fullscreenStudioBtn) {
+  fullscreenStudioBtn.addEventListener("click", toggleStudioFullscreen);
+}
+if (tutorFullscreenBtn) {
+  tutorFullscreenBtn.addEventListener("click", toggleTutorFullscreen);
+  _setTutorFullscreenButtonState(false);
+}
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    exitTutorFullscreen();
+    if (chapterDetailCard && !chapterDetailCard.classList.contains("hidden")) {
+      closeChapterDetailPanel();
+    }
+  }
+});
+if (chapterDetailCloseBtn) {
+  chapterDetailCloseBtn.addEventListener("click", closeChapterDetailPanel);
+}
+if (journeyHoursInput && journeyHoursLabel) {
+  journeyHoursInput.addEventListener("input", () => {
+    journeyHoursLabel.textContent = _formatJourneyHours(journeyHoursInput.value);
+  });
+}
+if (setupJourneyBtn) {
+  setupJourneyBtn.addEventListener("click", async () => {
+    await setupJourneyFromUI();
+  });
+}
+if (journeyExamDateSaveBtn) {
+  journeyExamDateSaveBtn.addEventListener("click", () => {
+    if (!journeyExamDateInput || !journeyExamDateInput.value) {
+      alert("Please select your exam date before continuing");
+      return;
+    }
+    if (journeySetupStatus) {
+      journeySetupStatus.textContent = "Exam date saved. Click Begin My Journey when you are ready.";
+    }
+  });
+}
+if (beginJourneyBtn) {
+  beginJourneyBtn.addEventListener("click", async () => {
+    if (journeyPlanSnapshot) {
+      await startJourneySession();
+    } else {
+      await setupJourneyFromUI();
+      if (journeyPlanSnapshot) {
+        await startJourneySession();
+      }
+    }
+  });
+}
+if (startSessionBtn) {
+  startSessionBtn.addEventListener("click", async () => {
+    await startJourneySession();
+  });
+}
+if (openJourneySummaryBtn) {
+  openJourneySummaryBtn.addEventListener("click", () => {
+    if (journeyProgressSidebar && typeof journeyProgressSidebar.scrollIntoView === "function") {
+      journeyProgressSidebar.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+}
+if (startChapterSessionBtn) {
+  startChapterSessionBtn.addEventListener("click", async () => {
+    await startSelectedChapterSession();
+  });
+}
+if (clearTutorChatBtn) {
+  clearTutorChatBtn.addEventListener("click", async () => {
+    try {
+      await deleteChatHistory("tutor");
+    } catch (error) {
+      appendMessage("tutor", "tutor", error.message);
+    }
+  });
+}
+if (newTutorChatBtn) {
+  newTutorChatBtn.addEventListener("click", async () => {
+    try {
+      await createTutorConversation();
+    } catch (error) {
+      appendMessage("tutor", "tutor", error.message);
+    }
+  });
+}
+if (viewAllTutorChatsBtn) {
+  viewAllTutorChatsBtn.addEventListener("click", async () => {
+    try {
+      await fetchTutorConversations();
+      openTutorConversationDrawer();
+    } catch (error) {
+      appendMessage("tutor", "tutor", error.message);
+    }
+  });
+}
+if (closeTutorConversationDrawerBtn) {
+  closeTutorConversationDrawerBtn.addEventListener("click", closeTutorConversationDrawer);
+}
+if (tutorConversationDrawerBackdrop) {
+  tutorConversationDrawerBackdrop.addEventListener("click", closeTutorConversationDrawer);
+}
+if (newLoungeChatBtn) {
+  newLoungeChatBtn.addEventListener("click", async () => {
+    try {
+      await createLoungeConversation();
+    } catch (error) {
+      appendMessage("lounge", "tutor", error.message);
+    }
+  });
+}
+if (tutorChatSearchInput) {
+  tutorChatSearchInput.addEventListener("input", async () => {
+    tutorConversationSearch = tutorChatSearchInput.value.trim();
+    try {
+      await fetchTutorConversations();
+    } catch (error) {
+      appendMessage("tutor", "tutor", error.message);
+    }
+  });
+}
+if (loungeChatSearchInput) {
+  loungeChatSearchInput.addEventListener("input", async () => {
+    loungeConversationSearch = loungeChatSearchInput.value.trim();
+    try {
+      await fetchLoungeConversations();
+    } catch (error) {
+      appendMessage("lounge", "tutor", error.message);
+    }
+  });
+}
+if (clearPracticeChatBtn) {
+  clearPracticeChatBtn.addEventListener("click", async () => {
+    try {
+      await deleteChatHistory("practice");
+    } catch (error) {
+      appendMessage("practice", "tutor", error.message);
+    }
+  });
+}
+if (clearLoungeChatBtn) {
+  clearLoungeChatBtn.addEventListener("click", async () => {
+    try {
+      await deleteChatHistory("lounge");
+    } catch (error) {
+      appendMessage("lounge", "tutor", error.message);
+    }
+  });
+}
+if (summarizeTutorBtn) {
+  summarizeTutorBtn.addEventListener("click", summarizeLatestTutorAnswer);
+}
+if (quickSummaryBtn) {
+  quickSummaryBtn.addEventListener("click", summarizeLatestTutorAnswer);
+}
+if (tutorModeButtons.length) {
+  tutorModeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      setTutorMode(button.dataset.tutorMode || "calm");
+    });
+  });
+}
+refreshWeeklyPlanBtn.addEventListener("click", refreshWeeklyPlan);
+refreshWeeklyPlanBtnAlt.addEventListener("click", refreshWeeklyPlan);
+if (refreshNetworkBtn) {
+  refreshNetworkBtn.addEventListener("click", () => {
+    if (activeProfile) {
+      fetchNetwork(activeProfile.name);
+    }
+  });
+}
+if (saveGroupStudyBtn) {
+  saveGroupStudyBtn.addEventListener("click", () => {
+    saveGroupStudyPreferences("save");
+  });
+}
+if (rerollGroupStudyBtn) {
+  rerollGroupStudyBtn.addEventListener("click", () => {
+    saveGroupStudyPreferences("reroll");
+  });
+}
+if (soloGroupStudyBtn) {
+  soloGroupStudyBtn.addEventListener("click", () => {
+    if (groupStudyEnabledToggle) {
+      groupStudyEnabledToggle.checked = false;
+    }
+    if (groupStudyModeSelect) {
+      groupStudyModeSelect.value = "solo";
+    }
+    saveGroupStudyPreferences("solo");
+  });
+}
+if (groupStudyModeSelect && groupStudyEnabledToggle) {
+  groupStudyModeSelect.addEventListener("change", () => {
+    if (groupStudyModeSelect.value === "solo") {
+      groupStudyEnabledToggle.checked = false;
+    }
+  });
+  groupStudyEnabledToggle.addEventListener("change", () => {
+    if (groupStudyEnabledToggle.checked && groupStudyModeSelect.value === "solo") {
+      groupStudyModeSelect.value = "mixed";
+    }
+  });
+}
+if (refreshProgressBtn) {
+  refreshProgressBtn.addEventListener("click", () => {
+    if (activeProfile) {
+      fetchProgress(activeProfile.name);
+    }
+  });
+}
+openWeeklyTabBtn.addEventListener("click", () => setActiveTab("weeklyTab"));
+if (openProgressTabBtn) {
+  openProgressTabBtn.addEventListener("click", () => setActiveTab("progressTab"));
+}
+if (tutorRoomBackToTutorBtn) {
+  tutorRoomBackToTutorBtn.addEventListener("click", () => setActiveTab("tutorTab"));
+}
+if (tutorRoomSpeakLastBtn) {
+  tutorRoomSpeakLastBtn.addEventListener("click", () => {
+    speakText(lastRepliesByMode.tutor || lastTutorReply || ((activeAvatar && activeAvatar.sample_line) || ""));
+  });
+}
+if (tutorRoomPauseBtn) {
+  tutorRoomPauseBtn.addEventListener("click", () => {
+    pauseTutorNarration();
+  });
+}
+if (tutorRoomResumeBtn) {
+  tutorRoomResumeBtn.addEventListener("click", async () => {
+    await resumeTutorCheckpoint("tutor");
+    updateTutorRoomLivePanel();
+  });
+}
+if (tutorRoomStopBtn) {
+  tutorRoomStopBtn.addEventListener("click", () => {
+    interruptTutorOutput("tutor");
+    stopSpeaking();
+    updateTutorRoomLivePanel();
+  });
+}
+if (generateVideoAnswerBtn) {
+  generateVideoAnswerBtn.addEventListener("click", generateVideoAnswerBrief);
+}
+if (generateRequestedVideoBtn) {
+  generateRequestedVideoBtn.addEventListener("click", async () => {
+    const topic = videoTutorRequestTopicInput ? videoTutorRequestTopicInput.value.trim() : "";
+    const subject = videoTutorRequestSubjectSelect ? videoTutorRequestSubjectSelect.value : "";
+    if (!topic) {
+      if (videoTutorRequestStatus) {
+        videoTutorRequestStatus.textContent = "Type a topic first.";
+      }
+      return;
+    }
+    openVideoTutorTopic(topic, subject, "request");
+  });
+}
+if (generateRequestedFullVideoBtn) {
+  generateRequestedFullVideoBtn.addEventListener("click", async () => {
+    const topic = activeVideoTutorRequest && activeVideoTutorRequest.topic
+      ? activeVideoTutorRequest.topic
+      : (videoTutorRequestTopicInput && videoTutorRequestTopicInput.value.trim()) || "";
+    const subject = activeVideoTutorRequest && activeVideoTutorRequest.subject
+      ? activeVideoTutorRequest.subject
+      : (videoTutorRequestSubjectSelect && videoTutorRequestSubjectSelect.value) || "";
+    if (!topic || !activeVideoTutorBrief) {
+      if (videoTutorRequestStatus) {
+        videoTutorRequestStatus.textContent = "Prepare the script preview first.";
+      }
+      return;
+    }
+    const jobId = await requestTutorVideo(activeVideoTutorBrief.question || topic, topic, subject);
+    if (jobId) {
+      await updateRequestedVideoStatus(_videoTopicSlug(topic), "generating", jobId, "");
+    }
+  });
+}
+if (videoAnswerBtn) {
+  videoAnswerBtn.addEventListener("click", () => {
+    const question = (videoTutorQuestionInput && videoTutorQuestionInput.value.trim())
+      || (lastTutorQuestion || (tutorRoomMessageInput && tutorRoomMessageInput.value) || lastTutorReply || "").trim();
+    const topic = (lastVideoAnswerBrief && lastVideoAnswerBrief.topic) || question;
+    const subject = (lastVideoAnswerBrief && lastVideoAnswerBrief.subject) || activeProfile?.exam || "";
+    requestTutorVideo(question, topic, subject);
+  });
+}
+speakLastReplyBtn.addEventListener("click", () => {
+  const mode = getActiveConversationModeFromUI();
+  speakText(lastRepliesByMode[mode] || lastTutorReply || ((activeAvatar && activeAvatar.sample_line) || ""));
+});
+if (pauseVoiceBtn) {
+  pauseVoiceBtn.addEventListener("click", () => {
+    pauseTutorNarration();
+  });
+}
+if (resumeVoiceBtn) {
+  resumeVoiceBtn.addEventListener("click", async () => {
+    await resumeTutorCheckpoint(getActiveConversationModeFromUI());
+  });
+}
+stopVoiceBtn.addEventListener("click", () => {
+  interruptTutorOutput(getActiveConversationModeFromUI());
+  stopSpeaking();
+});
+if (tutorRoomForm) {
+  tutorRoomForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const message = tutorRoomMessageInput ? tutorRoomMessageInput.value.trim() : "";
+    if (!message) {
+      return;
+    }
+    if (tutorRoomMessageInput) {
+      tutorRoomMessageInput.value = "";
+    }
+    setActiveTab("tutorRoomTab");
+    await sendMessage(message);
+  });
+}
+if (tutorRoomMessageInput) {
+  tutorRoomMessageInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      tutorRoomForm.requestSubmit();
+    }
+  });
+}
+stopLoungeTimerBtn.addEventListener("click", () => {
+  clearLoungeTimer();
+  updateLoungeTimerLabel();
+});
+if (loungeVoiceBtn) {
+  loungeVoiceBtn.addEventListener("click", toggleLoungeVoiceInput);
+}
+doubtImageInput.addEventListener("change", async () => {
+  try {
+    await handleDoubtImageSelection();
+  } catch (error) {
+    imageUploadStatus.textContent = error.message;
+  }
+});
+analyzeImageBtn.addEventListener("click", analyzeDoubtImage);
+saveTutorNameBtn.addEventListener("click", saveTutorName);
+addExamBtn.addEventListener("click", addExamPlan);
+examCatalogSelect.addEventListener("change", updateExamInputMode);
+addPersonBtn.addEventListener("click", addPerson);
+addInterestBtn.addEventListener("click", addInterest);
+addLifeNoteBtn.addEventListener("click", addLifeNote);
+if (uploadSyllabusBtn) {
+  uploadSyllabusBtn.addEventListener("click", uploadSyllabusMaterial);
+}
+languageSelect.addEventListener("change", () => {
+  currentLanguage = languageSelect.value;
+  applyLanguage();
+});
+if (nightModeToggle) {
+  nightModeToggle.addEventListener("change", () => {
+    currentTheme = nightModeToggle.checked ? "midnight" : "sunrise";
+    applyThemePreferences();
+  });
+}
+if (voiceChatMode) {
+  voiceChatMode.addEventListener("change", () => {
+    applyAccessibilityPreferences();
+    updateTutorRoomLivePanel();
+  });
+}
+if (responsePacingSelect) {
+  responsePacingSelect.addEventListener("change", () => {
+    applyAccessibilityPreferences();
+    updateTutorRoomLivePanel();
+  });
+}
+tutorLevelSelect.addEventListener("change", () => {
+  updateTutorLevelHint();
+  updateTutorRoomLivePanel();
+});
+
+[highContrastMode, largeTextMode, reducedMotionMode, readingComfortMode, chunkedReplyMode, autoCaptionMode, autoSpeakReplies].forEach((toggle) => {
+  if (!toggle) {
+    return;
+  }
+  toggle.addEventListener("change", () => {
+    applyAccessibilityPreferences();
+    updateTutorRoomLivePanel();
+  });
+});
+if (showLeagueToggle) {
+  showLeagueToggle.addEventListener("change", () => {
+    leagueTabVisible = showLeagueToggle.checked;
+    applyLeagueVisibility();
+  });
+}
+[showTextExplanation, showVideoExplanation, showVisualExplanation].filter(Boolean).forEach((toggle) => {
+  toggle.addEventListener("change", applyExplanationPreferences);
+});
+
+personManagerInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    addPerson();
+  }
+});
+
+interestManagerInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    addInterest();
+  }
+});
+
+lifeNoteInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    addLifeNote();
+  }
+});
+
+chatForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = messageInput.value.trim();
+  if (!message) {
+    return;
+  }
+  messageInput.value = "";
+  setActiveTab("tutorTab");
+  await sendMessage(message);
+});
+
+loungeForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = loungeMessageInput.value.trim();
+  if (!message) {
+    return;
+  }
+  loungeMessageInput.value = "";
+  setActiveTab("loungeTab");
+  await sendMessage(message);
+});
+
+practiceForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = practiceMessageInput.value.trim();
+  if (!message) {
+    return;
+  }
+  lastPracticeMode = "custom practice";
+  practiceMessageInput.value = "";
+  setActiveTab("practiceTab");
+  await sendMessage(message);
+});
+
+lastMinuteForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = lastMinuteMessageInput.value.trim();
+  if (!message) {
+    return;
+  }
+  lastMinuteMessageInput.value = "";
+  setActiveTab("lastMinuteTab");
+  await sendMessage(message);
+});
+
+guideForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = guideMessageInput.value.trim();
+  if (!message) {
+    return;
+  }
+  guideMessageInput.value = "";
+  setActiveTab("guideTab");
+  await sendMessage(message);
+});
+
+tipsForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = tipsMessageInput.value.trim();
+  if (!message) {
+    return;
+  }
+  tipsMessageInput.value = "";
+  setActiveTab("tipsTab");
+  await sendMessage(message);
+});
+
+submitPracticeReviewBtn.addEventListener("click", submitPracticeReview);
+if (saveMockScoresBtn) {
+  saveMockScoresBtn.addEventListener("click", saveMockBaseline);
+}
+if (startMockTestBtn) {
+  startMockTestBtn.addEventListener("click", startMockTest);
+}
+if (mockTestNavPrev) {
+  mockTestNavPrev.addEventListener("click", () => goToMockQuestion(-1));
+}
+if (mockTestNavNext) {
+  mockTestNavNext.addEventListener("click", () => goToMockQuestion(1));
+}
+if (mockTestSubmitBtn) {
+  mockTestSubmitBtn.addEventListener("click", finishMockTest);
+}
+if (mockTestRetakeBtn) {
+  mockTestRetakeBtn.addEventListener("click", resetMockTestState);
+}
+if (mockTestWeeklyPlanBtn) {
+  mockTestWeeklyPlanBtn.addEventListener("click", () => setActiveTab("weeklyTab"));
+}
+if (mockTestExitBtn) {
+  mockTestExitBtn.addEventListener("click", exitMockTestRoom);
+}
+if (mockTestExitBtnReport) {
+  mockTestExitBtnReport.addEventListener("click", exitMockTestRoom);
+}
+if (mockTestIntegerInput) {
+  mockTestIntegerInput.addEventListener("input", () => {
+    if (activeMockTest && activeMockTest.questions && activeMockTest.questions[activeMockIndex]) {
+      activeMockAnswers[activeMockIndex] = mockTestIntegerInput.value.trim();
+    }
+  });
+}
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && document.body.classList.contains("mock-test-open")) {
+    event.preventDefault();
+    exitMockTestRoom();
+    return;
+  }
+  if (event.key === "Escape") {
+    const activeTabElement = document.querySelector(".tab-panel.active");
+    const activeTab = activeTabElement ? activeTabElement.id : "";
+    if (activeTab === "tutorRoomTab") {
+      const hasTutorReply = (lastRepliesByMode.tutor || lastTutorReply || "").trim();
+      if (hasTutorReply || activeTutorNarration) {
+        event.preventDefault();
+        interruptTutorOutput("tutor");
+        stopSpeaking();
+        updateTutorRoomLivePanel();
+      }
+    }
+  }
+});
+saveProgressItemBtn.addEventListener("click", saveProgressItem);
+
+[signinEmailInput, signinPasswordInput].forEach((input) => input.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    loadProfile();
+  }
+}));
+
+[signupName, signupEmail, signupPassword, signupStudentName, signupHours].forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      createWebProfile();
+    }
+  });
+});
+
+[customExamNameInput, examDateInput, examSubjectsInput, examPortionInput].forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      addExamPlan();
+    }
+  });
+});
+
+if (syllabusTitleInput) {
+  syllabusTitleInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      uploadSyllabusMaterial();
+    }
+  });
+}
+
+practiceMessageInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    practiceForm.requestSubmit();
+  }
+});
+
+[progressExamInput, progressSubjectInput, progressTopicInput, progressNoteInput].forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      saveProgressItem();
+    }
+  });
+});
+
+lastMinuteMessageInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    lastMinuteForm.requestSubmit();
+  }
+});
+
+guideMessageInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    guideForm.requestSubmit();
+  }
+});
+
+tipsMessageInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    tipsForm.requestSubmit();
+  }
+});
+
+if (enterAstraBtn) {
+  enterAstraBtn.addEventListener("click", revealLoginFromSplash);
+}
+
+if (skipAstraBtn) {
+  skipAstraBtn.addEventListener("click", revealLoginFromSplash);
+}
+
+document.addEventListener("keydown", (event) => {
+  if (!splashScreen || splashScreen.classList.contains("hidden")) {
+    return;
+  }
+  if (event.key !== "Enter") {
+    return;
+  }
+  const tagName = String(event.target && event.target.tagName ? event.target.tagName : "").toUpperCase();
+  if (tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT" || tagName === "BUTTON") {
+    return;
+  }
+  event.preventDefault();
+  revealLoginFromSplash();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") {
+    return;
+  }
+  if (tutorConversationDrawer && !tutorConversationDrawer.classList.contains("hidden")) {
+    closeTutorConversationDrawer();
+  }
+});
+
+initializeAstraSplash();
+loadAccessibilityPreferences();
+loadSidebarPreference();
+loadStudioPanePreference();
+renderDailyMotivation("");
+fetchVideoLibrary().catch((error) => {
+  console.warn("Could not load the homepage video library:", error);
+  renderAuthHeroVideo(null);
+});
+refreshTabCollections();
+applyTabOrder();
+setTutorMode(activeTutorMode);
+updateTutorLevelHint();
+initLoungeVoiceInput();
+setAuthMode("signin");
+updateExamInputMode();
+applyExplanationPreferences();
+renderConceptCanvas(null);
+
+if (supportsSpeech()) {
+  loadBrowserVoices();
+  window.speechSynthesis.onvoiceschanged = loadBrowserVoices;
+} else {
+  if (avatarStageStatus) avatarStageStatus.textContent = "Browser Voice Unavailable";
+  setCaption("Browser speech is unavailable on this device.");
+}

@@ -1,0 +1,16 @@
+google-genai
+google-adk
+chromadb
+sentence-transformers
+pydantic
+tiktoken
+streamlit
+python-dotenv
+langchain
+fastapi
+uvicorn
+pypdf
+pypdf2
+python-multipart
+httpx
+elevenlabs

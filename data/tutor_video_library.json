@@ -1,0 +1,64 @@
+{
+  "videos": [
+    {
+      "id": "female-homepage-hero",
+      "file_name": "Female Homepage Hero (Highest Priority)_1080p.mp4",
+      "title": "Female Homepage Hero",
+      "topic": "Welcome and onboarding",
+      "summary": "Best suited for the homepage hero, first-time welcome, and warm onboarding flow.",
+      "tags": ["homepage", "welcome", "onboarding", "female tutor"],
+      "level": "intro",
+      "duration_label": "1080p hero video",
+      "cue_points": [
+        "Use this for the strongest first impression on the homepage.",
+        "Pair it with onboarding and the welcome flow."
+      ],
+      "transcript_hint": "Keep the tone welcoming, premium, calm, and aspirational."
+    },
+    {
+      "id": "welcome-back-female-tutor",
+      "file_name": "Welcome Back (Female Tutor)_1080p.mp4",
+      "title": "Welcome Back",
+      "topic": "Re-engagement and return visits",
+      "summary": "Best suited for return users, login reinforcement, and a personalized welcome-back experience.",
+      "tags": ["retention", "re-engagement", "female tutor", "welcome"],
+      "level": "intro",
+      "duration_label": "1080p welcome clip",
+      "cue_points": [
+        "Use this after sign-in or when the learner returns after a break.",
+        "Can introduce the latest progress summary or next step."
+      ],
+      "transcript_hint": "Keep it personal and supportive, as if greeting a returning learner by name."
+    },
+    {
+      "id": "strategy-focus-male-tutor",
+      "file_name": "Strategy_Focus (Male Tutor)_1080p.mp4",
+      "title": "Strategy Focus",
+      "topic": "Exam strategy and focus",
+      "summary": "Best suited for tips, last-minute revision, and exam strategy guidance.",
+      "tags": ["strategy", "focus", "exam tips", "male tutor"],
+      "level": "strategy",
+      "duration_label": "1080p strategy clip",
+      "cue_points": [
+        "Use this when the student needs sharper exam tactics.",
+        "It fits the Tips and Last Minute experience very well."
+      ],
+      "transcript_hint": "Keep the message crisp, high-energy, and strategy-driven."
+    },
+    {
+      "id": "problem-solving-male-tutor",
+      "file_name": "Problem Solving (Male Tutor)_1080p.mp4",
+      "title": "Problem Solving",
+      "topic": "Stepwise problem solving",
+      "summary": "Best suited for Tutor mode, worked examples, and the 3D concept bridge for physics or math.",
+      "tags": ["problem solving", "tutor", "worked example", "male tutor"],
+      "level": "teaching",
+      "duration_label": "1080p teaching clip",
+      "cue_points": [
+        "Use this to explain a concept in a stepwise way.",
+        "It should feed the 3D concept board and reasoning panel."
+      ],
+      "transcript_hint": "Use a clear teach-then-check structure and end with a simple practice prompt."
+    }
+  ]
+}
