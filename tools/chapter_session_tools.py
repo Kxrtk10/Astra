@@ -4,6 +4,12 @@ from copy import deepcopy
 from datetime import datetime, timedelta
 from pathlib import Path
 
+from backend.database import (
+    get_active_chapter_session as db_get_active_chapter_session,
+    get_all_chapter_scores as db_get_all_chapter_scores,
+    save_chapter_score as db_save_chapter_score,
+    save_chapter_session as db_save_chapter_session,
+)
 from backend.storage import atomic_write_json
 from tools.analytics_tools import record_chapter_completion, record_subtopic_score
 from tools.behavior_tools import record_behavior_event
@@ -100,6 +106,12 @@ def _default_session(student_id, unit_name, subject):
 
 
 def _load_session(student_id):
+    try:
+        session = db_get_active_chapter_session(student_id)
+        if session:
+            return session
+    except Exception as exc:
+        print(f"WARNING: Could not load chapter session from database for {student_id}: {exc}")
     return _load_json(_session_path(student_id), {})
 
 
@@ -310,6 +322,16 @@ def reset_chapter_session(student_id, unit_name, subject):
 
 
 def _save_session(student_id, session):
+    try:
+        db_save_chapter_session(
+            student_id,
+            session.get("unit_name", ""),
+            session.get("subject", ""),
+            session,
+            session.get("status", "in_progress"),
+        )
+    except Exception as exc:
+        print(f"WARNING: Could not save chapter session to database for {student_id}: {exc}")
     _save_json(_session_path(student_id), session)
 
 

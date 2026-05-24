@@ -1,9 +1,18 @@
 import json
 import os
-from datetime import datetime
+import time
+from collections import defaultdict
+from datetime import datetime, timedelta
+from statistics import mean
 
-from backend.database import fetch_json_record, upsert_json_record
+from backend.database import execute_query, fetch_json_record, upsert_json_record
 from backend.storage import atomic_write_json
+from tools.jee_syllabus import build_chapter_ready_syllabus
+
+try:
+    from google import genai
+except Exception:  # pragma: no cover - optional dependency
+    genai = None
 
 ANALYTICS_FOLDER = "analytics_state"
 
@@ -434,3 +443,386 @@ def get_analytics_summary(name):
         "checkpoint_attempts_by_topic": dict(sorted((state.get("checkpoint_attempts_by_topic") or {}).items(), key=lambda item: item[1], reverse=True)),
         "checkpoint_attempts_by_exam": dict(sorted((state.get("checkpoint_attempts_by_exam") or {}).items(), key=lambda item: item[1], reverse=True)),
     }
+
+
+def _safe_float(value, default=0.0):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return float(default)
+
+
+def _normalize_subject_label(subject):
+    label = str(subject or "").strip().lower()
+    if "phys" in label:
+        return "physics"
+    if "chem" in label:
+        return "chemistry"
+    if "math" in label:
+        return "mathematics"
+    return label or "general"
+
+
+def _load_dashboard_cache(student_id):
+    state = load_analytics_state(student_id)
+    cache = state.get("dashboard_insight_cache") or {}
+    generated_at = cache.get("generated_at", "")
+    if generated_at:
+        try:
+            cached_dt = datetime.fromisoformat(generated_at)
+            if (datetime.utcnow() - cached_dt).total_seconds() < 3600:
+                return cache
+        except Exception:
+            pass
+    return None
+
+
+def _save_dashboard_cache(student_id, insight):
+    state = load_analytics_state(student_id)
+    state["dashboard_insight_cache"] = {
+        "insight": insight,
+        "generated_at": datetime.utcnow().isoformat(timespec="seconds"),
+    }
+    state["last_updated"] = state["dashboard_insight_cache"]["generated_at"]
+    save_analytics_state(student_id, state)
+
+
+def get_performance_trends(student_id, days=30):
+    try:
+        rows = execute_query(
+            """
+            SELECT DATE(recorded_at) AS day, subject, score, duration_minutes
+            FROM progress_records
+            WHERE student_id = ? AND recorded_at >= datetime('now', ?)
+            ORDER BY recorded_at ASC, id ASC
+            """,
+            (student_id, f"-{int(days or 30)} days"),
+        ) or []
+        daily_map = defaultdict(lambda: {"scores": [], "sessions": 0, "minutes": 0})
+        subject_map = defaultdict(lambda: {"scores": [], "sessions": 0})
+        total_sessions = 0
+        total_minutes = 0
+        for row in rows:
+            day = str(row["day"] or "").strip()
+            subject = _normalize_subject_label(row["subject"])
+            score = _safe_float(row["score"])
+            duration = _safe_float(row["duration_minutes"])
+            if not day:
+                continue
+            daily_map[day]["scores"].append(score)
+            daily_map[day]["sessions"] += 1
+            daily_map[day]["minutes"] += duration
+            subject_map[subject]["scores"].append(score)
+            subject_map[subject]["sessions"] += 1
+            total_sessions += 1
+            total_minutes += duration
+
+        daily_scores = [
+            {
+                "date": day,
+                "avg_score": round(mean(bucket["scores"]), 1) if bucket["scores"] else 0,
+                "sessions": bucket["sessions"],
+                "minutes": round(bucket["minutes"], 1),
+            }
+            for day, bucket in sorted(daily_map.items())
+        ]
+        subject_averages = {
+            subject: round(mean(bucket["scores"]), 1) if bucket["scores"] else 0
+            for subject, bucket in subject_map.items()
+        }
+        recent = daily_scores[-7:]
+        previous = daily_scores[-14:-7]
+        recent_avg = round(mean([item["avg_score"] for item in recent]), 1) if recent else 0
+        previous_avg = round(mean([item["avg_score"] for item in previous]), 1) if previous else 0
+        weekly_improvement = round(recent_avg - previous_avg, 1)
+        best_day = max(daily_scores, key=lambda item: (item["avg_score"], item["sessions"]))["date"] if daily_scores else ""
+        consistency = get_study_consistency(student_id, days=min(7, max(int(days or 30), 7)))
+        return {
+            "daily_scores": daily_scores,
+            "subject_averages": subject_averages,
+            "weekly_improvement": weekly_improvement,
+            "best_day": best_day,
+            "consistency_score": consistency.get("consistency_percent", 0),
+            "total_sessions": total_sessions,
+            "total_time_minutes": int(round(total_minutes)),
+        }
+    except Exception as exc:
+        print(f"WARNING: Could not build performance trends for {student_id}: {exc}")
+        return {
+            "daily_scores": [],
+            "subject_averages": {},
+            "weekly_improvement": 0,
+            "best_day": "",
+            "consistency_score": 0,
+            "total_sessions": 0,
+            "total_time_minutes": 0,
+        }
+
+
+def get_weak_strong_topics(student_id):
+    try:
+        rows = execute_query(
+            """
+            SELECT unit_name, subject, topic, score
+            FROM progress_records
+            WHERE student_id = ?
+            ORDER BY recorded_at DESC, id DESC
+            """,
+            (student_id,),
+        ) or []
+        chapter_rows = execute_query(
+            """
+            SELECT unit_name, subject, subtopic_scores, chapter_test_score, attempts
+            FROM chapter_scores
+            WHERE student_id = ?
+            ORDER BY completed_at DESC, id DESC
+            """,
+            (student_id,),
+        ) or []
+        topic_scores = defaultdict(list)
+        attempted_topics = set()
+        for row in rows:
+            topic = str(row["topic"] or row["unit_name"] or "").strip()
+            subject = _normalize_subject_label(row["subject"])
+            score = _safe_float(row["score"])
+            if topic:
+                attempted_topics.add(topic.lower())
+                topic_scores[(topic, subject)].append(score)
+        for row in chapter_rows:
+            subject = _normalize_subject_label(row["subject"])
+            unit_name = str(row["unit_name"] or "").strip()
+            chapter_score = _safe_float(row["chapter_test_score"])
+            if unit_name:
+                attempted_topics.add(unit_name.lower())
+                topic_scores[(unit_name, subject)].append(chapter_score)
+            try:
+                subtopics = json.loads(row["subtopic_scores"] or "{}")
+            except Exception:
+                subtopics = {}
+            if isinstance(subtopics, dict):
+                for subtopic_name, subtopic_score in subtopics.items():
+                    subtopic_label = str(subtopic_name or "").strip()
+                    if subtopic_label:
+                        attempted_topics.add(subtopic_label.lower())
+                        topic_scores[(subtopic_label, subject)].append(_safe_float(subtopic_score))
+
+        strong_topics = []
+        weak_topics = []
+        for (topic, subject), scores in sorted(topic_scores.items(), key=lambda item: item[0][0].lower()):
+            if not scores:
+                continue
+            best_score = round(max(scores), 1)
+            attempts = len(scores)
+            entry = {
+                "topic": topic,
+                "subject": subject,
+                "best_score": best_score,
+                "attempts": attempts,
+            }
+            if best_score >= 80:
+                strong_topics.append(entry)
+            elif best_score < 60:
+                entry["revision_recommended"] = True
+                weak_topics.append(entry)
+
+        syllabus = build_chapter_ready_syllabus()
+        not_attempted = []
+        for subject, units in syllabus.items():
+            for unit in units:
+                unit_name = str(unit.get("name") or "").strip()
+                if unit_name and unit_name.lower() not in attempted_topics:
+                    not_attempted.append(unit_name)
+
+        return {
+            "strong_topics": strong_topics[:20],
+            "weak_topics": weak_topics[:20],
+            "not_attempted": not_attempted[:40],
+        }
+    except Exception as exc:
+        print(f"WARNING: Could not derive weak/strong topics for {student_id}: {exc}")
+        return {"strong_topics": [], "weak_topics": [], "not_attempted": []}
+
+
+def get_study_consistency(student_id, days=7):
+    try:
+        rows = execute_query(
+            """
+            SELECT DATE(recorded_at) AS day, SUM(duration_minutes) AS total_minutes
+            FROM progress_records
+            WHERE student_id = ? AND recorded_at >= datetime('now', ?)
+            GROUP BY DATE(recorded_at)
+            ORDER BY DATE(recorded_at) ASC
+            """,
+            (student_id, f"-{int(days or 7)} days"),
+        ) or []
+        studied_days = []
+        minutes_by_day = {}
+        for row in rows:
+            day = str(row["day"] or "").strip()
+            if day:
+                studied_days.append(day)
+                minutes_by_day[day] = int(round(_safe_float(row["total_minutes"])))
+        studied_days_set = set(studied_days)
+        total_days = max(int(days or 7), 1)
+        days_studied = len(studied_days_set)
+        days_missed = max(0, total_days - days_studied)
+        avg_daily_minutes = round(sum(minutes_by_day.values()) / max(days_studied, 1), 1) if days_studied else 0
+        consistency_percent = round((days_studied / total_days) * 100, 1)
+        current_streak = 0
+        longest_streak = 0
+        cursor_date = datetime.utcnow().date()
+        for _ in range(total_days):
+            day_key = cursor_date.isoformat()
+            if day_key in studied_days_set:
+                current_streak += 1
+            else:
+                break
+            cursor_date = cursor_date - timedelta(days=1)
+        run = 0
+        for offset in range(total_days):
+            day_key = (datetime.utcnow().date() - timedelta(days=offset)).isoformat()
+            if day_key in studied_days_set:
+                run += 1
+                longest_streak = max(longest_streak, run)
+            else:
+                run = 0
+        return {
+            "days_studied": days_studied,
+            "days_missed": days_missed,
+            "current_streak": current_streak,
+            "longest_streak": longest_streak,
+            "avg_daily_minutes": avg_daily_minutes,
+            "consistency_percent": consistency_percent,
+        }
+    except Exception as exc:
+        print(f"WARNING: Could not calculate consistency for {student_id}: {exc}")
+        return {
+            "days_studied": 0,
+            "days_missed": int(days or 7),
+            "current_streak": 0,
+            "longest_streak": 0,
+            "avg_daily_minutes": 0,
+            "consistency_percent": 0,
+        }
+
+
+def generate_ai_insight(student_id):
+    try:
+        cached = _load_dashboard_cache(student_id)
+        if cached and cached.get("insight"):
+            return {"insight": cached["insight"], "cached": True}
+
+        trends = get_performance_trends(student_id, days=30)
+        weak_strong = get_weak_strong_topics(student_id)
+        consistency = get_study_consistency(student_id, days=7)
+        prompt = (
+            "You are Astra's analytics coach. Write exactly 3 short sentences.\n"
+            "Make the insight personalized, specific, and encouraging.\n"
+            "Use the data below and mention one strength, one weak area, and one next action.\n\n"
+            f"Performance trends: {json.dumps(trends, ensure_ascii=False)}\n"
+            f"Weak/strong topics: {json.dumps(weak_strong, ensure_ascii=False)}\n"
+            f"Consistency: {json.dumps(consistency, ensure_ascii=False)}\n"
+        )
+        insight = ""
+        client = None
+        api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+        if genai is not None and api_key:
+            try:
+                client = genai.Client(api_key=api_key)
+            except Exception:
+                client = None
+        if client is not None:
+            try:
+                response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+                insight = str(response.text or "").strip()
+            except Exception as exc:
+                print(f"WARNING: Gemini insight generation failed for {student_id}: {exc}")
+        if not insight:
+            strongest = (weak_strong.get("strong_topics") or [])[:1]
+            weakest = (weak_strong.get("weak_topics") or [])[:1]
+            strong_text = strongest[0]["topic"] if strongest else "your recent strengths"
+            weak_text = weakest[0]["topic"] if weakest else "one weak area"
+            insight = (
+                f"You are building confidence in {strong_text}. "
+                f"{weak_text} still needs focused revision. "
+                f"Keep a steady rhythm and use one targeted practice block next."
+            )
+        _save_dashboard_cache(student_id, insight)
+        return {"insight": insight, "cached": False}
+    except Exception as exc:
+        print(f"WARNING: Could not generate AI insight for {student_id}: {exc}")
+        return {"insight": "Keep going. Astra will refine your plan as more sessions are logged.", "cached": False}
+
+
+def get_subject_mastery_breakdown(student_id):
+    try:
+        syllabus = build_chapter_ready_syllabus()
+        chapters = execute_query(
+            """
+            SELECT unit_name, subject, chapter_test_score, mastery_level, attempts
+            FROM chapter_scores
+            WHERE student_id = ?
+            ORDER BY completed_at DESC, id DESC
+            """,
+            (student_id,),
+        ) or []
+        progress_rows = execute_query(
+            """
+            SELECT topic, subject, score
+            FROM progress_records
+            WHERE student_id = ?
+            ORDER BY recorded_at DESC, id DESC
+            """,
+            (student_id,),
+        ) or []
+        subject_maps = {subject: {"attempted": set(), "strong": set(), "developing": set(), "weak": set()} for subject in syllabus.keys()}
+        for row in progress_rows:
+            subject = _normalize_subject_label(row["subject"])
+            topic = str(row["topic"] or "").strip()
+            score = _safe_float(row["score"])
+            if subject not in subject_maps:
+                continue
+            if topic:
+                subject_maps[subject]["attempted"].add(topic)
+                if score >= 80:
+                    subject_maps[subject]["strong"].add(topic)
+                elif score >= 60:
+                    subject_maps[subject]["developing"].add(topic)
+                else:
+                    subject_maps[subject]["weak"].add(topic)
+        for row in chapters:
+            subject = _normalize_subject_label(row["subject"])
+            unit_name = str(row["unit_name"] or "").strip()
+            score = _safe_float(row["chapter_test_score"])
+            if subject not in subject_maps:
+                continue
+            if unit_name:
+                subject_maps[subject]["attempted"].add(unit_name)
+                if score >= 80:
+                    subject_maps[subject]["strong"].add(unit_name)
+                elif score >= 60:
+                    subject_maps[subject]["developing"].add(unit_name)
+                else:
+                    subject_maps[subject]["weak"].add(unit_name)
+        breakdown = {}
+        for subject, units in syllabus.items():
+            total_topics = len(units)
+            attempted = len(subject_maps.get(subject, {}).get("attempted", set()))
+            strong = len(subject_maps.get(subject, {}).get("strong", set()))
+            developing = len(subject_maps.get(subject, {}).get("developing", set()))
+            weak = len(subject_maps.get(subject, {}).get("weak", set()))
+            not_started = max(0, total_topics - attempted)
+            mastery_percent = round(((strong * 1.0 + developing * 0.6 + weak * 0.2) / max(total_topics, 1)) * 100, 1)
+            breakdown[subject] = {
+                "total_topics": total_topics,
+                "topics_attempted": attempted,
+                "topics_strong": strong,
+                "topics_developing": developing,
+                "topics_weak": weak,
+                "topics_not_started": not_started,
+                "overall_mastery_percent": mastery_percent,
+            }
+        return breakdown
+    except Exception as exc:
+        print(f"WARNING: Could not build subject mastery breakdown for {student_id}: {exc}")
+        return {}

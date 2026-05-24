@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from json import JSONDecodeError
 
-from backend.database import fetch_json_record, upsert_json_record
+from backend.database import get_student_profile, save_student_profile
 from backend.storage import atomic_write_json
 
 PROFILE_FOLDER = "profiles"
@@ -42,6 +42,8 @@ def _normalize_profile(profile):
     profile.setdefault("tutor_personality_traits", [])
     profile.setdefault("tutor_personality_notes", "")
     profile.setdefault("tutor_style", "positive, encouraging, and easy to talk to")
+    profile.setdefault("preferred_language", "english")
+    profile.setdefault("ui_language", "english")
     profile.setdefault("default_response_language", "English")
     profile.setdefault("default_tutor_level", 3)
     profile.setdefault("appearance_description", "friendly, fun, and human-like")
@@ -105,6 +107,8 @@ def _default_profile(name):
             "tutor_personality_traits": [],
             "tutor_personality_notes": "",
             "tutor_style": "positive, encouraging, and easy to talk to",
+            "preferred_language": "english",
+            "ui_language": "english",
             "default_response_language": "English",
             "default_tutor_level": 3,
             "appearance_description": "friendly, fun, and human-like",
@@ -154,24 +158,17 @@ def _find_case_insensitive_match(name):
 
 def _load_profile_from_db(name):
     try:
-        raw = fetch_json_record("student_profiles", "student_name", name, "profile_json")
-        if not raw:
+        profile = get_student_profile(name)
+        if not profile:
             return None
-        return _normalize_profile(json.loads(raw))
+        return _normalize_profile(profile)
     except Exception as exc:
         print(f"WARNING: Could not load profile {name} from database - returning default profile. {exc}")
         return _default_profile(name)
 
 
 def _save_profile_to_db(profile):
-    upsert_json_record(
-        "student_profiles",
-        "student_name",
-        profile["name"],
-        "profile_json",
-        json.dumps(profile, indent=2),
-        _timestamp(),
-    )
+    save_student_profile(profile["name"], profile)
 
 
 def create_profile(

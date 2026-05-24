@@ -1,11 +1,15 @@
 import json
 import os
-import json
 from datetime import datetime, timedelta
 from pathlib import Path
 from uuid import uuid4
 
-from backend.database import fetch_json_record, upsert_json_record
+from backend.database import (
+    get_all_chapter_scores as db_get_all_chapter_scores,
+    get_student_progress_summary as db_get_student_progress_summary,
+    log_progress_record as db_log_progress_record,
+    save_chapter_score as db_save_chapter_score,
+)
 from backend.storage import atomic_write_json
 
 PROGRESS_FOLDER = "progress_state"
@@ -88,24 +92,22 @@ def find_progress_item(name, exam, subject, topic):
 
 def _load_state_from_db(name):
     try:
-        raw = fetch_json_record("student_progress", "student_name", name, "state_json")
-        if not raw:
+        summary = db_get_student_progress_summary(name)
+        if not summary:
             return None
-        return _normalize_state(json.loads(raw))
+        state = _default_state()
+        state["progress_summary"] = summary
+        return _normalize_state(state)
     except Exception as exc:
         print(f"WARNING: Could not load progress state for {name} from database - returning safe defaults. {exc}")
         return _default_state()
 
 
 def _save_state_to_db(name, state):
-    upsert_json_record(
-        "student_progress",
-        "student_name",
-        name,
-        "state_json",
-        json.dumps(state, indent=2),
-        _timestamp(),
-    )
+    try:
+        return None
+    except Exception as exc:
+        print(f"WARNING: Could not persist progress state summary for {name}: {exc}")
 
 
 def load_progress_state(name):
@@ -172,6 +174,15 @@ def record_checkpoint_attempt(
     state["checkpoint_attempts"].append(attempt)
     state["checkpoint_attempts"] = state["checkpoint_attempts"][-120:]
     state["last_updated"] = timestamp
+    db_log_progress_record(
+        name,
+        topic,
+        subject,
+        "",
+        "checkpoint",
+        100 if is_correct else 0,
+        0,
+    )
     filepath = _progress_path(name)
     atomic_write_json(filepath, state)
     _save_state_to_db(name, state)
@@ -179,10 +190,29 @@ def record_checkpoint_attempt(
 
 
 def load_chapter_scores_state(name):
-    filepath = _chapter_scores_path(name)
-    if not filepath.exists():
-        return _default_chapter_scores_state()
     try:
+        scores = db_get_all_chapter_scores(name)
+        if scores:
+            state = _default_chapter_scores_state()
+            for entry in scores:
+                chapter_key = str(entry.get("unit_name") or "Chapter").strip()
+                state["chapters"][chapter_key] = {
+                    "subject": entry.get("subject", ""),
+                    "subtopic_scores": entry.get("subtopic_scores", {}),
+                    "chapter_test_score": entry.get("chapter_test_score"),
+                    "mastery_level": entry.get("mastery_level", "in_progress"),
+                    "attempts": entry.get("attempts", 1),
+                    "last_attempt_date": entry.get("completed_at", ""),
+                    "revision_count": 0,
+                    "time_spent_total_minutes": entry.get("time_spent_minutes", 0),
+                    "subtopics_completed": [],
+                    "revision_scheduled": [],
+                    "completed_date": entry.get("completed_at", ""),
+                }
+            return _normalize_chapter_scores_state(state)
+        filepath = _chapter_scores_path(name)
+        if not filepath.exists():
+            return _default_chapter_scores_state()
         with open(filepath, "r", encoding="utf-8") as file:
             state = json.load(file)
         return _normalize_chapter_scores_state(state)
@@ -196,15 +226,16 @@ def save_chapter_scores_state(name, state):
         filepath = _chapter_scores_path(name)
         state = _normalize_chapter_scores_state(state)
         atomic_write_json(str(filepath), state)
-        state_json = json.dumps(state, indent=2)
-        upsert_json_record(
-            "student_chapter_scores",
-            "student_name",
-            name,
-            "state_json",
-            state_json,
-            _timestamp(),
-        )
+        for chapter_name, chapter in (state.get("chapters", {}) or {}).items():
+            db_save_chapter_score(
+                name,
+                chapter_name,
+                chapter.get("subject", ""),
+                chapter.get("subtopic_scores", {}),
+                chapter.get("chapter_test_score", 0) or 0,
+                chapter.get("mastery_level", "in_progress"),
+                chapter.get("time_spent_total_minutes", 0) or 0,
+            )
     except Exception as exc:
         print(f"WARNING: Could not save chapter score state for {name}; keeping safe defaults. {exc}")
 
@@ -235,6 +266,15 @@ def log_checkpoint(student_id, unit_name, subject, subtopic_id, score, time_spen
     if subtopic_id and subtopic_id not in chapter["subtopics_completed"]:
         chapter["subtopics_completed"].append(subtopic_id)
     state["updated_at"] = _timestamp()
+    db_log_progress_record(
+        student_id,
+        subtopic_id or chapter_key,
+        subject,
+        unit_name,
+        "checkpoint",
+        score,
+        time_spent_minutes,
+    )
     save_chapter_scores_state(student_id, state)
     return state
 
@@ -271,6 +311,15 @@ def log_chapter_score(student_id, unit_name, subject, score, mastery_level, subt
     chapter["completed_date"] = str(completed_date or datetime.now().date().isoformat())
     chapter["last_attempt_date"] = _timestamp()
     state["updated_at"] = _timestamp()
+    db_log_progress_record(
+        student_id,
+        unit_name,
+        subject,
+        unit_name,
+        "chapter_test",
+        score,
+        time_spent_minutes,
+    )
     save_chapter_scores_state(student_id, state)
     return state
 
@@ -386,6 +435,15 @@ def log_topic_completion(student_id, topic, subject, score, session_type, unit_n
     subject_label = str(subject or "").strip()
     note = f"{session_type} session | score {round(float(score or 0), 1)}% | unit {str(unit_name or '').strip()}"
     snapshot = upsert_progress_item(student_id, exam, subject_label, topic_label, status, note=note)
+    db_log_progress_record(
+        student_id,
+        topic_label,
+        subject_label,
+        str(unit_name or "").strip(),
+        str(session_type or "learn").strip(),
+        int(round(float(score or 0))),
+        0,
+    )
     state = load_progress_state(student_id)
     state.setdefault("topic_completions", [])
     state["topic_completions"].append(

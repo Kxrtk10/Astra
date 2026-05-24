@@ -1,9 +1,11 @@
 import asyncio
 import base64
+from collections import defaultdict
 import json
 import logging
 import os
 import re
+import time
 from uuid import uuid4
 from datetime import datetime
 from pathlib import Path
@@ -32,16 +34,21 @@ from backend.auth import (
     require_bearer_token,
 )
 from backend.config import settings
-from backend.database import init_db
+import backend.database as database
 from backend.storage import atomic_write_json, get_storage_status, save_binary_file
 from agents.supervisor_agent import supervisor_agent
 from tools.analytics_tools import (
     get_analytics_summary,
+    get_performance_trends,
     load_analytics_state,
     record_checkpoint_attempt as record_analytics_checkpoint_attempt,
     record_practice_attempt,
     record_chapter_completion,
     record_subtopic_score,
+    get_weak_strong_topics,
+    get_study_consistency,
+    generate_ai_insight,
+    get_subject_mastery_breakdown,
 )
 from tools.app_guide_tools import build_app_guide_reply
 from tools.behavior_tools import format_behavior_report, record_behavior_event
@@ -203,8 +210,10 @@ APP_DATA_DIRECTORIES = [
     Path("app_data") / "progress",
     Path("app_data") / "analytics",
     Path("app_data") / "memory",
+    Path("app_data") / "ui_cache",
     Path("app_data") / "video_briefs",
     Path("app_data") / "video_requests",
+    Path("app_data") / "logs",
 ]
 RELOAD_EXCLUDES = [
     "personal_memory/*",
@@ -224,6 +233,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+LOG_DIR = Path("app_data") / "logs"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+logging.basicConfig(
+    filename=str(LOG_DIR / "astra.log"),
+    level=logging.ERROR,
+    format="%(asctime)s %(levelname)s %(message)s",
+)
+
+APP_START_TIME = time.time()
+STUDENTS_LOADED = 0
+request_counts = defaultdict(list)
+
 
 def _ensure_app_data_directories():
     for directory in APP_DATA_DIRECTORIES:
@@ -240,6 +261,154 @@ def _warn_missing_startup_env_vars():
     for env_name, feature_name, resolver in checks:
         if not resolver():
             print(f"WARNING: Missing env variable: {env_name} — feature {feature_name} will not work")
+
+
+def check_rate_limit(student_id, max_requests=30, window_seconds=60):
+    now = time.time()
+    window_start = now - window_seconds
+    safe_id = str(student_id or "").strip()
+    if not safe_id:
+        return True
+    requests = request_counts[safe_id]
+    requests = [timestamp for timestamp in requests if timestamp > window_start]
+    request_counts[safe_id] = requests
+    if len(requests) >= max_requests:
+        return False
+    requests.append(now)
+    return True
+
+
+def _student_profile_exists(student_id: str) -> bool:
+    try:
+        row = database.execute_query(
+            "SELECT 1 FROM student_profiles WHERE student_id = ? LIMIT 1",
+            (student_id,),
+            fetchone=True,
+        )
+        return bool(row)
+    except Exception as exc:
+        print(f"WARNING: Could not check profile existence for {student_id}: {exc}")
+        return False
+
+
+def _planner_state_exists(student_id: str) -> bool:
+    try:
+        row = database.execute_query(
+            "SELECT 1 FROM planner_state WHERE student_id = ? LIMIT 1",
+            (student_id,),
+            fetchone=True,
+        )
+        return bool(row)
+    except Exception as exc:
+        print(f"WARNING: Could not check planner existence for {student_id}: {exc}")
+        return False
+
+
+def _read_json_file(path: Path):
+    try:
+        with open(path, "r", encoding="utf-8-sig") as handle:
+            return json.load(handle)
+    except Exception as exc:
+        print(f"WARNING: Could not read JSON file {path}: {exc}")
+        return None
+
+
+def _migrate_student_profiles_to_db():
+    migrated = 0
+    candidate_dirs = [Path("profiles"), Path("app_data") / "profiles"]
+    seen_paths = set()
+    for directory in candidate_dirs:
+        if not directory.exists():
+            continue
+        for path in sorted(directory.glob("*.json")):
+            resolved = str(path.resolve())
+            if resolved in seen_paths:
+                continue
+            seen_paths.add(resolved)
+            student_id = path.stem.strip()
+            if not student_id or _student_profile_exists(student_id):
+                continue
+            profile = _read_json_file(path)
+            if not isinstance(profile, dict) or not profile:
+                continue
+            try:
+                student_name = str(profile.get("name") or student_id).strip() or student_id
+                database.execute_query(
+                    """
+                    INSERT OR IGNORE INTO students (student_id, name, created_at)
+                    VALUES (?, ?, CURRENT_TIMESTAMP)
+                    """,
+                    (student_id, student_name),
+                )
+                save_profile(profile)
+                migrated += 1
+            except Exception as exc:
+                print(f"WARNING: Could not migrate profile {student_id}: {exc}")
+    return migrated
+
+
+def _migrate_planner_states_to_db():
+    migrated = 0
+    candidate_dirs = [Path("planner_state"), Path("app_data") / "planner"]
+    grouped = {}
+    seen_paths = set()
+    for directory in candidate_dirs:
+        if not directory.exists():
+            continue
+        for path in sorted(directory.glob("*.json")):
+            resolved = str(path.resolve())
+            if resolved in seen_paths:
+                continue
+            seen_paths.add(resolved)
+            stem = path.stem.strip()
+            if not stem:
+                continue
+            student_id = stem
+            section = "combined"
+            if stem.endswith("_journey"):
+                student_id = stem[:-8]
+                section = "journey"
+            elif stem.endswith("_weekly"):
+                student_id = stem[:-7]
+                section = "weekly"
+            elif stem.endswith("_today"):
+                student_id = stem[:-6]
+                section = "today"
+            if not student_id or _planner_state_exists(student_id):
+                continue
+            payload = _read_json_file(path)
+            if payload is None:
+                continue
+            bucket = grouped.setdefault(
+                student_id,
+                {"journey": None, "weekly": None, "today": None, "combined": None},
+            )
+            bucket[section] = payload
+    for student_id, bucket in grouped.items():
+        try:
+            combined = bucket.get("combined")
+            journey = bucket.get("journey")
+            weekly = bucket.get("weekly")
+            today = bucket.get("today")
+            if isinstance(combined, dict):
+                journey = combined
+                weekly = combined.get("weekly", weekly or {})
+                today = combined.get("today", today or {})
+            database.save_planner_state(student_id, journey or {}, weekly or {}, today or {})
+            migrated += 1
+        except Exception as exc:
+            print(f"WARNING: Could not migrate planner state for {student_id}: {exc}")
+    return migrated
+
+
+def _count_loaded_students():
+    try:
+        row = database.execute_query("SELECT COUNT(*) AS total FROM student_profiles", fetchone=True)
+        if row and "total" in row.keys():
+            return int(row["total"] or 0)
+    except Exception as exc:
+        print(f"WARNING: Could not count loaded students: {exc}")
+    return 0
 
 
 @app.middleware("http")
@@ -267,7 +436,6 @@ async def disable_static_caching(request: Request, call_next):
 
 @app.on_event("startup")
 def startup_event():
-    init_db()
     _ensure_app_data_directories()
     _warn_missing_startup_env_vars()
     _ensure_video_job_dirs()
@@ -281,6 +449,17 @@ def startup_event():
             print(f"Knowledge base initialized: {kb_stats}")
     except Exception as exc:
         print(f"WARNING: Knowledge base initialization failed: {exc}")
+    try:
+        database.init_db()
+        migrated_profiles = _migrate_student_profiles_to_db()
+        migrated_planner = _migrate_planner_states_to_db()
+        global STUDENTS_LOADED
+        STUDENTS_LOADED = _count_loaded_students()
+        print(f"Database ready — {STUDENTS_LOADED} students loaded")
+        if migrated_profiles or migrated_planner:
+            print(f"Migration complete: profiles={migrated_profiles}, planner_states={migrated_planner}")
+    except Exception as exc:
+        print(f"WARNING: Database initialization or migration failed: {exc}")
 
 
 @app.get("/app-config.js", include_in_schema=False)
@@ -368,6 +547,10 @@ AVATAR_PRESETS = [
     },
 ]
 
+AVATARS_DIR = WEB_DIR / "avatars"
+AVATARS_DIR.mkdir(parents=True, exist_ok=True)
+AVATAR_CONFIG_PATH = AVATARS_DIR / "avatar_config.json"
+
 EXAM_PRIORITY_ORDER = [
     "JEE MAIN",
     "JEE ADVANCED",
@@ -424,6 +607,161 @@ def _load_json_safe(path: Path, default):
         return json.loads(Path(path).read_text(encoding="utf-8"))
     except Exception:
         return default
+
+
+UI_CACHE_ROOT = Path("app_data") / "ui_cache"
+
+
+def _ui_cache_path(student_id: str, kind: str) -> Path:
+    safe_student_id = re.sub(r"[^a-z0-9]+", "_", str(student_id or "student").strip().lower()).strip("_") or "student"
+    safe_kind = re.sub(r"[^a-z0-9]+", "_", str(kind or "item").strip().lower()).strip("_") or "item"
+    return UI_CACHE_ROOT / f"{safe_student_id}_{safe_kind}.json"
+
+
+def _journey_path(student_id: str, suffix: str) -> Path:
+    try:
+        safe_student_id = re.sub(r"[^a-z0-9]+", "_", str(student_id or "student").strip().lower()).strip("_") or "student"
+        safe_suffix = re.sub(r"[^a-z0-9]+", "_", str(suffix or "journey").strip().lower()).strip("_") or "journey"
+        planner_root = Path("app_data") / "planner"
+        planner_root.mkdir(parents=True, exist_ok=True)
+        return planner_root / f"{safe_student_id}_{safe_suffix}.json"
+    except Exception:
+        planner_root = Path("app_data") / "planner"
+        planner_root.mkdir(parents=True, exist_ok=True)
+        return planner_root / "student_journey.json"
+
+
+def _load_ui_cache(student_id: str, kind: str, default=None):
+    default = {} if default is None else default
+    return _load_json_safe(_ui_cache_path(student_id, kind), default)
+
+
+def _save_ui_cache(student_id: str, kind: str, payload: dict):
+    atomic_write_json(str(_ui_cache_path(student_id, kind)), payload)
+    return payload
+
+
+def _safe_subject(topic: str) -> str:
+    lower = str(topic or "").lower()
+    if any(word in lower for word in ["chem", "mole", "reaction", "bond", "equilibrium", "organic"]):
+        return "Chemistry"
+    if any(word in lower for word in ["math", "integral", "derivative", "probability", "matrix", "geometry", "calculus"]):
+        return "Mathematics"
+    return "Physics"
+
+
+def _progress_topic_rollup(student_id: str) -> dict:
+    board = get_chapter_mastery_board(student_id) or {}
+    chapters = list((board.get("chapters") or {}).values()) if isinstance(board, dict) else []
+    strengths = []
+    weaknesses = []
+    for item in chapters:
+        if not isinstance(item, dict):
+            continue
+        level = str(item.get("mastery_level", "")).lower()
+        name = str(item.get("chapter_name") or item.get("unit_name") or item.get("name") or "").strip()
+        score = item.get("chapter_test_score")
+        if level in {"mastered", "proficient"} and name:
+            strengths.append({"name": name, "score": score or 0})
+        if level in {"developing", "needs_revision"} and name:
+            weaknesses.append({"name": name, "score": score or 0})
+    strengths = sorted(strengths, key=lambda item: item.get("score", 0), reverse=True)[:3]
+    weaknesses = sorted(weaknesses, key=lambda item: item.get("score", 0))[:3]
+    return {"strong": strengths, "weak": weaknesses, "board": board}
+
+
+def _generate_ui_text_prompt(student_name: str, kind: str, context: dict) -> str:
+    if kind == "daily_briefing":
+        focus = context.get("focus") or {}
+        return (
+            f"Write a 3-part daily briefing for {student_name}. "
+            f"Today's topic is {focus.get('topic', 'your current topic')} in {focus.get('subject', 'your subject')}. "
+            f"Use one greeting sentence, one sentence about what to accomplish today, and one motivational line based on the student's progress."
+        )
+    if kind == "next_action":
+        return (
+            f"Write one short recommendation for {student_name}. "
+            f"Completed topic: {context.get('completed_topic', '')}. Score: {context.get('score', 0)}. "
+            "Return JSON with keys message, action_label, action_kind, reason."
+        )
+    if kind == "progress_insight":
+        rollup = context.get("rollup") or {}
+        return (
+            f"Write a 2-3 sentence personalized progress insight for {student_name}. "
+            f"Strong chapters: {rollup.get('strong', [])}. Weak chapters: {rollup.get('weak', [])}. "
+            "Point out one strength, one attention area, and one next action."
+        )
+    return ""
+
+
+def _generate_ui_text(profile: dict, kind: str, context: dict) -> dict:
+    student_name = profile.get("name", "student")
+    prompt = _generate_ui_text_prompt(student_name, kind, context)
+    if not prompt:
+        return {}
+    if genai_client:
+        try:
+            response = genai_client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
+            )
+            raw_text = str(getattr(response, "text", "") or "").strip()
+            if kind == "next_action":
+                candidate = _extract_json_payload(raw_text)
+                parsed = json.loads(candidate) if candidate else {}
+                if isinstance(parsed, dict) and parsed:
+                    return parsed
+            if raw_text:
+                return {"text": raw_text}
+        except Exception as exc:
+            print(f"WARNING: UI text generation failed for {kind} ({student_name}): {exc}")
+    if kind == "daily_briefing":
+        focus = context.get("focus") or {}
+        topic = focus.get("topic") or "your current topic"
+        subject = focus.get("subject") or "your subject"
+        return {
+            "greeting": f"Hi {student_name},",
+            "accomplish": f"Today we will work on {topic} in {subject} so your next session feels easier.",
+            "motivation": "Keep the momentum going one focused step at a time.",
+        }
+    if kind == "next_action":
+        score = float(context.get("score", 0) or 0)
+        topic = str(context.get("completed_topic") or "this topic").strip()
+        if score >= 85:
+            return {
+                "message": f"Try 3 JEE questions on {topic}.",
+                "action_label": "Try 3 JEE questions",
+                "action_kind": "practice",
+                "reason": "You are strong enough to convert this into quick exam practice.",
+            }
+        if score >= 60:
+            return {
+                "message": f"Continue to the next subtopic for {topic}.",
+                "action_label": "Continue",
+                "action_kind": "continue",
+                "reason": "This topic is moving in the right direction.",
+            }
+        return {
+            "message": f"Revise {topic} once more before moving on.",
+            "action_label": "Revise again",
+            "action_kind": "revise",
+            "reason": "A second pass will make the idea feel clearer and more stable.",
+        }
+    if kind == "progress_insight":
+        rollup = context.get("rollup") or {}
+        strong = ", ".join(item.get("name", "") for item in rollup.get("strong", [])[:3] if item.get("name"))
+        weak = ", ".join(item.get("name", "") for item in rollup.get("weak", [])[:3] if item.get("name"))
+        return {
+            "text": (
+                f"You have been strongest in {strong or 'your covered chapters'} this week. "
+                f"{weak or 'A few chapters still need a focused pass'} need attention before you move ahead."
+            )
+        }
+    return {}
+
+
+def _write_ui_cache_result(profile: dict, kind: str, payload: dict):
+    return _save_ui_cache(profile.get("name", "student"), kind, payload)
 
 
 def _save_video_job(job_id: str, payload: dict):
@@ -506,6 +844,12 @@ class MemoryUpdateRequest(BaseModel):
     student_name: str
     value: str
     category: str
+
+
+class SetLanguageRequest(BaseModel):
+    student_id: str
+    preferred_language: str = "english"
+    ui_language: str = "english"
 
 
 class ExamRequest(BaseModel):
@@ -1512,7 +1856,10 @@ def _apply_onboarding_profile(profile, onboarding_profile):
     profile["onboarding_profile"] = normalized
     save_profile(profile)
     if normalized["preferred_language"]:
-        profile["default_response_language"] = normalized["preferred_language"]
+        preferred_language = _normalize_language_value(normalized["preferred_language"])
+        profile["preferred_language"] = preferred_language
+        profile["ui_language"] = preferred_language
+        profile["default_response_language"] = _language_display_name(preferred_language)
     if normalized["explanation_depth"]:
         depth_text = normalized["explanation_depth"].lower()
         if any(word in depth_text for word in ["short", "brief", "quick"]):
@@ -1543,6 +1890,52 @@ def _apply_onboarding_profile(profile, onboarding_profile):
     if normalized["astra_question_answer"]:
         add_memory_item(profile["name"], "life_notes", f"Astra answered: {normalized['astra_question_answer']}")
     return profile
+
+
+SUPPORTED_LANGUAGE_VALUES = {
+    "english": "English",
+    "hindi": "Hindi",
+    "hinglish": "Hinglish",
+    "telugu": "Telugu",
+    "tamil": "Tamil",
+    "kannada": "Kannada",
+    "marathi": "Marathi",
+    "bengali": "Bengali",
+    "gujarati": "Gujarati",
+}
+
+SUPPORTED_LANGUAGE_ALIASES = {
+    "english": "english",
+    "eng": "english",
+    "hindi": "hindi",
+    "हिंदी": "hindi",
+    "hinglish": "hinglish",
+    "hindi + english": "hinglish",
+    "hindi english": "hinglish",
+    "telugu": "telugu",
+    "తెలుగు": "telugu",
+    "tamil": "tamil",
+    "தமிழ்": "tamil",
+    "kannada": "kannada",
+    "ಕನ್ನಡ": "kannada",
+    "marathi": "marathi",
+    "मराठी": "marathi",
+    "bengali": "bengali",
+    "বাংলা": "bengali",
+    "gujarati": "gujarati",
+    "ગુજરાતી": "gujarati",
+}
+
+
+def _normalize_language_value(language: str | None) -> str:
+    text = re.sub(r"\s+", " ", str(language or "").strip().lower())
+    if not text:
+        return "english"
+    return SUPPORTED_LANGUAGE_ALIASES.get(text, text if text in SUPPORTED_LANGUAGE_VALUES else "english")
+
+
+def _language_display_name(language: str | None) -> str:
+    return SUPPORTED_LANGUAGE_VALUES.get(_normalize_language_value(language), "English")
 
 
 _CONFUSION_PHRASES = [
@@ -1960,6 +2353,10 @@ def _run_agent_reply(
                 active_chapter_subtopic.get("subject", ""),
                 active_chapter_subtopic.get("session_type", "learn"),
                 chapter_kb,
+                preferred_language=profile.get("preferred_language")
+                or profile.get("ui_language")
+                or profile.get("default_response_language")
+                or response_language,
             )
             instruction_block = "\n\n".join([instruction_block, chapter_block])
     else:
@@ -2382,12 +2779,46 @@ def _run_image_tutor_reply(profile, user_input, image_base64, mime_type, respons
 
 @app.get("/api/health")
 def health():
-    return {
-        "status": "ok",
-        "environment": settings.app_env,
-        "database_path": settings.database_path,
-        "storage": get_storage_status(),
-    }
+    try:
+        db_ok = bool(database.execute_query("SELECT 1", fetchone=True))
+        kb_stats = get_kb_stats()
+        return {
+            "status": "healthy",
+            "database": "connected" if db_ok else "disconnected",
+            "students_loaded": STUDENTS_LOADED or _count_loaded_students(),
+            "knowledge_base": "available" if kb_stats.get("backend") != "fallback" else "fallback",
+            "uptime_seconds": int(time.time() - APP_START_TIME),
+            "version": "1.0.0",
+        }
+    except Exception as exc:
+        logging.error("Endpoint error: %s", str(exc), exc_info=True)
+        return {
+            "status": "degraded",
+            "database": "fallback",
+            "students_loaded": STUDENTS_LOADED,
+            "knowledge_base": "fallback",
+            "uptime_seconds": int(time.time() - APP_START_TIME),
+            "version": "1.0.0",
+        }
+
+
+@app.get("/api/analytics/dashboard/{student_id}")
+def analytics_dashboard(student_id: str):
+    try:
+        profile = _load_profile_or_404(student_id)
+        return {
+            "student_id": profile["name"],
+            "trends": get_performance_trends(profile["name"], days=30),
+            "weak_strong": get_weak_strong_topics(profile["name"]),
+            "consistency": get_study_consistency(profile["name"], days=7),
+            "insight": generate_ai_insight(profile["name"]),
+            "subject_breakdown": get_subject_mastery_breakdown(profile["name"]),
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.error("Endpoint error: %s", str(exc), exc_info=True)
+        raise HTTPException(status_code=500, detail="Could not load analytics dashboard right now.") from exc
 
 
 @app.get("/api/readiness")
@@ -2557,6 +2988,63 @@ def avatar_presets():
     return {"avatars": AVATAR_PRESETS}
 
 
+def _default_avatar_config():
+    return {
+        "avatars": [
+            {
+                "id": preset["id"],
+                "name": preset["name"],
+                "personality": preset.get("tagline", ""),
+                "glb_url": f"/avatars/{preset['id'].replace('-', '_')}.glb",
+                "fallback_image": preset.get("portrait_url", ""),
+                "voice_style": "calm" if preset["id"] == "calm-mentor" else "confident" if preset["id"] == "sharp-strategist" else "warm",
+                "skin_tone": "medium",
+            }
+            for preset in AVATAR_PRESETS
+        ]
+    }
+
+
+def _load_avatar_config():
+    try:
+        if AVATAR_CONFIG_PATH.exists():
+            return json.loads(AVATAR_CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as exc:
+        print(f"WARNING: Could not load avatar config: {exc}")
+    return _default_avatar_config()
+
+
+@app.get("/api/avatar/config")
+def avatar_config():
+    try:
+        return _load_avatar_config()
+    except Exception as exc:
+        logging.error(f"Endpoint error: {str(exc)}", exc_info=True)
+        return _default_avatar_config()
+
+
+@app.get("/api/avatar/available")
+def avatar_available():
+    try:
+        config = _load_avatar_config()
+        avatars = []
+        for avatar in config.get("avatars", []):
+            glb_url = str(avatar.get("glb_url", "")).strip()
+            glb_name = os.path.basename(glb_url) if glb_url else ""
+            avatars.append(
+                {
+                    "id": avatar.get("id", ""),
+                    "name": avatar.get("name", ""),
+                    "has_3d": bool(glb_name and (AVATARS_DIR / glb_name).exists()),
+                    "fallback_image": avatar.get("fallback_image", ""),
+                }
+            )
+        return {"avatars": avatars}
+    except Exception as exc:
+        logging.error(f"Endpoint error: {str(exc)}", exc_info=True)
+        return {"avatars": []}
+
+
 @app.get("/api/exam-catalog")
 def exam_catalog():
     return {"exams": EXAM_CATALOG}
@@ -2632,6 +3120,24 @@ def update_profile_exams(request: ExamUpdateRequest):
     profile = _sync_profile_exam_fields(profile)
     save_profile(profile)
     return {"profile": profile}
+
+
+@app.post("/api/profile/set-language")
+def set_profile_language(request: SetLanguageRequest):
+    profile = _load_profile_or_404(request.student_id)
+    preferred_language = _normalize_language_value(request.preferred_language)
+    ui_language = _normalize_language_value(request.ui_language or preferred_language)
+    profile["preferred_language"] = preferred_language
+    profile["ui_language"] = ui_language
+    profile["default_response_language"] = _language_display_name(preferred_language)
+    onboarding_profile = dict(profile.get("onboarding_profile") or {})
+    onboarding_profile["preferred_language"] = preferred_language
+    profile["onboarding_profile"] = onboarding_profile
+    save_profile(profile)
+    return {
+        "profile": profile,
+        "message": f"Astra will now explain in {_language_display_name(preferred_language)}.",
+    }
 
 
 @app.post("/api/avatar/select")
@@ -3229,6 +3735,73 @@ def progress_analytics(student_id: str):
     return get_chapter_score_summary(profile["name"])
 
 
+@app.get("/api/progress/insight/{student_id}")
+def progress_insight(student_id: str):
+    profile = _load_profile_or_404(student_id)
+    cached = _load_ui_cache(profile["name"], "progress_insight", {})
+    generated_at = str((cached or {}).get("generated_at", "")).strip()
+    try:
+        if generated_at:
+            cached_time = datetime.fromisoformat(generated_at)
+            if (datetime.utcnow() - cached_time).total_seconds() < 3600 and cached.get("insight"):
+                return cached
+    except Exception:
+        pass
+
+    rollup = _progress_topic_rollup(profile["name"])
+    payload = _generate_ui_text(profile, "progress_insight", {"rollup": rollup})
+    result = {
+        "insight": payload.get("text") or payload.get("insight") or "Keep moving steadily. Your chapter board will sharpen as you continue the session loop.",
+        "generated_at": datetime.utcnow().isoformat(),
+    }
+    _write_ui_cache_result(profile, "progress_insight", result)
+    return result
+
+
+@app.post("/api/ui/daily-briefing")
+def ui_daily_briefing(request: dict):
+    student_id = str((request or {}).get("student_id") or "").strip()
+    if not student_id:
+        raise HTTPException(status_code=400, detail="student_id is required.")
+    profile = _load_profile_or_404(student_id)
+    today_key = datetime.utcnow().strftime("%Y-%m-%d")
+    cached = _load_ui_cache(profile["name"], "daily_briefing", {})
+    if cached and cached.get("date") == today_key and cached.get("briefing"):
+        return cached
+    focus = get_todays_focus(profile["name"]).get("primary") or {}
+    brief = _generate_ui_text(profile, "daily_briefing", {"focus": focus})
+    result = {
+        "date": today_key,
+        "briefing": {
+            "greeting": brief.get("greeting") or f"Hi {profile['name']},",
+            "accomplish": brief.get("accomplish") or f"Today we will focus on {focus.get('topic', 'your current topic')}.",
+            "motivation": brief.get("motivation") or "Keep the momentum going one focused step at a time.",
+        },
+    }
+    _write_ui_cache_result(profile, "daily_briefing", result)
+    return result
+
+
+@app.post("/api/ui/next-action")
+def ui_next_action(request: dict):
+    student_id = str((request or {}).get("student_id") or "").strip()
+    if not student_id:
+        raise HTTPException(status_code=400, detail="student_id is required.")
+    profile = _load_profile_or_404(student_id)
+    payload = _generate_ui_text(profile, "next_action", {
+        "completed_topic": (request or {}).get("completed_topic", ""),
+        "score": (request or {}).get("score", 0),
+    })
+    result = {
+        "message": payload.get("message") or "Continue to the next step.",
+        "action_label": payload.get("action_label") or "Continue",
+        "action_kind": payload.get("action_kind") or "continue",
+        "reason": payload.get("reason") or "",
+        "generated_at": datetime.utcnow().isoformat(),
+    }
+    return result
+
+
 @app.post("/api/session/extend-practice")
 def session_extend_practice(request: ChapterPracticeRequest):
     profile = _load_profile_or_404(request.student_id)
@@ -3782,6 +4355,14 @@ def fun_fact(student_name: str):
 def chat(request: ChatRequest):
     try:
         profile = _load_profile_or_404(request.student_name)
+        if not check_rate_limit(profile["name"]):
+            raise HTTPException(status_code=429, detail="Too many requests. Please wait a moment.")
+        stored_language = _normalize_language_value(
+            profile.get("preferred_language")
+            or profile.get("ui_language")
+            or profile.get("default_response_language")
+            or request.response_language
+        )
         student_insight_snapshot = get_student_insight_snapshot(profile)
         tutor_brain = _build_tutor_brain_snapshot(
             profile,
@@ -3811,7 +4392,7 @@ def chat(request: ChatRequest):
                 profile,
                 request.message,
                 voice_chat_mode=request.voice_chat_mode,
-                response_language=request.response_language,
+                response_language=stored_language,
                 conversation_mode=request.conversation_mode,
                 tutor_mode=request.tutor_mode,
                 tutor_level=request.tutor_level,
@@ -3896,6 +4477,7 @@ def chat(request: ChatRequest):
     except HTTPException:
         raise
     except Exception as exc:
+        logging.error(f"Endpoint error: {str(exc)}", exc_info=True)
         logging.exception("Chat request failed: %s", exc)
         raise HTTPException(
             status_code=500,
@@ -3907,6 +4489,11 @@ def chat(request: ChatRequest):
 def checkpoint_generate(request: CheckpointGenerateRequest):
     try:
         profile = _load_profile_or_404(request.student_name) if str(request.student_name or "").strip() else None
+        stored_language = _normalize_language_value(
+            profile.get("preferred_language")
+            or profile.get("ui_language")
+            or profile.get("default_response_language")
+        ) if profile else "english"
         checkpoint = generate_checkpoint_question(
             request.topic,
             request.subject,
@@ -3914,6 +4501,7 @@ def checkpoint_generate(request: CheckpointGenerateRequest):
             request.original_explanation,
             genai_client=genai_client,
             practice_count=request.practice_count,
+            preferred_language=stored_language,
         )
         if profile:
             active_exam = (profile.get("exams") or [{}])[0] if profile.get("exams") else {}
@@ -4079,6 +4667,8 @@ def video_answer_render(request: VideoAnswerRenderRequest):
         except Exception as exc:
             logging.warning("Video answer render profile lookup failed for %s; using fallback profile: %s", request.student_name, exc)
             profile = _fallback_video_profile(request.student_name)
+        if not check_rate_limit(profile["name"]):
+            raise HTTPException(status_code=429, detail="Too many requests. Please wait a moment.")
         avatar = _get_avatar_preset(profile)
         tutor_brain = _build_tutor_brain_snapshot(
             profile,
@@ -4115,6 +4705,7 @@ def video_answer_render(request: VideoAnswerRenderRequest):
     except HTTPException:
         raise
     except Exception as exc:
+        logging.error(f"Endpoint error: {str(exc)}", exc_info=True)
         logging.exception("Video answer render request failed: %s", exc)
         raise HTTPException(
             status_code=500,
@@ -4457,6 +5048,8 @@ def video_status(job_id: str):
 def video_generate(request: VideoGenerateRequest, background_tasks: BackgroundTasks):
     try:
         print("[video_generate] incoming request body:", request.model_dump())
+        if not check_rate_limit(request.student_id):
+            raise HTTPException(status_code=429, detail="Too many requests. Please wait a moment.")
         job_id = str(uuid4())
         _ensure_video_job_dirs()
         initial_job = {
@@ -4479,6 +5072,7 @@ def video_generate(request: VideoGenerateRequest, background_tasks: BackgroundTa
     except HTTPException:
         raise
     except Exception as exc:
+        logging.error(f"Endpoint error: {str(exc)}", exc_info=True)
         logging.exception("Video generation queue creation failed: %s", exc)
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
@@ -4487,6 +5081,12 @@ def video_generate(request: VideoGenerateRequest, background_tasks: BackgroundTa
 def image_chat(request: ImageChatRequest):
     try:
         profile = _load_profile_or_404(request.student_name)
+        stored_language = _normalize_language_value(
+            profile.get("preferred_language")
+            or profile.get("ui_language")
+            or profile.get("default_response_language")
+            or request.response_language
+        )
         image_bytes = base64.b64decode(request.image_base64)
         extension = ".jpg"
         if "png" in (request.mime_type or "").lower():
@@ -4507,7 +5107,7 @@ def image_chat(request: ImageChatRequest):
             request.message,
             request.image_base64,
             request.mime_type,
-            request.response_language,
+            stored_language,
         )
         reply = result["reply"]
         record_behavior_event(
@@ -4790,6 +5390,7 @@ VIDEO_RENDER_JOB_DIR.mkdir(parents=True, exist_ok=True)
 VIDEO_AUDIO_DIR.mkdir(parents=True, exist_ok=True)
 
 if WEB_DIR.exists():
+    app.mount("/avatars", StaticFiles(directory=str(AVATARS_DIR), html=False), name="avatars")
     app.mount("/audio", StaticFiles(directory=str(VIDEO_AUDIO_DIR), html=False), name="audio")
     app.mount("/", StaticFiles(directory=WEB_DIR, html=True), name="web")
 

@@ -176,6 +176,76 @@ EMOTION_RULES = {
     ],
 }
 
+SUPPORTED_LANGUAGE_INSTRUCTIONS = {
+    "hindi": (
+        "You must explain everything in clear Hindi. "
+        "Use Devanagari script. Technical terms like 'velocity', 'acceleration', 'projectile' should be written in Hindi transliteration followed by English in brackets on first use. "
+        "Example: वेग (velocity), त्वरण (acceleration). "
+        "All explanations, examples, and checkpoint questions must be in Hindi."
+    ),
+    "hinglish": (
+        "You must explain in Hinglish — the natural mix of Hindi and English that Indian coaching teachers use. "
+        "Write primarily in English but mix Hindi phrases naturally. "
+        "Example: 'Toh dekho, jab hum projectile motion ki baat karte hain, the key idea yeh hai ki horizontal aur vertical motion completely independent hain. Gravity sirf vertical component ko affect karti hai, horizontal ko nahi.' "
+        "Use this natural conversational style throughout. Checkpoint questions should also be in Hinglish."
+    ),
+    "telugu": (
+        "You must explain everything in Telugu. Use Telugu script. "
+        "Technical terms should appear in Telugu transliteration with English in brackets on first use. "
+        "All explanations and examples must be in Telugu."
+    ),
+    "tamil": (
+        "Explain everything in Tamil using Tamil script. "
+        "Technical terms in Tamil transliteration with English in brackets."
+    ),
+    "kannada": (
+        "Explain everything in Kannada using Kannada script."
+    ),
+    "marathi": (
+        "Explain everything in Marathi using Devanagari script."
+    ),
+    "bengali": (
+        "Explain everything in Bengali using Bengali script."
+    ),
+    "gujarati": (
+        "Explain everything in Gujarati using Gujarati script."
+    ),
+}
+
+
+def _normalize_language_key(language):
+    text = re.sub(r"\s+", " ", str(language or "").strip().lower())
+    if not text:
+        return "english"
+    aliases = {
+        "hindi": "hindi",
+        "हिंदी": "hindi",
+        "hinglish": "hinglish",
+        "hindi + english": "hinglish",
+        "hindi english": "hinglish",
+        "telugu": "telugu",
+        "తెలుగు": "telugu",
+        "tamil": "tamil",
+        "தமிழ்": "tamil",
+        "kannada": "kannada",
+        "ಕನ್ನಡ": "kannada",
+        "marathi": "marathi",
+        "मराठी": "marathi",
+        "bengali": "bengali",
+        "বাংলা": "bengali",
+        "gujarati": "gujarati",
+        "ગુજરાતી": "gujarati",
+        "english": "english",
+    }
+    return aliases.get(text, text)
+
+
+def _language_instruction(language):
+    key = _normalize_language_key(language)
+    if key == "english" or not key:
+        return ""
+    return SUPPORTED_LANGUAGE_INSTRUCTIONS.get(key, "")
+
 
 def _normalize_text(value):
     return re.sub(r"\s+", " ", (value or "").strip().lower())
@@ -406,6 +476,11 @@ def build_prompt_instruction_block(
     tutor_name = profile.get("tutor_name", "Astra")
     preferred_persona = profile.get("preferred_persona") or "friendly study coach"
     onboarding_profile = profile.get("onboarding_profile") or {}
+    language_instruction = _language_instruction(
+        profile.get("preferred_language")
+        or profile.get("default_response_language")
+        or response_language
+    )
     style_block = build_style_block(profile, support_style=support_style)
     state_route = build_student_state_route(
         profile,
@@ -427,14 +502,17 @@ def build_prompt_instruction_block(
     route_block = format_student_state_route(state_route)
     task_learning_block = build_task_learning_context(profile.get("name", ""), active_mode=conversation_mode)
 
-    lines = [
+    lines = []
+    if language_instruction:
+        lines.append(language_instruction)
+    lines.extend([
         f"You are {tutor_name}, Astra's adaptive AI mentor.",
         f"Preferred persona: {preferred_persona}.",
         "Your first job is to respect the active tab role.",
         "Do not blend Tutor, Lounge, Practice, Tips, Last Minute, or Guide behaviors together.",
         "If the tab changes, switch behavior immediately.",
         "",
-    ]
+    ])
     onboarding_lines = []
     if onboarding_profile.get("why_astra"):
         onboarding_lines.append(f"Why Astra was chosen: {onboarding_profile['why_astra']}.")
@@ -555,11 +633,17 @@ def build_tutor_prompt(
     knowledge_query="",
     student_state_snapshot=None,
 ):
+    profile_language = (
+        profile.get("preferred_language")
+        or profile.get("ui_language")
+        or profile.get("default_response_language")
+        or response_language
+    )
     prompt = build_prompt_instruction_block(
         profile,
         conversation_mode=conversation_mode,
         tutor_level=tutor_level,
-        response_language=response_language,
+        response_language=profile_language,
         voice_chat_mode=voice_chat_mode,
         reading_comfort_mode=reading_comfort_mode,
         chunked_reply_mode=chunked_reply_mode,
@@ -617,6 +701,7 @@ def build_subtopic_explanation_prompt(
     subject,
     session_type,
     retrieved_kb_content,
+    preferred_language="english",
 ):
     concept_lines = [str(concept).strip() for concept in (concepts or []) if str(concept).strip()]
     kb_text = ""
@@ -629,13 +714,17 @@ def build_subtopic_explanation_prompt(
     else:
         kb_text = str(retrieved_kb_content or "").strip()
 
-    lines = [
+    language_instruction = _language_instruction(preferred_language)
+    lines = []
+    if language_instruction:
+        lines.append(language_instruction)
+    lines.extend([
         f"You are Astra teaching student {student_id} the subtopic {subtopic} from {unit_name} in {subject}.",
         f"Session type: {session_type}.",
         "Teach the entire subtopic deeply and in order.",
         "1. INTRODUCE THE SUBTOPIC (2-3 lines): why this subtopic matters in JEE and how often it shows up in past papers if relevant.",
         "2. TEACH EVERY CONCEPT IN ORDER:",
-    ]
+    ])
     for index, concept in enumerate(concept_lines, start=1):
         lines.extend([
             f"   a) Concept {index}: start with a real world analogy first.",
@@ -875,14 +964,17 @@ def _checkpoint_fallback(topic, subject, explanation_level, original_explanation
     return checkpoint
 
 
-def generate_checkpoint_question(topic, subject, explanation_level, original_explanation, genai_client=None, practice_count=0):
+def generate_checkpoint_question(topic, subject, explanation_level, original_explanation, genai_client=None, practice_count=0, preferred_language="english"):
     level = _clamp_level(explanation_level)
     topic_text = _topic_hint(topic, original_explanation)
     subject_text = _subject_hint(subject, topic_text)
     focus_text = _extract_explanation_focus(original_explanation)
     fallback = _checkpoint_fallback(topic_text, subject_text, level, original_explanation, practice_count=practice_count)
+    language_instruction = _language_instruction(preferred_language)
+    prompt_prefix = f"{language_instruction}\n" if language_instruction else ""
 
     prompt = (
+        f"{prompt_prefix}"
         "You are Astra, a JEE tutor checkpoint generator. Return ONLY valid JSON. "
         "For a single checkpoint, use these exact keys: heading, topic, subject, explanation_level, difficulty, question, options, correct_answer, correct_explanation, wrong_reason, re_explanation. "
         "options must be an array of exactly 4 short option strings. correct_answer must be one of A, B, C, or D. "

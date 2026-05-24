@@ -7,7 +7,7 @@ from pathlib import Path
 from collections import OrderedDict
 
 from google.adk.tools import ToolContext
-from backend.database import fetch_json_record, upsert_json_record
+from backend.database import get_planner_state as db_get_planner_state, save_planner_state as db_save_planner_state
 from backend.storage import atomic_write_json
 from tools.chat_outcome_tracker import build_task_learning_context, get_task_learning_profiles
 from tools.behavior_tools import get_behavior_snapshot
@@ -499,21 +499,22 @@ def _normalize_planner_state(state):
 
 
 def _load_planner_from_db(name):
-    raw = fetch_json_record("student_planner", "student_name", name, "state_json")
-    if not raw:
+    try:
+        db_state = db_get_planner_state(name) or {}
+        state = db_state.get("journey") or db_state.get("weekly") or db_state.get("today") or {}
+        if not state:
+            return None
+        return _normalize_planner_state(state)
+    except Exception as exc:
+        print(f"WARNING: Could not load planner state from database for {name}: {exc}")
         return None
-    return _normalize_planner_state(json.loads(raw))
 
 
 def _save_planner_to_db(name, state):
-    upsert_json_record(
-        "student_planner",
-        "student_name",
-        name,
-        "state_json",
-        json.dumps(state, indent=2),
-        _planner_timestamp(),
-    )
+    try:
+        db_save_planner_state(name, state, state.get("weekly", {}), state.get("today", {}))
+    except Exception as exc:
+        print(f"WARNING: Could not save planner state to database for {name}: {exc}")
 
 
 def _task_key(exam_name, subject):

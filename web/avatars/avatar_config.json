@@ -1,0 +1,31 @@
+{
+  "avatars": [
+    {
+      "id": "calm-mentor",
+      "name": "Calm Mentor",
+      "personality": "Warm, patient, grounded",
+      "glb_url": "/avatars/calm_mentor.glb",
+      "fallback_image": "/media/tutor-faces/CalmMentorFemaleMain1.png",
+      "voice_style": "calm",
+      "skin_tone": "medium"
+    },
+    {
+      "id": "sharp-strategist",
+      "name": "Sharp Strategist",
+      "personality": "Exam-focused, clear, structured",
+      "glb_url": "/avatars/sharp_strategist.glb",
+      "fallback_image": "/media/tutor-faces/GeniusStrategistGuideMain1.png",
+      "voice_style": "confident",
+      "skin_tone": "medium"
+    },
+    {
+      "id": "friendly-senior",
+      "name": "Friendly Senior",
+      "personality": "Supportive, casual, relatable",
+      "glb_url": "/avatars/friendly_senior.glb",
+      "fallback_image": "/media/tutor-faces/FriendlySeniorMaleMain1.png",
+      "voice_style": "warm",
+      "skin_tone": "warm"
+    }
+  ]
+}

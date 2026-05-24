@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -64,7 +64,7 @@
         <p class="muted">Create your account, then take a short walk with Astra. These questions help Astra understand your style, build trust, and shape the kind of mentor you actually want beside you.</p>
         <div class="auth-form-card onboarding-card">
           <p class="auth-form-title">Walk With Astra</p>
-          <p class="muted">Astra asks a few gentle questions first so it can learn your vibe, avoid assumptions, and build a mentor you’ll actually want to open up to.</p>
+          <p class="muted">Astra asks a few gentle questions first so it can learn your vibe, avoid assumptions, and build a mentor youâ€™ll actually want to open up to.</p>
           <textarea id="signupWhyAstra" rows="2" placeholder="Why do you want Astra in your corner?"></textarea>
           <textarea id="signupInterests" rows="2" placeholder="What do you enjoy outside studies, like hobbies or topics you love?"></textarea>
           <textarea id="signupDislikes" rows="2" placeholder="What should Astra avoid or never do?"></textarea>
@@ -165,14 +165,21 @@
         <button id="studioMenuToggleBtn" type="button" class="ghost-button menu-toggle-button">Hide studio menu</button>
       </div>
       <div id="tabBar" class="tab-bar" role="tablist" aria-label="Tutor views">
-        <div class="nav-hub nav-hub-home" data-nav-group-container="home">
+        <div class="section-nav" role="tablist" aria-label="Main sections">
+          <button type="button" class="section-nav-button active" data-section-group="home" aria-selected="true">Home</button>
+          <button type="button" class="section-nav-button" data-section-group="learn" aria-selected="false">Learn</button>
+          <button type="button" class="section-nav-button" data-section-group="plan" aria-selected="false">Plan</button>
+          <button type="button" class="section-nav-button" data-section-group="connect" aria-selected="false">Connect</button>
+          <button type="button" class="section-nav-button" data-section-group="settings" aria-selected="false">Settings</button>
+        </div>
+        <div class="nav-hub nav-hub-home" data-section-group="home" data-nav-group-container="home">
           <p class="nav-hub-label">Home</p>
           <p class="nav-hub-cue">Start with your current state, then move to Tutor.</p>
           <div class="nav-hub-buttons">
             <button class="tab-button active" data-tab="overviewTab" data-tab-key="overview" data-nav-group="home" role="tab" aria-selected="true">Overview</button>
           </div>
         </div>
-        <div class="nav-hub nav-hub-learn" data-nav-group-container="learn">
+        <div class="nav-hub nav-hub-learn" data-section-group="learn" data-nav-group-container="learn">
           <p class="nav-hub-label">Learn</p>
           <p class="nav-hub-cue">Tutor Text for written help, Tutor Room for live voice tutoring, Video Tutor for video answers, then Practice, Mock Test, rescue, or tip.</p>
           <div class="nav-hub-buttons">
@@ -185,7 +192,7 @@
             <button class="tab-button" data-tab="tipsTab" data-tab-key="tips" data-nav-group="learn" role="tab" aria-selected="false">Tips</button>
           </div>
         </div>
-        <div class="nav-hub nav-hub-plan" data-nav-group-container="plan">
+        <div class="nav-hub nav-hub-plan" data-section-group="plan" data-nav-group-container="plan">
           <p class="nav-hub-label">Plan</p>
           <p class="nav-hub-cue">Check Progress, then open Weekly Plan for the next route.</p>
           <div class="nav-hub-buttons">
@@ -193,7 +200,7 @@
             <button class="tab-button" data-tab="progressTab" data-tab-key="progress" data-nav-group="plan" role="tab" aria-selected="false">Progress</button>
           </div>
         </div>
-        <div class="nav-hub nav-hub-connect" data-nav-group-container="connect">
+        <div class="nav-hub nav-hub-connect" data-section-group="connect" data-nav-group-container="connect">
           <p class="nav-hub-label">Connect</p>
           <p class="nav-hub-cue">Use Lounge to reset, Network to collaborate, League to climb.</p>
           <div class="nav-hub-buttons">
@@ -202,7 +209,7 @@
             <button class="tab-button" data-tab="leagueTab" data-tab-key="league" data-nav-group="connect" role="tab" aria-selected="false">League</button>
           </div>
         </div>
-        <div class="nav-hub nav-hub-settings" data-nav-group-container="settings">
+        <div class="nav-hub nav-hub-settings" data-section-group="settings" data-nav-group-container="settings">
           <p class="nav-hub-label">Settings</p>
           <p class="nav-hub-cue">Personalize Astra first, then use Guide or Assist when needed.</p>
           <div class="nav-hub-buttons">
@@ -212,11 +219,11 @@
           </div>
         </div>
       </div>
+      <div id="astra-status-bar" class="astra-status-bar" aria-live="polite">Astra is ready. Today's focus: -</div>
 
       <section id="tutorTab" class="tab-panel active" role="tabpanel">
         <div class="tutor-layout">
           <div class="table-card tutor-main-card tutor-chat-panel" style="position: relative;">
-            
             <div class="tutor-controls-bar">
               <div class="studio-field tutor-level-field">
                 <label for="tutorLevelSelect">Tutor level</label>
@@ -229,6 +236,14 @@
                 </select>
               </div>
               <p id="tutorLevelHint" class="muted">Level 3 gives a balanced explanation. Switch lower for simple answers or higher for deeper detail.</p>
+              <div class="tutor-controls-inline-actions">
+                <button id="openTutorRoomBtn" type="button" class="tutor-text-link" title="Open Tutor Room">â†’ Tutor Room</button>
+                <button type="button" class="tutor-mode-pill tutor-mode-pill-inline active" data-tutor-mode="calm" title="Calm mode">Calm</button>
+                <div class="tutor-language-picker">
+                  <button id="tutorLanguageChip" type="button" class="tutor-language-chip" title="Change tutor language">ðŸŒ English</button>
+                  <div id="tutorLanguageDropdown" class="tutor-language-dropdown hidden" aria-label="Tutor language selector"></div>
+                </div>
+              </div>
             </div>
 
             <div class="table-card tutor-mode-card">
@@ -240,7 +255,6 @@
                 <span id="tutorModePill" class="pill">Calm</span>
               </div>
               <div class="tutor-mode-pills" role="tablist" aria-label="Tutor mode">
-                <button type="button" class="tutor-mode-pill active" data-tutor-mode="calm">Calm</button>
                 <button type="button" class="tutor-mode-pill" data-tutor-mode="motivating">Motivating</button>
                 <button type="button" class="tutor-mode-pill" data-tutor-mode="strict">Strict</button>
               </div>
@@ -248,77 +262,45 @@
 
             <div class="tutor-divider"></div>
 
-            <div class="card-header">
-              <div>
-                <p class="card-title">Ask Anything</p>
-                <p class="muted">Ask an academic doubt, request a plan, or ask for a concept breakdown with visuals, reasoning, and guided progression.</p>
-              </div>
-              <span id="tutorModeBadge" class="pill">Live Tutor</span>
-            </div>
-            <div class="subtab-action-row">
-              <button id="clearTutorChatBtn" type="button" class="ghost-button">Delete tutor chat</button>
-            </div>
-
             <div id="chapter-resume-card" class="table-card chapter-resume-card hidden"></div>
 
             <div class="tutor-workspace">
               <div class="tutor-chat-column">
-                <div class="table-card chat-thread-card">
-                  <div class="card-header">
-                    <div>
-                      <p class="card-title">Recent Chats</p>
-                      <p class="muted">Only the latest chats stay in view. Open the drawer for the full list.</p>
-                    </div>
-                    <div class="chat-thread-actions">
+                <div class="recent-chats-compact">
+                  <button id="recent-chats-toggle" type="button" onclick="toggleRecentChats()">Recent Chats â–¾</button>
+                  <div id="recent-chats-dropdown" class="recent-chats-dropdown hidden">
+                    <div class="chat-thread-actions recent-chats-actions">
                       <button id="newTutorChatBtn" type="button" class="ghost-button">New chat</button>
                       <button id="viewAllTutorChatsBtn" type="button" class="ghost-button">View all</button>
                     </div>
-                  </div>
-                  <div id="tutorConversationList" class="conversation-list">
-                    <p class="muted">Your saved tutor chats will appear here.</p>
+                    <div id="tutorConversationList" class="conversation-list">
+                      <p class="muted">Your saved tutor chats will appear here.</p>
+                    </div>
+                    <div class="drawer-section">
+                      <button id="clearTutorChatBtn" type="button" class="ghost-button recent-chats-clear">Clear all chats</button>
+                    </div>
                   </div>
                 </div>
 
                 <div id="chatFeed" class="chat-feed tutor-feed">
                   <div class="message tutor">
-                    <p>Ask for explanations, quizzes, recovery support, or just start talking. I will help from wherever you are.</p>
+                  <p>Ask for explanations, quizzes, recovery support, or just start talking. I will help from wherever you are.</p>
                   </div>
                 </div>
 
                 <form id="chatForm" class="composer">
                   <textarea id="messageInput" rows="3" placeholder="Ask your tutor for an academic explanation, strategy, or concept breakdown..."></textarea>
-                  <div class="image-doubt-row">
-                    <input id="doubtImageInput" type="file" accept="image/*">
-                    <button id="analyzeImageBtn" type="button" class="ghost-button">Scan doubt image</button>
-                  </div>
-                  <p id="imageUploadStatus" class="muted">Upload a picture of your doubt, worksheet, or handwritten solution.</p>
-                <div class="composer-actions">
-                <span class="muted">Examples: Explain JEE probability, Make my JEE plan for today, Teach projectile motion visually</span>
-                  <div class="mini-action-row">
-                    <button id="summarizeTutorBtn" type="button" class="ghost-button">Summarize answer</button>
-                    <button type="submit">Send</button>
-                    <button id="tutor-fullscreen-btn" type="button" class="ghost-button tutor-fullscreen-button" title="Expand to fullscreen" aria-label="Expand to fullscreen">⛶ Fullscreen</button>
-                  </div>
+                <div class="image-doubt-row compact">
+                  <label for="doubtImageInput" class="ghost-button icon-button" title="Attach image" aria-label="Attach image">ðŸ“Ž</label>
+                  <input id="doubtImageInput" type="file" accept="image/*" class="hidden-file-input">
+                  <button id="analyzeImageBtn" type="button" class="ghost-button">Scan doubt image</button>
+                  <button id="summarizeTutorBtn" type="button" class="ghost-button">Summarize answer</button>
+                  <button id="tutor-fullscreen-btn" type="button" class="ghost-button tutor-fullscreen-button" title="Expand to fullscreen" aria-label="Expand to fullscreen">â›¶ Fullscreen</button>
+                  <button type="submit">Send</button>
                 </div>
+                <p id="imageUploadStatus" class="muted hidden"></p>
               </form>
 
-                <div class="quick-prompt-grid">
-                  <button type="button" class="ghost-button" data-tutor-prompt="Explain JEE electrostatics in a simple way.">Explain a JEE concept</button>
-                  <button type="button" class="ghost-button" data-command="What should I study today?">Today's JEE study</button>
-                  <button type="button" class="ghost-button" data-tutor-prompt="Teach this JEE topic with a real-life case study so I can actually visualize it.">Use a case study</button>
-                  <button type="button" class="ghost-button" data-tutor-prompt="Break this JEE topic into a 3D-style visual explanation.">Visualize it</button>
-                  <button type="button" class="ghost-button" id="quickSummaryBtn">Quick summary</button>
-                </div>
-
-                <div class="table-card tutor-room-launch-card">
-                  <div class="card-header">
-                    <div>
-                      <p class="card-title">Tutor Room</p>
-                      <p class="muted">Open the bigger voice and video space when you want Astra to feel more like a live tutor presence.</p>
-                    </div>
-                    <button id="openTutorRoomBtn" type="button" class="ghost-button">Open Tutor Room</button>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -358,6 +340,7 @@
               </div>
             </aside>
           </div>
+
         </div>
       </section>
 
@@ -373,6 +356,25 @@
               <div class="mini-action-row">
                 <button id="backToTutorTextBtn" type="button" class="ghost-button">Back to written Tutor</button>
                 <button id="fullscreenStudioBtn" type="button" class="ghost-button studio-fullscreen-button">Fullscreen</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card tutor-room-avatar-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Avatar Stage</p>
+                <p class="muted">A lightweight speaking tutor stage with a clean 2D fallback when the 3D avatar is not available.</p>
+              </div>
+              <span class="pill">Avatar</span>
+            </div>
+            <div id="avatar-stage-container">
+              <canvas id="avatar-canvas" width="400" height="500"></canvas>
+              <div class="avatar-name-badge" id="avatar-name-badge">Calm Mentor</div>
+              <div class="avatar-controls-bar">
+                <button id="avatar-speak-btn" type="button" onclick="avatarSpeak()">▶ Speak Last Reply</button>
+                <button id="avatar-stop-btn" type="button" onclick="avatarStop()">⏸ Stop</button>
+                <span id="avatar-status-text">Ready</span>
               </div>
             </div>
           </div>
@@ -658,60 +660,30 @@
               </div>
               <span class="pill">Weekly Plan</span>
             </div>
+            <div class="home-subtab-bar" id="videoSubjectTabBar" role="tablist" aria-label="Video subjects">
+              <button class="home-subtab-button active" data-video-subject-tab="physics" type="button">Physics</button>
+              <button class="home-subtab-button" data-video-subject-tab="chemistry" type="button">Chemistry</button>
+              <button class="home-subtab-button" data-video-subject-tab="maths" type="button">Maths</button>
+            </div>
+            <div class="vt-smart-search">
+              <div class="vt-search-bar">
+                <span class="vt-search-icon">⟳</span>
+                <input
+                  type="text"
+                  id="video-topic-search"
+                  class="vt-search-input"
+                  placeholder="Search or request a topic...">
+                <button
+                  id="video-search-generate-btn"
+                  class="vt-search-generate"
+                  type="button"
+                  onclick="requestVideoForTopic()">
+                  Generate
+                </button>
+              </div>
+            </div>
             <div id="videoTutorWeeklyStatus" class="muted">Loading this week's video plan...</div>
             <div id="videoTutorWeeklyVideos" class="video-week-grid"></div>
-          </div>
-
-          <div class="table-card video-tutor-request-card">
-            <div class="card-header">
-              <div>
-                <p class="card-title">Request a Video</p>
-                <p class="muted">Ask for any JEE topic and Astra will prepare the script first, then the full video.</p>
-              </div>
-              <span class="pill">Request</span>
-            </div>
-            <div class="video-request-grid">
-              <input id="videoTutorRequestTopicInput" type="text" placeholder="Type a JEE topic, like Projectile Motion or Electrostatics" />
-              <select id="videoTutorRequestSubjectSelect">
-                <option value="Physics">Physics</option>
-                <option value="Chemistry">Chemistry</option>
-                <option value="Mathematics">Mathematics</option>
-              </select>
-              <button id="generateRequestedVideoBtn" type="button">Generate Video for This Topic</button>
-            </div>
-            <div id="videoTutorRequestStatus" class="muted">Type a topic to begin.</div>
-            <div id="videoTutorRequestBriefPanel" class="video-answer-brief-panel">
-              <p class="muted">The brief preview will appear here after you request a topic.</p>
-            </div>
-            <div class="mini-action-row">
-              <button id="generateRequestedFullVideoBtn" type="button" class="ghost-button" disabled>Generate Full Video</button>
-            </div>
-            <div class="card-header compact-header">
-              <div>
-                <p class="card-title">Requested Videos</p>
-                <p class="muted">Your personal video requests are saved here.</p>
-              </div>
-            </div>
-            <div id="videoTutorRequestedList" class="video-request-list"></div>
-          </div>
-
-          <div class="table-card video-tutor-output-card">
-            <div class="card-header">
-              <div>
-                <p class="card-title">Script Preview</p>
-                <p class="muted">Astra will show the generated video brief, status, and transcript here.</p>
-              </div>
-              <span class="pill">Output</span>
-            </div>
-            <div id="videoAnswerBriefPanel" class="video-answer-brief-panel">
-              <p class="muted">Ask a question, then generate the video brief.</p>
-            </div>
-            <div id="video-status-panel" class="video-status-panel muted">Astra is waiting for a video answer request.</div>
-            <video id="tutor-video-player" class="tutor-video-player hidden" controls playsinline preload="metadata"></video>
-            <div id="video-transcript" class="video-transcript muted"></div>
-            <div class="mini-action-row tutor-room-video-actions">
-              <span id="videoRenderStatus" class="muted">Click Generate Video Answer to launch the full tutor video pipeline.</span>
-            </div>
           </div>
 
           <div class="table-card visual-side-panel tutor-room-stage-panel">
@@ -789,9 +761,7 @@
               <div class="video-library-player-card">
                 <video id="tutorVideoPlayer" class="tutor-video-player" controls playsinline preload="metadata"></video>
                 <div class="video-library-player-copy">
-                  <p id="tutorVideoTitle" class="card-title">No video selected</p>
-                  <p id="tutorVideoMeta" class="muted">Add videos to `web/media/tutor-videos` or provide entries in `data/tutor_video_library.json`.</p>
-                  <p id="tutorVideoSummary" class="muted">Choose a clip and Astra will suggest the best 3D concept bridge and tutor follow-up.</p>
+                  <p id="tutorVideoTitle" class="card-title">Welcome</p>
                   <div id="tutorVideoBridgeCues" class="video-library-cues"></div>
                 </div>
                 <div class="video-library-actions">
@@ -803,7 +773,6 @@
                 <div class="card-header compact-header">
                   <div>
                     <p class="card-title">Available videos</p>
-                    <p class="muted">The strongest matches rise to the top based on your study context.</p>
                   </div>
                 </div>
                 <div id="tutorVideoList" class="video-library-list"></div>
@@ -812,7 +781,6 @@
           </div>
         </div>
       </section>
-
       <section id="lastMinuteTab" class="tab-panel" role="tabpanel">
         <div class="practice-layout">
           <div class="table-card practice-main-card">
@@ -1191,6 +1159,17 @@
           <button id="refreshWeeklyPlanBtn" class="ghost-button" type="button">Refresh weekly plan</button>
         </div>
 
+        <div id="dailyBriefingCard" class="table-card daily-briefing-card hidden">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Daily Briefing</p>
+              <p class="muted">A short personal update for today.</p>
+            </div>
+            <button id="dismissDailyBriefingBtn" type="button" class="ghost-button mini-button">Dismiss</button>
+          </div>
+          <p id="dailyBriefingText" class="briefing-text muted">Your briefing will appear here.</p>
+        </div>
+
         <div class="home-subtab-bar" role="tablist" aria-label="Home sections">
           <button class="home-subtab-button active" data-home-subtab="overview" type="button">Overview</button>
           <button class="home-subtab-button" data-home-subtab="motivation" type="button">Motivation</button>
@@ -1201,42 +1180,70 @@
         <button id="motivationQuickAccessBtn" type="button" class="ghost-button motivation-jump-button">Feeling low? Read this</button>
 
         <div class="home-subtab-panel active" data-home-subtab-panel="overview">
-          <div class="overview-lite-grid">
-            <div class="table-card welcome-card">
-              <div class="section-heading">
+          <div class="overview-command-grid">
+            <div class="table-card overview-command-card overview-right-now-card">
+              <div class="card-header">
                 <div>
-                  <p class="eyebrow">Overview</p>
-                  <h3>Your current position</h3>
+                  <p class="eyebrow">Right Now</p>
+                  <h3 id="overviewCommandTopic">Today's topic</h3>
+                </div>
+                <span id="overviewCommandBadge" class="pill">Learning</span>
+              </div>
+              <p id="overviewCommandReason" class="muted">Your next step will appear here.</p>
+              <div class="weekly-summary compact">
+                <div class="summary-card">
+                  <span class="summary-label">Subject</span>
+                  <strong id="overviewCommandSubject">-</strong>
+                </div>
+                <div class="summary-card">
+                  <span class="summary-label">Time</span>
+                  <strong id="overviewCommandTime">-</strong>
+                </div>
+                <div class="summary-card">
+                  <span class="summary-label">Why it matters</span>
+                  <strong id="overviewCommandWhy">JEE focus</strong>
                 </div>
               </div>
-              <p class="muted">This screen shows your current position, your next step, and your weekly direction without extra clutter.</p>
-              <div id="overviewSnapshotStrip" class="weekly-summary compact overview-snapshot-strip">
-                <div class="summary-card">
-                  <span class="summary-label">Today</span>
-                  <strong id="overviewTodayText">Steady start</strong>
-                </div>
-                <div class="summary-card">
-                  <span class="summary-label">This week</span>
-                  <strong id="overviewWeekText">-</strong>
-                </div>
-                <div class="summary-card">
-                  <span class="summary-label">Next step</span>
-                  <strong id="overviewNextText">Open your weekly plan</strong>
+              <div class="mini-action-row">
+                <button id="overviewStartLearningBtn" type="button">Start Learning</button>
+              </div>
+            </div>
+
+            <div class="table-card overview-command-card overview-status-card">
+              <div class="card-header">
+                <div>
+                  <p class="eyebrow">Your Status</p>
+                  <h3>Week at a glance</h3>
                 </div>
               </div>
-              <div id="weeklySummary" class="weekly-summary compact">
+              <div class="overview-metric-grid">
                 <div class="summary-card">
-                  <span class="summary-label">Core target</span>
-                  <strong id="weeklyCoreHours">-</strong>
+                  <span class="summary-label">Topics covered this week</span>
+                  <strong id="overviewMetricCovered">0/0</strong>
                 </div>
                 <div class="summary-card">
-                  <span class="summary-label">This week</span>
-                  <strong id="weeklyScheduledHours">-</strong>
+                  <span class="summary-label">Average checkpoint score</span>
+                  <strong id="overviewMetricAverage">0%</strong>
                 </div>
                 <div class="summary-card">
-                  <span class="summary-label">Main focus</span>
-                  <strong id="weeklyFocusSplit">-</strong>
+                  <span class="summary-label">Streak</span>
+                  <strong id="overviewMetricStreak">0 days</strong>
                 </div>
+              </div>
+            </div>
+
+            <div class="table-card overview-command-card overview-actions-card">
+              <div class="card-header">
+                <div>
+                  <p class="eyebrow">Quick Actions</p>
+                  <h3>What do you want to do now?</h3>
+                </div>
+              </div>
+              <div class="overview-action-grid">
+                <button id="continueJourneyBtn" type="button" class="ghost-button">Continue where I left off</button>
+                <button id="openPracticeFromHomeBtn" type="button" class="ghost-button">Take a practice test</button>
+                <button id="needHelpConceptBtn" type="button" class="ghost-button">I need help with a concept</button>
+                <button id="openProgressFromHomeBtn" type="button" class="ghost-button">How am I doing?</button>
               </div>
             </div>
           </div>
@@ -1634,6 +1641,61 @@
             <p id="progressComparisonText" class="muted progress-comparison-text">Your week-over-week trend will be explained here.</p>
           </div>
 
+          <div id="analytics-insight-card" class="table-card progress-analytics-card">
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">AI Insight</p>
+                <p class="card-title">Astra's personalized read</p>
+              </div>
+              <span class="pill">Insight</span>
+            </div>
+            <p class="progress-insight-text muted">A personalized insight will appear here.</p>
+          </div>
+
+          <div id="performance-chart" class="table-card progress-analytics-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Performance Chart</p>
+                <p id="performanceChartSummary" class="muted">Your last 7 days of average scores will appear here.</p>
+              </div>
+              <span class="pill">7 Days</span>
+            </div>
+            <div id="performanceChartBars" class="performance-chart-bars"></div>
+          </div>
+
+          <div id="subject-breakdown-cards" class="table-card progress-analytics-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Subject Breakdown</p>
+                <p class="muted">Physics, Chemistry, and Mathematics mastery at a glance.</p>
+              </div>
+              <span class="pill">Subjects</span>
+            </div>
+            <div id="subjectBreakdownGrid" class="subject-breakdown-grid"></div>
+          </div>
+
+          <div id="consistency-tracker" class="table-card progress-analytics-card">
+            <div class="card-header">
+              <div>
+                <p class="card-title">Consistency Tracker</p>
+                <p id="consistencyTrackerSummary" class="muted">Your study streak across the last 7 days.</p>
+              </div>
+              <span class="pill">Streak</span>
+            </div>
+            <div id="consistencyTrackerGrid" class="consistency-tracker-grid"></div>
+          </div>
+
+          <div id="progressInsightCard" class="table-card insight-note-card">
+            <div class="card-header">
+              <div>
+                <p class="eyebrow">Insight</p>
+                <p class="card-title">Astra's observation</p>
+              </div>
+              <span class="pill">Lightbulb</span>
+            </div>
+            <p class="progress-insight-text muted">A personalized insight will appear here.</p>
+          </div>
+
           <div id="chapter-mastery-board" class="table-card progress-analytics-card">
             <div class="card-header">
               <div>
@@ -1769,7 +1831,7 @@
             <div class="card-header">
               <div>
                 <p class="card-title">Walk With Astra</p>
-                <p class="muted">Run the same friendly interview again any time you want to refresh Astra’s understanding of you.</p>
+                <p class="muted">Run the same friendly interview again any time you want to refresh Astraâ€™s understanding of you.</p>
               </div>
               <span class="pill">Bond First</span>
             </div>
@@ -1912,26 +1974,69 @@
             </div>
 
             <div class="settings-stack">
-              <div class="studio-field">
-                <label for="languageSelect">Tutor language</label>
-                <select id="languageSelect">
-                  <option value="English">English</option>
-                  <option value="Hindi">Hindi</option>
-                  <option value="Tamil">Tamil</option>
-                  <option value="Telugu">Telugu</option>
-                  <option value="Kannada">Kannada</option>
-                  <option value="Malayalam">Malayalam</option>
-                  <option value="Marathi">Marathi</option>
-                  <option value="Gujarati">Gujarati</option>
-                  <option value="Bengali">Bengali</option>
-                  <option value="Punjabi">Punjabi</option>
-                  <option value="Urdu">Urdu</option>
-                  <option value="Spanish">Spanish</option>
-                  <option value="French">French</option>
+              <div class="language-settings-section">
+                <h3>Language Preferences</h3>
+
+                <div class="language-option">
+                  <label>Tutor Explanation Language</label>
+                  <p class="hint">Astra will explain concepts in your chosen language</p>
+                  <div class="language-grid" id="tutor-language-selector">
+                    <button type="button" class="language-card selected" data-language="english" data-language-ui="English">
+                      <span class="native-name">English</span>
+                      <span class="english-name">English (Default)</span>
+                    </button>
+                    <button type="button" class="language-card" data-language="hindi" data-language-ui="Hindi">
+                      <span class="native-name">à¤¹à¤¿à¤‚à¤¦à¥€</span>
+                      <span class="english-name">Hindi</span>
+                    </button>
+                    <button type="button" class="language-card" data-language="hinglish" data-language-ui="Hinglish">
+                      <span class="native-name">Hinglish</span>
+                      <span class="english-name">Hindi + English</span>
+                    </button>
+                    <button type="button" class="language-card" data-language="telugu" data-language-ui="Telugu">
+                      <span class="native-name">à°¤à±†à°²à±à°—à±</span>
+                      <span class="english-name">Telugu</span>
+                    </button>
+                    <button type="button" class="language-card" data-language="tamil" data-language-ui="Tamil">
+                      <span class="native-name">à®¤à®®à®¿à®´à¯</span>
+                      <span class="english-name">Tamil</span>
+                    </button>
+                    <button type="button" class="language-card" data-language="kannada" data-language-ui="Kannada">
+                      <span class="native-name">à²•à²¨à³à²¨à²¡</span>
+                      <span class="english-name">Kannada</span>
+                    </button>
+                    <button type="button" class="language-card" data-language="marathi" data-language-ui="Marathi">
+                      <span class="native-name">à¤®à¤°à¤¾à¤ à¥€</span>
+                      <span class="english-name">Marathi</span>
+                    </button>
+                    <button type="button" class="language-card" data-language="bengali" data-language-ui="Bengali">
+                      <span class="native-name">à¦¬à¦¾à¦‚à¦²à¦¾</span>
+                      <span class="english-name">Bengali</span>
+                    </button>
+                    <button type="button" class="language-card" data-language="gujarati" data-language-ui="Gujarati">
+                      <span class="native-name">àª—à«àªœàª°àª¾àª¤à«€</span>
+                      <span class="english-name">Gujarati</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="language-option">
+                  <label>Hinglish Mode</label>
+                  <p class="hint">Mix Hindi and English the way your coaching teacher would explain</p>
+                  <button id="hinglish-toggle" class="toggle-btn" type="button">Enable Hinglish</button>
+                </div>
+
+                <select id="languageSelect" class="hidden">
+                  <option value="english">English</option>
+                  <option value="hindi">Hindi</option>
+                  <option value="hinglish">Hinglish</option>
+                  <option value="telugu">Telugu</option>
+                  <option value="tamil">Tamil</option>
+                  <option value="kannada">Kannada</option>
+                  <option value="marathi">Marathi</option>
+                  <option value="bengali">Bengali</option>
+                  <option value="gujarati">Gujarati</option>
                 </select>
-                <p class="muted language-hint">
-                  Tutor replies, summaries, and voice playback will try to follow this language where possible.
-                </p>
               </div>
 
               <div class="studio-field">
@@ -2095,12 +2200,16 @@
 
   <script src="/three.legacy.min.js?v=20260408l"></script>
   <script src="/OrbitControls.legacy.js?v=20260408l"></script>
+  <script src="/avatar_renderer.js?v=20260518"></script>
   <script src="/app-config.js?v=20260426"></script>
   <script src="/api-client.js?v=20260426"></script>
   <script src="/app.js?v=20260408l"></script>
   <script src="/three_visualizer.js?v=20260408l"></script>
 </body>
 </html>
+
+
+
 
 
 

@@ -65,15 +65,21 @@ const tutorPersonaPresetSelect = document.getElementById("tutorPersonaPresetSele
 const tutorStyleInput = document.getElementById("tutorStyleInput");
 const tutorAppearanceInput = document.getElementById("tutorAppearanceInput");
 const tutorTraitChips = document.getElementById("tutorTraitChips");
-const tutorStudioSummary = document.getElementById("tutorStudioSummary");
-const avatarStageTitle = document.getElementById("avatarStageTitle");
-const avatarStageTagline = document.getElementById("avatarStageTagline");
-const avatarStageStatus = document.getElementById("avatarStageStatus");
-const avatarFace = document.getElementById("avatarFace");
-const avatarPortrait = document.getElementById("avatarPortrait");
-const avatarMouth = document.getElementById("avatarMouth");
-const avatarGlasses = document.getElementById("avatarGlasses");
-const avatarShoulders = document.getElementById("avatarShoulders");
+  const tutorStudioSummary = document.getElementById("tutorStudioSummary");
+  const avatarStageTitle = document.getElementById("avatarStageTitle");
+  const avatarStageTagline = document.getElementById("avatarStageTagline");
+  const avatarStageStatus = document.getElementById("avatarStageStatus");
+  const avatarStageContainer = document.getElementById("avatar-stage-container");
+  const avatarCanvas = document.getElementById("avatar-canvas");
+  const avatarSpeakBtn = document.getElementById("avatar-speak-btn");
+  const avatarStopBtn = document.getElementById("avatar-stop-btn");
+  const avatarStatusText = document.getElementById("avatar-status-text");
+  const avatarNameBadge = document.getElementById("avatar-name-badge");
+  const avatarFace = document.getElementById("avatarFace");
+  const avatarPortrait = document.getElementById("avatarPortrait");
+  const avatarMouth = document.getElementById("avatarMouth");
+  const avatarGlasses = document.getElementById("avatarGlasses");
+  const avatarShoulders = document.getElementById("avatarShoulders");
 const avatarAppearanceText = document.getElementById("avatarAppearanceText");
 const chapterResumeBanner = document.getElementById("chapter-resume-banner");
 const chapterResumeCard = document.getElementById("chapter-resume-card");
@@ -152,6 +158,35 @@ const studentInsightSummary = document.getElementById("studentInsightSummary");
 const overviewTodayText = document.getElementById("overviewTodayText");
 const overviewWeekText = document.getElementById("overviewWeekText");
 const overviewNextText = document.getElementById("overviewNextText");
+const dailyBriefingCard = document.getElementById("dailyBriefingCard");
+const dailyBriefingText = document.getElementById("dailyBriefingText");
+const dismissDailyBriefingBtn = document.getElementById("dismissDailyBriefingBtn");
+const astraStatusBar = document.getElementById("astra-status-bar");
+const sessionStatsCard = document.getElementById("session-stats-card");
+const sessionStatsTopic = document.getElementById("sessionStatsTopic");
+const sessionStatsConfidence = document.getElementById("sessionStatsConfidence");
+const sessionStatsCount = document.getElementById("sessionStatsCount");
+const sessionStatsAverage = document.getElementById("sessionStatsAverage");
+const sessionStatsStreak = document.getElementById("sessionStatsStreak");
+const tutorSmartPromptLine = document.getElementById("tutorSmartPromptLine");
+const tutorSmartPromptChips = document.getElementById("tutorSmartPromptChips");
+const sessionActivityPanel = document.getElementById("session-activity-panel");
+const sessionActivityToggleBtn = document.getElementById("sessionActivityToggleBtn");
+const sessionActivityList = document.getElementById("sessionActivityList");
+const overviewCommandTopic = document.getElementById("overviewCommandTopic");
+const overviewCommandBadge = document.getElementById("overviewCommandBadge");
+const overviewCommandReason = document.getElementById("overviewCommandReason");
+const overviewCommandSubject = document.getElementById("overviewCommandSubject");
+const overviewCommandTime = document.getElementById("overviewCommandTime");
+const overviewCommandWhy = document.getElementById("overviewCommandWhy");
+const overviewStartLearningBtn = document.getElementById("overviewStartLearningBtn");
+const overviewMetricCovered = document.getElementById("overviewMetricCovered");
+const overviewMetricAverage = document.getElementById("overviewMetricAverage");
+const overviewMetricStreak = document.getElementById("overviewMetricStreak");
+const continueJourneyBtn = document.getElementById("continueJourneyBtn");
+const openPracticeFromHomeBtn = document.getElementById("openPracticeFromHomeBtn");
+const needHelpConceptBtn = document.getElementById("needHelpConceptBtn");
+const openProgressFromHomeBtn = document.getElementById("openProgressFromHomeBtn");
 const walkthroughModal = document.getElementById("walkthroughModal");
 const walkthroughBackdrop = walkthroughModal ? walkthroughModal.querySelector(".walkthrough-backdrop") : null;
 const walkthroughParticles = document.getElementById("walkthroughParticles");
@@ -177,14 +212,6 @@ const funFactText = document.getElementById("funFactText");
 const funFactCategory = document.getElementById("funFactCategory");
 const liveSourcesList = document.getElementById("liveSourcesList");
 const visualLearningPanel = document.getElementById("visualLearningPanel");
-const tutorVideoPlayer = document.getElementById("tutorVideoPlayer");
-const tutorVideoTitle = document.getElementById("tutorVideoTitle");
-const tutorVideoMeta = document.getElementById("tutorVideoMeta");
-const tutorVideoSummary = document.getElementById("tutorVideoSummary");
-const tutorVideoBridgeCues = document.getElementById("tutorVideoBridgeCues");
-const tutorVideoList = document.getElementById("tutorVideoList");
-const openVideoBridgeBtn = document.getElementById("openVideoBridgeBtn");
-const useVideoInTutorBtn = document.getElementById("useVideoInTutorBtn");
 const videoExplanationPanel = document.getElementById("videoExplanationPanel");
 const conceptCanvasPanel = document.getElementById("conceptCanvasPanel");
 const conceptCanvas = document.getElementById("conceptCanvas");
@@ -192,14 +219,41 @@ const reasoningPanel = document.getElementById("reasoningPanel");
 const summaryPanel = document.getElementById("summaryPanel");
 const videoTutorWeeklyStatus = document.getElementById("videoTutorWeeklyStatus");
 const videoTutorWeeklyVideos = document.getElementById("videoTutorWeeklyVideos");
-const videoTutorRequestTopicInput = document.getElementById("videoTutorRequestTopicInput");
-const videoTutorRequestSubjectSelect = document.getElementById("videoTutorRequestSubjectSelect");
-const generateRequestedVideoBtn = document.getElementById("generateRequestedVideoBtn");
+const videoTutorRequestTopicInput = document.getElementById("video-topic-search") || document.getElementById("videoTutorRequestTopicInput");
+const videoTutorRequestSubjectSelect = document.getElementById("video-subject-select") || document.getElementById("videoTutorRequestSubjectSelect");
+const generateRequestedVideoBtn = document.getElementById("video-search-generate-btn") || document.getElementById("generateRequestedVideoBtn");
 const videoTutorRequestStatus = document.getElementById("videoTutorRequestStatus");
 const videoTutorRequestBriefPanel = document.getElementById("videoTutorRequestBriefPanel");
 const generateRequestedFullVideoBtn = document.getElementById("generateRequestedFullVideoBtn");
 const videoTutorRequestedList = document.getElementById("videoTutorRequestedList");
+const videoTutorQuestionInput = document.getElementById("videoTutorQuestionInput");
+const generateVideoAnswerBtn = document.getElementById("generateVideoAnswerBtn");
+const videoAnswerBtn = document.getElementById("videoAnswerBtn");
+const videoAnswerBriefPanel = document.getElementById("videoAnswerBriefPanel");
+const videoStatusPanel = document.getElementById("video-status-panel");
+const tutorVideoAnswerPlayer = document.getElementById("tutor-video-answer-player") || document.getElementById("tutor-video-player");
+const tutorVideoPlayer = document.getElementById("tutorVideoPlayer") || document.getElementById("tutor-video-player");
+const videoTranscriptPanel = document.getElementById("video-transcript");
+const videoRenderStatus = document.getElementById("videoRenderStatus");
+const videoQuestionInput = videoTutorQuestionInput;
+const videoSubjectSelect = videoTutorRequestSubjectSelect;
+const tutorVideoTitle = document.getElementById("tutorVideoTitle");
+const tutorVideoMeta = document.getElementById("tutorVideoMeta");
+const tutorVideoSummary = document.getElementById("tutorVideoSummary");
+const tutorVideoBridgeCues = document.getElementById("tutorVideoBridgeCues");
+const tutorVideoList = document.getElementById("tutorVideoList");
+const openVideoBridgeBtn = document.getElementById("openVideoBridgeBtn");
+const useVideoInTutorBtn = document.getElementById("useVideoInTutorBtn");
+const vtCurrentTopicCard = null;
+const vtTopicName = null;
+const vtTopicSubject = null;
+const vtSuggestedChips = null;
+const vtWeekRow = null;
+const vtLibraryGrid = null;
+const vtStatusPanel = null;
+const vtStatusText = null;
 const chatFeed = document.getElementById("chatFeed");
+const kbStatusTag = document.getElementById("kbStatusTag");
 const guideFeed = document.getElementById("guideFeed");
 const loungeFeed = document.getElementById("loungeFeed");
 const practiceFeed = document.getElementById("practiceFeed");
@@ -237,22 +291,27 @@ const tutorRoomSpeakLastBtn = document.getElementById("tutorRoomSpeakLastBtn");
 const tutorRoomPauseBtn = document.getElementById("tutorRoomPauseBtn");
 const tutorRoomResumeBtn = document.getElementById("tutorRoomResumeBtn");
 const tutorRoomStopBtn = document.getElementById("tutorRoomStopBtn");
-const generateVideoAnswerBtn = document.getElementById("generateVideoAnswerBtn");
-const videoAnswerBtn = document.getElementById("videoAnswerBtn");
-const videoTutorQuestionInput = document.getElementById("videoTutorQuestionInput");
 const tutorRoomBackToTutorBtn = document.getElementById("tutorRoomBackToTutorBtn");
 const tutorRoomTranscriptFeed = document.getElementById("tutorRoomTranscript");
 const tutorChatPanel = document.querySelector(".tutor-chat-panel");
+const tutorTab = document.getElementById("tutorTab");
+const tutorControlsBar = tutorTab ? tutorTab.querySelector(".tutor-controls-bar") : null;
+const tutorModeCard = tutorTab ? tutorTab.querySelector(".tutor-mode-card") : null;
+const quickPromptGrid = tutorTab ? tutorTab.querySelector(".quick-prompt-grid") : null;
 let tutorFullscreenOverlay = null;
 let tutorFullscreenMessages = null;
 let tutorFullscreenInputArea = null;
 let tutorFullscreenTextarea = null;
 let tutorFullscreenSendButton = null;
-const videoAnswerBriefPanel = document.getElementById("videoAnswerBriefPanel");
-const videoStatusPanel = document.getElementById("video-status-panel");
-const tutorVideoAnswerPlayer = document.getElementById("tutor-video-player");
-const videoTranscriptPanel = document.getElementById("video-transcript");
-const videoRenderStatus = document.getElementById("videoRenderStatus");
+let tutorFullscreenMirrorObserver = null;
+let tutorFullscreenMirrorSource = null;
+let tutorTabLayout = null;
+let tutorControlStrip = null;
+let tutorChatZone = null;
+let tutorSidePanel = null;
+let tutorInputZone = null;
+let activeTutorSideTab = "session";
+let tutorSidePanelCollapsed = false;
 const videoApiBaseUrl = window.__ASTRA_VIDEO_API_BASE__ || "http://127.0.0.1:8001";
 const doubtImageInput = document.getElementById("doubtImageInput");
 const analyzeImageBtn = document.getElementById("analyzeImageBtn");
@@ -338,6 +397,15 @@ const progressPreviousWeekRate = document.getElementById("progressPreviousWeekRa
 const progressImprovementRate = document.getElementById("progressImprovementRate");
 const progressNeedFocus = document.getElementById("progressNeedFocus");
 const progressComparisonText = document.getElementById("progressComparisonText");
+const analyticsInsightCard = document.getElementById("analytics-insight-card");
+const performanceChartCard = document.getElementById("performance-chart");
+const performanceChartSummary = document.getElementById("performanceChartSummary");
+const performanceChartBars = document.getElementById("performanceChartBars");
+const subjectBreakdownCards = document.getElementById("subject-breakdown-cards");
+const subjectBreakdownGrid = document.getElementById("subjectBreakdownGrid");
+const consistencyTrackerCard = document.getElementById("consistency-tracker");
+const consistencyTrackerSummary = document.getElementById("consistencyTrackerSummary");
+const consistencyTrackerGrid = document.getElementById("consistencyTrackerGrid");
 const chapterMasteryCard = document.getElementById("chapter-mastery-board") || document.getElementById("chapter-mastery-card");
 const chapterMasterySummary = document.getElementById("chapterMasterySummary");
 const chapterMasteryGrid = document.getElementById("chapterMasteryGrid");
@@ -402,6 +470,10 @@ const showVideoExplanation = document.getElementById("showVideoExplanation");
 const showVisualExplanation = document.getElementById("showVisualExplanation");
 const showLeagueToggle = document.getElementById("showLeagueToggle");
 const languageSelect = document.getElementById("languageSelect");
+const tutorLanguageChip = document.getElementById("tutorLanguageChip");
+const tutorLanguageDropdown = document.getElementById("tutorLanguageDropdown");
+const tutorLanguageSelector = document.getElementById("tutor-language-selector");
+const hinglishToggle = document.getElementById("hinglish-toggle");
 const tabManager = document.getElementById("tabManager");
 const tabBar = document.getElementById("tabBar");
 const authHeroTitle = document.getElementById("authHeroTitle");
@@ -437,11 +509,15 @@ let tabButtons = [];
 let tabPanels = [];
 let activeProfile = null;
 let activeUser = null;
-let authSession = null;
-let avatarPresets = [];
-let activeAvatar = null;
-let activeTutorBrain = null;
-let lastTutorReply = "";
+  let authSession = null;
+  let avatarPresets = [];
+  let activeAvatar = null;
+  let avatarRenderer = null;
+  let avatarConfigCache = null;
+  let avatarStageInitPromise = null;
+  let activeTutorBrain = null;
+  let lastTutorReply = "";
+  let lastTutorReplyText = "";
 let lastTutorQuestion = "";
 let lastVideoAnswerBrief = null;
 let lastRepliesByMode = { tutor: "", guide: "", lounge: "", practice: "", last_minute: "", tips: "" };
@@ -457,13 +533,19 @@ let currentVideoTutorPlanStatus = [];
 let currentRequestedVideos = [];
 let activeVideoTutorBrief = null;
 let activeVideoTutorRequest = null;
+let videoSearchBound = false;
+let activeVideoSubjectTab = "physics";
+let activeVideoSearchQuery = "";
+let activeVideoSubjectQuery = "";
+let videoSubjectTabButtons = [];
 const dismissedVideoSuggestionTopics = new Set();
 const LoungeSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 let loungeVoiceRecognition = null;
 let loungeVoiceDraft = "";
 let loungeVoicePrefix = "";
 let loungeVoiceActive = false;
-let currentLanguage = APP_CONFIG.default_language || "English";
+let currentLanguage = normalizeLanguageSelection(APP_CONFIG.default_language || "english");
+window.astraLanguage = currentLanguage;
 let currentTheme = "midnight";
 let currentBackground = "glow";
 let isSidebarCollapsed = false;
@@ -734,12 +816,30 @@ let motivationStoryOpen = false;
 let activeHomeSubtab = "overview";
 let homeSubtabButtons = [];
 let homeSubtabPanels = [];
+let sectionNavButtons = [];
+let activeSectionGroup = "home";
+let astraStatusTimer = null;
+let sessionActivityLog = [];
+let sessionCheckpointStats = {
+  answered: 0,
+  average: 0,
+  confidence: "new",
+  topic: "",
+};
+let dailyBriefingLoadedDate = "";
+let dailyBriefingDismissedDate = "";
+let toastTimer = null;
+if (sessionActivityToggleBtn && sessionActivityPanel && sessionActivityPanel.classList.contains("hidden")) {
+  sessionActivityToggleBtn.textContent = "Session log ▸";
+}
 
 function refreshTabCollections() {
   tabButtons = Array.from(document.querySelectorAll(".tab-button"));
   tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
+  sectionNavButtons = Array.from(document.querySelectorAll(".section-nav-button"));
   homeSubtabButtons = Array.from(document.querySelectorAll("[data-home-subtab]"));
   homeSubtabPanels = Array.from(document.querySelectorAll("[data-home-subtab-panel]"));
+  videoSubjectTabButtons = Array.from(document.querySelectorAll("[data-video-subject-tab]"));
   homeSubtabButtons.forEach((button) => {
     if (button.dataset.homeSubtabBound === "1") {
       return;
@@ -752,6 +852,53 @@ function refreshTabCollections() {
       setHomeSubtab(button.dataset.homeSubtab);
     });
   });
+  videoSubjectTabButtons.forEach((button) => {
+    if (button.dataset.videoSubjectTabBound === "1") {
+      return;
+    }
+    button.dataset.videoSubjectTabBound = "1";
+    button.addEventListener("click", () => {
+      switchVideoSubjectTab(button.dataset.videoSubjectTab || "physics");
+    });
+  });
+  sectionNavButtons.forEach((button) => {
+    if (button.dataset.sectionBound === "1") {
+      return;
+    }
+    button.dataset.sectionBound = "1";
+    button.addEventListener("click", () => {
+      setActiveSectionGroup(button.dataset.sectionGroup);
+    });
+  });
+}
+
+function setActiveSectionGroup(section = "home", { skipTabSwitch = false } = {}) {
+  const nextSection = ["home", "learn", "plan", "connect", "settings"].includes(String(section || "").trim())
+    ? String(section || "").trim()
+    : "home";
+  activeSectionGroup = nextSection;
+  sectionNavButtons.forEach((button) => {
+    const isActive = button.dataset.sectionGroup === activeSectionGroup;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
+  });
+  document.querySelectorAll(".nav-hub[data-section-group]").forEach((hub) => {
+    const isActive = hub.dataset.sectionGroup === activeSectionGroup;
+    hub.classList.toggle("hidden", !isActive);
+    hub.hidden = !isActive;
+    hub.setAttribute("aria-hidden", String(!isActive));
+  });
+  if (!skipTabSwitch) {
+    const defaultTabs = {
+      home: "overviewTab",
+      learn: "tutorTab",
+      plan: "weeklyTab",
+      connect: "loungeTab",
+      settings: "personalizeTab",
+    };
+    const defaultTab = defaultTabs[activeSectionGroup] || "overviewTab";
+    setActiveTab(defaultTab);
+  }
 }
 
 function setHomeSubtab(subtab = "overview") {
@@ -783,6 +930,994 @@ function setHomeSubtab(subtab = "overview") {
   } else if (activeHomeSubtab === "progress") {
     updateOverviewSnapshotStripFromWeeklyPlan(null);
   }
+  updateOverviewCommandCenter();
+}
+
+function setAstraStatus(message, type = "idle", autoClear = false) {
+  if (!astraStatusBar) {
+    return;
+  }
+  const normalized = String(message || "").trim();
+  astraStatusBar.textContent = normalized || "Astra is ready.";
+  astraStatusBar.dataset.state = type || "idle";
+  astraStatusBar.classList.remove("hide-status");
+  astraStatusBar.classList.add("show-status");
+  if (astraStatusTimer) {
+    window.clearTimeout(astraStatusTimer);
+    astraStatusTimer = null;
+  }
+  if (autoClear && type !== "idle") {
+    astraStatusTimer = window.setTimeout(() => {
+      if (astraStatusBar) {
+        astraStatusBar.classList.add("hide-status");
+        astraStatusBar.textContent = "Astra is ready.";
+        astraStatusBar.dataset.state = "idle";
+      }
+    }, 4000);
+  }
+}
+
+function showToast(message, type = "success") {
+  const existing = document.querySelector(".astra-toast");
+  if (existing) {
+    existing.remove();
+  }
+  const toast = document.createElement("div");
+  toast.className = `astra-toast ${type || "success"}`;
+  toast.textContent = String(message || "").trim();
+  document.body.appendChild(toast);
+  if (toastTimer) {
+    window.clearTimeout(toastTimer);
+  }
+  toastTimer = window.setTimeout(() => {
+    toast.classList.add("hide-toast");
+    window.setTimeout(() => toast.remove(), 220);
+  }, 4000);
+}
+
+function showKnowledgeBaseTag(text, visible = false) {
+  if (!kbStatusTag) {
+    return;
+  }
+  const content = String(text || "").trim();
+  kbStatusTag.textContent = content;
+  kbStatusTag.classList.toggle("hidden", !visible || !content);
+}
+
+function getActiveTutorFocus() {
+  const focus = todaysFocusSnapshot && (todaysFocusSnapshot.primary || todaysFocusSnapshot.morning)
+    ? (todaysFocusSnapshot.primary || todaysFocusSnapshot.morning)
+    : {};
+  const chapterFocus = activeChapterSubtopic || {};
+  return {
+    topic: chapterFocus.subtopic_name || chapterFocus.chapter_name || focus.topic || "today's topic",
+    subject: chapterFocus.subject || focus.subject || (activeProfile && activeProfile.exams && activeProfile.exams[0] && activeProfile.exams[0].subjects && activeProfile.exams[0].subjects[0]) || "physics",
+    unit: chapterFocus.chapter_name || focus.unit || focus.unit_name || "",
+    isChapter: Boolean(chapterFocus.subtopic_id || activeChapterSession),
+  };
+}
+
+function updateSessionCheckpointStats({ topic, score, confidence } = {}) {
+  const normalizedScore = Number(score || 0);
+  sessionCheckpointStats.topic = topic || sessionCheckpointStats.topic || "";
+  sessionCheckpointStats.answered = Math.max(0, Number(sessionCheckpointStats.answered || 0)) + 1;
+  const previousAverage = Number(sessionCheckpointStats.average || 0);
+  sessionCheckpointStats.average = Math.round((previousAverage * (sessionCheckpointStats.answered - 1) + normalizedScore) / sessionCheckpointStats.answered);
+  sessionCheckpointStats.confidence = confidence || sessionCheckpointStats.confidence || "new";
+  renderSessionStats(sessionCheckpointStats.topic, sessionCheckpointStats.confidence, sessionCheckpointStats.average);
+}
+
+function logSessionActivity(message) {
+  const text = String(message || "").trim();
+  if (!text) {
+    return;
+  }
+  const stamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  sessionActivityLog.unshift({ stamp, text });
+  sessionActivityLog = sessionActivityLog.slice(0, 12);
+  renderSessionActivity();
+}
+
+function renderDailyBriefingCard(briefing = null) {
+  if (!dailyBriefingCard || !dailyBriefingText) {
+    return;
+  }
+  if (!briefing) {
+    dailyBriefingText.textContent = "Your briefing will appear here.";
+    dailyBriefingCard.classList.add("hidden");
+    return;
+  }
+  const parts = [briefing.greeting, briefing.accomplish, briefing.motivation].filter(Boolean);
+  dailyBriefingText.textContent = parts.join(" ").trim();
+  dailyBriefingCard.classList.remove("hidden");
+}
+
+function focusTutorComposerWithPrompt(prompt = "") {
+  setActiveTab("tutorTab");
+  if (messageInput) {
+    messageInput.value = String(prompt || "");
+    window.setTimeout(() => messageInput.focus(), 0);
+  }
+}
+
+function startTodaySessionFromHome() {
+  if (activeJourneySession || (todaysFocusSnapshot && (todaysFocusSnapshot.primary || todaysFocusSnapshot.morning))) {
+    void startJourneySession();
+    return;
+  }
+  setActiveTab("weeklyTab");
+}
+
+function renderSessionActivity() {
+  if (!sessionActivityList) {
+    return;
+  }
+  sessionActivityList.innerHTML = "";
+  if (!sessionActivityLog.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Session events will appear here as Astra teaches.";
+    sessionActivityList.appendChild(empty);
+    return;
+  }
+  sessionActivityLog.forEach((entry) => {
+    const row = document.createElement("div");
+    row.className = "session-activity-item";
+    row.innerHTML = `<span class="session-activity-stamp">${entry.stamp}</span><span>${escapeHtml(entry.text)}</span>`;
+    sessionActivityList.appendChild(row);
+  });
+}
+
+function renderSessionStats(topic = "", confidence = "new", score = 0) {
+  sessionCheckpointStats.topic = topic || sessionCheckpointStats.topic || "";
+  sessionCheckpointStats.confidence = confidence || sessionCheckpointStats.confidence || "new";
+  if (Number.isFinite(Number(score))) {
+    sessionCheckpointStats.average = Math.max(0, Math.min(100, Number(score || 0)));
+  }
+  if (sessionStatsTopic) {
+    sessionStatsTopic.textContent = `Current topic: ${sessionCheckpointStats.topic || "-"}`;
+  }
+  if (sessionStatsConfidence) {
+    sessionStatsConfidence.textContent = sessionCheckpointStats.confidence || "new";
+  }
+  if (sessionStatsCount) {
+    sessionStatsCount.textContent = String(Math.max(0, sessionCheckpointStats.answered || 0));
+  }
+  if (sessionStatsAverage) {
+    sessionStatsAverage.textContent = `${Math.max(0, Math.min(100, Number(sessionCheckpointStats.average || 0)))}%`;
+  }
+  if (sessionStatsStreak) {
+    sessionStatsStreak.textContent = activeProfile && activeProfile.streak_days ? `${activeProfile.streak_days} days` : "0";
+  }
+  renderTutorSideSessionSummary();
+}
+
+function updateOverviewCommandCenter() {
+  const focus = todaysFocusSnapshot && (todaysFocusSnapshot.primary || todaysFocusSnapshot.morning) ? (todaysFocusSnapshot.primary || todaysFocusSnapshot.morning) : {};
+  if (overviewCommandTopic) {
+    overviewCommandTopic.textContent = focus.topic || "Today's topic";
+  }
+  if (overviewCommandBadge) {
+    overviewCommandBadge.textContent = focus.session_type ? String(focus.session_type).replace(/_/g, " ") : "Learning";
+  }
+  if (overviewCommandReason) {
+    overviewCommandReason.textContent = focus.daily_goal || "Your next step will appear here.";
+  }
+  if (overviewCommandSubject) {
+    overviewCommandSubject.textContent = focus.subject || "-";
+  }
+  if (overviewCommandTime) {
+    overviewCommandTime.textContent = focus.duration_minutes ? `${focus.duration_minutes} min` : "-";
+  }
+  if (overviewCommandWhy) {
+    overviewCommandWhy.textContent = focus.weightage ? `${focus.weightage}% of JEE Main` : "JEE focus";
+  }
+  const mastery = chapterMasterySnapshot || {};
+  const covered = mastery.covered_count || 0;
+  const total = mastery.total_count || 0;
+  if (overviewMetricCovered) {
+    overviewMetricCovered.textContent = `${covered}/${total}`;
+  }
+  if (overviewMetricAverage) {
+    overviewMetricAverage.textContent = `${Math.round(mastery.average_score || 0)}%`;
+  }
+  if (overviewMetricStreak) {
+    overviewMetricStreak.textContent = `${(activeProfile && activeProfile.streak_days) || 0} days`;
+  }
+  if (astraStatusBar) {
+    setAstraStatus(
+      focus.topic
+        ? `Astra is ready. Today's focus: ${focus.topic} — ${focus.subject || "study"}`
+        : "Astra is ready. Today's focus: -",
+      "idle"
+    );
+  }
+}
+
+function updateContextPanel() {
+  return;
+}
+
+function renderTutorSmartPrompts() {
+  if (!tutorSmartPromptChips) {
+    return;
+  }
+  const focus = todaysFocusSnapshot && (todaysFocusSnapshot.primary || todaysFocusSnapshot.morning) ? (todaysFocusSnapshot.primary || todaysFocusSnapshot.morning) : {};
+  const chapterActive = isChapterCheckpointActive();
+  const prompts = chapterActive
+    ? [
+        `I didn't understand ${activeChapterSubtopic.subtopic_name || "this subtopic"}`,
+        "Give me another example",
+        "Make this simpler",
+        "What's the JEE trap here?",
+      ]
+    : [
+        `Explain ${focus.topic || "today's topic"} from the beginning`,
+        `What is the most important formula in ${focus.topic || "this topic"}?`,
+        `Give me a JEE question on ${focus.topic || "this topic"}`,
+      ];
+  if (tutorSmartPromptLine) {
+    tutorSmartPromptLine.textContent = chapterActive
+      ? `Focus now: ${activeChapterSubtopic.subtopic_name || "this subtopic"}`
+      : `Focus now: ${focus.topic || "today's topic"}`;
+  }
+  tutorSmartPromptChips.innerHTML = "";
+  prompts.forEach((prompt) => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "soft-chip tutor-smart-chip";
+    chip.textContent = prompt;
+    chip.addEventListener("click", () => {
+      if (messageInput) {
+        messageInput.value = prompt;
+        messageInput.focus();
+        updateTutorSuggestedPromptsVisibility();
+      }
+    });
+    tutorSmartPromptChips.appendChild(chip);
+  });
+}
+
+function _setTutorTopToggle(button, on, onLabel, offLabel) {
+  if (!button) {
+    return;
+  }
+  button.classList.toggle("active", !!on);
+  button.textContent = on ? onLabel : offLabel;
+}
+
+function syncTutorControlStrip() {
+  const voiceOn = !!(voiceChatMode && voiceChatMode.checked);
+  const speakOn = !!(autoSpeakReplies && autoSpeakReplies.checked);
+  const captionOn = !!(autoCaptionMode && autoCaptionMode.checked);
+  const readingOn = !!(readingComfortMode && readingComfortMode.checked);
+  const paceValue = (responsePacingSelect && responsePacingSelect.value) || "gentle";
+  const levelValue = String((tutorLevelSelect && tutorLevelSelect.value) || "3");
+
+  _setTutorTopToggle(document.getElementById("tutorVoiceToggleBtn"), voiceOn, "Voice on", "Voice off");
+  _setTutorTopToggle(document.getElementById("tutorSpeakToggleBtn"), speakOn, "Speak on", "Speak off");
+  _setTutorTopToggle(document.getElementById("tutorCaptionToggleBtn"), captionOn, "Captions on", "Captions off");
+  _setTutorTopToggle(document.getElementById("tutorReadingToggleBtn"), readingOn, "Read on", "Read off");
+  _setTutorTopToggle(document.getElementById("tutorPaceGentleBtn"), paceValue === "gentle", "Gentle", "Gentle");
+  _setTutorTopToggle(document.getElementById("tutorPaceNormalBtn"), paceValue === "standard" || paceValue === "normal", "Normal", "Normal");
+  _setTutorTopToggle(document.getElementById("tutorPaceFastBtn"), paceValue === "fast", "Fast", "Fast");
+  const levelSelect = document.getElementById("tutorTopLevelSelect");
+  if (levelSelect) {
+    levelSelect.value = levelValue;
+  }
+}
+
+function _buildTutorVoiceControlsMirror() {
+  const card = document.createElement("div");
+  card.className = "table-card compact-side-card";
+  card.innerHTML = `
+    <div class="card-header">
+      <div>
+        <p class="card-title">Voice controls</p>
+        <p class="muted">All reply controls, mirrored in a compact panel.</p>
+      </div>
+    </div>
+    <div class="voice-controls-grid" id="tutorVoiceControlsGrid"></div>
+    <div class="voice-controls-grid">
+      <button type="button" class="ghost-button" id="tutorVoiceSpeakLastSideBtn">Speak last reply</button>
+      <button type="button" class="ghost-button" id="tutorVoicePauseSideBtn">Pause</button>
+      <button type="button" class="ghost-button" id="tutorVoiceResumeSideBtn">Resume</button>
+      <button type="button" class="ghost-button" id="tutorVoiceStopSideBtn">Stop</button>
+    </div>
+  `;
+  const grid = card.querySelector("#tutorVoiceControlsGrid");
+  const controls = [
+    { id: "tutorVoiceOnSideBtn", label: "Voice on/off", getter: () => !!(voiceChatMode && voiceChatMode.checked), toggle: () => voiceChatMode && (voiceChatMode.checked = !voiceChatMode.checked) },
+    { id: "tutorAutoSpeakSideBtn", label: "Auto-speak", getter: () => !!(autoSpeakReplies && autoSpeakReplies.checked), toggle: () => autoSpeakReplies && (autoSpeakReplies.checked = !autoSpeakReplies.checked) },
+    { id: "tutorCaptionsSideBtn", label: "Captions", getter: () => !!(autoCaptionMode && autoCaptionMode.checked), toggle: () => autoCaptionMode && (autoCaptionMode.checked = !autoCaptionMode.checked) },
+    { id: "tutorReadingSideBtn", label: "Reading comfort", getter: () => !!(readingComfortMode && readingComfortMode.checked), toggle: () => readingComfortMode && (readingComfortMode.checked = !readingComfortMode.checked) },
+  ];
+  controls.forEach((entry) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = entry.id;
+    button.className = "ghost-button";
+    const refresh = () => {
+      button.textContent = `${entry.label}: ${entry.getter() ? "On" : "Off"}`;
+      button.classList.toggle("active", entry.getter());
+    };
+    refresh();
+    button.addEventListener("click", () => {
+      entry.toggle();
+      if (voiceChatMode) voiceChatMode.dispatchEvent(new Event("change", { bubbles: true }));
+      if (autoSpeakReplies && entry.id === "tutorAutoSpeakSideBtn") autoSpeakReplies.dispatchEvent(new Event("change", { bubbles: true }));
+      if (autoCaptionMode && entry.id === "tutorCaptionsSideBtn") autoCaptionMode.dispatchEvent(new Event("change", { bubbles: true }));
+      if (readingComfortMode && entry.id === "tutorReadingSideBtn") readingComfortMode.dispatchEvent(new Event("change", { bubbles: true }));
+      refresh();
+      syncTutorControlStrip();
+    });
+    grid.appendChild(button);
+  });
+
+  const paceRow = document.createElement("div");
+  paceRow.className = "voice-controls-grid";
+  ["gentle", "standard", "fast"].forEach((pace) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "ghost-button";
+    button.dataset.pace = pace;
+    button.textContent = pace.charAt(0).toUpperCase() + pace.slice(1);
+    button.addEventListener("click", () => {
+      if (responsePacingSelect) {
+        responsePacingSelect.value = pace;
+        responsePacingSelect.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      syncTutorControlStrip();
+    });
+    paceRow.appendChild(button);
+  });
+  card.appendChild(paceRow);
+
+  const levelRow = document.createElement("div");
+  levelRow.className = "inline-form";
+  levelRow.innerHTML = `
+    <label class="muted" for="tutorVoiceLevelSelect">Tutor level</label>
+    <select id="tutorVoiceLevelSelect">
+      <option value="1">Level 1</option>
+      <option value="2">Level 2</option>
+      <option value="3" selected>Level 3</option>
+      <option value="4">Level 4</option>
+      <option value="5">Level 5</option>
+    </select>
+  `;
+  const levelSelect = levelRow.querySelector("#tutorVoiceLevelSelect");
+  if (levelSelect && tutorLevelSelect) {
+    levelSelect.value = tutorLevelSelect.value || "3";
+    levelSelect.addEventListener("change", () => {
+      tutorLevelSelect.value = levelSelect.value;
+      tutorLevelSelect.dispatchEvent(new Event("change", { bubbles: true }));
+      syncTutorControlStrip();
+    });
+  }
+  card.appendChild(levelRow);
+
+  const speakLast = card.querySelector("#tutorVoiceSpeakLastSideBtn");
+  if (speakLast) {
+    speakLast.addEventListener("click", () => {
+      if (lastTutorReply) {
+        speakText(lastTutorReply);
+      }
+    });
+  }
+  const pauseBtn = card.querySelector("#tutorVoicePauseSideBtn");
+  if (pauseBtn) {
+    pauseBtn.addEventListener("click", () => pauseTutorNarration());
+  }
+  const resumeBtn = card.querySelector("#tutorVoiceResumeSideBtn");
+  if (resumeBtn) {
+    resumeBtn.addEventListener("click", () => resumeTutorNarration());
+  }
+  const stopBtn = card.querySelector("#tutorVoiceStopSideBtn");
+  if (stopBtn) {
+    stopBtn.addEventListener("click", () => interruptTutorOutput("tutor"));
+  }
+  return card;
+}
+
+function setTutorSidePanelTab(tab = "session") {
+  activeTutorSideTab = tab;
+  const buttons = tutorSidePanel ? Array.from(tutorSidePanel.querySelectorAll("[data-tutor-side-tab]")) : [];
+  const panels = tutorSidePanel ? Array.from(tutorSidePanel.querySelectorAll("[data-tutor-side-panel]")) : [];
+  buttons.forEach((button) => {
+    const active = button.dataset.tutorSideTab === activeTutorSideTab;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", active ? "true" : "false");
+  });
+  panels.forEach((panel) => {
+    const active = panel.dataset.tutorSidePanel === activeTutorSideTab;
+    panel.classList.toggle("hidden", !active);
+    panel.setAttribute("aria-hidden", active ? "false" : "true");
+  });
+}
+
+function toggleSidePanel() {
+  if (!tutorTabLayout) {
+    return;
+  }
+  tutorSidePanelCollapsed = !tutorSidePanelCollapsed;
+  tutorTabLayout.classList.toggle("panel-collapsed", tutorSidePanelCollapsed);
+  const btn = document.getElementById("panelToggleBtn");
+  if (btn) {
+    btn.textContent = tutorSidePanelCollapsed ? "⟩" : "⟨";
+    btn.title = tutorSidePanelCollapsed ? "Open side panel" : "Collapse side panel";
+  }
+}
+
+function updateTutorInputTopicChip() {
+  const chip = document.getElementById("tutorCurrentTopicChip");
+  if (!chip) {
+    return;
+  }
+  const focus = getActiveTutorFocus();
+  const text = focus.topic ? `${focus.topic} • ${focus.subject || "topic"}` : "No topic selected";
+  chip.textContent = text;
+}
+
+function updateTutorSuggestedPromptsVisibility() {
+  const chipRow = document.getElementById("tutorSmartPromptChips");
+  const line = document.getElementById("tutorSmartPromptLine");
+  const hasInput = !!(messageInput && String(messageInput.value || "").trim());
+  if (chipRow) {
+    chipRow.classList.toggle("hidden", hasInput);
+  }
+  if (line) {
+    line.classList.toggle("hidden", hasInput);
+  }
+}
+
+function toggleRecentChats() {
+  const dropdown = document.getElementById("recent-chats-dropdown");
+  if (!dropdown) {
+    return;
+  }
+  dropdown.classList.toggle("hidden");
+}
+
+function renderTutorSideSessionSummary() {
+  const topic = sessionStatsTopic ? sessionStatsTopic.textContent.replace(/^Current topic:\s*/, "") : "-";
+  const confidence = sessionStatsConfidence ? sessionStatsConfidence.textContent : "new";
+  const count = sessionStatsCount ? sessionStatsCount.textContent : "0";
+  const average = sessionStatsAverage ? sessionStatsAverage.textContent : "0%";
+  const streak = sessionStatsStreak ? sessionStatsStreak.textContent : "0";
+  const target = document.getElementById("sideSessionSummary");
+  if (!target) {
+    return;
+  }
+  target.innerHTML = `
+    <div class="side-session-summary-row"><span class="summary-label">Current topic</span><strong>${escapeHtml(topic || "-")}</strong></div>
+    <div class="side-session-summary-grid">
+      <div><span class="summary-label">Checkpoints</span><strong>${escapeHtml(count || "0")}</strong></div>
+      <div><span class="summary-label">Average</span><strong>${escapeHtml(average || "0%")}</strong></div>
+      <div><span class="summary-label">Streak</span><strong>${escapeHtml(streak || "0")}</strong></div>
+    </div>
+    <div class="side-session-summary-row"><span class="summary-label">Confidence</span><span class="pill">${escapeHtml(confidence || "new")}</span></div>
+  `;
+}
+
+function buildTutorControlStrip() {
+  if (!tutorTab || document.getElementById("tutorControlStrip")) {
+    return;
+  }
+
+  const layout = document.createElement("div");
+  layout.className = "tutor-tab-layout";
+  layout.id = "tutorTabLayout";
+
+  const strip = document.createElement("div");
+  strip.className = "tutor-control-strip";
+  strip.innerHTML = `
+    <div class="tutor-strip-group">
+      <button id="tutorVoiceToggleBtn" type="button" class="ghost-button compact-strip-btn" title="Voice on/off">Voice off</button>
+      <button id="tutorSpeakToggleBtn" type="button" class="ghost-button compact-strip-btn" title="Auto-speak">Speak off</button>
+      <button id="tutorCaptionToggleBtn" type="button" class="ghost-button compact-strip-btn" title="Captions">Captions on</button>
+    </div>
+    <div class="tutor-strip-group tutor-strip-center">
+      <button id="tutorReadingToggleBtn" type="button" class="ghost-button compact-strip-btn" title="Reading comfort">Read off</button>
+      <div class="tutor-pacing-toggle" role="group" aria-label="Pacing selector">
+        <button id="tutorPaceGentleBtn" type="button" class="ghost-button compact-strip-btn" title="Gentle pacing">Gentle</button>
+        <button id="tutorPaceNormalBtn" type="button" class="ghost-button compact-strip-btn" title="Normal pacing">Normal</button>
+        <button id="tutorPaceFastBtn" type="button" class="ghost-button compact-strip-btn" title="Fast pacing">Fast</button>
+      </div>
+      <select id="tutorTopLevelSelect" class="compact-level-select" title="Tutor level">
+        <option value="1">L1</option>
+        <option value="2">L2</option>
+        <option value="3" selected>L3</option>
+        <option value="4">L4</option>
+        <option value="5">L5</option>
+      </select>
+    </div>
+    <div class="tutor-strip-group tutor-strip-right">
+      <button id="tutorSpeakLastCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Speak last reply">🔊</button>
+      <button id="tutorPauseCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Pause">⏸</button>
+      <button id="tutorResumeCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Resume">▶</button>
+      <button id="tutorStopCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Stop and checkpoint">⏹</button>
+      <button id="tutorFullscreenCompactBtn" type="button" class="ghost-button compact-strip-btn tutor-fullscreen-button" title="Expand to fullscreen">⛶</button>
+    </div>
+  `;
+
+  const chatZone = document.createElement("div");
+  chatZone.className = "tutor-chat-zone";
+  chatZone.id = "tutorChatZone";
+
+  const sidePanel = document.createElement("aside");
+  sidePanel.className = "tutor-side-panel";
+  sidePanel.id = "tutorSidePanel";
+  sidePanel.innerHTML = `
+    <button id="panelToggleBtn" type="button" class="panel-toggle-btn" title="Collapse side panel">⟩</button>
+    <div class="tutor-side-panel-tabs">
+      <button type="button" class="active" data-tutor-side-tab="session" aria-selected="true">Session</button>
+      <button type="button" data-tutor-side-tab="voice" aria-selected="false">Voice</button>
+      <button type="button" data-tutor-side-tab="history" aria-selected="false">History</button>
+      <button type="button" data-tutor-side-tab="video" aria-selected="false">Video</button>
+    </div>
+    <div class="tutor-side-panel-content">
+      <div class="tutor-side-tab-panel" data-tutor-side-panel="session">
+        <div class="table-card compact-side-card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Session</p>
+              <p class="muted">Current topic and progress at a glance.</p>
+            </div>
+          </div>
+          <div id="sideSessionSummary"></div>
+          <div class="side-panel-actions">
+            <button id="sideStopCheckpointBtn" type="button" class="ghost-button">Stop & checkpoint</button>
+            <button id="sideCompleteSessionBtn" type="button" class="ghost-button">Mark session complete</button>
+          </div>
+        </div>
+        <div class="table-card compact-side-card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Activity</p>
+              <p class="muted">What Astra is doing in this session.</p>
+            </div>
+          </div>
+          <div id="sessionActivityList" class="session-activity-list"></div>
+        </div>
+      </div>
+      <div class="tutor-side-tab-panel hidden" data-tutor-side-panel="voice" aria-hidden="true">
+        <div class="table-card compact-side-card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Tutor Mode</p>
+              <p class="muted">Compact persona controls for the tutor tone.</p>
+            </div>
+            <span id="tutorModePill" class="pill">Calm</span>
+          </div>
+          <div class="tutor-mode-pills" role="tablist" aria-label="Tutor mode">
+            <button type="button" class="tutor-mode-pill active" data-tutor-mode="calm">Calm</button>
+            <button type="button" class="tutor-mode-pill" data-tutor-mode="motivating">Motivating</button>
+            <button type="button" class="tutor-mode-pill" data-tutor-mode="strict">Strict</button>
+          </div>
+        </div>
+        <div class="table-card compact-side-card" id="tutorVoiceControlsMirror"></div>
+      </div>
+      <div class="tutor-side-tab-panel hidden" data-tutor-side-panel="history" aria-hidden="true">
+        <div class="table-card compact-side-card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Chats</p>
+              <p class="muted">Rename, pin, or restore previous tutor conversations.</p>
+            </div>
+            <button id="newTutorChatBtnSide" type="button" class="ghost-button">New conversation</button>
+          </div>
+          <div id="tutorConversationList" class="conversation-list"></div>
+          <div class="drawer-section">
+            <p class="drawer-section-title">Recently deleted</p>
+            <div id="deletedTutorConversationList" class="conversation-list"></div>
+          </div>
+          <div class="side-panel-actions">
+            <button id="viewAllTutorChatsBtnSide" type="button" class="ghost-button">View all chats</button>
+          </div>
+        </div>
+      </div>
+      <div class="tutor-side-tab-panel hidden" data-tutor-side-panel="video" aria-hidden="true">
+        <div class="table-card compact-side-card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Video</p>
+              <p class="muted">Jump to a video explanation from the current topic.</p>
+            </div>
+          </div>
+          <div class="side-panel-actions">
+            <button id="generateVideoFromTutorBtn" type="button" class="ghost-button">Generate video answer</button>
+            <button id="openVideoTutorFromTutorBtn" type="button" class="ghost-button">Open Video Tutor</button>
+          </div>
+          <div id="tutorVideoPreviewMini" class="video-answer-brief-panel"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const inputZone = document.createElement("div");
+  inputZone.className = "tutor-input-zone";
+  inputZone.id = "tutorInputZone";
+  inputZone.innerHTML = `
+    <div class="tutor-input-topline">
+      <span id="tutorCurrentTopicChip" class="pill tutor-current-topic-chip">No topic selected</span>
+      <span class="muted">Ask Astra anything and the workspace stays focused on the conversation.</span>
+    </div>
+    <div class="tutor-input-chip-row" id="tutorSmartPromptRow">
+      <div id="tutorSmartPromptLine" class="muted tutor-smart-prompt-line">Suggested prompts will appear here.</div>
+      <div id="tutorSmartPromptChips" class="tutor-suggested-chips"></div>
+    </div>
+  `;
+
+  tutorTab.innerHTML = "";
+  tutorTab.appendChild(layout);
+  layout.appendChild(strip);
+  layout.appendChild(chatZone);
+  layout.appendChild(sidePanel);
+  layout.appendChild(inputZone);
+
+  chatZone.appendChild(sessionStatsCard);
+  chatZone.appendChild(chapterResumeCard);
+  chatZone.appendChild(chatFeed);
+  chatZone.appendChild(kbStatusTag);
+
+  inputZone.appendChild(chatForm);
+  inputZone.appendChild(quickPromptGrid);
+  if (tutorFullscreenBtn) {
+    tutorFullscreenBtn.classList.add("hidden");
+  }
+
+  sidePanel.querySelector("[data-tutor-side-panel='session']").appendChild(sessionActivityPanel);
+  if (sessionActivityPanel) {
+    sessionActivityPanel.classList.remove("hidden");
+  }
+  sidePanel.querySelector("[data-tutor-side-panel='history']").appendChild(tutorConversationDrawerBackdrop);
+  sidePanel.querySelector("[data-tutor-side-panel='history']").appendChild(tutorConversationDrawer);
+  sidePanel.querySelector("[data-tutor-side-panel='video']").appendChild(tutorRoomLaunchCard);
+  const voiceMirror = sidePanel.querySelector("#tutorVoiceControlsMirror");
+  if (voiceMirror) {
+    voiceMirror.appendChild(_buildTutorVoiceControlsMirror());
+    voiceMirror.appendChild(tutorControlsBar);
+    voiceMirror.appendChild(tutorModeCard);
+  }
+
+  const toggleBtn = sidePanel.querySelector("#panelToggleBtn");
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", toggleSidePanel);
+  }
+  sidePanel.querySelectorAll("[data-tutor-side-tab]").forEach((button) => {
+    button.addEventListener("click", () => setTutorSidePanelTab(button.dataset.tutorSideTab));
+  });
+
+  const sessionTab = sidePanel.querySelector("[data-tutor-side-panel='session']");
+  if (sessionTab) {
+    const sessionActionRow = document.createElement("div");
+    sessionActionRow.className = "side-panel-actions";
+    const stopBtn = document.createElement("button");
+    stopBtn.type = "button";
+    stopBtn.className = "ghost-button";
+    stopBtn.textContent = "Stop & checkpoint";
+    stopBtn.addEventListener("click", () => {
+      const tutorRoomStop = document.getElementById("tutorRoomStopBtn");
+      if (tutorRoomStop) {
+        tutorRoomStop.click();
+      }
+    });
+    const completeBtn = document.createElement("button");
+    completeBtn.type = "button";
+    completeBtn.className = "ghost-button";
+    completeBtn.textContent = "Mark session complete";
+    completeBtn.addEventListener("click", () => {
+      const checkpointScore = Math.round(Number(sessionCheckpointStats.average || 0));
+      void completeJourneySessionFromCheckpoint(checkpointScore || 100);
+    });
+    sessionActionRow.append(stopBtn, completeBtn);
+    sessionTab.insertBefore(sessionActionRow, sessionTab.querySelector(".session-activity-list"));
+  }
+
+  const historyTab = sidePanel.querySelector("[data-tutor-side-panel='history']");
+  if (historyTab) {
+    const viewAllBtn = document.getElementById("viewAllTutorChatsBtnSide");
+    if (viewAllBtn) {
+      viewAllBtn.addEventListener("click", () => {
+        const drawerBackdrop = document.getElementById("tutorConversationDrawerBackdrop");
+        const drawer = document.getElementById("tutorConversationDrawer");
+        if (drawerBackdrop && drawer) {
+          drawerBackdrop.classList.remove("hidden");
+          drawer.classList.remove("hidden");
+          drawer.setAttribute("aria-hidden", "false");
+        }
+      });
+    }
+    const newBtn = document.getElementById("newTutorChatBtnSide");
+    if (newBtn) {
+      newBtn.addEventListener("click", () => {
+        const createBtn = document.getElementById("newTutorChatBtn");
+        if (createBtn) {
+          createBtn.click();
+        }
+      });
+    }
+  }
+
+  const videoBtn = document.getElementById("generateVideoFromTutorBtn");
+  if (videoBtn) {
+    videoBtn.addEventListener("click", () => {
+      if (videoTutorQuestionInput && !videoTutorQuestionInput.value.trim()) {
+        const focus = getActiveTutorFocus();
+        videoTutorQuestionInput.value = focus.topic || lastTutorQuestion || "";
+      }
+      const triggerBtn = generateVideoAnswerBtn || document.getElementById("videoAnswerBtn");
+      if (triggerBtn) {
+        triggerBtn.click();
+      } else {
+        void generateVideoAnswerBrief();
+      }
+    });
+  }
+  const openVideoBtn = document.getElementById("openVideoTutorFromTutorBtn");
+  if (openVideoBtn) {
+    openVideoBtn.addEventListener("click", () => setActiveTab("videoTutorTab"));
+  }
+
+  const stripToggle = document.getElementById("tutorFullscreenCompactBtn");
+  if (stripToggle) {
+    stripToggle.addEventListener("click", toggleTutorFullscreen);
+  }
+  const speakLast = document.getElementById("tutorSpeakLastCompactBtn");
+  if (speakLast) {
+    speakLast.addEventListener("click", () => {
+      if (lastTutorReply) {
+        speakText(lastTutorReply);
+      }
+    });
+  }
+  const pauseBtn = document.getElementById("tutorPauseCompactBtn");
+  if (pauseBtn) {
+    pauseBtn.addEventListener("click", () => pauseTutorNarration());
+  }
+  const resumeBtn = document.getElementById("tutorResumeCompactBtn");
+  if (resumeBtn) {
+    resumeBtn.addEventListener("click", () => resumeTutorNarration());
+  }
+  const stopBtn = document.getElementById("tutorStopCompactBtn");
+  if (stopBtn) {
+    stopBtn.addEventListener("click", () => interruptTutorOutput("tutor"));
+  }
+  const voiceToggle = document.getElementById("tutorVoiceToggleBtn");
+  if (voiceToggle) {
+    voiceToggle.addEventListener("click", () => {
+      if (voiceChatMode) {
+        voiceChatMode.checked = !voiceChatMode.checked;
+        voiceChatMode.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    });
+  }
+  const speakToggle = document.getElementById("tutorSpeakToggleBtn");
+  if (speakToggle) {
+    speakToggle.addEventListener("click", () => {
+      if (autoSpeakReplies) {
+        autoSpeakReplies.checked = !autoSpeakReplies.checked;
+        autoSpeakReplies.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    });
+  }
+  const captionToggle = document.getElementById("tutorCaptionToggleBtn");
+  if (captionToggle) {
+    captionToggle.addEventListener("click", () => {
+      if (autoCaptionMode) {
+        autoCaptionMode.checked = !autoCaptionMode.checked;
+        autoCaptionMode.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    });
+  }
+  const readingToggle = document.getElementById("tutorReadingToggleBtn");
+  if (readingToggle) {
+    readingToggle.addEventListener("click", () => {
+      if (readingComfortMode) {
+        readingComfortMode.checked = !readingComfortMode.checked;
+        readingComfortMode.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    });
+  }
+  ["tutorPaceGentleBtn", "tutorPaceNormalBtn", "tutorPaceFastBtn"].forEach((id) => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.addEventListener("click", () => {
+        if (!responsePacingSelect) {
+          return;
+        }
+        if (id === "tutorPaceGentleBtn") responsePacingSelect.value = "gentle";
+        if (id === "tutorPaceNormalBtn") responsePacingSelect.value = "standard";
+        if (id === "tutorPaceFastBtn") responsePacingSelect.value = "fast";
+        responsePacingSelect.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+    }
+  });
+  const topLevel = document.getElementById("tutorTopLevelSelect");
+  if (topLevel) {
+    topLevel.addEventListener("change", () => {
+      if (tutorLevelSelect) {
+        tutorLevelSelect.value = topLevel.value;
+        tutorLevelSelect.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    });
+  }
+
+  if (chatForm) {
+    chatForm.classList.add("tutor-input-form");
+  }
+
+  if (messageInput) {
+    messageInput.addEventListener("input", updateTutorSuggestedPromptsVisibility);
+  }
+  if (tutorTab) {
+    tutorTab.dataset.tutorLayoutReady = "1";
+  }
+
+  tutorTabLayout = layout;
+  tutorControlStrip = strip;
+  tutorChatZone = chatZone;
+  tutorSidePanel = sidePanel;
+  tutorInputZone = inputZone;
+  setTutorSidePanelTab("session");
+  syncTutorControlStrip();
+  updateTutorInputTopicChip();
+  updateTutorSuggestedPromptsVisibility();
+  renderTutorSideSessionSummary();
+}
+
+async function loadDailyBriefingIfNeeded(force = false) {
+  if (!activeProfile) {
+    return null;
+  }
+  const todayKey = new Date().toISOString().slice(0, 10);
+  if (dailyBriefingDismissedDate === todayKey && !force) {
+    return null;
+  }
+  if (!force && dailyBriefingLoadedDate === todayKey) {
+    return null;
+  }
+  try {
+    const response = await fetch("/api/ui/daily-briefing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ student_id: activeProfile.name }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load today's briefing.");
+    }
+    dailyBriefingLoadedDate = todayKey;
+    const briefing = payload.briefing || {};
+    renderDailyBriefingCard(briefing);
+    return payload;
+  } catch (error) {
+    console.warn("Could not load daily briefing:", error);
+    return null;
+  }
+}
+
+async function loadProgressInsight() {
+  if (!activeProfile) {
+    return null;
+  }
+  try {
+    const response = await fetch(`/api/analytics/dashboard/${encodeURIComponent(activeProfile.name)}`);
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load analytics dashboard.");
+    }
+    renderAnalyticsDashboard(payload || {});
+    return payload;
+  } catch (error) {
+    console.warn("Could not load analytics dashboard:", error);
+    return null;
+  }
+}
+
+function renderAnalyticsDashboard(payload) {
+  const insightText = payload && payload.insight && payload.insight.insight ? payload.insight.insight : "";
+  const trends = payload && payload.trends ? payload.trends : {};
+  const weakStrong = payload && payload.weak_strong ? payload.weak_strong : {};
+  const consistency = payload && payload.consistency ? payload.consistency : {};
+  const subjectBreakdown = payload && payload.subject_breakdown ? payload.subject_breakdown : {};
+
+  if (analyticsInsightCard) {
+    const body = analyticsInsightCard.querySelector(".progress-insight-text");
+    if (body) {
+      body.textContent = insightText || "A personalized insight will appear here.";
+    }
+    analyticsInsightCard.classList.toggle("hidden", !insightText);
+  }
+  if (performanceChartSummary) {
+    const weeklyImprovement = Number(trends.weekly_improvement || 0).toFixed(1);
+    performanceChartSummary.textContent = trends.daily_scores && trends.daily_scores.length
+      ? `Weekly improvement: ${weeklyImprovement}% | Best day: ${trends.best_day || "n/a"}`
+      : "Your last 7 days of average scores will appear here.";
+  }
+  if (performanceChartBars) {
+    performanceChartBars.innerHTML = "";
+    const lastSeven = Array.isArray(trends.daily_scores) ? trends.daily_scores.slice(-7) : [];
+    if (!lastSeven.length) {
+      const empty = document.createElement("p");
+      empty.className = "muted";
+      empty.textContent = "No daily score data yet.";
+      performanceChartBars.appendChild(empty);
+    } else {
+      const maxScore = Math.max(100, ...lastSeven.map((item) => Number(item.avg_score || 0)));
+      lastSeven.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "performance-bar-row";
+        const label = document.createElement("span");
+        label.className = "performance-bar-label";
+        label.textContent = item.date ? item.date.slice(5) : "Day";
+        const track = document.createElement("div");
+        track.className = "performance-bar-track";
+        const fill = document.createElement("div");
+        fill.className = "performance-bar-fill";
+        fill.style.width = `${Math.max(6, Math.round((Number(item.avg_score || 0) / maxScore) * 100))}%`;
+        const value = document.createElement("span");
+        value.className = "performance-bar-value";
+        value.textContent = `${Number(item.avg_score || 0).toFixed(0)}%`;
+        track.appendChild(fill);
+        row.append(label, track, value);
+        performanceChartBars.appendChild(row);
+      });
+    }
+  }
+
+  if (subjectBreakdownGrid) {
+    subjectBreakdownGrid.innerHTML = "";
+    const order = ["physics", "chemistry", "mathematics"];
+    order.forEach((subject) => {
+      const data = subjectBreakdown[subject] || {};
+      const card = document.createElement("div");
+      card.className = "subject-breakdown-card";
+      const mastery = Number(data.overall_mastery_percent || 0);
+      card.innerHTML = `
+        <div class="subject-circle" style="--progress:${Math.max(0, Math.min(100, mastery))}">
+          <strong>${mastery.toFixed(0)}%</strong>
+          <span>${subject.charAt(0).toUpperCase() + subject.slice(1)}</span>
+        </div>
+        <div class="subject-breakdown-list">
+          <p class="muted">Total topics: ${Number(data.total_topics || 0)}</p>
+          <p class="muted">Attempted: ${Number(data.topics_attempted || 0)}</p>
+          <p class="muted">Strong: ${Number(data.topics_strong || 0)}</p>
+          <p class="muted">Developing: ${Number(data.topics_developing || 0)}</p>
+          <p class="muted">Weak: ${Number(data.topics_weak || 0)}</p>
+          <p class="muted">Not started: ${Number(data.topics_not_started || 0)}</p>
+        </div>
+      `;
+      subjectBreakdownGrid.appendChild(card);
+    });
+  }
+
+  if (consistencyTrackerSummary) {
+    consistencyTrackerSummary.textContent = `Current streak: ${Number(consistency.current_streak || 0)} day(s) | Consistency: ${Number(consistency.consistency_percent || 0).toFixed(0)}%`;
+  }
+  if (consistencyTrackerGrid) {
+    consistencyTrackerGrid.innerHTML = "";
+    const dailyScores = Array.isArray(trends.daily_scores) ? trends.daily_scores.slice(-7) : [];
+    const dateSet = new Set(dailyScores.map((item) => item.date));
+    const days = [];
+    for (let offset = 6; offset >= 0; offset -= 1) {
+      const day = new Date();
+      day.setDate(day.getDate() - offset);
+      const iso = day.toISOString().slice(0, 10);
+      days.push(iso);
+    }
+    days.forEach((day) => {
+      const circle = document.createElement("div");
+      circle.className = `consistency-day ${dateSet.has(day) ? "studied" : "missed"}`;
+      circle.title = day;
+      circle.textContent = day.slice(8);
+      consistencyTrackerGrid.appendChild(circle);
+    });
+  }
+
+  if (progressInsightCard && analyticsInsightCard) {
+    progressInsightCard.classList.add("hidden");
+  }
 }
 
 function setTutorMode(mode = "calm") {
@@ -802,6 +1937,7 @@ function setTutorMode(mode = "calm") {
     button.classList.toggle("active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
   });
+  syncTutorControlStrip();
 }
 
 function isLeagueTabEnabled() {
@@ -960,6 +2096,10 @@ function setActiveStudioPane(paneId) {
   });
   window.dispatchEvent(new CustomEvent("alt:studio-pane-changed", { detail: { paneId: activeStudioPane } }));
   localStorage.setItem("alt_studio_pane", activeStudioPane);
+}
+
+function switchStudioTab(name) {
+  setActiveStudioPane(name);
 }
 
 function focusTutorRoomStage(reason = "") {
@@ -1140,6 +2280,180 @@ function toggleTutorFullscreen() {
   window.setTimeout(() => fullscreenInput.focus(), 0);
 }
 
+function _getTutorFullscreenSourceFeed() {
+  return document.querySelector("#tutor-chat-messages, .tutor-messages, .chat-messages") || chatFeed;
+}
+
+function _setTutorFullscreenButtonState(isFullscreen) {
+  if (!tutorFullscreenBtn) {
+    return;
+  }
+  tutorFullscreenBtn.textContent = isFullscreen ? "✕ Exit Fullscreen" : "⛶ Fullscreen";
+  tutorFullscreenBtn.title = isFullscreen ? "Exit fullscreen" : "Expand to fullscreen";
+  tutorFullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Expand to fullscreen");
+}
+
+function _cloneFullscreenMessageNode(node) {
+  const clone = node.cloneNode(true);
+  if (clone.classList) {
+    if (clone.classList.contains("student")) {
+      clone.classList.add("message-student");
+    }
+    if (clone.classList.contains("tutor")) {
+      clone.classList.add("message-tutor");
+    }
+  }
+  return clone;
+}
+
+function syncTutorFullscreenOverlay() {
+  if (!tutorFullscreenOverlay || !tutorFullscreenMessages) {
+    return;
+  }
+  const sourceFeed = tutorFullscreenMirrorSource || _getTutorFullscreenSourceFeed();
+  if (sourceFeed) {
+    tutorFullscreenMessages.innerHTML = "";
+    Array.from(sourceFeed.children).forEach((node) => {
+      if (node.classList && node.classList.contains("message")) {
+        tutorFullscreenMessages.appendChild(_cloneFullscreenMessageNode(node));
+      }
+    });
+    tutorFullscreenMessages.scrollTop = tutorFullscreenMessages.scrollHeight;
+  }
+  if (tutorFullscreenTextarea && messageInput) {
+    tutorFullscreenTextarea.value = messageInput.value || "";
+  }
+}
+
+function closeTutorFullscreen() {
+  if (tutorFullscreenMirrorObserver) {
+    tutorFullscreenMirrorObserver.disconnect();
+    tutorFullscreenMirrorObserver = null;
+  }
+  tutorFullscreenMirrorSource = null;
+  if (tutorFullscreenOverlay) {
+    tutorFullscreenOverlay.remove();
+  }
+  tutorFullscreenOverlay = null;
+  tutorFullscreenMessages = null;
+  tutorFullscreenInputArea = null;
+  tutorFullscreenTextarea = null;
+  tutorFullscreenSendButton = null;
+  _setTutorFullscreenButtonState(false);
+}
+
+function fsSendMessage() {
+  const input = document.getElementById("fs-input");
+  if (!input || !input.value.trim()) {
+    return;
+  }
+  const text = input.value.trim();
+  input.value = "";
+
+  const messagesArea = document.getElementById("fs-messages-area");
+  if (messagesArea) {
+    const studentMsg = document.createElement("div");
+    studentMsg.className = "message-student";
+    studentMsg.textContent = text;
+    messagesArea.appendChild(studentMsg);
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+  }
+
+  const realInput = document.querySelector("#tutor-input, .tutor-input, [placeholder*=\"academic\"]") || messageInput;
+  if (realInput) {
+    realInput.value = text;
+  }
+
+  const sendBtn = chatForm ? chatForm.querySelector('button[type="submit"]') : null;
+  if (sendBtn) {
+    sendBtn.click();
+  } else {
+    void sendMessage(text);
+  }
+
+  syncTutorFullscreenOverlay();
+}
+
+function openTutorFullscreen() {
+  if (tutorFullscreenOverlay) {
+    return;
+  }
+  if (!tutorChatPanel || !messageInput) {
+    return;
+  }
+
+  const overlay = document.createElement("div");
+  overlay.className = "tutor-fullscreen-overlay";
+  overlay.id = "tutor-fullscreen-overlay";
+
+  const topbar = document.createElement("div");
+  topbar.className = "tutor-fullscreen-topbar";
+  topbar.innerHTML = `
+    <span class="fs-title">Astra Tutor</span>
+    <button class="tutor-fullscreen-exit-btn" onclick="closeTutorFullscreen()">✕ Exit Fullscreen</button>
+  `;
+
+  const messagesArea = document.createElement("div");
+  messagesArea.className = "tutor-fullscreen-messages";
+  messagesArea.id = "fs-messages-area";
+
+  tutorFullscreenMirrorSource = _getTutorFullscreenSourceFeed();
+  if (tutorFullscreenMirrorSource) {
+    Array.from(tutorFullscreenMirrorSource.children).forEach((node) => {
+      if (node.classList && node.classList.contains("message")) {
+        messagesArea.appendChild(_cloneFullscreenMessageNode(node));
+      }
+    });
+  }
+
+  window.setTimeout(() => {
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+  }, 100);
+
+  const inputArea = document.createElement("div");
+  inputArea.className = "tutor-fullscreen-input-area";
+  inputArea.innerHTML = `
+    <textarea id="fs-input" placeholder="Ask your tutor..." rows="1" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();fsSendMessage()}"></textarea>
+    <button class="tutor-fullscreen-send-btn" onclick="fsSendMessage()">Send</button>
+  `;
+
+  overlay.appendChild(topbar);
+  overlay.appendChild(messagesArea);
+  overlay.appendChild(inputArea);
+  document.body.appendChild(overlay);
+
+  tutorFullscreenOverlay = overlay;
+  tutorFullscreenMessages = messagesArea;
+  tutorFullscreenInputArea = inputArea;
+  tutorFullscreenTextarea = overlay.querySelector("#fs-input");
+  tutorFullscreenSendButton = inputArea.querySelector(".tutor-fullscreen-send-btn");
+  _setTutorFullscreenButtonState(true);
+
+  if (tutorFullscreenMirrorObserver) {
+    tutorFullscreenMirrorObserver.disconnect();
+  }
+  if (tutorFullscreenMirrorSource) {
+    tutorFullscreenMirrorObserver = new MutationObserver(() => {
+      if (!tutorFullscreenOverlay) {
+        return;
+      }
+      syncTutorFullscreenOverlay();
+    });
+    tutorFullscreenMirrorObserver.observe(tutorFullscreenMirrorSource, { childList: true, subtree: true });
+  }
+
+  syncTutorFullscreenOverlay();
+  window.setTimeout(() => tutorFullscreenTextarea && tutorFullscreenTextarea.focus(), 200);
+}
+
+function toggleTutorFullscreen() {
+  if (tutorFullscreenOverlay) {
+    closeTutorFullscreen();
+    return;
+  }
+  openTutorFullscreen();
+}
+
 function setAuthMode(mode) {
   const signinActive = mode === "signin";
   signinPanel.classList.toggle("hidden", !signinActive);
@@ -1314,10 +2628,166 @@ function updateTutorSummary(profile) {
   }
 }
 
-function renderTutorBrain(brain) {
-  activeTutorBrain = brain || null;
-  updateTutorRoomLivePanel();
-}
+  function renderTutorBrain(brain) {
+    activeTutorBrain = brain || null;
+    updateTutorRoomLivePanel();
+  }
+
+  function setAvatarStatusText(text) {
+    const value = String(text || "Ready").trim() || "Ready";
+    if (avatarStatusText) {
+      avatarStatusText.textContent = value;
+    }
+    if (avatarStageStatus) {
+      avatarStageStatus.textContent = value;
+    }
+  }
+
+  function getAvatarConfigUrl() {
+    return "/avatars/avatar_config.json";
+  }
+
+  async function loadStudentProfile() {
+    if (activeProfile) {
+      return activeProfile;
+    }
+    const name = activeUser?.name || activeUser?.student_name || "";
+    if (!name) {
+      return null;
+    }
+    try {
+      const response = await fetch(`/api/profile/${encodeURIComponent(name)}`);
+      const payload = await response.json();
+      if (!response.ok) {
+        return null;
+      }
+      return payload.profile || null;
+    } catch (error) {
+      console.warn("Could not load student profile for avatar stage:", error);
+      return null;
+    }
+  }
+
+  async function loadAvatarConfig() {
+    if (avatarConfigCache) {
+      return avatarConfigCache;
+    }
+    try {
+      const response = await fetch(getAvatarConfigUrl());
+      const payload = await response.json();
+      avatarConfigCache = payload && Array.isArray(payload.avatars) ? payload : { avatars: [] };
+      return avatarConfigCache;
+    } catch (error) {
+      console.warn("Could not load avatar config:", error);
+      avatarConfigCache = { avatars: [] };
+      return avatarConfigCache;
+    }
+  }
+
+  function normalizeAvatarId(value) {
+    return String(value || "").trim().toLowerCase().replace(/_/g, "-");
+  }
+
+  function getAvatarConfigForTutorId(config, tutorId) {
+    const avatars = (config && Array.isArray(config.avatars) ? config.avatars : []).filter(Boolean);
+    if (!avatars.length) {
+      return null;
+    }
+    const normalizedId = normalizeAvatarId(tutorId);
+    return avatars.find((avatar) => normalizeAvatarId(avatar.id) === normalizedId) || avatars[0] || null;
+  }
+
+  async function initAvatar() {
+    try {
+      if (!avatarCanvas || !window.AvatarRenderer) {
+        return null;
+      }
+      if (avatarStageInitPromise) {
+        return avatarStageInitPromise;
+      }
+
+      avatarStageInitPromise = (async () => {
+        const profile = await loadStudentProfile();
+        const config = await loadAvatarConfig();
+        const avatarConfig = getAvatarConfigForTutorId(config, profile?.selected_avatar || profile?.tutor_id || "calm-mentor");
+        if (!avatarConfig) {
+          return null;
+        }
+
+        if (!avatarRenderer) {
+          avatarRenderer = new AvatarRenderer("avatar-canvas");
+          await avatarRenderer.init();
+          window.addEventListener("resize", () => {
+            if (!avatarRenderer || !avatarCanvas) {
+              return;
+            }
+            avatarRenderer.resize(avatarCanvas.clientWidth || 400, avatarCanvas.clientHeight || 500);
+          });
+        }
+
+        if (avatarNameBadge) {
+          avatarNameBadge.textContent = avatarConfig.name || "Calm Mentor";
+        }
+        setAvatarStatusText("Loading avatar...");
+
+        try {
+          await avatarRenderer.loadAvatar(avatarConfig.glb_url);
+          avatarRenderer.canvas.style.display = "block";
+          setAvatarStatusText("Ready");
+        } catch (error) {
+          console.log("GLB not found, using 2D fallback:", error);
+          avatarRenderer.useFallback2D(avatarConfig.fallback_image || "");
+          setAvatarStatusText("Ready");
+        }
+
+        return avatarRenderer;
+      })();
+
+      const instance = await avatarStageInitPromise;
+      return instance;
+    } catch (error) {
+      console.error("Avatar init failed:", error);
+      setAvatarStatusText("Ready");
+      return null;
+    } finally {
+      avatarStageInitPromise = null;
+    }
+  }
+
+  function avatarSpeak(text) {
+    const textToSpeak = String(text || lastTutorReplyText || lastTutorReply || (activeAvatar && activeAvatar.sample_line) || "").trim();
+    if (!textToSpeak) {
+      return;
+    }
+    if (!supportsSpeech()) {
+      setAvatarStatusText("Voice unavailable");
+      return;
+    }
+    lastTutorReplyText = textToSpeak;
+    if (avatarRenderer) {
+      avatarRenderer.startSpeakingAnimation();
+    }
+    setAvatarStatusText("Speaking...");
+    speakText(textToSpeak);
+  }
+
+  function avatarStop() {
+    window.speechSynthesis.cancel();
+    if (avatarRenderer) {
+      avatarRenderer.stopSpeakingAnimation();
+    }
+    setAvatarStatusText("Ready");
+    stopTalkingFace();
+    setCaption("Speech stopped.");
+    if (activeSpeechUtterance) {
+      activeSpeechUtterance = null;
+    }
+    updateTutorRoomLivePanel();
+  }
+
+  function onTutorReplyReceived(replyText) {
+    lastTutorReplyText = String(replyText || "").trim();
+  }
 
 function updateTutorRoomLivePanel() {
   if (!tutorRoomLivePill || !tutorRoomLiveSummary) {
@@ -1375,7 +2845,7 @@ function updateTutorRoomLivePanel() {
   if (generateVideoAnswerBtn) {
     const hasQuestion = !!(lastTutorQuestion.trim() || lastTutorReply.trim());
     generateVideoAnswerBtn.disabled = !hasQuestion;
-    generateVideoAnswerBtn.textContent = "Generate video answer";
+    generateVideoAnswerBtn.textContent = "Generate";
   }
   if (tutorRoomLiveHint) {
     tutorRoomLiveHint.textContent = liveLine;
@@ -1401,108 +2871,103 @@ function updateTutorRoomLivePanel() {
 
 function renderVideoAnswerBrief(brief) {
   lastVideoAnswerBrief = brief || null;
-  if (!videoAnswerBriefPanel) {
-    return;
-  }
-
-  videoAnswerBriefPanel.innerHTML = "";
   if (!brief) {
-    const empty = document.createElement("p");
-    empty.className = "muted";
-    empty.textContent = "Ask a tutor question, then generate a video answer to prepare the speaking tutor video and its live status.";
-    videoAnswerBriefPanel.appendChild(empty);
+    if (videoAnswerBriefPanel) {
+      videoAnswerBriefPanel.innerHTML = "";
+    }
+    setVideoTutorStatus("Astra is waiting for a video answer request.", { visible: true });
     if (videoRenderStatus) {
       videoRenderStatus.textContent = "Generate a video answer to launch the full tutor video pipeline.";
     }
-    if (videoStatusPanel) {
-      videoStatusPanel.textContent = "Astra is waiting for a video answer request.";
-    }
+    showToast("Astra is waiting for a video answer request.", "success");
     if (videoTranscriptPanel) {
       videoTranscriptPanel.textContent = "";
     }
     return;
   }
 
-  const header = document.createElement("div");
-  header.className = "video-answer-brief-header";
+  if (videoAnswerBriefPanel) {
+    videoAnswerBriefPanel.innerHTML = "";
+    const header = document.createElement("div");
+    header.className = "video-answer-brief-header";
 
-  const titleBlock = document.createElement("div");
-  const title = document.createElement("p");
-  title.className = "card-title";
-  title.textContent = `${brief.tutor_face?.name || "Astra Tutor"} video answer`;
-  const meta = document.createElement("p");
-  meta.className = "muted";
-  meta.textContent = `${brief.subject || "JEE"} | ${brief.topic || "Concept"} | Level ${brief.tutor_level || 3} | ${brief.expected_duration_seconds || 0}s`;
-  titleBlock.appendChild(title);
-  titleBlock.appendChild(meta);
+    const titleBlock = document.createElement("div");
+    const title = document.createElement("p");
+    title.className = "card-title";
+    title.textContent = `${brief.tutor_face?.name || "Astra Tutor"} video answer`;
+    const meta = document.createElement("p");
+    meta.className = "muted";
+    meta.textContent = `${brief.subject || "JEE"} | ${brief.topic || "Concept"} | Level ${brief.tutor_level || 3} | ${brief.expected_duration_seconds || 0}s`;
+    titleBlock.appendChild(title);
+    titleBlock.appendChild(meta);
 
-  const status = document.createElement("span");
-  status.className = "pill";
-  status.textContent = brief.status || "brief_ready";
-  header.appendChild(titleBlock);
-  header.appendChild(status);
-  videoAnswerBriefPanel.appendChild(header);
+    const status = document.createElement("span");
+    status.className = "pill";
+    status.textContent = brief.status || "brief_ready";
+    header.appendChild(titleBlock);
+    header.appendChild(status);
+    videoAnswerBriefPanel.appendChild(header);
 
-  const question = document.createElement("p");
-  question.className = "video-answer-brief-question";
-  question.textContent = brief.question ? `Question: ${brief.question}` : "Question not available.";
-  videoAnswerBriefPanel.appendChild(question);
+    const question = document.createElement("p");
+    question.className = "video-answer-brief-question";
+    question.textContent = brief.question ? `Question: ${brief.question}` : "Question not available.";
+    videoAnswerBriefPanel.appendChild(question);
 
-  const voice = document.createElement("p");
-  voice.className = "muted";
-  const voiceStyle = brief.voice_style || {};
-  voice.textContent = `Voice: ${voiceStyle.avatar_name || "Astra Tutor"} | ${voiceStyle.assistant_voice_family || "female"} | ${voiceStyle.speaking_style || "clear and warm"}`;
-  videoAnswerBriefPanel.appendChild(voice);
+    const voice = document.createElement("p");
+    voice.className = "muted";
+    const voiceStyle = brief.voice_style || {};
+    voice.textContent = `Voice: ${voiceStyle.avatar_name || "Astra Tutor"} | ${voiceStyle.assistant_voice_family || "female"} | ${voiceStyle.speaking_style || "clear and warm"}`;
+    videoAnswerBriefPanel.appendChild(voice);
 
-  const scriptHeading = document.createElement("p");
-  scriptHeading.className = "memory-heading";
-  scriptHeading.textContent = "Script blocks";
-  videoAnswerBriefPanel.appendChild(scriptHeading);
+    const scriptHeading = document.createElement("p");
+    scriptHeading.className = "memory-heading";
+    scriptHeading.textContent = "Script blocks";
+    videoAnswerBriefPanel.appendChild(scriptHeading);
 
-  const scriptList = document.createElement("div");
-  scriptList.className = "video-answer-brief-list";
-  (brief.script_blocks || []).forEach((block) => {
-    const item = document.createElement("div");
-    item.className = "video-answer-brief-item";
-    const itemTitle = document.createElement("p");
-    itemTitle.className = "memory-heading";
-    itemTitle.textContent = block.label || "Scene";
-    const itemText = document.createElement("p");
-    itemText.className = "muted";
-    itemText.textContent = block.text || "";
-    item.appendChild(itemTitle);
-    item.appendChild(itemText);
-    scriptList.appendChild(item);
-  });
-  videoAnswerBriefPanel.appendChild(scriptList);
+    const scriptList = document.createElement("div");
+    scriptList.className = "video-answer-brief-list";
+    (brief.script_blocks || []).forEach((block) => {
+      const item = document.createElement("div");
+      item.className = "video-answer-brief-item";
+      const itemTitle = document.createElement("p");
+      itemTitle.className = "memory-heading";
+      itemTitle.textContent = block.label || "Scene";
+      const itemText = document.createElement("p");
+      itemText.className = "muted";
+      itemText.textContent = block.text || "";
+      item.appendChild(itemTitle);
+      item.appendChild(itemText);
+      scriptList.appendChild(item);
+    });
+    videoAnswerBriefPanel.appendChild(scriptList);
 
-  const sceneHeading = document.createElement("p");
-  sceneHeading.className = "memory-heading";
-  sceneHeading.textContent = "Scene and gesture plan";
-  videoAnswerBriefPanel.appendChild(sceneHeading);
+    const sceneHeading = document.createElement("p");
+    sceneHeading.className = "memory-heading";
+    sceneHeading.textContent = "Scene and gesture plan";
+    videoAnswerBriefPanel.appendChild(sceneHeading);
 
-  (brief.scene_blocks || []).forEach((scene) => {
-    const sceneItem = document.createElement("p");
-    sceneItem.className = "muted";
-    sceneItem.textContent = `${scene.label || "Scene"}: ${scene.narration || ""}${scene.gesture ? ` | Gesture: ${scene.gesture}` : ""}`;
-    videoAnswerBriefPanel.appendChild(sceneItem);
-  });
+    (brief.scene_blocks || []).forEach((scene) => {
+      const sceneItem = document.createElement("p");
+      sceneItem.className = "muted";
+      sceneItem.textContent = `${scene.label || "Scene"}: ${scene.narration || ""}${scene.gesture ? ` | Gesture: ${scene.gesture}` : ""}`;
+      videoAnswerBriefPanel.appendChild(sceneItem);
+    });
 
-  const note = document.createElement("p");
-  note.className = "muted";
-  note.textContent = Array.isArray(brief.gesture_notes) && brief.gesture_notes.length
-    ? `Gesture notes: ${brief.gesture_notes.join(" ")}`
-    : "Gesture notes will appear here.";
-  videoAnswerBriefPanel.appendChild(note);
+    const note = document.createElement("p");
+    note.className = "muted";
+    note.textContent = Array.isArray(brief.gesture_notes) && brief.gesture_notes.length
+      ? `Gesture notes: ${brief.gesture_notes.join(" ")}`
+      : "Gesture notes will appear here.";
+    videoAnswerBriefPanel.appendChild(note);
+  }
   if (videoTranscriptPanel) {
     videoTranscriptPanel.textContent = brief.recap || brief.caption_text || "The recap will appear here when Astra renders the answer.";
   }
   if (videoRenderStatus) {
     videoRenderStatus.textContent = "The tutor video brief is ready. Astra can now launch the live render pipeline.";
   }
-  if (videoStatusPanel) {
-    videoStatusPanel.textContent = "Tutor video brief ready. Generate the live video next.";
-  }
+  setVideoTutorStatus("Tutor video brief ready. Generate the live video next.", { visible: true });
+  showToast("Tutor video brief ready.", "success");
 }
 
 function _videoTopicKey(topic, subject = "") {
@@ -1556,6 +3021,8 @@ function updateAstraCurrentTopic(topic, subject, source) {
     subject: subject ? String(subject).trim() : null,
     source: source ? String(source).trim() : null,
   };
+  updateTutorInputTopicChip();
+  renderVideoTutorCurrentTopic(window.astraCurrentTopic.topic, window.astraCurrentTopic.subject);
 }
 
 function _topicSubjectColor(subject) {
@@ -1631,6 +3098,7 @@ function renderSimpleVideoBrief(panel, brief) {
 
 function renderVideoTutorRequestedList(items) {
   if (!videoTutorRequestedList) {
+    refreshVideoSearchResults();
     return;
   }
   videoTutorRequestedList.innerHTML = "";
@@ -1668,76 +3136,560 @@ function renderVideoTutorRequestedList(items) {
     card.append(head, buttons);
     videoTutorRequestedList.appendChild(card);
   });
+  refreshVideoSearchResults();
 }
 
 function renderVideoTutorWeeklyCards(items) {
   currentVideoTutorWeek = Array.isArray(items) ? items : [];
-  if (!videoTutorWeeklyVideos) {
+  renderVideoTutorSubjectItems(activeVideoSearchQuery);
+}
+
+function renderVideoTutorSuggestedChips(items) {
+  if (!vtSuggestedChips) {
     return;
   }
-  videoTutorWeeklyVideos.innerHTML = "";
-  if (!currentVideoTutorWeek.length) {
-    const empty = document.createElement("p");
-    empty.className = "muted";
-    empty.textContent = "Your weekly videos will appear here after the journey is ready.";
-    videoTutorWeeklyVideos.appendChild(empty);
-    if (videoTutorWeeklyStatus) {
-      videoTutorWeeklyStatus.textContent = "No weekly plan video items yet.";
+  vtSuggestedChips.innerHTML = "";
+  const topItems = (Array.isArray(items) ? items : [])
+    .filter((item) => item && item.topic)
+    .slice(0, 3);
+  if (!topItems.length) {
+    const chip = document.createElement("span");
+    chip.className = "ghost-button";
+    chip.textContent = "Ask for any topic";
+    vtSuggestedChips.appendChild(chip);
+    return;
+  }
+  topItems.forEach((item) => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "ghost-button";
+    chip.textContent = item.topic;
+    chip.addEventListener("click", () => {
+      if (videoQuestionInput) {
+        videoQuestionInput.value = item.topic;
+        videoQuestionInput.focus();
+      }
+      updateAstraCurrentTopic(item.topic, item.subject || _inferVideoSubjectFromText(item.topic), "weekly_plan");
+    });
+    vtSuggestedChips.appendChild(chip);
+  });
+}
+
+function renderVideoTutorCurrentTopic(topic, subject) {
+  const cleanTopic = String(topic || "").trim();
+  const displaySubject = String(subject || "").trim();
+  if (vtTopicName) {
+    vtTopicName.textContent = cleanTopic || "—";
+  }
+  if (vtTopicSubject) {
+    vtTopicSubject.textContent = displaySubject ? displaySubject : "";
+  }
+}
+
+function _videoTutorActiveSubject() {
+  return normalizeVideoSubject(activeVideoSubjectTab || "physics");
+}
+
+function _videoTutorTopicSubject(item) {
+  return normalizeVideoSubject(item && (item.subject || item.topic || item.title || ""));
+}
+
+function _videoTutorMatchesActiveSubject(item, subject = activeVideoSubjectTab) {
+  return _videoTutorTopicSubject(item) === normalizeVideoSubject(subject || "physics");
+}
+
+function _videoTutorSearchText(item) {
+  return [
+    item && item.title,
+    item && item.topic,
+    item && item.summary,
+    item && item.description,
+    item && item.status,
+    item && item.subject,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function _videoTutorQueryMatches(item, query) {
+  const cleanQuery = String(query || "").trim().toLowerCase();
+  if (!cleanQuery) {
+    return true;
+  }
+  const haystack = _videoTutorSearchText(item);
+  return Boolean(haystack) && haystack.includes(cleanQuery);
+}
+
+function _videoTutorCombinedItems(subject = activeVideoSubjectTab, query = activeVideoSearchQuery) {
+  const normalizedSubject = normalizeVideoSubject(subject || "physics");
+  const cleanQuery = String(query || "").trim();
+  const weeklyItems = Array.isArray(currentVideoTutorWeek) ? currentVideoTutorWeek : [];
+  const libraryItems = Array.isArray(videoLibrarySnapshot && videoLibrarySnapshot.videos) ? videoLibrarySnapshot.videos : [];
+  const requestedItems = Array.isArray(currentRequestedVideos) ? currentRequestedVideos : [];
+  const seen = new Map();
+  const merged = [];
+
+  const addItem = (item, source) => {
+    if (!item) {
+      return;
     }
-    return;
+    const topic = String(item.topic || item.title || "").trim();
+    if (!topic) {
+      return;
+    }
+    const candidate = {
+      ...item,
+      topic,
+      subject: item.subject || _inferVideoSubjectFromText(topic),
+      _videoSource: source,
+    };
+    if (!_videoTutorMatchesActiveSubject(candidate, normalizedSubject)) {
+      return;
+    }
+    if (cleanQuery && !_videoTutorQueryMatches(candidate, cleanQuery)) {
+      return;
+    }
+    const key = _videoTopicSlug(candidate.topic || candidate.title || candidate.topic_slug || candidate.id || "");
+    if (!key) {
+      return;
+    }
+    if (seen.has(key)) {
+      const existingIndex = seen.get(key);
+      const existing = merged[existingIndex] || {};
+      const mergedItem = {
+        ...existing,
+        ...candidate,
+        _videoSource: existing._videoSource || candidate._videoSource || source,
+      };
+      merged[existingIndex] = mergedItem;
+      return;
+    }
+    seen.set(key, merged.length);
+    merged.push(candidate);
+  };
+
+  weeklyItems.forEach((item) => addItem(item, "weekly"));
+  libraryItems.forEach((item) => addItem(item, "library"));
+  requestedItems.forEach((item) => addItem(item, "requested"));
+  return merged;
+}
+
+function _videoTutorItemBadge(item) {
+  if (item && item.video_url) {
+    return { text: "Available", className: "available" };
   }
-
-  if (videoTutorWeeklyStatus) {
-    const readyCount = currentVideoTutorWeek.filter((item) => item.video_ready).length;
-    const scriptCount = currentVideoTutorWeek.filter((item) => item.script_ready && !item.video_ready).length;
-    videoTutorWeeklyStatus.textContent = `${readyCount} video ready | ${scriptCount} script ready | ${currentVideoTutorWeek.length} planned items`;
+  if (item && (item.script_ready || item.brief || String(item.status || "").toLowerCase().includes("script"))) {
+    return { text: "Script Ready", className: "script" };
   }
+  return { text: "Planned", className: "generate" };
+}
 
-  currentVideoTutorWeek.forEach((item) => {
-    const card = document.createElement("div");
-    card.className = "video-week-card";
-    const icon = document.createElement("div");
-    icon.className = `video-week-icon subject-${_topicSubjectColor(item.subject)}`;
-    icon.textContent = (item.subject || "V").slice(0, 1);
+function _videoTutorRenderItem(item) {
+  const row = document.createElement("div");
+  row.className = "video-request-item";
 
-    const body = document.createElement("div");
-    const title = document.createElement("strong");
-    title.textContent = item.topic || "Weekly topic";
-    const meta = document.createElement("p");
-    meta.className = "muted";
-    meta.textContent = `${item.day_label || "This week"} | ${item.subject || "JEE"}`;
-    const status = document.createElement("span");
-    status.className = `pill video-week-status ${item.video_ready ? "ready" : item.script_ready ? "script" : "pending"}`;
-    status.textContent = item.status || "Not prepared yet";
-    body.appendChild(title);
-    body.appendChild(meta);
-    body.appendChild(status);
+  const head = document.createElement("div");
+  const title = document.createElement("strong");
+  title.textContent = item.topic || item.title || "Video topic";
+  const meta = document.createElement("p");
+  meta.className = "muted";
+  const subjectLabel = item.subject || _inferVideoSubjectFromText(item.topic || item.title || "");
+  const sourceLabel = item._videoSource === "library" ? "Library" : item._videoSource === "requested" ? "Requested" : "Weekly";
+  meta.textContent = [subjectLabel, item.day_label || "", sourceLabel].filter(Boolean).join(" | ");
+  head.appendChild(title);
+  head.appendChild(meta);
 
-    const actions = document.createElement("div");
-    actions.className = "mini-action-row";
+  const actions = document.createElement("div");
+  actions.className = "mini-action-row";
+  const badgeInfo = _videoTutorItemBadge(item);
+  const badge = document.createElement("span");
+  badge.className = `pill ${badgeInfo.className}`;
+  badge.textContent = badgeInfo.text;
+  actions.appendChild(badge);
+
+  if (item.video_url) {
+    const watchBtn = document.createElement("button");
+    watchBtn.type = "button";
+    watchBtn.className = "ghost-button";
+    watchBtn.textContent = "Watch";
+    watchBtn.addEventListener("click", () => {
+      openGeneratedVideoForTopic(item.topic || item.title || "Video", item.subject || "", item.video_url || "");
+    });
+    actions.appendChild(watchBtn);
+  } else {
     const generateBtn = document.createElement("button");
     generateBtn.type = "button";
     generateBtn.textContent = "Generate Video";
     generateBtn.addEventListener("click", () => {
-      openVideoTutorTopic(item.topic, item.subject, "weekly_plan");
+      openVideoTutorTopic(item.topic || item.title || "Video", item.subject || "", item._videoSource || "weekly_plan");
     });
     actions.appendChild(generateBtn);
-    if (item.video_ready && item.video_url) {
-      const watchBtn = document.createElement("button");
-      watchBtn.type = "button";
-      watchBtn.className = "ghost-button";
-      watchBtn.textContent = "Watch";
-      watchBtn.addEventListener("click", () => {
-        openGeneratedVideoForTopic(item.topic, item.subject, item.video_url);
-      });
-      actions.appendChild(watchBtn);
-    }
+  }
 
-    card.appendChild(icon);
-    card.appendChild(body);
-    card.appendChild(actions);
-    videoTutorWeeklyVideos.appendChild(card);
+  row.append(head, actions);
+  row.addEventListener("click", (event) => {
+    if (event.target && event.target.closest && event.target.closest("button")) {
+      return;
+    }
+    if (item.video_url) {
+      openGeneratedVideoForTopic(item.topic || item.title || "Video", item.subject || "", item.video_url || "");
+      return;
+    }
+    if (item.script_ready || item.brief) {
+      openVideoTutorTopic(item.topic || item.title || "Video", item.subject || "", item._videoSource || "weekly_plan");
+      return;
+    }
+    if (videoTutorRequestTopicInput) {
+      videoTutorRequestTopicInput.value = item.topic || item.title || "";
+      videoTutorRequestTopicInput.focus();
+    }
   });
+  return row;
+}
+
+function renderVideoTutorSubjectItems(query = activeVideoSearchQuery) {
+  if (!videoTutorWeeklyVideos) {
+    return;
+  }
+  const subject = _videoTutorActiveSubject();
+  const items = _videoTutorCombinedItems(subject, query);
+  videoTutorWeeklyVideos.innerHTML = "";
+  if (videoTutorWeeklyStatus) {
+    const totalWeekly = (Array.isArray(currentVideoTutorWeek) ? currentVideoTutorWeek : [])
+      .filter((item) => _videoTutorMatchesActiveSubject(item, subject)).length;
+    const totalLibrary = (Array.isArray(videoLibrarySnapshot && videoLibrarySnapshot.videos) ? videoLibrarySnapshot.videos : [])
+      .filter((item) => _videoTutorMatchesActiveSubject(item, subject)).length;
+    const searchText = String(query || "").trim();
+    videoTutorWeeklyStatus.textContent = searchText
+      ? `Showing ${items.length} match${items.length === 1 ? "" : "es"} for ${subject}.`
+      : `${totalWeekly} planned | ${totalLibrary} available | ${subject}`;
+  }
+  if (!items.length) {
+    const empty = document.createElement("div");
+    empty.className = "table-card";
+    const text = document.createElement("p");
+    text.className = "muted";
+    text.textContent = String(query || "").trim()
+      ? "No matching videos found for this subject yet."
+      : "This subject will fill with your weekly videos and matching library clips.";
+    empty.appendChild(text);
+    videoTutorWeeklyVideos.appendChild(empty);
+    return;
+  }
+  const [featuredItem, ...remainingItems] = items;
+  if (featuredItem) {
+    videoTutorWeeklyVideos.appendChild(_videoTutorRenderItem(featuredItem));
+  }
+  if (remainingItems.length) {
+    const dropdown = document.createElement("details");
+    dropdown.className = "video-week-dropdown";
+    const summary = document.createElement("summary");
+    summary.className = "video-week-dropdown-summary";
+    summary.textContent = `More videos (${remainingItems.length})`;
+    const list = document.createElement("div");
+    list.className = "video-week-dropdown-list";
+    remainingItems.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "video-week-dropdown-item";
+      row.appendChild(_videoTutorRenderItem(item));
+      list.appendChild(row);
+    });
+    dropdown.appendChild(summary);
+    dropdown.appendChild(list);
+    videoTutorWeeklyVideos.appendChild(dropdown);
+  }
+}
+
+function switchVideoSubjectTab(subject = "physics") {
+  const nextSubject = normalizeVideoSubject(subject || "physics");
+  activeVideoSubjectTab = nextSubject;
+  videoSubjectTabButtons.forEach((button) => {
+    const isActive = normalizeVideoSubject(button.dataset.videoSubjectTab || "") === nextSubject;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
+  });
+  renderVideoTutorSubjectItems(activeVideoSearchQuery);
+}
+
+function _videoSearchNormalize(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function _videoSearchCanonicalSubject(value) {
+  const normalized = _videoSearchNormalize(value);
+  if (!normalized) {
+    return "";
+  }
+  if (normalized.includes("chem")) {
+    return "chemistry";
+  }
+  if (normalized.includes("math")) {
+    return "mathematics";
+  }
+  if (normalized.includes("phys")) {
+    return "physics";
+  }
+  return normalized;
+}
+
+function _videoSearchSubjectAllowed(itemSubject, selectedSubject) {
+  const selected = _videoSearchCanonicalSubject(selectedSubject);
+  if (!selected || selected === "all") {
+    return true;
+  }
+  return _videoSearchCanonicalSubject(itemSubject || "") === selected;
+}
+
+function _videoSearchThumbnailNode(item) {
+  const thumb = document.createElement("div");
+  thumb.className = "vt-result-thumb";
+  const imageUrl = item.thumbnail_url || item.poster_url || item.cover_url || item.image_url || item.thumbnail || item.poster || "";
+  if (imageUrl) {
+    const img = document.createElement("img");
+    img.src = imageUrl;
+    img.alt = item.topic || item.title || "Video";
+    thumb.appendChild(img);
+  } else if (item.video_url) {
+    const video = document.createElement("video");
+    video.src = item.video_url;
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "metadata";
+    thumb.appendChild(video);
+  } else {
+    thumb.textContent = String((item.topic || item.title || "V").slice(0, 1)).toUpperCase();
+    thumb.classList.add("video-library-thumb-fallback");
+  }
+  return thumb;
+}
+
+function _videoSearchBadge(item) {
+  if (item && item.video_url) {
+    return { text: "Available", className: "available" };
+  }
+  const status = String(item && (item.status || item.brief_status || "") || "").toLowerCase();
+  if (item && (item.script_ready || status.includes("brief") || status.includes("script") || item.brief)) {
+    return { text: "Script Ready", className: "script" };
+  }
+  return { text: "New", className: "generate" };
+}
+
+function _videoSearchMatchScore(item, query) {
+  const cleanQuery = _videoSearchNormalize(query);
+  if (!cleanQuery) {
+    return 1;
+  }
+  const haystack = [
+    item && item.title,
+    item && item.topic,
+    item && item.summary,
+    item && item.description,
+    item && item.status,
+    item && item.subject,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  if (!haystack) {
+    return 0;
+  }
+  return haystack.includes(cleanQuery) ? 1 : 0;
+}
+
+function _videoSearchCandidateItems(query, subject) {
+  const requested = Array.isArray(currentRequestedVideos) ? currentRequestedVideos : [];
+  const library = Array.isArray(videoLibrarySnapshot && videoLibrarySnapshot.videos) ? videoLibrarySnapshot.videos : [];
+  const mergeItems = [...requested, ...library];
+  const deduped = [];
+  const seen = new Set();
+  mergeItems.forEach((item) => {
+    if (!_videoSearchSubjectAllowed(item.subject || item.topic || "", subject)) {
+      return;
+    }
+    if (!_videoSearchMatchScore(item, query)) {
+      return;
+    }
+    const key = _videoTopicSlug(item.topic || item.title || item.topic_slug || item.id || "");
+    if (!key || seen.has(key)) {
+      return;
+    }
+    seen.add(key);
+    deduped.push(item);
+  });
+  return deduped;
+}
+
+function _videoSearchDefaultItems(subject) {
+  const requested = (Array.isArray(currentRequestedVideos) ? currentRequestedVideos : [])
+    .slice(-3)
+    .reverse();
+  const library = (Array.isArray(videoLibrarySnapshot && videoLibrarySnapshot.videos) ? videoLibrarySnapshot.videos : [])
+    .slice(-3)
+    .reverse();
+  const merged = [...requested];
+  const seen = new Set(requested.map((item) => _videoTopicSlug(item.topic || item.title || item.topic_slug || item.id || "")));
+  library.forEach((item) => {
+    const key = _videoTopicSlug(item.topic || item.title || item.topic_slug || item.id || "");
+    if (!seen.has(key)) {
+      seen.add(key);
+      merged.push(item);
+    }
+  });
+  return merged;
+}
+
+function _videoSearchRenderItem(item, { generateNew = false } = {}) {
+  const row = document.createElement("div");
+  row.className = `vt-result-item${generateNew ? " generate-new" : ""}`;
+  if (generateNew) {
+    const info = document.createElement("div");
+    info.className = "vt-result-info";
+    const title = document.createElement("div");
+    title.className = "vt-result-title";
+    title.textContent = `+ Generate '${item || "topic"}' video`;
+    const meta = document.createElement("div");
+    meta.className = "vt-result-meta";
+    meta.textContent = "Create a new brief and launch a fresh video pipeline.";
+    info.appendChild(title);
+    info.appendChild(meta);
+    const badge = document.createElement("span");
+    badge.className = "vt-result-badge generate";
+    badge.textContent = "New";
+    row.appendChild(info);
+    row.appendChild(badge);
+    row.addEventListener("click", () => {
+      const topic = String(item || "").trim();
+      if (!topic) {
+        return;
+      }
+      if (videoTutorQuestionInput) {
+        videoTutorQuestionInput.value = topic;
+      }
+      if (generateVideoAnswerBtn) {
+        generateVideoAnswerBtn.click();
+      } else {
+        void generateVideoAnswerBrief();
+      }
+    });
+    return row;
+  }
+
+  const thumb = _videoSearchThumbnailNode(item);
+  const info = document.createElement("div");
+  info.className = "vt-result-info";
+  const title = document.createElement("div");
+  title.className = "vt-result-title";
+  title.textContent = item.topic || item.title || "Video topic";
+  const meta = document.createElement("div");
+  meta.className = "vt-result-meta";
+  meta.textContent = [item.subject || "JEE", item.day_label || item.status || ""].filter(Boolean).join(" | ");
+  info.appendChild(title);
+  info.appendChild(meta);
+
+  const badgeInfo = _videoSearchBadge(item);
+  const badge = document.createElement("span");
+  badge.className = `vt-result-badge ${badgeInfo.className}`;
+  badge.textContent = badgeInfo.text;
+
+  row.appendChild(thumb);
+  row.appendChild(info);
+  row.appendChild(badge);
+
+  row.addEventListener("click", () => {
+    if (item.video_url) {
+      openGeneratedVideoForTopic(item.topic || item.title || "Video", item.subject || "", item.video_url);
+      return;
+    }
+    if (badgeInfo.className === "script") {
+      openVideoTutorTopic(item.topic || item.title || "Video", item.subject || "", item.source || "request");
+      return;
+    }
+    if (videoTutorQuestionInput) {
+      videoTutorQuestionInput.value = item.topic || item.title || "";
+    }
+    if (generateVideoAnswerBtn) {
+      generateVideoAnswerBtn.click();
+    } else {
+      void generateVideoAnswerBrief();
+    }
+  });
+
+  return row;
+}
+
+function renderVideoSearchResults(query = "", subject = activeVideoSubjectTab) {
+  activeVideoSearchQuery = String(query || "").trim();
+  activeVideoSubjectTab = normalizeVideoSubject(subject || activeVideoSubjectTab || "physics");
+  renderVideoTutorSubjectItems(activeVideoSearchQuery);
+}
+
+function refreshVideoSearchResults() {
+  renderVideoTutorSubjectItems(
+    videoTutorRequestTopicInput ? videoTutorRequestTopicInput.value : activeVideoSearchQuery
+  );
+}
+
+function initVideoSearch() {
+  const input = videoTutorRequestTopicInput;
+  const searchBar = document.querySelector(".vt-search-bar");
+  if (!input || videoSearchBound) {
+    return;
+  }
+  videoSearchBound = true;
+  const rerender = () => renderVideoSearchResults(input.value, activeVideoSubjectTab);
+  input.addEventListener("input", rerender);
+  rerender();
+  if (searchBar) {
+    searchBar.dataset.bound = "1";
+  }
+}
+
+function requestVideoForTopic() {
+  const topic = String(videoTutorRequestTopicInput ? videoTutorRequestTopicInput.value : "").trim();
+  const subject = activeVideoSubjectTab || "physics";
+  const searchBar = document.querySelector(".vt-search-bar");
+  if (!topic) {
+    if (searchBar) {
+      searchBar.classList.add("vt-shake");
+      window.setTimeout(() => searchBar.classList.remove("vt-shake"), 380);
+    }
+    if (videoTutorRequestTopicInput) {
+      videoTutorRequestTopicInput.focus();
+    }
+    return;
+  }
+  activeVideoSearchQuery = topic;
+  updateAstraCurrentTopic(topic, normalizeVideoSubject(subject || _inferVideoSubjectFromText(topic)), "request");
+  const combined = _videoTutorCombinedItems(subject, topic);
+  const exactMatch = combined.find((item) => _videoTopicSlug(item.topic || item.title || "") === _videoTopicSlug(topic)) || null;
+
+  if (exactMatch && exactMatch.video_url) {
+    openGeneratedVideoForTopic(exactMatch.topic || topic, exactMatch.subject || subject, exactMatch.video_url);
+    return;
+  }
+  if (exactMatch && (exactMatch.script_ready || exactMatch.brief || String(exactMatch.status || "").toLowerCase().includes("brief"))) {
+    openVideoTutorTopic(exactMatch.topic || topic, exactMatch.subject || subject, exactMatch._videoSource || "weekly_plan");
+    return;
+  }
+  if (videoTutorQuestionInput) {
+    videoTutorQuestionInput.value = topic;
+  }
+  if (generateVideoAnswerBtn) {
+    generateVideoAnswerBtn.click();
+  } else {
+    void generateVideoAnswerBrief();
+  }
+}
+
+function setVideoTutorStatus(message, { visible = true } = {}) {
+  if (videoRenderStatus) {
+    videoRenderStatus.textContent = message || "";
+  }
+  if (videoStatusPanel) {
+    videoStatusPanel.textContent = message || "";
+    videoStatusPanel.classList.toggle("hidden", !visible);
+  }
 }
 
 function buildVideoTutorWeekFromWeeklyPlan(weeklyPayload = {}, statusItems = []) {
@@ -1790,20 +3742,13 @@ async function loadVideoTutorWorkspace() {
     currentRequestedVideos = Array.isArray(requestedPayload.requests) ? requestedPayload.requests : [];
     renderVideoTutorWeeklyCards(buildVideoTutorWeekFromWeeklyPlan(weeklyPayload || {}, currentVideoTutorPlanStatus));
     renderVideoTutorRequestedList(currentRequestedVideos);
-    if (videoTutorRequestTopicInput && window.astraCurrentTopic && window.astraCurrentTopic.topic) {
-      videoTutorRequestTopicInput.value = window.astraCurrentTopic.topic;
-    }
-    if (videoTutorRequestSubjectSelect && window.astraCurrentTopic && window.astraCurrentTopic.subject) {
-      const wanted = String(window.astraCurrentTopic.subject).toLowerCase();
-      const option = Array.from(videoTutorRequestSubjectSelect.options).find((item) => String(item.value).toLowerCase() === wanted);
-      if (option) {
-        videoTutorRequestSubjectSelect.value = option.value;
+    switchVideoSubjectTab(activeVideoSubjectTab || "physics");
+    initVideoSearch();
+    refreshVideoSearchResults();
+    } catch (error) {
+      if (videoTutorWeeklyStatus) {
+        videoTutorWeeklyStatus.textContent = error.message || "Could not load the weekly video plan right now.";
       }
-    }
-  } catch (error) {
-    if (videoTutorWeeklyStatus) {
-      videoTutorWeeklyStatus.textContent = error.message || "Could not load the weekly video plan right now.";
-    }
   }
 }
 
@@ -1892,6 +3837,7 @@ async function loadRequestedVideoBrief(topic, subject, source = "request") {
     if (videoTutorRequestStatus) {
       videoTutorRequestStatus.textContent = `Brief ready for ${topic}.`;
     }
+    setActiveStudioPane("lesson");
     return activeVideoTutorBrief;
   } catch (error) {
     if (videoTutorRequestBriefPanel) {
@@ -1901,11 +3847,11 @@ async function loadRequestedVideoBrief(topic, subject, source = "request") {
       note.textContent = error.message || "Could not load the requested brief right now.";
       videoTutorRequestBriefPanel.appendChild(note);
     }
-    if (videoTutorRequestStatus) {
-      videoTutorRequestStatus.textContent = error.message || "Could not load the requested brief right now.";
-    }
     if (generateRequestedFullVideoBtn) {
       generateRequestedFullVideoBtn.disabled = true;
+    }
+    if (videoTutorRequestStatus) {
+      videoTutorRequestStatus.textContent = error.message || "Could not load the requested brief right now.";
     }
     return null;
   }
@@ -1916,16 +3862,12 @@ function openVideoTutorTopic(topic, subject, source = "weekly_plan") {
   if (!cleanTopic) {
     return;
   }
-  updateAstraCurrentTopic(cleanTopic, subject || _inferVideoSubjectFromText(cleanTopic), source);
+  const nextSubject = normalizeVideoSubject(subject || _inferVideoSubjectFromText(cleanTopic));
+  switchVideoSubjectTab(nextSubject);
+  activeVideoSearchQuery = cleanTopic;
+  updateAstraCurrentTopic(cleanTopic, nextSubject, source);
   if (videoTutorRequestTopicInput) {
     videoTutorRequestTopicInput.value = cleanTopic;
-  }
-  if (videoTutorRequestSubjectSelect) {
-    const desired = String(subject || _inferVideoSubjectFromText(cleanTopic)).toLowerCase();
-    const option = Array.from(videoTutorRequestSubjectSelect.options).find((item) => String(item.value).toLowerCase() === desired);
-    if (option) {
-      videoTutorRequestSubjectSelect.value = option.value;
-    }
   }
   dismissedVideoSuggestionTopics.add(_videoTopicKey(cleanTopic, subject || ""));
   setActiveTab("videoTutorTab");
@@ -1935,16 +3877,12 @@ function openVideoTutorTopic(topic, subject, source = "weekly_plan") {
 function openGeneratedVideoForTopic(topic, subject, videoUrl = "") {
   const cleanTopic = String(topic || "").trim();
   if (cleanTopic) {
-    updateAstraCurrentTopic(cleanTopic, subject || _inferVideoSubjectFromText(cleanTopic), "request");
+    const nextSubject = normalizeVideoSubject(subject || _inferVideoSubjectFromText(cleanTopic));
+    switchVideoSubjectTab(nextSubject);
+    activeVideoSearchQuery = cleanTopic;
+    updateAstraCurrentTopic(cleanTopic, nextSubject, "request");
     if (videoTutorRequestTopicInput) {
       videoTutorRequestTopicInput.value = cleanTopic;
-    }
-    if (videoTutorRequestSubjectSelect) {
-      const desired = String(subject || _inferVideoSubjectFromText(cleanTopic)).toLowerCase();
-      const option = Array.from(videoTutorRequestSubjectSelect.options).find((item) => String(item.value).toLowerCase() === desired);
-      if (option) {
-        videoTutorRequestSubjectSelect.value = option.value;
-      }
     }
   }
   setActiveTab("videoTutorTab");
@@ -1959,7 +3897,7 @@ function openGeneratedVideoForTopic(topic, subject, videoUrl = "") {
       }
     }
     if (videoTutorRequestStatus) {
-      videoTutorRequestStatus.textContent = "Playing the generated video.";
+      setVideoTutorStatus("Playing the generated video.", { visible: true });
     }
   }
 }
@@ -2022,16 +3960,18 @@ async function generateVideoAnswerBrief() {
       videoRenderStatus.textContent = "Ask Astra a question first, then generate the tutor video.";
       videoRenderStatus.style.display = "block";
     }
-    if (videoStatusPanel) {
-      videoStatusPanel.textContent = "Ask Astra a question first, then generate the tutor video.";
-      videoStatusPanel.style.display = "block";
-    }
+    setVideoTutorStatus("Ask Astra a question first, then generate the tutor video.", { visible: true });
     return;
   }
 
+  const briefTopic = _inferVideoTopicFromText(question);
+  const briefSubject = _inferVideoSubjectFromText(question);
+  setAstraStatus(`Generating video for ${briefTopic}... scripting`, "working");
+  logSessionActivity(`Requested video brief for ${briefTopic}`);
+
   if (generateVideoAnswerBtn) {
     generateVideoAnswerBtn.disabled = true;
-    generateVideoAnswerBtn.textContent = "Generating video...";
+    generateVideoAnswerBtn.textContent = "Generating...";
   }
 
   try {
@@ -2060,6 +4000,7 @@ async function generateVideoAnswerBrief() {
         "tutor"
       );
       renderVideoAnswerBrief(briefPayload.video_answer_brief);
+      setActiveStudioPane("lesson");
       if (videoTutorQuestionInput) {
         videoTutorQuestionInput.value = question;
       }
@@ -2075,8 +4016,9 @@ async function generateVideoAnswerBrief() {
   } finally {
     if (generateVideoAnswerBtn) {
       generateVideoAnswerBtn.disabled = false;
-      generateVideoAnswerBtn.textContent = "Generate video answer";
+      generateVideoAnswerBtn.textContent = "Generate";
     }
+    setAstraStatus(`Astra is ready. Today's focus: ${briefTopic} — ${briefSubject}`, "success", true);
     updateTutorRoomLivePanel();
   }
 }
@@ -2127,10 +4069,7 @@ async function requestTutorVideo(question, topic, subject) {
   ).trim();
   if (!questionText) {
     console.log("Video Answer aborted: no question text.");
-    if (videoStatusPanel) {
-      videoStatusPanel.textContent = "Ask Astra a tutor question first, then request the video answer.";
-      videoStatusPanel.style.display = "block";
-    }
+    setVideoTutorStatus("Ask Astra a tutor question first, then request the video answer.", { visible: true });
     return;
   }
 
@@ -2139,14 +4078,14 @@ async function requestTutorVideo(question, topic, subject) {
   const tutorPersonality = (activeProfile.tutor_style || activeProfile.tutor_personality_notes || activeTutorFace?.tagline || activeTutorFace?.name || "Warm, clear tutor").trim();
   const inferredTopic = String(topic || (lastVideoAnswerBrief && lastVideoAnswerBrief.topic) || questionText).trim();
   const inferredSubject = normalizeVideoSubject(subject || (lastVideoAnswerBrief && lastVideoAnswerBrief.subject) || inferVideoSubjectFromQuestion(questionText) || activeProfile.exam || "");
+  updateAstraCurrentTopic(inferredTopic, inferredSubject, "request");
+  setAstraStatus(`Generating video for ${inferredTopic}...`, "working");
+  showKnowledgeBaseTag("", false);
+  logSessionActivity(`Requested full video for ${inferredTopic}`);
 
   clearTutorVideoPolling();
   activeTutorVideoJobId = "";
-  if (videoStatusPanel) {
-    videoStatusPanel.classList.remove("hidden");
-    videoStatusPanel.textContent = "Astra is preparing your explanation...";
-    videoStatusPanel.style.display = "block";
-  }
+  setVideoTutorStatus("Astra is preparing your explanation...", { visible: true });
   if (videoRenderStatus) {
     videoRenderStatus.textContent = "Astra is preparing your explanation...";
   }
@@ -2187,18 +4126,17 @@ async function requestTutorVideo(question, topic, subject) {
       if (topic) {
         void updateRequestedVideoStatus(_videoTopicSlug(topic), "generating", activeTutorVideoJobId, "");
       }
-    } else if (videoStatusPanel) {
-      videoStatusPanel.textContent = "The video job was queued, but no job id was returned.";
+    } else {
+      setVideoTutorStatus("The video job was queued, but no job id was returned.", { visible: true });
     }
+    setAstraStatus(`Generating video for ${inferredTopic}... ${payload.job_id ? "queued" : "working"}`, "working");
     return activeTutorVideoJobId || null;
   } catch (error) {
-    if (videoStatusPanel) {
-      videoStatusPanel.textContent = error.message || "The video request could not be created right now.";
-      videoStatusPanel.style.display = "block";
-    }
+    setVideoTutorStatus(error.message || "The video request could not be created right now.", { visible: true });
     if (videoRenderStatus) {
       videoRenderStatus.textContent = error.message || "The video request could not be created right now.";
     }
+    setAstraStatus(`Could not generate video: ${error.message}`, "warning", true);
     updateTutorRoomLivePanel();
     return null;
   }
@@ -2231,9 +4169,7 @@ function onVideoReady(videoUrl, recapText = "") {
       // Ignore autoplay failures; controls remain available.
     }
   }
-  if (videoStatusPanel) {
-    videoStatusPanel.classList.add("hidden");
-  }
+  setVideoTutorStatus("", { visible: false });
   if (videoTranscriptPanel) {
     videoTranscriptPanel.textContent = recapText || (lastVideoAnswerBrief && (lastVideoAnswerBrief.recap || lastVideoAnswerBrief.caption_text)) || "The tutor recap will appear here.";
   }
@@ -2276,38 +4212,34 @@ function startVideoPolling(jobId) {
       const status = String(payload.status || "pending").toLowerCase();
       if (status === "ready" && payload.video_url) {
         onVideoReady(payload.video_url, payload.script?.recap || payload.script?.caption_text || "");
+        setAstraStatus("Video ready. You can watch it now.", "success", true);
         return;
       }
       if (status === "failed") {
         clearTutorVideoPolling();
-        if (videoStatusPanel) {
-          videoStatusPanel.classList.remove("hidden");
-          videoStatusPanel.textContent = "Something went wrong. Showing text answer instead.";
-        }
+        setVideoTutorStatus("Something went wrong. Showing text answer instead.", { visible: true });
         if (videoRenderStatus) {
           videoRenderStatus.textContent = "Something went wrong. Showing text answer instead.";
         }
         if (tutorVideoAnswerPlayer) {
           tutorVideoAnswerPlayer.classList.add("hidden");
         }
+        setAstraStatus("Video generation failed.", "warning", true);
         updateTutorRoomLivePanel();
         return;
       }
-      if (videoStatusPanel) {
-        videoStatusPanel.textContent = statusMessages[status] || "Astra is preparing your explanation...";
-      }
+      setVideoTutorStatus(statusMessages[status] || "Astra is preparing your explanation...", { visible: true });
       if (videoRenderStatus) {
         videoRenderStatus.textContent = statusMessages[status] || "Astra is preparing your explanation...";
       }
+      setAstraStatus(`Generating video for ${activeVideoTutorRequest?.topic || "your topic"}... ${String(statusMessages[status] || "Astra is preparing your explanation...").toLowerCase()}`, "working");
     } catch (error) {
       clearTutorVideoPolling();
-      if (videoStatusPanel) {
-        videoStatusPanel.classList.remove("hidden");
-        videoStatusPanel.textContent = "Something went wrong. Showing text answer instead.";
-      }
+      setVideoTutorStatus("Something went wrong. Showing text answer instead.", { visible: true });
       if (videoRenderStatus) {
         videoRenderStatus.textContent = error.message || "Something went wrong. Showing text answer instead.";
       }
+      setAstraStatus(`Could not generate video: ${error.message}`, "warning", true);
       updateTutorRoomLivePanel();
     }
   };
@@ -4207,6 +6139,7 @@ function renderChapterMasteryBoard(payload) {
     });
     chapterMasteryGrid.appendChild(button);
   });
+  updateContextPanel(document.querySelector(".tab-panel.active")?.id || "");
 }
 
 function renderChapterDetailPanel(chapter) {
@@ -4267,6 +6200,7 @@ function renderChapterAnalytics(payload) {
     row.append(title, meta);
     chapterAnalyticsList.appendChild(row);
   });
+  updateContextPanel(document.querySelector(".tab-panel.active")?.id || "");
 }
 
 function renderChapterRevisionTracker(payload) {
@@ -4310,6 +6244,7 @@ function renderChapterRevisionTracker(payload) {
     row.append(title, meta);
     chapterRevisionList.appendChild(row);
   });
+  updateContextPanel(document.querySelector(".tab-panel.active")?.id || "");
 }
 
 function hideChapterResumeUI() {
@@ -5531,11 +7466,11 @@ function stopLessonNarration(keepCaption = false) {
   if (activeLessonNarration) {
     activeLessonNarration.cancelled = true;
     activeLessonNarration = null;
-  }
-  if (!keepCaption) {
-    if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
-    stopTalkingFace();
-  }
+    }
+    if (!keepCaption) {
+      setAvatarStatusText("Ready");
+      stopTalkingFace();
+    }
 }
 
 function startLessonNarration(video, paintScene) {
@@ -5553,12 +7488,12 @@ function startLessonNarration(video, paintScene) {
     if (controller.cancelled) {
       return;
     }
-    if (sceneIndex >= scenes.length) {
-      activeLessonNarration = null;
-      if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
-      stopTalkingFace();
-      return;
-    }
+      if (sceneIndex >= scenes.length) {
+        activeLessonNarration = null;
+        setAvatarStatusText("Ready");
+        stopTalkingFace();
+        return;
+      }
 
     const scene = scenes[sceneIndex];
     paintScene(sceneIndex);
@@ -5576,10 +7511,10 @@ function startLessonNarration(video, paintScene) {
     if (chosenVoice) {
       utterance.voice = chosenVoice;
     }
-    utterance.rate = ((avatar && avatar.voice_rate) || 0.96) * 0.94;
-    utterance.pitch = (avatar && avatar.voice_pitch) || 1.0;
-    if (avatarStageStatus) avatarStageStatus.textContent = "Explaining Live";
-    updateTalkingFace(1);
+      utterance.rate = ((avatar && avatar.voice_rate) || 0.96) * 0.94;
+      utterance.pitch = (avatar && avatar.voice_pitch) || 1.0;
+      setAvatarStatusText("Explaining Live");
+      updateTalkingFace(1);
 
     utterance.onboundary = (event) => {
       const index = typeof event.charIndex === "number" ? event.charIndex : 0;
@@ -6561,6 +8496,7 @@ function renderTutorVideoBridge(video) {
 function renderVideoLibrary(snapshot) {
   videoLibrarySnapshot = snapshot || null;
   if (!tutorVideoList) {
+    refreshVideoSearchResults();
     return;
   }
 
@@ -6578,13 +8514,7 @@ function renderVideoLibrary(snapshot) {
     }
     activeTutorVideo = null;
     if (tutorVideoTitle) {
-      tutorVideoTitle.textContent = "No video selected";
-    }
-    if (tutorVideoMeta) {
-      tutorVideoMeta.textContent = "Add videos to the tutor media folder or manifest and they will appear in the tutor room.";
-    }
-    if (tutorVideoSummary) {
-      tutorVideoSummary.textContent = "Once videos are available, Astra will rank them by exam relevance and topic weakness inside the tutor room.";
+      tutorVideoTitle.textContent = "Welcome";
     }
     renderTutorVideoBridge(null);
     const mediaRoot = APP_CONFIG.video_library_media_root || "web/media/tutor-videos";
@@ -6598,92 +8528,100 @@ function renderVideoLibrary(snapshot) {
 
   const videoItems = snapshot.videos;
   const selectedVideoId = activeTutorVideo && activeTutorVideo.id ? activeTutorVideo.id : "";
-  const selectedVideo = videoItems.find((item) => item.id === selectedVideoId) || videoItems[0];
+  const selectedVideo = videoItems.find((item) => item.id === selectedVideoId) || pickWelcomeTutorVideo(snapshot) || videoItems[0];
   activeTutorVideo = selectedVideo || null;
-  if (openVideoBridgeBtn) {
-    openVideoBridgeBtn.disabled = !selectedVideo;
-  }
-  if (useVideoInTutorBtn) {
-    useVideoInTutorBtn.disabled = !selectedVideo;
-  }
 
   if (tutorVideoPlayer && selectedVideo && selectedVideo.url) {
     tutorVideoPlayer.src = selectedVideo.url;
     tutorVideoPlayer.load();
+    if (openVideoBridgeBtn) {
+      openVideoBridgeBtn.disabled = false;
+    }
+    if (useVideoInTutorBtn) {
+      useVideoInTutorBtn.disabled = false;
+    }
   }
   if (tutorVideoTitle) {
-    tutorVideoTitle.textContent = selectedVideo ? selectedVideo.title || "Tutor Video" : "No video selected";
+    tutorVideoTitle.textContent = selectedVideo ? selectedVideo.title || "Welcome" : "Welcome";
   }
-  if (tutorVideoMeta) {
-    const metaBits = [];
-    if (selectedVideo && selectedVideo.topic) {
-      metaBits.push(selectedVideo.topic);
-    }
-    if (selectedVideo && selectedVideo.duration_label) {
-      metaBits.push(selectedVideo.duration_label);
-    }
-    if (selectedVideo && selectedVideo.level) {
-      metaBits.push(selectedVideo.level);
-    }
-    if (selectedVideo && selectedVideo.relevance_score !== undefined) {
-      metaBits.push(`Relevance ${selectedVideo.relevance_score}`);
-    }
-    tutorVideoMeta.textContent = metaBits.length
-      ? metaBits.join(" | ")
-      : "A video will appear here once it is added to the library.";
-  }
-  if (tutorVideoSummary) {
-    tutorVideoSummary.textContent = selectedVideo && selectedVideo.summary
-      ? selectedVideo.summary
-      : "Use this video as the seed for a visual recap, a 3D concept bridge, or a tutor follow-up prompt.";
-  }
-
-  renderTutorVideoBridge(selectedVideo);
 
   videoItems.forEach((video) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `video-library-item${selectedVideo && video.id === selectedVideo.id ? " active" : ""}`;
-    button.addEventListener("click", () => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = `video-library-item${selectedVideo && video.id === selectedVideo.id ? " active" : ""}`;
+    card.addEventListener("click", () => {
       activeTutorVideo = video;
-      focusTutorRoomStage("video-selection");
+      if (video.url) {
+        if (tutorVideoPlayer) {
+          tutorVideoPlayer.src = video.url;
+          tutorVideoPlayer.load();
+          const playResult = tutorVideoPlayer.play();
+          if (playResult && typeof playResult.catch === "function") {
+            playResult.catch(() => {});
+          }
+        }
+        if (tutorVideoTitle) {
+          tutorVideoTitle.textContent = video.title || "Welcome";
+        }
+        openGeneratedVideoForTopic(video.topic || video.title || "Tutor Video", video.subject || "", video.url);
+      } else {
+        updateAstraCurrentTopic(video.topic || video.title || "", video.subject || "", "video_library");
+      }
       renderVideoLibrary(videoLibrarySnapshot);
     });
 
+    const info = document.createElement("div");
+    info.className = "video-library-player-copy";
     const title = document.createElement("strong");
+    title.className = "exam-chip-title";
     title.textContent = video.title || "Tutor Video";
-    button.appendChild(title);
 
-    const description = document.createElement("p");
-    description.className = "muted";
-    description.textContent = video.summary || "A lesson clip that can be bridged into the 3D concept board.";
-    button.appendChild(description);
-
-    const badges = document.createElement("div");
-    badges.className = "video-library-badges";
-    const badgeValues = [];
-    if (video.topic) {
-      badgeValues.push(video.topic);
-    }
-    if (video.source_type) {
-      badgeValues.push(video.source_type === "local_file" ? "Local file" : "Manifest");
-    }
-    if (Array.isArray(video.tags) && video.tags.length) {
-      badgeValues.push(...video.tags.slice(0, 3));
-    }
-    if (video.relevance_score !== undefined) {
-      badgeValues.push(`Score ${video.relevance_score}`);
-    }
-    badgeValues.slice(0, 4).forEach((value) => {
-      const chip = document.createElement("span");
-      chip.className = "video-library-chip";
-      chip.textContent = value;
-      badges.appendChild(chip);
-    });
-    button.appendChild(badges);
-
-    tutorVideoList.appendChild(button);
+    info.appendChild(title);
+    card.appendChild(info);
+    tutorVideoList.appendChild(card);
   });
+  ensureWelcomeTutorVideoLoaded();
+  renderVideoTutorSubjectItems(activeVideoSearchQuery);
+}
+
+function pickWelcomeTutorVideo(snapshot = null) {
+  const videos = snapshot && Array.isArray(snapshot.videos) ? snapshot.videos : [];
+  if (!videos.length) {
+    return null;
+  }
+  return videos.find((video) => video.id === "welcome-back-female-tutor")
+    || videos.find((video) => video.id === "female-homepage-hero")
+    || videos.find((video) => String(video.title || "").toLowerCase().includes("welcome"))
+    || videos.find((video) => (video.tags || []).some((tag) => String(tag || "").toLowerCase().includes("welcome")))
+    || videos[0]
+    || null;
+}
+
+function ensureWelcomeTutorVideoLoaded() {
+  if (!videoLibrarySnapshot || !Array.isArray(videoLibrarySnapshot.videos) || !videoLibrarySnapshot.videos.length) {
+    return;
+  }
+  if (activeTutorVideo && activeTutorVideo.url) {
+    return;
+  }
+  const welcomeVideo = pickWelcomeTutorVideo(videoLibrarySnapshot);
+  if (!welcomeVideo || !welcomeVideo.url) {
+    return;
+  }
+  activeTutorVideo = welcomeVideo;
+  if (tutorVideoPlayer) {
+    tutorVideoPlayer.src = welcomeVideo.url;
+    tutorVideoPlayer.load();
+  }
+  if (tutorVideoTitle) {
+    tutorVideoTitle.textContent = welcomeVideo.title || "Welcome";
+  }
+  if (openVideoBridgeBtn) {
+    openVideoBridgeBtn.disabled = false;
+  }
+  if (useVideoInTutorBtn) {
+    useVideoInTutorBtn.disabled = false;
+  }
 }
 
 function preferTutorVideosForAvatar(avatar) {
@@ -7373,6 +9311,19 @@ function renderTutorCheckpointWidget(checkpoint, { practiceMode = false } = {}) 
         original_explanation: checkpoint.original_explanation || checkpoint.correct_explanation || checkpoint.question,
       });
       showResult(evaluation, optionText);
+      updateSessionCheckpointStats({
+        topic: checkpoint.topic || checkpoint.question || "Checkpoint",
+        score: evaluation.is_correct ? 100 : 45,
+        confidence: evaluation.is_correct ? "good" : "medium",
+      });
+      logSessionActivity(`Checkpoint answered for ${checkpoint.topic || "this topic"}: ${evaluation.is_correct ? "correct" : "needs revision"}`);
+      setAstraStatus(
+        evaluation.is_correct
+          ? `Updating your progress... ${checkpoint.topic || "this topic"} confidence: good`
+          : `Updating your progress... ${checkpoint.topic || "this topic"} confidence: medium`,
+        "working",
+        true
+      );
       if (!practiceMode && activeJourneySession) {
         const checkpointScore = evaluation.is_correct ? 100 : 45;
         await completeJourneySessionFromCheckpoint(checkpointScore);
@@ -7563,10 +9514,24 @@ async function loadTutorCheckpoint(topic, subject, explanationLevel, originalExp
   if (!activeProfile) {
     return;
   }
+  const topicLabel = String(topic || "").trim() || "this topic";
+  const subjectLabel = String(subject || "").trim() || "your subject";
   try {
     clearTutorCheckpointWidget();
     const chapterMode = Boolean(options.chapterMode) || isChapterCheckpointActive();
     const practiceCount = chapterMode ? 3 : Number(options.practiceCount || 0);
+    setAstraStatus(
+      chapterMode
+        ? "Pulling from JEE PYQ database..."
+        : `Searching NCERT ${subjectLabel} sources...`,
+      "working"
+    );
+    showKnowledgeBaseTag(
+      chapterMode
+        ? "Pulling from JEE PYQ database..."
+        : `Pulling from NCERT ${subjectLabel} sources...`,
+      true
+    );
     const chapterCheckpointStartedAt = Date.now();
     const checkpoint = await fetchCheckpointSet({
       student_name: activeProfile.name,
@@ -7577,21 +9542,37 @@ async function loadTutorCheckpoint(topic, subject, explanationLevel, originalExp
       practice_count: practiceCount,
     });
     activeTutorCheckpoint = checkpoint;
+    if (sessionCheckpointStats.topic !== topicLabel) {
+      sessionCheckpointStats = {
+        answered: 0,
+        average: 0,
+        confidence: "new",
+        topic: topicLabel,
+      };
+    }
+    renderSessionStats(topicLabel, sessionCheckpointStats.confidence || "new", sessionCheckpointStats.average || 0);
+    logSessionActivity(`Loaded checkpoint for ${topicLabel}`);
     if (chapterMode && Array.isArray(checkpoint.practice_questions) && checkpoint.practice_questions.length) {
       renderTutorPracticeSet(checkpoint.practice_questions, null, {
         chapterMode: true,
         onComplete: async ({ correctCount, totalCount }) => {
           const score = totalCount ? Math.round((Number(correctCount || 0) * 100) / totalCount) : 0;
           const elapsedMinutes = Math.max(1, Math.round((Date.now() - chapterCheckpointStartedAt) / 60000));
+          updateSessionCheckpointStats({ topic: topicLabel, score, confidence: score >= 85 ? "strong" : score >= 70 ? "good" : score >= 50 ? "medium" : "low" });
+          logSessionActivity(`Checkpoint ${Math.min(sessionCheckpointStats.answered, 99)} on ${topicLabel}: ${score}/100`);
           await completeChapterSubtopicFromCheckpoint(score, elapsedMinutes);
         },
       });
     } else {
       renderTutorCheckpointWidget(checkpoint);
     }
+    showKnowledgeBaseTag("", false);
+    setAstraStatus(`Astra is ready. Today's focus: ${topicLabel} — ${subjectLabel}`, "idle");
     return checkpoint;
   } catch (error) {
     console.warn("Checkpoint generation skipped:", error);
+    showKnowledgeBaseTag("", false);
+    setAstraStatus(`Checkpoint ready. ${topicLabel}`, "idle");
     return null;
   }
 }
@@ -7733,32 +9714,60 @@ async function streamTutorReply(mode, text) {
     syncTutorFullscreenOverlay();
     saveTutorCheckpoint(mode, preparedText, narration.output || preparedText);
   }
-  if (activeTutorNarration === narration) {
-    activeTutorNarration = narration.cancelled ? narration : null;
+    if (activeTutorNarration === narration) {
+      activeTutorNarration = narration.cancelled ? narration : null;
+    }
+    updateResumeControls();
+    updateTutorRoomLivePanel();
+    if (mode === "tutor") {
+      onTutorReplyReceived(preparedText);
+    }
   }
-  updateResumeControls();
-  updateTutorRoomLivePanel();
-}
 
 function setActiveTab(tabId) {
   if (tabId !== "loungeTab") {
     stopLoungeVoiceInput();
   }
+  const tabSectionMap = {
+    overviewTab: "home",
+    tutorTab: "learn",
+    tutorRoomTab: "learn",
+    videoTutorTab: "learn",
+    practiceTab: "learn",
+    mockTestTab: "learn",
+    lastMinuteTab: "learn",
+    tipsTab: "learn",
+    weeklyTab: "plan",
+    progressTab: "plan",
+    loungeTab: "connect",
+    networkTab: "connect",
+    leagueTab: "connect",
+    personalizeTab: "settings",
+    guideTab: "settings",
+    assistTab: "settings",
+  };
+  setActiveSectionGroup(tabSectionMap[tabId] || "home", { skipTabSwitch: true });
   if (tabId === "leagueTab" && !isLeagueTabEnabled()) {
     tabId = "overviewTab";
   }
-  if (tabId === "videoTutorTab" && activeStudioPane !== "threeConceptPanel") {
-    setActiveStudioPane("threeConceptPanel");
-  }
-  if (tabId === "tutorRoomTab" && voiceChatMode && !voiceChatMode.checked) {
-    voiceChatMode.checked = true;
-    applyAccessibilityPreferences();
-  }
-  if (tabId === "weeklyTab" && activeProfile) {
-    window.setTimeout(() => {
-      refreshWeeklyPlan();
-      refreshJourneyDashboard();
-      refreshActiveChapterSession();
+    if (tabId === "videoTutorTab" && activeStudioPane !== "threeConceptPanel") {
+      setActiveStudioPane("threeConceptPanel");
+    }
+    if (tabId === "tutorRoomTab" && voiceChatMode && !voiceChatMode.checked) {
+      voiceChatMode.checked = true;
+      applyAccessibilityPreferences();
+    }
+    if (tabId === "tutorRoomTab") {
+      if (activeStudioPane !== "threeTutorPanel") {
+        setActiveStudioPane("threeTutorPanel");
+      }
+      void initAvatar();
+    }
+    if (tabId === "weeklyTab" && activeProfile) {
+      window.setTimeout(() => {
+        refreshWeeklyPlan();
+        refreshJourneyDashboard();
+        refreshActiveChapterSession();
     }, 0);
   }
   if (tabId === "progressTab" && activeProfile) {
@@ -7779,6 +9788,11 @@ function setActiveTab(tabId) {
   tabPanels.forEach((panel) => {
     panel.classList.toggle("active", panel.id === tabId);
   });
+  updateContextPanel(tabId);
+  if (tabId === "overviewTab") {
+    void loadDailyBriefingIfNeeded();
+    updateOverviewCommandCenter();
+  }
 
   if (tabId === "overviewTab") {
     setHomeSubtab("overview");
@@ -7788,6 +9802,7 @@ function setActiveTab(tabId) {
     window.setTimeout(() => tutorRoomMessageInput.focus(), 0);
     syncTutorRoomTranscript();
     ensureTutorRoomPersona();
+    void initAvatar();
   } else if (tabId === "tutorTab" && messageInput) {
     window.setTimeout(() => messageInput.focus(), 0);
     if (activeProfile) {
@@ -7799,18 +9814,19 @@ function setActiveTab(tabId) {
   } else if (tabId === "videoTutorTab" && videoTutorQuestionInput) {
     window.setTimeout(() => videoTutorQuestionInput.focus(), 0);
     window.setTimeout(() => {
-      if (videoTutorRequestTopicInput && window.astraCurrentTopic && window.astraCurrentTopic.topic) {
-        videoTutorRequestTopicInput.value = window.astraCurrentTopic.topic;
-      }
-      if (videoTutorRequestSubjectSelect && window.astraCurrentTopic && window.astraCurrentTopic.subject) {
-        const wanted = String(window.astraCurrentTopic.subject).toLowerCase();
-        const option = Array.from(videoTutorRequestSubjectSelect.options).find((item) => String(item.value).toLowerCase() === wanted);
-        if (option) {
-          videoTutorRequestSubjectSelect.value = option.value;
-        }
-      }
+      initVideoSearch();
       void loadVideoTutorWorkspace();
+      ensureWelcomeTutorVideoLoaded();
     }, 0);
+  }
+  if (tabId === "tutorTab") {
+    renderTutorSmartPrompts();
+    updateTutorInputTopicChip();
+    updateTutorSuggestedPromptsVisibility();
+    syncTutorControlStrip();
+    if (!tutorSidePanelCollapsed) {
+      setTutorSidePanelTab(activeTutorSideTab || "session");
+    }
   }
   updateTutorRoomLivePanel();
 }
@@ -7880,7 +9896,7 @@ function loadAccessibilityPreferences() {
     currentTheme = "midnight";
   }
   currentBackground = localStorage.getItem("alt_background") || "glow";
-  currentLanguage = localStorage.getItem("alt_language") || "English";
+  currentLanguage = normalizeLanguageSelection(localStorage.getItem("alt_language") || "english");
   leagueTabVisible = localStorage.getItem("alt_show_league_tab") !== "0";
   const savedOrder = safeJsonParse(localStorage.getItem("alt_tab_order") || "[]", []);
   const savedOrderList = Array.isArray(savedOrder) ? savedOrder : [];
@@ -7907,6 +9923,7 @@ function loadAccessibilityPreferences() {
   applyAccessibilityPreferences();
   applyThemePreferences();
   applyLanguage();
+  renderTutorLanguageDropdown();
   applyLeagueVisibility();
 }
 
@@ -7993,9 +10010,7 @@ function logoutAndShowAuth() {
   renderDeletedLoungeConversations([]);
   renderVideoLibrary(null);
   renderVideoAnswerBrief(null);
-  if (videoStatusPanel) {
-    videoStatusPanel.textContent = "Astra is waiting for a video answer request.";
-  }
+  setVideoTutorStatus("Astra is waiting for a video answer request.", { visible: true });
   if (tutorVideoAnswerPlayer) {
     tutorVideoAnswerPlayer.pause();
     tutorVideoAnswerPlayer.removeAttribute("src");
@@ -8005,9 +10020,7 @@ function logoutAndShowAuth() {
   if (videoTranscriptPanel) {
     videoTranscriptPanel.textContent = "";
   }
-  if (videoRenderStatus) {
-    videoRenderStatus.textContent = "Astra is waiting for a video answer request.";
-  }
+  setVideoTutorStatus("Astra is waiting for a video answer request.", { visible: true });
   renderAuthHeroVideo(authHeroVideoSnapshot || videoLibrarySnapshot || null);
   if (introVideoPlayer) {
     introVideoPlayer.pause();
@@ -8045,9 +10058,145 @@ async function restoreSessionIfAvailable() {
 }
 
 function applyLanguage() {
-  localStorage.setItem("alt_language", currentLanguage);
+  const normalizedLanguage = normalizeLanguageSelection(currentLanguage);
+  currentLanguage = normalizedLanguage;
+  window.astraLanguage = normalizedLanguage;
+  localStorage.setItem("alt_language", normalizedLanguage);
   if (languageBadge) {
-    languageBadge.textContent = currentLanguage;
+    languageBadge.textContent = getLanguageDisplayLabel(normalizedLanguage);
+  }
+  if (languageSelect) {
+    languageSelect.value = normalizedLanguage;
+  }
+  updateTutorLanguageChip();
+  updateLanguageSelectionCards();
+  updateHinglishToggleState();
+}
+
+const LANGUAGE_OPTIONS = [
+  { key: "english", native: "English", label: "English (Default)" },
+  { key: "hindi", native: "हिंदी", label: "Hindi" },
+  { key: "hinglish", native: "Hinglish", label: "Hindi + English" },
+  { key: "telugu", native: "తెలుగు", label: "Telugu" },
+  { key: "tamil", native: "தமிழ்", label: "Tamil" },
+  { key: "kannada", native: "ಕನ್ನಡ", label: "Kannada" },
+  { key: "marathi", native: "मराठी", label: "Marathi" },
+  { key: "bengali", native: "বাংলা", label: "Bengali" },
+  { key: "gujarati", native: "ગુજરાતી", label: "Gujarati" },
+];
+
+function normalizeLanguageSelection(language) {
+  const value = String(language || "").trim().toLowerCase();
+  if (!value) {
+    return "english";
+  }
+  const aliases = {
+    english: "english",
+    eng: "english",
+    hindi: "hindi",
+    "हिंदी": "hindi",
+    hinglish: "hinglish",
+    "hindi + english": "hinglish",
+    "hindi english": "hinglish",
+    telugu: "telugu",
+    "తెలుగు": "telugu",
+    tamil: "tamil",
+    "தமிழ்": "tamil",
+    kannada: "kannada",
+    "ಕನ್ನಡ": "kannada",
+    marathi: "marathi",
+    "मराठी": "marathi",
+    bengali: "bengali",
+    "বাংলা": "bengali",
+    gujarati: "gujarati",
+    "ગુજરાતી": "gujarati",
+  };
+  const supportedKeys = ["english", "hindi", "hinglish", "telugu", "tamil", "kannada", "marathi", "bengali", "gujarati"];
+  return aliases[value] || (supportedKeys.includes(value) ? value : "english");
+}
+
+function getLanguageDisplayLabel(language) {
+  const normalized = normalizeLanguageSelection(language);
+  return (LANGUAGE_OPTIONS.find((entry) => entry.key === normalized) || LANGUAGE_OPTIONS[0]).label;
+}
+
+function getLanguageNativeLabel(language) {
+  const normalized = normalizeLanguageSelection(language);
+  return (LANGUAGE_OPTIONS.find((entry) => entry.key === normalized) || LANGUAGE_OPTIONS[0]).native;
+}
+
+function updateTutorLanguageChip() {
+  if (!tutorLanguageChip) {
+    return;
+  }
+  tutorLanguageChip.textContent = `🌐 ${getLanguageDisplayLabel(currentLanguage).replace(" (Default)", "")}`;
+}
+
+function updateLanguageSelectionCards() {
+  if (!tutorLanguageSelector) {
+    return;
+  }
+  const selectedLanguage = normalizeLanguageSelection(currentLanguage);
+  tutorLanguageSelector.querySelectorAll(".language-card").forEach((card) => {
+    const cardLanguage = normalizeLanguageSelection(card.dataset.language);
+    card.classList.toggle("selected", cardLanguage === selectedLanguage);
+  });
+}
+
+function updateHinglishToggleState() {
+  if (!hinglishToggle) {
+    return;
+  }
+  const isHinglish = normalizeLanguageSelection(currentLanguage) === "hinglish";
+  hinglishToggle.textContent = isHinglish ? "Disable Hinglish" : "Enable Hinglish";
+}
+
+function renderTutorLanguageDropdown() {
+  if (!tutorLanguageDropdown) {
+    return;
+  }
+  tutorLanguageDropdown.innerHTML = LANGUAGE_OPTIONS.map((option) => (
+    `<button type="button" data-language-option="${option.key}">${option.native} · ${option.label.replace(" (Default)", "")}</button>`
+  )).join("");
+}
+
+async function setLanguagePreference(language, { persist = true, updateProfile = true, showConfirmation = true } = {}) {
+  const normalizedLanguage = normalizeLanguageSelection(language);
+  currentLanguage = normalizedLanguage;
+  window.astraLanguage = normalizedLanguage;
+  applyLanguage();
+  let saveSucceeded = !persist || !activeProfile;
+  if (persist && activeProfile) {
+    try {
+      const response = await fetch("/api/profile/set-language", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          student_id: activeProfile.name,
+          preferred_language: normalizedLanguage,
+          ui_language: normalizedLanguage,
+        }),
+      });
+      const payload = await response.json();
+      if (response.ok && payload.profile) {
+        activeProfile = payload.profile;
+        saveSucceeded = true;
+        if (updateProfile) {
+          updateTutorSummary(activeProfile);
+        }
+      }
+    } catch (error) {
+      console.warn("Could not save language preference:", error);
+      saveSucceeded = false;
+    }
+  }
+  if (showConfirmation) {
+    showToast(
+      saveSucceeded
+        ? `Astra will now explain in ${getLanguageDisplayLabel(normalizedLanguage).replace(" (Default)", "")}.`
+        : "Could not save language preference right now.",
+      saveSucceeded ? "success" : "warning"
+    );
   }
 }
 
@@ -8189,13 +10338,14 @@ function applyOnboardingDefaultsToApp(profile) {
   }
 
   const onboarding = profile.onboarding_profile || {};
-  const preferredLanguage = profile.default_response_language || onboarding.preferred_language || "";
+  const preferredLanguage = normalizeLanguageSelection(
+    profile.preferred_language || profile.ui_language || profile.default_response_language || onboarding.preferred_language || currentLanguage
+  );
   if (preferredLanguage) {
     currentLanguage = preferredLanguage;
     if (languageSelect) {
       languageSelect.value = currentLanguage;
     }
-    localStorage.setItem("alt_language", currentLanguage);
     applyLanguage();
   }
 
@@ -8741,20 +10891,20 @@ function toggleLoungeVoiceInput() {
   }
 }
 
-function setAvatarStage(avatar) {
-  if (!avatar) {
-    return;
-  }
+  function setAvatarStage(avatar) {
+    if (!avatar) {
+      return;
+    }
 
   activeAvatar = avatar;
   if (!avatarStageTitle || !avatarStageTagline || !avatarStageStatus || !avatarFace || !avatarMouth || !avatarGlasses || !avatarShoulders || !avatarAppearanceText) {
     updateTutorSummary(activeProfile || {});
     return;
-  }
-  avatarStageTitle.textContent = avatar.name;
-  avatarStageTagline.textContent = avatar.tagline;
-  if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
-  avatarFace.classList.toggle("portrait-mode", !!avatar.portrait_url);
+    }
+    avatarStageTitle.textContent = avatar.name;
+    avatarStageTagline.textContent = avatar.tagline;
+    setAvatarStatusText("Ready");
+    avatarFace.classList.toggle("portrait-mode", !!avatar.portrait_url);
   avatarShoulders.classList.toggle("hidden", !!avatar.portrait_url);
   if (avatarPortrait) {
     avatarPortrait.src = avatar.portrait_url || "";
@@ -9063,15 +11213,23 @@ function updateOverviewSnapshotStripFromWeeklyPlan(plan) {
 }
 
 function renderWeeklyPlan(plan) {
-  weeklyPlanTableBody.innerHTML = "";
+  journeyWeeklySnapshot = plan || null;
+  if (weeklyPlanTableBody) {
+    weeklyPlanTableBody.innerHTML = "";
+  }
+  const hasWeeklySummary = weeklyCoreHours && weeklyScheduledHours && weeklyFocusSplit;
   if (!plan || plan.message) {
-    weeklyCoreHours.textContent = "-";
-    weeklyScheduledHours.textContent = "-";
-    weeklyFocusSplit.textContent = "-";
+    if (hasWeeklySummary) {
+      weeklyCoreHours.textContent = "-";
+      weeklyScheduledHours.textContent = "-";
+      weeklyFocusSplit.textContent = "-";
+    }
     updateOverviewSnapshotStripFromWeeklyPlan(plan);
     renderSectionProgress([]);
     renderWeeklyStrategy(plan);
     renderWeeklyPreview(plan);
+    updateOverviewCommandCenter();
+    updateContextPanel(document.querySelector(".tab-panel.active")?.id || "");
 
     const row = document.createElement("tr");
     const cell = document.createElement("td");
@@ -9091,13 +11249,17 @@ function renderWeeklyPlan(plan) {
     return;
   }
 
-  weeklyCoreHours.textContent = `${plan.weekly_core_hours}h`;
-  weeklyScheduledHours.textContent = `${plan.weekly_scheduled_hours}h`;
-  weeklyFocusSplit.textContent = plan.exam_totals.map((item) => `${item.exam} ${item.hours}h`).join(" | ");
+  if (hasWeeklySummary) {
+    weeklyCoreHours.textContent = `${plan.weekly_core_hours}h`;
+    weeklyScheduledHours.textContent = `${plan.weekly_scheduled_hours}h`;
+    weeklyFocusSplit.textContent = plan.exam_totals.map((item) => `${item.exam} ${item.hours}h`).join(" | ");
+  }
   updateOverviewSnapshotStripFromWeeklyPlan(plan);
   renderSectionProgress(plan.section_progress || []);
   renderWeeklyStrategy(plan);
   renderWeeklyPreview(plan);
+  updateOverviewCommandCenter();
+  updateContextPanel(document.querySelector(".tab-panel.active")?.id || "");
 
   plan.days.forEach((day) => {
     const row = document.createElement("tr");
@@ -9393,6 +11555,16 @@ async function startJourneySession() {
     return;
   }
   try {
+    const focusPreview = todaysFocusSnapshot && (todaysFocusSnapshot.primary || todaysFocusSnapshot.morning)
+      ? (todaysFocusSnapshot.primary || todaysFocusSnapshot.morning)
+      : null;
+    setAstraStatus(
+      focusPreview
+        ? `Astra is ready. Today's focus: ${focusPreview.topic || "today's topic"} — ${focusPreview.subject || "study"}`
+        : "Astra is ready. Preparing today's focus...",
+      "idle"
+    );
+    logSessionActivity(`Started ${focusPreview && focusPreview.topic ? focusPreview.topic : "today's session"}`);
     const response = await fetch(`/api/tutor/todays-session/${encodeURIComponent(activeProfile.name)}`);
     const payload = await response.json();
     if (!response.ok) {
@@ -9406,18 +11578,32 @@ async function startJourneySession() {
     if (morningTopic) {
       updateAstraCurrentTopic(morningTopic, morningSubject, "weekly_plan");
     }
+    sessionCheckpointStats = {
+      answered: 0,
+      average: 0,
+      confidence: (payload.student_state && payload.student_state.confidence_level) || "new",
+      topic: morningTopic || "Today",
+    };
     appendMessage("tutor", "tutor", payload.opening_message || "Let's begin your session.");
     renderJourneyProgressSidebar(journeyPlanSnapshot || null, payload.todays_focus || null, payload.student_state || null, payload.revision_due || []);
     renderSessionTimer(Date.now());
+    renderSessionStats(morningTopic || "Today", sessionCheckpointStats.confidence, Number((payload.student_state && payload.student_state.confidence_level_score) || 0));
     setTimeout(() => {
       if (todaysFocusCard) {
         todaysFocusCard.classList.remove("pulse-focus");
       }
     }, 1200);
     activeJourneySession = payload;
+    setAstraStatus(
+      morningTopic
+        ? `Astra is explaining ${morningTopic}...`
+        : "Astra is explaining today's topic...",
+      "working"
+    );
     setActiveTab("tutorTab");
   } catch (error) {
     appendMessage("tutor", "tutor", `I could not start the session right now: ${error.message}`);
+    setAstraStatus(`Could not start the session: ${error.message}`, "warning", true);
   }
 }
 
@@ -9427,6 +11613,10 @@ async function completeJourneySessionFromCheckpoint(checkpointScore) {
   }
   const morning = todaysFocusSnapshot.primary || todaysFocusSnapshot.morning || {};
   try {
+    setAstraStatus(
+      `Updating your progress... ${morning.topic || "current topic"} confidence: ${(checkpointScore >= 85 ? "strong" : checkpointScore >= 70 ? "good" : checkpointScore >= 50 ? "medium" : "low")}`,
+      "working"
+    );
     const response = await fetch("/api/tutor/complete-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -9457,12 +11647,28 @@ async function completeJourneySessionFromCheckpoint(checkpointScore) {
       checkpoint_score: checkpointScore,
     });
     renderJourneyProgressSidebar(journeyPlanSnapshot, payload.next_topic_preview || null, payload.result || null, payload.result ? payload.result.next_revision_dates || [] : []);
+    const nextRevision = payload.result && payload.result.next_revision_dates && payload.result.next_revision_dates.length ? payload.result.next_revision_dates[0] : null;
+    const nextRevisionDate = nextRevision ? new Date(nextRevision) : null;
+    const nextRevisionDays = nextRevisionDate && !Number.isNaN(nextRevisionDate.getTime())
+      ? Math.max(1, Math.round((nextRevisionDate.getTime() - Date.now()) / 86400000))
+      : null;
+    showToast(`Plan updated — ${morning.topic || "topic"} marked as ${(payload.result && payload.result.confidence_level) || "updated"}. Next revision in ${nextRevisionDays || "a few"} days.`);
+    logSessionActivity(`Checkpoint completed for ${morning.topic || "current topic"}: ${checkpointScore}%`);
+    renderSessionStats(morning.topic || "Today", (payload.result && payload.result.confidence_level) || "updated", checkpointScore);
     if (payload.weekly_plan_updated) {
       await refreshWeeklyPlan();
     }
     await refreshJourneyDashboard();
+    setAstraStatus(
+      payload.next_topic_preview && payload.next_topic_preview.topic
+        ? `Plan updated. Next up: ${payload.next_topic_preview.topic}`
+        : "Plan updated.",
+      "success",
+      true
+    );
   } catch (error) {
     console.warn("Could not complete journey session:", error);
+    setAstraStatus(`Could not update plan: ${error.message}`, "warning", true);
   }
 }
 
@@ -9636,13 +11842,13 @@ function stopTalkingFace() {
   avatarMouth.className = "mouth";
 }
 
-function speakText(text) {
-  if (!supportsSpeech() || !text) {
-    return;
-  }
+  function speakText(text) {
+    if (!supportsSpeech() || !text) {
+      return;
+    }
 
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
   const currentMode = getActiveConversationModeFromUI();
   const avatar = getSpeechAvatarForMode(currentMode) || activeAvatar || avatarPresets[0] || null;
   const chosenVoice = findVoiceForAvatar(avatar);
@@ -9650,14 +11856,18 @@ function speakText(text) {
   if (chosenVoice) {
     utterance.voice = chosenVoice;
   }
-  const pacingMode = responsePacingSelect ? responsePacingSelect.value : "standard";
-  const pacingScale = pacingMode === "slow" ? 0.86 : pacingMode === "gentle" ? 0.93 : 1;
-  utterance.rate = ((avatar && avatar.voice_rate) || 0.96) * pacingScale;
-  utterance.pitch = (avatar && avatar.voice_pitch) || 1.0;
-  setCaption(text);
-  if (avatarStageStatus) avatarStageStatus.textContent = "Speaking";
-  updateTalkingFace(1);
-  activeSpeechUtterance = utterance;
+    const pacingMode = responsePacingSelect ? responsePacingSelect.value : "standard";
+    const pacingScale = pacingMode === "slow" ? 0.86 : pacingMode === "gentle" ? 0.93 : 1;
+    utterance.rate = ((avatar && avatar.voice_rate) || 0.96) * pacingScale;
+    utterance.pitch = (avatar && avatar.voice_pitch) || 1.0;
+    setCaption(text);
+    const tutorRoomActive = document.querySelector(".tab-panel.active")?.id === "tutorRoomTab";
+    if (avatarRenderer && tutorRoomActive) {
+      avatarRenderer.startSpeakingAnimation();
+    }
+    setAvatarStatusText("Speaking");
+    updateTalkingFace(1);
+    activeSpeechUtterance = utterance;
 
   utterance.onboundary = (event) => {
     if (typeof event.charIndex === "number") {
@@ -9671,24 +11881,31 @@ function speakText(text) {
     }
   };
 
-  utterance.onend = () => {
-    if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
-    stopTalkingFace();
-    if (activeSpeechUtterance === utterance) {
-      activeSpeechUtterance = null;
-    }
+    utterance.onend = () => {
+      if (avatarRenderer && tutorRoomActive) {
+        avatarRenderer.stopSpeakingAnimation();
+        avatarRenderer.playNodGesture();
+      }
+      setAvatarStatusText("Ready");
+      stopTalkingFace();
+      if (activeSpeechUtterance === utterance) {
+        activeSpeechUtterance = null;
+      }
     if (autoCaptionMode.checked) {
       setCaption(text);
     }
     updateTutorRoomLivePanel();
   };
 
-  utterance.onerror = () => {
-    if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
-    stopTalkingFace();
-    if (activeSpeechUtterance === utterance) {
-      activeSpeechUtterance = null;
-    }
+    utterance.onerror = () => {
+      if (avatarRenderer && tutorRoomActive) {
+        avatarRenderer.stopSpeakingAnimation();
+      }
+      setAvatarStatusText("Ready");
+      stopTalkingFace();
+      if (activeSpeechUtterance === utterance) {
+        activeSpeechUtterance = null;
+      }
     updateTutorRoomLivePanel();
   };
 
@@ -9696,40 +11913,43 @@ function speakText(text) {
   updateTutorRoomLivePanel();
 }
 
-function pauseSpeaking() {
-  if (!supportsSpeech()) {
-    return;
+  function pauseSpeaking() {
+    if (!supportsSpeech()) {
+      return;
+    }
+    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+      window.speechSynthesis.pause();
+      setAvatarStatusText("Voice Paused");
+      setCaption("Speech paused.");
+    }
   }
-  if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
-    window.speechSynthesis.pause();
-    if (avatarStageStatus) avatarStageStatus.textContent = "Voice Paused";
-    setCaption("Speech paused.");
-  }
-}
 
-function resumeSpeaking() {
-  if (!supportsSpeech()) {
-    return;
+  function resumeSpeaking() {
+    if (!supportsSpeech()) {
+      return;
+    }
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+      setAvatarStatusText("Speaking");
+      setCaption("Speech resumed.");
+    }
   }
-  if (window.speechSynthesis.paused) {
-    window.speechSynthesis.resume();
-    if (avatarStageStatus) avatarStageStatus.textContent = "Speaking";
-    setCaption("Speech resumed.");
-  }
-}
 
-function stopSpeaking() {
-  if (!supportsSpeech()) {
+  function stopSpeaking() {
+    if (!supportsSpeech()) {
+      updateTutorRoomLivePanel();
+      return;
+    }
+    window.speechSynthesis.cancel();
+    activeSpeechUtterance = null;
+    if (avatarRenderer) {
+      avatarRenderer.stopSpeakingAnimation();
+    }
+    setAvatarStatusText("Ready");
+    stopTalkingFace();
+    setCaption("Speech stopped.");
     updateTutorRoomLivePanel();
-    return;
   }
-  window.speechSynthesis.cancel();
-  activeSpeechUtterance = null;
-  if (avatarStageStatus) avatarStageStatus.textContent = "Voice Ready";
-  stopTalkingFace();
-  setCaption("Speech stopped.");
-  updateTutorRoomLivePanel();
-}
 
 function pauseTutorNarration() {
   if (activeTutorNarration) {
@@ -9919,34 +12139,43 @@ async function fetchNetwork(studentName) {
 }
 
 async function fetchProgress(studentName) {
-  if (!studentName) {
-    renderProgressSnapshot(null);
-    renderChapterMasteryBoard(null);
-    renderChapterAnalytics(null);
-    renderChapterRevisionTracker(null);
-    return;
+  try {
+    if (!studentName) {
+      renderProgressSnapshot(null);
+      renderChapterMasteryBoard(null);
+      renderChapterAnalytics(null);
+      renderChapterRevisionTracker(null);
+      return;
+    }
+    setAstraStatus("Pulling progress and mastery signals...", "working");
+    const [progressResponse, masteryResponse, analyticsResponse, summariesResponse] = await Promise.all([
+      fetch(`/api/progress/${encodeURIComponent(studentName)}`),
+      fetch(`/api/progress/chapter-mastery/${encodeURIComponent(studentName)}`),
+      fetch(`/api/progress/analytics/${encodeURIComponent(studentName)}`),
+      fetch(`/api/session/chapter-summaries/${encodeURIComponent(studentName)}`),
+    ]);
+    const [progressPayload, masteryPayload, analyticsPayload, summariesPayload] = await Promise.all([
+      progressResponse.json(),
+      masteryResponse.json(),
+      analyticsResponse.json(),
+      summariesResponse.json(),
+    ]).catch((error) => {
+      throw error;
+    });
+    if (!progressResponse.ok) {
+      throw new Error(progressPayload.detail || "Could not load progress.");
+    }
+    renderProgressSnapshot(progressPayload);
+    renderChapterMasteryBoard(masteryPayload);
+    renderChapterAnalytics(analyticsPayload);
+    renderChapterRevisionTracker(summariesPayload);
+    void loadProgressInsight();
+    updateContextPanel("progressTab");
+    setAstraStatus("Progress board updated.", "success", true);
+  } catch (error) {
+    console.warn("Could not load progress:", error);
+    setAstraStatus(`Could not load progress: ${error.message}`, "warning", true);
   }
-  const [progressResponse, masteryResponse, analyticsResponse, summariesResponse] = await Promise.all([
-    fetch(`/api/progress/${encodeURIComponent(studentName)}`),
-    fetch(`/api/progress/chapter-mastery/${encodeURIComponent(studentName)}`),
-    fetch(`/api/progress/analytics/${encodeURIComponent(studentName)}`),
-    fetch(`/api/session/chapter-summaries/${encodeURIComponent(studentName)}`),
-  ]);
-  const [progressPayload, masteryPayload, analyticsPayload, summariesPayload] = await Promise.all([
-    progressResponse.json(),
-    masteryResponse.json(),
-    analyticsResponse.json(),
-    summariesResponse.json(),
-  ]).catch((error) => {
-    throw error;
-  });
-  if (!progressResponse.ok) {
-    throw new Error(progressPayload.detail || "Could not load progress.");
-  }
-  renderProgressSnapshot(progressPayload);
-  renderChapterMasteryBoard(masteryPayload);
-  renderChapterAnalytics(analyticsPayload);
-  renderChapterRevisionTracker(summariesPayload);
 }
 
 async function fetchStudentInsights(studentName) {
@@ -10119,11 +12348,12 @@ async function selectAvatar(avatarId) {
     return;
   }
 
-  activeProfile = payload.profile;
-  setAvatarStage(payload.avatar);
-  renderTutorBrain(payload.tutor_brain || buildLocalTutorBrain(activeProfile, payload.avatar, "tutor"));
-  renderAvatars(activeProfile.selected_avatar);
-  renderHomeTutorPersonalityGrid();
+    activeProfile = payload.profile;
+    setAvatarStage(payload.avatar);
+    void initAvatar();
+    renderTutorBrain(payload.tutor_brain || buildLocalTutorBrain(activeProfile, payload.avatar, "tutor"));
+    renderAvatars(activeProfile.selected_avatar);
+    renderHomeTutorPersonalityGrid();
   preferTutorVideosForAvatar(payload.avatar);
   studentSubcopy.textContent = `Current AI teacher style: ${payload.avatar.name}.`;
   appendMessage("tutor", "tutor", `I will now guide you with the ${payload.avatar.name} persona.`);
@@ -10389,9 +12619,10 @@ async function enterLearningStudio(studentName, options = {}) {
   applyGroupStudyPreferencesToForm(activeProfile);
   tutorAppearanceInput.value = activeProfile.appearance_description || "";
   updateTutorSummary(activeProfile);
-  setTutorMode(activeTutorMode);
-  setAvatarStage(payload.active_avatar || avatarPresets[0]);
-  renderTutorBrain(payload.tutor_brain || buildLocalTutorBrain(activeProfile, payload.active_avatar || avatarPresets[0], "tutor"));
+    setTutorMode(activeTutorMode);
+    setAvatarStage(payload.active_avatar || avatarPresets[0]);
+    void initAvatar();
+    renderTutorBrain(payload.tutor_brain || buildLocalTutorBrain(activeProfile, payload.active_avatar || avatarPresets[0], "tutor"));
   renderMemory(payload.personal_memory || {});
   renderMemoryManager(payload.personal_memory || {});
   renderExamManager(activeProfile.exams || []);
@@ -10610,8 +12841,9 @@ async function analyzeDoubtImage() {
       throw new Error(payload.detail || "Could not analyze that image.");
     }
 
-    lastTutorReply = payload.reply;
-    lastRepliesByMode.tutor = payload.reply;
+      lastTutorReply = payload.reply;
+      onTutorReplyReceived(payload.reply);
+      lastRepliesByMode.tutor = payload.reply;
     if (payload.conversation_id) {
       activeTutorConversationId = payload.conversation_id;
       renderTutorConversations(payload.conversations || []);
@@ -10783,6 +13015,14 @@ async function sendMessage(message) {
   if (mode === "tutor") {
     renderVideoAnswerBrief(null);
   }
+  const activeFocus = getActiveTutorFocus();
+  if (mode === "tutor") {
+    setAstraStatus(`Astra is explaining ${activeFocus.topic}...`, "working");
+    showKnowledgeBaseTag(`Searching NCERT ${activeFocus.subject}...`, true);
+    logSessionActivity(`Asked about ${activeFocus.topic}`);
+  } else {
+    setAstraStatus("Astra is working...", "working");
+  }
   if (messageInput) {
     messageInput.disabled = true;
   }
@@ -10818,8 +13058,9 @@ async function sendMessage(message) {
       throw new Error(payload.detail || "Could not get tutor response.");
     }
 
-    lastTutorReply = payload.reply;
-    lastRepliesByMode[mode] = payload.reply;
+      lastTutorReply = payload.reply;
+      onTutorReplyReceived(payload.reply);
+      lastRepliesByMode[mode] = payload.reply;
     if (mode === "tutor" && payload.conversation_id) {
       activeTutorConversationId = payload.conversation_id;
       renderTutorConversations(payload.conversations || []);
@@ -10872,6 +13113,9 @@ async function sendMessage(message) {
       renderAdaptiveProfile(payload.adaptive_profile || ((payload.weekly_plan && payload.weekly_plan.adaptive_profile) || null));
     }
     await fetchStudentInsights(activeProfile.name);
+    if (mode === "tutor") {
+      logSessionActivity(`Astra answered ${activeFocus.topic}`);
+    }
     const shouldSpeakReply = autoSpeakReplies.checked || activeTab === "tutorRoomTab";
     if (shouldSpeakReply) {
       speakText(payload.reply);
@@ -10879,6 +13123,7 @@ async function sendMessage(message) {
       setCaption(payload.reply);
     }
     await replyStream;
+    showKnowledgeBaseTag("", false);
     if (mode === "tutor") {
       const suggestedTopic = _inferVideoTopicFromText(
         (payload.visual_learning && payload.visual_learning.title)
@@ -10917,8 +13162,17 @@ async function sendMessage(message) {
       );
     }
     await fetchStorageStatus(activeProfile.name);
+    setAstraStatus(
+      mode === "tutor"
+        ? `Astra is ready. Today's focus: ${activeFocus.topic} — ${activeFocus.subject}`
+        : "Astra is ready.",
+      "success",
+      true
+    );
   } catch (error) {
     appendMessage(mode, "tutor", `Something went wrong: ${error.message}`);
+    setAstraStatus(`Could not respond: ${error.message}`, "warning", true);
+    showKnowledgeBaseTag("", false);
   } finally {
     isSending = false;
     if (messageInput) {
@@ -10940,6 +13194,36 @@ document.body.addEventListener("click", (event) => {
   const studioPaneButton = event.target.closest(".studio-pane-button");
   if (studioPaneButton) {
     setActiveStudioPane(studioPaneButton.dataset.studioPane);
+  }
+
+  const languageCardButton = event.target.closest(".language-card");
+  if (languageCardButton) {
+    setLanguagePreference(languageCardButton.dataset.language || "english", {
+      persist: true,
+      updateProfile: true,
+      showConfirmation: true,
+    });
+  }
+
+  const languageChipButton = event.target.closest("#tutorLanguageChip");
+  if (languageChipButton && tutorLanguageDropdown) {
+    tutorLanguageDropdown.classList.toggle("hidden");
+  }
+
+  const languageOptionButton = event.target.closest("[data-language-option]");
+  if (languageOptionButton) {
+    if (tutorLanguageDropdown) {
+      tutorLanguageDropdown.classList.add("hidden");
+    }
+    setLanguagePreference(languageOptionButton.dataset.languageOption || "english", {
+      persist: true,
+      updateProfile: true,
+      showConfirmation: true,
+    });
+  }
+
+  if (tutorLanguageDropdown && !event.target.closest(".tutor-language-picker")) {
+    tutorLanguageDropdown.classList.add("hidden");
   }
 
   const homeSubtabButton = event.target.closest("[data-home-subtab]");
@@ -10977,6 +13261,56 @@ document.body.addEventListener("click", (event) => {
     if (loungeMessageInput) {
       loungeMessageInput.value = "I am feeling overwhelmed and need some support";
       window.setTimeout(() => loungeMessageInput.focus(), 0);
+    }
+  }
+
+  if (event.target.closest("#dismissDailyBriefingBtn")) {
+    dailyBriefingDismissedDate = new Date().toISOString().slice(0, 10);
+    if (dailyBriefingCard) {
+      dailyBriefingCard.classList.add("hidden");
+    }
+  }
+
+  if (event.target.closest("#overviewStartLearningBtn")) {
+    startTodaySessionFromHome();
+  }
+
+  if (event.target.closest("#continueJourneyBtn")) {
+    startTodaySessionFromHome();
+  }
+
+  if (event.target.closest("#openPracticeFromHomeBtn")) {
+    setActiveTab("practiceTab");
+  }
+
+  if (event.target.closest("#needHelpConceptBtn")) {
+    focusTutorComposerWithPrompt(`Explain ${getActiveTutorFocus().topic} from the beginning`);
+  }
+
+  if (event.target.closest("#openProgressFromHomeBtn")) {
+    setActiveTab("progressTab");
+  }
+
+  const tutorIntentChip = event.target.closest(".tutor-intent-chip");
+  if (tutorIntentChip) {
+    const intent = tutorIntentChip.dataset.tutorIntent || "doubt";
+    const focus = getActiveTutorFocus();
+    if (intent === "journey") {
+      startTodaySessionFromHome();
+    } else if (intent === "practice") {
+      setActiveTab("practiceTab");
+    } else {
+      focusTutorComposerWithPrompt(
+        focus.topic ? `I want help with ${focus.topic}` : "I want help with a concept"
+      );
+    }
+  }
+
+  if (event.target.closest("#sessionActivityToggleBtn") && sessionActivityPanel) {
+    const shouldHide = !sessionActivityPanel.classList.contains("hidden");
+    sessionActivityPanel.classList.toggle("hidden", shouldHide);
+    if (sessionActivityToggleBtn) {
+      sessionActivityToggleBtn.textContent = shouldHide ? "Session log ▸" : "Session log ▾";
     }
   }
 
@@ -11216,7 +13550,7 @@ if (tutorFullscreenBtn) {
 }
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
-    exitTutorFullscreen();
+    closeTutorFullscreen();
     if (chapterDetailCard && !chapterDetailCard.classList.contains("hidden")) {
       closeChapterDetailPanel();
     }
@@ -11309,6 +13643,15 @@ if (closeTutorConversationDrawerBtn) {
 if (tutorConversationDrawerBackdrop) {
   tutorConversationDrawerBackdrop.addEventListener("click", closeTutorConversationDrawer);
 }
+document.addEventListener("click", (event) => {
+  const dropdown = document.getElementById("recent-chats-dropdown");
+  if (!dropdown) {
+    return;
+  }
+  if (!event.target.closest(".recent-chats-compact")) {
+    dropdown.classList.add("hidden");
+  }
+});
 if (newLoungeChatBtn) {
   newLoungeChatBtn.addEventListener("click", async () => {
     try {
@@ -11368,6 +13711,7 @@ if (tutorModeButtons.length) {
       setTutorMode(button.dataset.tutorMode || "calm");
     });
   });
+  refreshVideoSearchResults();
 }
 refreshWeeklyPlanBtn.addEventListener("click", refreshWeeklyPlan);
 refreshWeeklyPlanBtnAlt.addEventListener("click", refreshWeeklyPlan);
@@ -11425,14 +13769,14 @@ if (openProgressTabBtn) {
 if (tutorRoomBackToTutorBtn) {
   tutorRoomBackToTutorBtn.addEventListener("click", () => setActiveTab("tutorTab"));
 }
-if (tutorRoomSpeakLastBtn) {
-  tutorRoomSpeakLastBtn.addEventListener("click", () => {
-    speakText(lastRepliesByMode.tutor || lastTutorReply || ((activeAvatar && activeAvatar.sample_line) || ""));
-  });
-}
-if (tutorRoomPauseBtn) {
-  tutorRoomPauseBtn.addEventListener("click", () => {
-    pauseTutorNarration();
+  if (tutorRoomSpeakLastBtn) {
+    tutorRoomSpeakLastBtn.addEventListener("click", () => {
+      avatarSpeak(lastTutorReplyText || lastRepliesByMode.tutor || lastTutorReply || ((activeAvatar && activeAvatar.sample_line) || ""));
+    });
+  }
+  if (tutorRoomPauseBtn) {
+    tutorRoomPauseBtn.addEventListener("click", () => {
+      pauseTutorNarration();
   });
 }
 if (tutorRoomResumeBtn) {
@@ -11441,29 +13785,16 @@ if (tutorRoomResumeBtn) {
     updateTutorRoomLivePanel();
   });
 }
-if (tutorRoomStopBtn) {
-  tutorRoomStopBtn.addEventListener("click", () => {
-    interruptTutorOutput("tutor");
-    stopSpeaking();
-    updateTutorRoomLivePanel();
-  });
-}
-if (generateVideoAnswerBtn) {
-  generateVideoAnswerBtn.addEventListener("click", generateVideoAnswerBrief);
-}
-if (generateRequestedVideoBtn) {
-  generateRequestedVideoBtn.addEventListener("click", async () => {
-    const topic = videoTutorRequestTopicInput ? videoTutorRequestTopicInput.value.trim() : "";
-    const subject = videoTutorRequestSubjectSelect ? videoTutorRequestSubjectSelect.value : "";
-    if (!topic) {
-      if (videoTutorRequestStatus) {
-        videoTutorRequestStatus.textContent = "Type a topic first.";
-      }
-      return;
-    }
-    openVideoTutorTopic(topic, subject, "request");
-  });
-}
+  if (tutorRoomStopBtn) {
+    tutorRoomStopBtn.addEventListener("click", () => {
+      interruptTutorOutput("tutor");
+      stopSpeaking();
+      updateTutorRoomLivePanel();
+    });
+  }
+  if (generateVideoAnswerBtn) {
+    generateVideoAnswerBtn.addEventListener("click", generateVideoAnswerBrief);
+  }
 if (generateRequestedFullVideoBtn) {
   generateRequestedFullVideoBtn.addEventListener("click", async () => {
     const topic = activeVideoTutorRequest && activeVideoTutorRequest.topic
@@ -11471,7 +13802,7 @@ if (generateRequestedFullVideoBtn) {
       : (videoTutorRequestTopicInput && videoTutorRequestTopicInput.value.trim()) || "";
     const subject = activeVideoTutorRequest && activeVideoTutorRequest.subject
       ? activeVideoTutorRequest.subject
-      : (videoTutorRequestSubjectSelect && videoTutorRequestSubjectSelect.value) || "";
+      : activeVideoSubjectTab || "";
     if (!topic || !activeVideoTutorBrief) {
       if (videoTutorRequestStatus) {
         videoTutorRequestStatus.textContent = "Prepare the script preview first.";
@@ -11558,9 +13889,14 @@ if (uploadSyllabusBtn) {
   uploadSyllabusBtn.addEventListener("click", uploadSyllabusMaterial);
 }
 languageSelect.addEventListener("change", () => {
-  currentLanguage = languageSelect.value;
-  applyLanguage();
+  setLanguagePreference(languageSelect.value, { persist: true, updateProfile: true, showConfirmation: true });
 });
+if (hinglishToggle) {
+  hinglishToggle.addEventListener("click", () => {
+    const nextLanguage = normalizeLanguageSelection(currentLanguage) === "hinglish" ? "english" : "hinglish";
+    setLanguagePreference(nextLanguage, { persist: true, updateProfile: true, showConfirmation: true });
+  });
+}
 if (nightModeToggle) {
   nightModeToggle.addEventListener("change", () => {
     currentTheme = nightModeToggle.checked ? "midnight" : "sunrise";
@@ -11571,18 +13907,23 @@ if (voiceChatMode) {
   voiceChatMode.addEventListener("change", () => {
     applyAccessibilityPreferences();
     updateTutorRoomLivePanel();
+    syncTutorControlStrip();
   });
 }
 if (responsePacingSelect) {
   responsePacingSelect.addEventListener("change", () => {
     applyAccessibilityPreferences();
     updateTutorRoomLivePanel();
+    syncTutorControlStrip();
   });
 }
-tutorLevelSelect.addEventListener("change", () => {
-  updateTutorLevelHint();
-  updateTutorRoomLivePanel();
-});
+if (tutorLevelSelect) {
+  tutorLevelSelect.addEventListener("change", () => {
+    updateTutorLevelHint();
+    updateTutorRoomLivePanel();
+    syncTutorControlStrip();
+  });
+}
 
 [highContrastMode, largeTextMode, reducedMotionMode, readingComfortMode, chunkedReplyMode, autoCaptionMode, autoSpeakReplies].forEach((toggle) => {
   if (!toggle) {
@@ -11591,6 +13932,7 @@ tutorLevelSelect.addEventListener("change", () => {
   toggle.addEventListener("change", () => {
     applyAccessibilityPreferences();
     updateTutorRoomLivePanel();
+    syncTutorControlStrip();
   });
 });
 if (showLeagueToggle) {
@@ -11870,10 +14212,10 @@ updateExamInputMode();
 applyExplanationPreferences();
 renderConceptCanvas(null);
 
-if (supportsSpeech()) {
-  loadBrowserVoices();
-  window.speechSynthesis.onvoiceschanged = loadBrowserVoices;
-} else {
-  if (avatarStageStatus) avatarStageStatus.textContent = "Browser Voice Unavailable";
-  setCaption("Browser speech is unavailable on this device.");
-}
+  if (supportsSpeech()) {
+    loadBrowserVoices();
+    window.speechSynthesis.onvoiceschanged = loadBrowserVoices;
+  } else {
+    setAvatarStatusText("Browser Voice Unavailable");
+    setCaption("Browser speech is unavailable on this device.");
+  }
