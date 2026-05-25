@@ -1,5 +1,8 @@
 import json
+import os
 import re
+
+from google import genai
 
 from tools.knowledge_base_tools import search_knowledge_base
 from tools.chat_outcome_tracker import build_task_learning_context
@@ -372,6 +375,21 @@ def build_mode_block(
         )
         lines.append("Do not describe your strategy, roadmap, or teaching process.")
         lines.append("Do not mention that you are planning the answer or deciding what to do next.")
+        lines.append(
+            "When answering Physics questions, always use this JEE Physics problem-solving framework:\n"
+            "STEP 1 - READ AND IDENTIFY\n"
+            "What type of problem is this? What quantities are given? What quantity needs to be found?\n\n"
+            "STEP 2 - DRAW AND VISUALIZE\n"
+            "Always draw a diagram even mentally. Mark all forces, velocities, or fields.\n\n"
+            "STEP 3 - IDENTIFY THE PRINCIPLE\n"
+            "Which law or formula applies here? Why does it apply to this situation?\n\n"
+            "STEP 4 - SET UP THE EQUATION\n"
+            "Write the formula. Substitute known values. Check units before calculating.\n\n"
+            "STEP 5 - SOLVE AND VERIFY\n"
+            "Calculate the answer. Does the magnitude make physical sense? Does the unit match what was asked? "
+            "Does the direction make sense?\n\n"
+            "Always show every step. Never skip steps. Explicitly name the principle being used."
+        )
     elif mode == "practice":
         lines.append("Mode response shape:")
         lines.extend(f"- {rule}" for rule in response_shape)
@@ -691,6 +709,163 @@ def build_tutor_prompt(
         lines.append("Knowledge base context:")
         lines.append(kb_context)
     return "\n\n".join(part for part in lines if str(part).strip())
+
+
+def _fallback_confusion_signal(student_message, topic):
+    text = _normalize_text(student_message)
+    confusion_words = [
+        "confused",
+        "stuck",
+        "didn't understand",
+        "dont understand",
+        "don't understand",
+        "not clear",
+        "why",
+        "how",
+        "lost",
+        "can't solve",
+        "cannot solve",
+        "formula",
+    ]
+    detected = any(word in text for word in confusion_words)
+    confusion_type = "none"
+    action = "continue"
+    missing = None
+    if detected:
+        confusion_type = "concept_unclear"
+        action = "rephrase"
+        if any(word in text for word in ["formula", "equation", "which formula"]):
+            confusion_type = "formula_confusion"
+            action = "worked_example"
+        if any(word in text for word in ["start", "approach", "solve", "begin"]):
+            confusion_type = "problem_approach"
+            action = "worked_example"
+        if any(word in text for word in ["basic", "prerequisite", "from start", "foundation"]):
+            confusion_type = "prerequisite_gap"
+            action = "back_to_prerequisite"
+            missing = "core prerequisite for the topic"
+    return {
+        "confusion_detected": detected,
+        "confusion_type": confusion_type,
+        "likely_missing_prerequisite": missing,
+        "confidence_score": 35 if detected else 75,
+        "recommended_action": action,
+        "recovery_message": (
+            f"This is a normal sticking point in {topic or 'this topic'}. Let's slow it down and connect the idea to one simpler example first."
+            if detected
+            else ""
+        ),
+    }
+
+
+def _get_gemini_client():
+    try:
+        api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            return None
+        return genai.Client(api_key=api_key)
+    except Exception:
+        return None
+
+
+def detect_confusion_signals(student_message, topic, previous_messages):
+    try:
+        last_messages = previous_messages or []
+        if not isinstance(last_messages, list):
+            last_messages = [str(last_messages)]
+        last_3_messages = "\n".join(str(message).strip() for message in last_messages[-3:] if str(message).strip())
+        prompt = (
+            f"Analyze this student message in the context of learning {topic}.\n\n"
+            f"Student message: {student_message}\n\n"
+            f"Previous conversation: {last_3_messages}\n\n"
+            "Identify:\n"
+            "1. confusion_detected: true/false\n"
+            "2. confusion_type: 'concept_unclear' | 'formula_confusion' | 'calculation_error' | 'prerequisite_gap' | 'problem_approach' | 'none'\n"
+            "3. likely_missing_prerequisite: which earlier concept they probably missed (or null)\n"
+            "4. confidence_score: 0-100 how confident the student seems\n"
+            "5. recommended_action: 'continue' | 'rephrase' | 'simpler_analogy' | 'back_to_prerequisite' | 'worked_example' | 'check_understanding'\n"
+            "6. recovery_message: a specific 1-2 sentence message to help the student get unstuck\n\n"
+            "Return as JSON only."
+        )
+        parsed = {}
+        client = _get_gemini_client()
+        if client:
+            try:
+                response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+                raw_text = str(getattr(response, "text", "") or "").strip()
+                candidate = _extract_json_candidate(raw_text)
+                parsed = json.loads(candidate) if candidate else {}
+                if not isinstance(parsed, dict):
+                    parsed = {}
+            except Exception:
+                parsed = {}
+        if not parsed:
+            parsed = _fallback_confusion_signal(student_message, topic)
+        allowed_types = {
+            "concept_unclear",
+            "formula_confusion",
+            "calculation_error",
+            "prerequisite_gap",
+            "problem_approach",
+            "none",
+        }
+        allowed_actions = {
+            "continue",
+            "rephrase",
+            "simpler_analogy",
+            "back_to_prerequisite",
+            "worked_example",
+            "check_understanding",
+        }
+        confusion_type = str(parsed.get("confusion_type") or "none").strip()
+        recommended_action = str(parsed.get("recommended_action") or "continue").strip()
+        try:
+            confidence_score = int(float(parsed.get("confidence_score", 70)))
+        except Exception:
+            confidence_score = 70
+        return {
+            "confusion_detected": bool(parsed.get("confusion_detected", False)),
+            "confusion_type": confusion_type if confusion_type in allowed_types else "none",
+            "likely_missing_prerequisite": parsed.get("likely_missing_prerequisite") or None,
+            "confidence_score": max(0, min(confidence_score, 100)),
+            "recommended_action": recommended_action if recommended_action in allowed_actions else "continue",
+            "recovery_message": str(parsed.get("recovery_message") or "").strip(),
+        }
+    except Exception:
+        return _fallback_confusion_signal(student_message, topic)
+
+
+def build_recovery_prompt(
+    student_id,
+    topic,
+    unit,
+    confusion_type,
+    missing_prerequisite,
+    original_explanation,
+):
+    try:
+        prerequisite = str(missing_prerequisite or "the core prerequisite").strip()
+        topic_text = str(topic or "this topic").strip()
+        unit_text = str(unit or "Physics").strip()
+        return (
+            f"You are Astra helping student {student_id} recover from confusion in {unit_text}.\n"
+            f"Topic: {topic_text}\n"
+            f"Confusion type: {confusion_type or 'prerequisite_gap'}\n"
+            f"Missing prerequisite: {prerequisite}\n\n"
+            "Start with this exact emotional frame, naturally embedded:\n"
+            "This is exactly where most students hit a wall - it means you are thinking deeply enough to notice the gap.\n\n"
+            f"Before continuing with {topic_text}, spend 2 minutes on {prerequisite} because that is the key that unlocks this.\n"
+            "Teach the prerequisite using a completely different analogy than the earlier explanation.\n"
+            f"Then bridge back with: Now that {prerequisite} is clear, watch how {topic_text} becomes obvious...\n"
+            "Use one simpler worked example before returning to the original problem.\n"
+            "Keep it warm, precise, and step-by-step. Do not make the student feel behind.\n\n"
+            f"Original explanation to avoid repeating too closely:\n{str(original_explanation or '').strip()}"
+        )
+    except Exception:
+        return (
+            "This is exactly where most students hit a wall - it means you are thinking deeply enough to notice the gap. "
+            "Let's back up to the missing prerequisite with a simpler analogy, then return to the original topic with one worked example."
+        )
 
 
 def build_subtopic_explanation_prompt(

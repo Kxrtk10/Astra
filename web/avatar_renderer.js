@@ -93,12 +93,14 @@ class AvatarRenderer {
     if (!glbUrl) {
       throw new Error("Avatar GLB URL is missing.");
     }
+    if (!THREE.GLTFLoader) {
+      throw new Error("Three.js GLTFLoader is unavailable.");
+    }
 
     this._clearAvatar();
     this._removeFallback2D();
 
-    const { GLTFLoader } = await import("https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/loaders/GLTFLoader.js");
-    const loader = new GLTFLoader();
+    const loader = new THREE.GLTFLoader();
 
     return new Promise((resolve, reject) => {
       loader.load(

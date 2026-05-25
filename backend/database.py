@@ -338,6 +338,20 @@ def init_db():
         )
         cursor.execute(
             """
+            CREATE TABLE IF NOT EXISTS confusion_events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                student_id TEXT,
+                topic TEXT,
+                unit TEXT,
+                confusion_type TEXT,
+                missing_prerequisite TEXT,
+                recovery_action TEXT,
+                session_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS knowledge_base_docs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 subject TEXT,
@@ -429,17 +443,22 @@ def get_student_profile(student_id):
 
 def save_student_profile(student_id, profile_data):
     try:
-        payload = json.dumps(profile_data or {}, indent=2)
         student_name = str((profile_data or {}).get("name") or student_id).strip() or str(student_id or "").strip()
         safe_write(
             """
-            INSERT INTO students (student_id, name, last_active)
+            INSERT OR IGNORE INTO students (student_id, name, created_at)
             VALUES (?, ?, CURRENT_TIMESTAMP)
-            ON CONFLICT(student_id) DO UPDATE SET
-                name = excluded.name,
-                last_active = CURRENT_TIMESTAMP
             """,
             (student_id, student_name),
+        )
+        payload = json.dumps(profile_data or {}, indent=2)
+        safe_write(
+            """
+            UPDATE students
+            SET name = ?, last_active = CURRENT_TIMESTAMP
+            WHERE student_id = ?
+            """,
+            (student_name, student_id),
         )
         safe_write(
             """

@@ -1,6 +1,7 @@
 import asyncio
 import base64
 from collections import defaultdict
+from contextvars import ContextVar
 import json
 import logging
 import os
@@ -13,7 +14,7 @@ from urllib.parse import urlparse
 
 import httpx
 from dotenv import load_dotenv
-from fastapi import BackgroundTasks, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
+from fastapi import BackgroundTasks, Depends, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -31,6 +32,7 @@ from backend.auth import (
     get_user_by_email,
     get_user_by_student_name,
     issue_session,
+    revoke_session,
     require_bearer_token,
 )
 from backend.config import settings
@@ -116,11 +118,13 @@ from tools.planner_tools import (
 from tools.jee_syllabus import build_chapter_ready_syllabus
 from tools.prompt_instruction_tools import (
     MODE_RESPONSE_SHAPES,
+    build_recovery_prompt,
     build_personality_summary,
     build_tutor_prompt,
     build_prompt_instruction_block,
     build_chapter_test_prompt,
     build_subtopic_explanation_prompt,
+    detect_confusion_signals,
     evaluate_checkpoint_answer,
     generate_checkpoint_question,
 )
@@ -244,6 +248,18 @@ logging.basicConfig(
 APP_START_TIME = time.time()
 STUDENTS_LOADED = 0
 request_counts = defaultdict(list)
+failed_login_attempts = defaultdict(list)
+current_authenticated_student: ContextVar[dict | None] = ContextVar("current_authenticated_student", default=None)
+PUBLIC_API_PATHS = {
+    "/api/auth/login",
+    "/api/auth/register",
+    "/api/auth/me",
+    "/api/health",
+    "/api/readiness",
+    "/api/video-library",
+    "/api/avatar-presets",
+    "/api/exam-catalog",
+}
 
 
 def _ensure_app_data_directories():
@@ -276,6 +292,59 @@ def check_rate_limit(student_id, max_requests=30, window_seconds=60):
         return False
     requests.append(now)
     return True
+
+
+def _prune_login_attempts(email: str) -> list[float]:
+    now = time.time()
+    window_start = now - (15 * 60)
+    key = str(email or "").strip().lower()
+    attempts = [timestamp for timestamp in failed_login_attempts[key] if timestamp > window_start]
+    failed_login_attempts[key] = attempts
+    return attempts
+
+
+def _record_failed_login_attempt(email: str) -> int:
+    attempts = _prune_login_attempts(email)
+    attempts.append(time.time())
+    failed_login_attempts[str(email or "").strip().lower()] = attempts
+    return len(attempts)
+
+
+def _clear_failed_login_attempts(email: str) -> None:
+    failed_login_attempts.pop(str(email or "").strip().lower(), None)
+
+
+def _request_path_requires_auth(path: str) -> bool:
+    normalized = str(path or "").strip()
+    if not normalized.startswith("/api/"):
+        return False
+    if normalized in PUBLIC_API_PATHS:
+        return False
+    return True
+
+
+async def get_authenticated_student(request: Request):
+    path = request.url.path
+    current_authenticated_student.set(None)
+    if not _request_path_requires_auth(path):
+        return None
+
+    authorization = request.headers.get("authorization", "").strip()
+    session_token = request.headers.get("x-session-token", "").strip()
+    header_value = authorization or (f"Bearer {session_token}" if session_token else "")
+    if not header_value:
+        raise HTTPException(status_code=401, detail="Missing bearer token.")
+
+    user = require_bearer_token(header_value)
+    current_authenticated_student.set(user)
+    try:
+        request.state.authenticated_student = user
+    except Exception:
+        pass
+    return user
+
+
+app.router.dependencies.append(Depends(get_authenticated_student))
 
 
 def _student_profile_exists(student_id: str) -> bool:
@@ -318,14 +387,19 @@ def _migrate_student_profiles_to_db():
     candidate_dirs = [Path("profiles"), Path("app_data") / "profiles"]
     seen_paths = set()
     for directory in candidate_dirs:
+        print(f"Scanning profile directory: {directory}")
         if not directory.exists():
+            print(f"Profile directory missing: {directory}")
             continue
-        for path in sorted(directory.glob("*.json")):
+        files = sorted(directory.glob("*.json"))
+        print(f"Found {len(files)} profile file(s) in {directory}")
+        for path in files:
             resolved = str(path.resolve())
             if resolved in seen_paths:
                 continue
             seen_paths.add(resolved)
             student_id = path.stem.strip()
+            print(f"Found profile file: {path} -> student_id={student_id}")
             if not student_id or _student_profile_exists(student_id):
                 continue
             profile = _read_json_file(path)
@@ -333,6 +407,7 @@ def _migrate_student_profiles_to_db():
                 continue
             try:
                 student_name = str(profile.get("name") or student_id).strip() or student_id
+                print(f"Migrating profile for student_id={student_id}")
                 database.execute_query(
                     """
                     INSERT OR IGNORE INTO students (student_id, name, created_at)
@@ -1562,13 +1637,34 @@ def _fallback_mock_test_payload(exam_name, subjects, question_count, mode):
 
 
 def _load_profile_or_404(name):
-    profile = load_profile(name)
+    authenticated_student = current_authenticated_student.get()
+    lookup_name = str(name or "").strip()
+    if authenticated_student and isinstance(authenticated_student, dict):
+        lookup_name = str(
+            authenticated_student.get("student_name")
+            or authenticated_student.get("display_name")
+            or lookup_name
+        ).strip()
+    profile = load_profile(lookup_name)
     if not profile:
         raise HTTPException(
             status_code=404,
             detail="Student profile not found. Please create or load the profile in the CLI first.",
         )
     return _ensure_jee_mvp_profile_scope(profile)
+
+
+def _authenticated_student_name(fallback: str = "") -> str:
+    authenticated_student = current_authenticated_student.get()
+    if authenticated_student and isinstance(authenticated_student, dict):
+        resolved = str(
+            authenticated_student.get("student_name")
+            or authenticated_student.get("display_name")
+            or fallback
+        ).strip()
+        if resolved:
+            return resolved
+    return str(fallback or "").strip()
 
 
 def _fallback_video_profile(student_name: str, tutor_face_url: str = "", tutor_personality: str = ""):
@@ -2026,6 +2122,170 @@ def _record_chat_outcome_from_reply(name, user_message, tutor_reply, conversatio
     )
 
 
+PHYSICS_UNIT_KEYWORDS = {
+    "Units and Measurements": ["unit", "dimension", "error", "significant figure", "measurement"],
+    "Kinematics": ["kinematics", "projectile", "velocity", "acceleration", "relative motion"],
+    "Laws of Motion": ["newton", "friction", "tension", "normal reaction", "incline"],
+    "Work Energy Power": ["work", "energy", "power", "potential", "kinetic"],
+    "Rotational Motion": ["rotation", "torque", "angular", "rolling", "moment of inertia"],
+    "Gravitation": ["gravitation", "gravity", "satellite", "escape velocity", "orbit"],
+    "Properties of Matter": ["elasticity", "surface tension", "viscosity", "bernoulli", "fluid"],
+    "Thermodynamics": ["thermodynamics", "heat", "adiabatic", "isothermal", "engine"],
+    "Kinetic Theory of Gases": ["kinetic theory", "rms", "ideal gas", "degrees of freedom"],
+    "Simple Harmonic Motion": ["shm", "simple harmonic", "oscillation", "spring", "pendulum"],
+    "Waves": ["wave", "sound", "doppler", "standing wave", "beats"],
+    "Electrostatics": ["electrostatics", "charge", "electric field", "potential", "capacitor"],
+    "Current Electricity": ["current", "resistance", "kirchhoff", "wheatstone", "internal resistance"],
+    "Magnetic Effects of Current": ["magnetic force", "biot", "ampere", "lorentz", "solenoid"],
+    "Magnetism and Matter": ["magnetism", "magnetic dipole", "hysteresis", "earth magnetism"],
+    "Electromagnetic Induction": ["emi", "faraday", "lenz", "induction", "motional emf"],
+    "Alternating Current": ["alternating current", " ac ", "lcr", "impedance", "resonance"],
+    "Electromagnetic Waves": ["em wave", "electromagnetic wave", "radiation pressure", "spectrum"],
+    "Ray Optics": ["ray optics", "lens", "mirror", "refraction", "snell"],
+    "Wave Optics": ["wave optics", "interference", "diffraction", "ydse", "polarization"],
+    "Dual Nature of Matter": ["dual nature", "photoelectric", "de broglie", "photon"],
+    "Atoms and Nuclei": ["atom", "nucleus", "nuclei", "bohr", "radioactivity"],
+    "Semiconductor Devices": ["semiconductor", "diode", "logic gate", "zener", "transistor"],
+}
+
+
+def _infer_physics_unit_and_topic(message, profile=None):
+    try:
+        text = f" {str(message or '').strip().lower()} "
+        focus = get_todays_focus((profile or {}).get("name", "")) if profile else {}
+        focus_subject = str((focus or {}).get("subject") or (profile or {}).get("default_subject") or "").lower()
+        focus_unit = str((focus or {}).get("unit") or "").strip()
+        focus_topic = str((focus or {}).get("topic") or "").strip()
+        if "physics" in focus_subject and focus_unit:
+            return focus_unit, focus_topic or focus_unit, True
+        for unit, keywords in PHYSICS_UNIT_KEYWORDS.items():
+            if any(keyword in text for keyword in keywords):
+                return unit, unit, True
+        physics_tokens = ["force", "motion", "velocity", "acceleration", "field", "circuit", "current", "voltage", "ray", "wave"]
+        if "physics" in text or any(token in text for token in physics_tokens):
+            return focus_unit or "Physics", focus_topic or _detect_topic_from_message(message) or "Physics", True
+    except Exception:
+        pass
+    return "", "", False
+
+
+def _ensure_confusion_table():
+    try:
+        database.execute_query(
+            """
+            CREATE TABLE IF NOT EXISTS confusion_events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                student_id TEXT,
+                topic TEXT,
+                unit TEXT,
+                confusion_type TEXT,
+                missing_prerequisite TEXT,
+                recovery_action TEXT,
+                session_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+    except Exception:
+        pass
+
+
+def _record_confusion_event(student_id, topic, unit, signal):
+    try:
+        _ensure_confusion_table()
+        database.safe_write(
+            """
+            INSERT INTO confusion_events (
+                student_id, topic, unit, confusion_type, missing_prerequisite, recovery_action
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (
+                str(student_id or "").strip(),
+                str(topic or "").strip(),
+                str(unit or "").strip(),
+                str((signal or {}).get("confusion_type") or "").strip(),
+                str((signal or {}).get("likely_missing_prerequisite") or "").strip(),
+                str((signal or {}).get("recommended_action") or "").strip(),
+            ),
+        )
+        database.safe_write(
+            """
+            INSERT INTO analytics_events (student_id, event_type, event_data)
+            VALUES (?, ?, ?)
+            """,
+            (
+                str(student_id or "").strip(),
+                "confusion_detected",
+                json.dumps({"topic": topic, "unit": unit, **(signal or {})}, ensure_ascii=False),
+            ),
+        )
+    except Exception as exc:
+        logging.warning("Could not record confusion event: %s", exc)
+
+
+def _run_recovery_prompt_reply(recovery_prompt):
+    try:
+        if not genai_client:
+            return ""
+        response = genai_client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=recovery_prompt,
+        )
+        return str(getattr(response, "text", "") or "").strip()
+    except Exception as exc:
+        logging.warning("Recovery prompt generation failed: %s", exc)
+        return ""
+
+
+def _maybe_apply_confusion_recovery(profile, request, conversation_id, reply):
+    try:
+        if request.conversation_mode != "tutor":
+            return reply, None, False
+        unit, topic, is_physics = _infer_physics_unit_and_topic(request.message, profile)
+        if not is_physics:
+            return reply, None, False
+        history = get_chat_history(profile["name"], request.conversation_mode, conversation_id=conversation_id, limit=6)
+        previous_messages = [
+            f"{item.get('role', '')}: {item.get('message_text', '')}"
+            for item in history[-3:]
+            if isinstance(item, dict)
+        ]
+        signal = detect_confusion_signals(request.message, topic or unit or "Physics", previous_messages)
+        if not signal.get("confusion_detected"):
+            return reply, signal, False
+        _record_confusion_event(profile["name"], topic, unit, signal)
+        recovery_message = str(signal.get("recovery_message") or "").strip()
+        recovery_applied = False
+        if signal.get("recommended_action") == "back_to_prerequisite":
+            profile["pending_recovery"] = {
+                "subject": "physics",
+                "topic": topic,
+                "unit": unit,
+                "missing_prerequisite": signal.get("likely_missing_prerequisite"),
+                "confusion_type": signal.get("confusion_type"),
+                "created_at": datetime.utcnow().isoformat(timespec="seconds"),
+            }
+            save_profile(profile)
+            recovery_prompt = build_recovery_prompt(
+                profile["name"],
+                topic or unit or "Physics",
+                unit or "Physics",
+                signal.get("confusion_type"),
+                signal.get("likely_missing_prerequisite"),
+                reply,
+            )
+            recovery_reply = _run_recovery_prompt_reply(recovery_prompt)
+            if recovery_reply:
+                return recovery_reply, signal, True
+            recovery_applied = True
+        if recovery_message and recovery_message not in reply:
+            reply = f"{reply}\n\n{recovery_message}"
+        return reply, signal, recovery_applied
+    except Exception as exc:
+        logging.warning("Confusion detection skipped: %s", exc)
+        return reply, None, False
+
+
 def _handle_local_command(profile, user_input):
     normalized = user_input.strip().lower()
 
@@ -2396,6 +2656,17 @@ def _run_agent_reply(
         }
     else:
         outgoing_message = instruction_block
+        pending_recovery = profile.get("pending_recovery") if conversation_mode == "tutor" else None
+        if isinstance(pending_recovery, dict) and pending_recovery.get("subject") == "physics":
+            prerequisite = str(pending_recovery.get("missing_prerequisite") or "the missing prerequisite").strip()
+            recovery_topic = str(pending_recovery.get("topic") or "this Physics topic").strip()
+            outgoing_message += (
+                "\n\nPending Physics recovery flag: before answering the new student message, briefly teach "
+                f"{prerequisite} first, then bridge back to {recovery_topic}. "
+                "Use the recovery style: no blame, simpler analogy, one worked example, then return to the current doubt."
+            )
+            profile.pop("pending_recovery", None)
+            save_profile(profile)
         outgoing_message += f"\n\nStudent message:\n{user_input}"
         outgoing_message += (
             "\n\nCore support policy for this tutor: stay academically focused, clear, and efficient by default. "
@@ -2821,6 +3092,73 @@ def analytics_dashboard(student_id: str):
         raise HTTPException(status_code=500, detail="Could not load analytics dashboard right now.") from exc
 
 
+@app.get("/api/analytics/confusion/{student_id}")
+def confusion_analytics(student_id: str):
+    try:
+        _ensure_confusion_table()
+        rows = database.execute_query(
+            """
+            SELECT student_id, topic, unit, confusion_type, missing_prerequisite, recovery_action, session_date
+            FROM confusion_events
+            WHERE student_id = ?
+            ORDER BY session_date DESC, id DESC
+            """,
+            (student_id,),
+        ) or []
+        topic_counts = defaultdict(int)
+        type_counts = defaultdict(int)
+        prerequisite_counts = defaultdict(int)
+        recovery_count = 0
+        recent_recoveries = []
+        for row in rows:
+            item = dict(row)
+            topic = item.get("topic") or item.get("unit") or "Physics"
+            confusion_type = item.get("confusion_type") or "none"
+            prerequisite = item.get("missing_prerequisite") or ""
+            action = item.get("recovery_action") or ""
+            topic_counts[topic] += 1
+            type_counts[confusion_type] += 1
+            if prerequisite:
+                prerequisite_counts[prerequisite] += 1
+            if action in {"rephrase", "simpler_analogy", "back_to_prerequisite", "worked_example", "check_understanding"}:
+                recovery_count += 1
+                if len(recent_recoveries) < 5:
+                    recent_recoveries.append(
+                        {
+                            "topic": topic,
+                            "unit": item.get("unit") or "",
+                            "confusion_type": confusion_type,
+                            "recovery_action": action,
+                            "session_date": item.get("session_date"),
+                        }
+                    )
+        total = len(rows)
+        return {
+            "most_confused_topics": [
+                {"topic": topic, "count": count}
+                for topic, count in sorted(topic_counts.items(), key=lambda pair: pair[1], reverse=True)[:5]
+            ],
+            "most_common_confusion_type": max(type_counts.items(), key=lambda pair: pair[1])[0] if type_counts else "none",
+            "recovery_success_rate": int(round((recovery_count / total) * 100)) if total else 0,
+            "prerequisite_gaps": [
+                {"prerequisite": prerequisite, "count": count}
+                for prerequisite, count in sorted(prerequisite_counts.items(), key=lambda pair: pair[1], reverse=True)[:5]
+            ],
+            "total_confusion_events": total,
+            "recent_recoveries": recent_recoveries,
+        }
+    except Exception as exc:
+        logging.exception("Confusion analytics failed: %s", exc)
+        return {
+            "most_confused_topics": [],
+            "most_common_confusion_type": "none",
+            "recovery_success_rate": 0,
+            "prerequisite_gaps": [],
+            "total_confusion_events": 0,
+            "recent_recoveries": [],
+        }
+
+
 @app.get("/api/readiness")
 def readiness():
     return {
@@ -2913,9 +3251,24 @@ def auth_register(request: AuthRegisterRequest):
 
 @app.post("/api/auth/login")
 def auth_login(request: AuthLoginRequest):
+    email = request.email.strip().lower()
+    attempts = _prune_login_attempts(email)
+    if len(attempts) >= 5:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many failed attempts. Please try again in 15 minutes.",
+        )
+
     user = authenticate_user(request.email, request.password)
     if not user:
+        attempt_count = _record_failed_login_attempt(email)
+        if attempt_count >= 5:
+            raise HTTPException(
+                status_code=429,
+                detail="Too many failed attempts. Please try again in 15 minutes.",
+            )
         raise HTTPException(status_code=401, detail="Invalid email or password.")
+    _clear_failed_login_attempts(email)
     session = issue_session(user["id"])
     profile = load_profile(user["student_name"])
     return {
@@ -2933,6 +3286,21 @@ def auth_me(authorization: str | None = Header(default=None)):
         "user": user,
         "profile": profile,
     }
+
+
+@app.post("/api/auth/logout")
+def auth_logout(authorization: str | None = Header(default=None), x_session_token: str | None = Header(default=None)):
+    token = ""
+    if authorization and authorization.lower().startswith("bearer "):
+        token = authorization.split(" ", 1)[1].strip()
+    elif x_session_token:
+        token = x_session_token.strip()
+    if not token:
+        raise HTTPException(status_code=401, detail="Missing bearer token.")
+    revoked = revoke_session(token)
+    if not revoked:
+        raise HTTPException(status_code=401, detail="Invalid or expired token.")
+    return {"success": True}
 
 
 @app.get("/api/profile/{student_name}")
@@ -3359,9 +3727,10 @@ def planner_generate_journey(request: PlannerSetupRequest, background_tasks: Bac
 @app.post("/api/video/pre-plan")
 def video_pre_plan(request: VideoPrePlanRequest):
     try:
-        briefs = pre_generate_video_briefs(request.student_id, request.days_ahead)
+        student_id = _authenticated_student_name(request.student_id)
+        briefs = pre_generate_video_briefs(student_id, request.days_ahead)
         return {
-            "student_id": request.student_id,
+            "student_id": student_id,
             "days_ahead": request.days_ahead,
             "briefs": briefs,
         }
@@ -3373,6 +3742,7 @@ def video_pre_plan(request: VideoPrePlanRequest):
 @app.get("/api/video/pre-plan/status/{student_id}")
 def video_pre_plan_status(student_id: str):
     try:
+        student_id = _authenticated_student_name(student_id)
         return {
             "student_id": student_id,
             "items": load_video_preplan_status(student_id),
@@ -3385,6 +3755,7 @@ def video_pre_plan_status(student_id: str):
 @app.get("/api/video/brief/{student_id}/{topic_slug}")
 def video_brief_for_topic(student_id: str, topic_slug: str, subject: str = ""):
     try:
+        student_id = _authenticated_student_name(student_id)
         topic = str(topic_slug or "").replace("_", " ")
         brief = get_video_brief_for_topic(student_id, topic, subject)
         return {
@@ -3400,6 +3771,7 @@ def video_brief_for_topic(student_id: str, topic_slug: str, subject: str = ""):
 @app.get("/api/video/requests/{student_id}")
 def video_requested_list(student_id: str):
     try:
+        student_id = _authenticated_student_name(student_id)
         return {
             "student_id": student_id,
             "requests": load_requested_videos(student_id),
@@ -3412,8 +3784,9 @@ def video_requested_list(student_id: str):
 @app.post("/api/video/request")
 def video_request_save(request: VideoRequestSaveRequest):
     try:
+        student_id = _authenticated_student_name(request.student_id)
         record = save_requested_video(
-            request.student_id,
+            student_id,
             request.topic,
             request.subject,
             source=request.source,
@@ -3422,9 +3795,9 @@ def video_request_save(request: VideoRequestSaveRequest):
             video_url=request.video_url,
         )
         return {
-            "student_id": request.student_id,
+            "student_id": student_id,
             "request": record,
-            "requests": load_requested_videos(request.student_id),
+            "requests": load_requested_videos(student_id),
         }
     except Exception as exc:
         logging.exception("Could not save requested video: %s", exc)
@@ -3434,17 +3807,18 @@ def video_request_save(request: VideoRequestSaveRequest):
 @app.post("/api/video/request/status")
 def video_request_update_status(request: VideoRequestSaveRequest):
     try:
+        student_id = _authenticated_student_name(request.student_id)
         record = update_requested_video_status(
-            request.student_id,
+            student_id,
             request.topic or request.topic_slug,
             request.status,
             job_id=request.job_id,
             video_url=request.video_url,
         )
         return {
-            "student_id": request.student_id,
+            "student_id": student_id,
             "request": record,
-            "requests": load_requested_videos(request.student_id),
+            "requests": load_requested_videos(student_id),
         }
     except Exception as exc:
         logging.exception("Could not update requested video status: %s", exc)
@@ -3476,7 +3850,17 @@ def planner_today(student_id: str):
 def planner_weekly(student_id: str):
     profile = _load_profile_or_404(student_id)
     weekly = _load_json_safe(_journey_path(profile["name"], "weekly"), {})
-    if not weekly:
+    weekly_subjects = {
+        str((day or {}).get("morning", {}).get("subject", "")).strip().lower()
+        for day in (weekly or {}).get("days", [])
+        if isinstance(day, dict)
+    } | {
+        str((day or {}).get("evening", {}).get("subject", "")).strip().lower()
+        for day in (weekly or {}).get("days", [])
+        if isinstance(day, dict)
+    }
+    weekly_subjects.discard("")
+    if not weekly or len(weekly_subjects) < 3:
         weekly = generate_this_weeks_plan(profile["name"])
     return weekly
 
@@ -3760,7 +4144,7 @@ def progress_insight(student_id: str):
 
 @app.post("/api/ui/daily-briefing")
 def ui_daily_briefing(request: dict):
-    student_id = str((request or {}).get("student_id") or "").strip()
+    student_id = _authenticated_student_name((request or {}).get("student_id") or "")
     if not student_id:
         raise HTTPException(status_code=400, detail="student_id is required.")
     profile = _load_profile_or_404(student_id)
@@ -3784,7 +4168,7 @@ def ui_daily_briefing(request: dict):
 
 @app.post("/api/ui/next-action")
 def ui_next_action(request: dict):
-    student_id = str((request or {}).get("student_id") or "").strip()
+    student_id = _authenticated_student_name((request or {}).get("student_id") or "")
     if not student_id:
         raise HTTPException(status_code=400, detail="student_id is required.")
     profile = _load_profile_or_404(student_id)
@@ -4405,6 +4789,7 @@ def chat(request: ChatRequest):
             visual_learning = agent_result["visual_learning"]
             video_explanation = agent_result["video_explanation"]
             adaptive_profile = agent_result["adaptive_profile"]
+            reply_source = agent_result.get("reply_source", "model")
             event_type = "chat"
             if request.conversation_mode == "tutor" and visual_learning:
                 reward_points = int((visual_learning.get("mastery") or {}).get("reward_points", 18) or 18)
@@ -4429,6 +4814,7 @@ def chat(request: ChatRequest):
                 if request.conversation_mode in {"tutor", "practice"}
                 else None
             )
+            reply_source = "local"
             if request.conversation_mode == "tutor" and visual_learning:
                 reward_points = int((visual_learning.get("mastery") or {}).get("reward_points", 18) or 18)
                 award_points(
@@ -4438,6 +4824,16 @@ def chat(request: ChatRequest):
                 )
             if request.conversation_mode == "tutor" and video_explanation:
                 award_points(profile["name"], 10, "watching a lesson-style concept walkthrough")
+
+        confusion_signal = None
+        recovery_applied = False
+        if local_reply is None:
+            reply, confusion_signal, recovery_applied = _maybe_apply_confusion_recovery(
+                profile,
+                request,
+                conversation_id,
+                reply,
+            )
 
         if request.conversation_mode != "guide":
             record_behavior_event(
@@ -4469,7 +4865,12 @@ def chat(request: ChatRequest):
             "video_explanation": video_explanation,
             "adaptive_profile": adaptive_profile,
             "tutor_brain": tutor_brain,
-            "reply_source": agent_result.get("reply_source", "local"),
+            "reply_source": reply_source,
+            "confusion_signal": confusion_signal,
+            "recovery": {
+                "active": bool(recovery_applied),
+                "indicator": "Astra is helping you recover" if recovery_applied else "",
+            },
             "weekly_plan": get_weekly_schedule_data(profile)
             if request.message.strip().lower() == "show weekly plan"
             else None,
@@ -5048,15 +5449,19 @@ def video_status(job_id: str):
 def video_generate(request: VideoGenerateRequest, background_tasks: BackgroundTasks):
     try:
         print("[video_generate] incoming request body:", request.model_dump())
-        if not check_rate_limit(request.student_id):
+        profile = _load_profile_or_404(request.student_id)
+        student_id = profile["name"]
+        if not check_rate_limit(student_id):
             raise HTTPException(status_code=429, detail="Too many requests. Please wait a moment.")
         job_id = str(uuid4())
         _ensure_video_job_dirs()
+        request_payload = request.model_dump()
+        request_payload["student_id"] = student_id
         initial_job = {
             "job_id": job_id,
             "status": "queued",
             "created_at": datetime.utcnow().isoformat(),
-            "student_id": request.student_id,
+            "student_id": student_id,
             "question": request.question,
             "topic": request.topic,
             "subject": request.subject,
@@ -5064,7 +5469,7 @@ def video_generate(request: VideoGenerateRequest, background_tasks: BackgroundTa
             "tutor_personality": request.tutor_personality,
         }
         _save_video_job(job_id, initial_job)
-        background_tasks.add_task(_run_video_generation_job, job_id, request.model_dump())
+        background_tasks.add_task(_run_video_generation_job, job_id, request_payload)
         return {
             "job_id": job_id,
             "status": "queued",

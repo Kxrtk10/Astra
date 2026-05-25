@@ -1,3 +1,5 @@
+(function() {
+
 const THREE = window.THREE;
 
 function drawRoundedRect(ctx, x, y, width, height, radius) {
@@ -913,3 +915,5 @@ document.addEventListener("click", (e) => {
     window.dispatchEvent(new CustomEvent("alt:tutor-behavior", { detail: { behavior } }));
   }
 });
+
+})();

@@ -141,3 +141,10 @@ def require_bearer_token(authorization_header):
     if not user:
         raise HTTPException(status_code=401, detail="Invalid or expired token.")
     return user
+
+
+def revoke_session(token):
+    token_hash = _hash_token(token)
+    with db_cursor(commit=True) as cursor:
+        cursor.execute("DELETE FROM sessions WHERE token_hash = ?", (token_hash,))
+        return cursor.rowcount > 0

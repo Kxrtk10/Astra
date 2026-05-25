@@ -2352,11 +2352,32 @@ def generate_this_weeks_plan(student_id):
             return {"student_id": student_id, "days": [], "message": "Journey has no topics yet."}
 
         behavior_snapshot = get_behavior_snapshot(profile)
+        subject_buckets = {}
+        subject_order = []
+        for item in topic_plan:
+            subject = str(item.get("subject", "")).strip() or "General"
+            subject_key = _subject_key(subject)
+            if subject_key not in subject_buckets:
+                subject_buckets[subject_key] = []
+                subject_order.append(subject_key)
+            subject_buckets[subject_key].append(item)
+
+        preferred_subject_order = ["PHYSICS", "CHEMISTRY", "MATHEMATICS"]
+        ordered_subjects = [subject for subject in preferred_subject_order if subject in subject_buckets]
+        ordered_subjects.extend(subject for subject in subject_order if subject not in ordered_subjects)
+        if not ordered_subjects:
+            ordered_subjects = list(subject_buckets.keys()) or ["PHYSICS"]
+
+        subject_positions = {subject: 0 for subject in subject_buckets}
         start_date = datetime.today().date()
         week_days = []
         for index in range(7):
             day_date = start_date + timedelta(days=index)
-            topic_item = topic_plan[min(index, len(topic_plan) - 1)]
+            subject_key = ordered_subjects[index % len(ordered_subjects)]
+            bucket = subject_buckets.get(subject_key) or topic_plan
+            position = subject_positions.get(subject_key, 0)
+            topic_item = bucket[position % len(bucket)] if bucket else topic_plan[min(index, len(topic_plan) - 1)]
+            subject_positions[subject_key] = position + 1
             topic_key = f"{topic_item['subject'].lower()}::{topic_item['topic'].lower()}"
             revision_items = []
             revision_due = get_revision_due_today(student_id)

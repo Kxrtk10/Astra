@@ -3730,12 +3730,23 @@ async function loadVideoTutorWorkspace() {
     videoTutorWeeklyStatus.textContent = "Loading this week's video plan...";
   }
   try {
-    const [weeklyResponse, statusResponse, requestedResponse] = await Promise.all([
-      fetch(`/api/planner/weekly/${encodeURIComponent(activeProfile.name)}`),
+    const weeklyResponse = await fetch(`/api/planner/weekly/${encodeURIComponent(activeProfile.name)}`);
+    const weeklyPayload = await weeklyResponse.json();
+
+    try {
+      await fetch("/api/video/pre-plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ student_id: activeProfile.name, days_ahead: 7 }),
+      });
+    } catch (prePlanError) {
+      console.warn("Could not pre-generate weekly video briefs:", prePlanError);
+    }
+
+    const [statusResponse, requestedResponse] = await Promise.all([
       fetch(`/api/video/pre-plan/status/${encodeURIComponent(activeProfile.name)}`),
       fetch(`/api/video/requests/${encodeURIComponent(activeProfile.name)}`),
     ]);
-    const weeklyPayload = await weeklyResponse.json();
     const statusPayload = await statusResponse.json();
     const requestedPayload = await requestedResponse.json();
     currentVideoTutorPlanStatus = Array.isArray(statusPayload.items) ? statusPayload.items : [];
@@ -4105,7 +4116,7 @@ async function requestTutorVideo(question, topic, subject) {
     });
     const response = await fetch(`${videoApiBaseUrl}/api/video/generate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         student_id: activeProfile.name,
         question: questionText,
@@ -4117,6 +4128,10 @@ async function requestTutorVideo(question, topic, subject) {
     });
     const payload = await response.json();
     console.log("Video Answer generate response:", payload);
+    if (response.status === 401) {
+      handleSessionExpired();
+      return null;
+    }
     if (!response.ok) {
       throw new Error(payload.detail || "Could not queue the tutor video request.");
     }
@@ -4206,6 +4221,11 @@ function startVideoPolling(jobId) {
     try {
       const response = await fetch(`${videoApiBaseUrl}/api/video/status/${encodeURIComponent(jobId)}`);
       const payload = await response.json();
+      if (response.status === 401) {
+        clearTutorVideoPolling();
+        handleSessionExpired();
+        return;
+      }
       if (!response.ok) {
         throw new Error(payload.detail || "Could not read the tutor video status.");
       }
@@ -9964,7 +9984,21 @@ function persistAuthSession(session, user) {
   }
 }
 
-function logoutAndShowAuth() {
+function getAuthHeaders() {
+  const token = localStorage.getItem("alt_auth_token");
+  return token
+    ? {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      }
+    : {
+        "Content-Type": "application/json",
+      };
+}
+
+window.getAuthHeaders = getAuthHeaders;
+
+function resetClientSessionState(message = "Sign in or create a fresh JEE account to continue.") {
   persistAuthSession(null, null);
   activeProfile = null;
   activeTutorConversationId = null;
@@ -10030,7 +10064,30 @@ function logoutAndShowAuth() {
   renderDailyMotivation("");
   setHomeSubtab("overview");
   setTutorMode("calm");
+  profileStatus.textContent = message;
 }
+
+async function logoutAndShowAuth() {
+  const token = localStorage.getItem("alt_auth_token");
+  try {
+    if (token) {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: getAuthHeaders(),
+      });
+    }
+  } catch (error) {
+    console.warn("Could not notify backend about logout:", error);
+  }
+  resetClientSessionState("Sign in or create a fresh JEE account to continue.");
+  window.location.reload();
+}
+
+function handleSessionExpired(message = "Your session has expired. Please sign in again.") {
+  resetClientSessionState(message);
+}
+
+window.handleSessionExpired = handleSessionExpired;
 
 async function restoreSessionIfAvailable() {
   const token = localStorage.getItem("alt_auth_token");
