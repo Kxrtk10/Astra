@@ -358,6 +358,7 @@ def build_mode_block(
         )
         lines.append(
             "Never start your response with a plan. Never use phrases like 'let us', 'I will', 'we will start', 'first let me', or 'in this explanation'. "
+            "Also never start with filler praise such as 'It's a really good question', 'That's a great question', 'That's a fantastic question', 'Great question', or 'Good question'. "
             "Just begin explaining immediately."
         )
         lines.append(
@@ -679,7 +680,14 @@ def build_tutor_prompt(
 
     lines = [prompt]
     if focus:
-        lines.append("Today's focus:")
+        scheduled_topic = str(focus.get("topic") or focus.get("unit") or "").strip()
+        lines.append("Today's focus context:")
+        lines.append(
+            "The weekly plan is a guide, not a cage. If a student asks any Physics question - whether it is on today's plan or not - answer it fully and completely first. "
+            f"After answering, you may mention: 'This topic comes up later in your plan. For now, your scheduled topic is {scheduled_topic or '[topic]'} - want to continue with that after this?' "
+            "Never refuse to answer a question. Never say 'we are focusing on X right now.' "
+            "Never redirect a student away from their question before answering it. Always answer first. Always."
+        )
         if focus.get("date"):
             lines.append(f"- Date: {focus.get('date')}")
         if focus.get("subject"):
@@ -856,6 +864,7 @@ def build_recovery_prompt(
             "This is exactly where most students hit a wall - it means you are thinking deeply enough to notice the gap.\n\n"
             f"Before continuing with {topic_text}, spend 2 minutes on {prerequisite} because that is the key that unlocks this.\n"
             "Teach the prerequisite using a completely different analogy than the earlier explanation.\n"
+            "Keep the recovery explanation before the solved example to 150 words maximum. Get to the point quickly.\n"
             f"Then bridge back with: Now that {prerequisite} is clear, watch how {topic_text} becomes obvious...\n"
             "Use one simpler worked example before returning to the original problem.\n"
             "Keep it warm, precise, and step-by-step. Do not make the student feel behind.\n\n"

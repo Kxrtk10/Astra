@@ -2618,7 +2618,12 @@ def _run_agent_reply(
                 or profile.get("default_response_language")
                 or response_language,
             )
-            instruction_block = "\n\n".join([instruction_block, chapter_block])
+            chapter_plan_rule = (
+                "Active chapter-session context is a guide, not a restriction. "
+                "If the student's message asks about a different Physics topic, answer that actual question fully first. "
+                "Never say 'we are focusing on X right now' and never redirect away from the question before answering."
+            )
+            instruction_block = "\n\n".join([instruction_block, chapter_plan_rule, chapter_block])
     else:
         instruction_block = build_prompt_instruction_block(
             profile,
@@ -2774,8 +2779,8 @@ def _run_agent_reply(
                 "Use short headings only when truly helpful. Avoid markdown clutter. If a formula or equation matters, place it on its own line and then explain it in prose."
             )
             outgoing_message += (
-                "\n\nIf the student has uploaded syllabus or portion documents, prioritize those topics and scope when answering. "
-                "Keep the scope JEE-only and stay aligned with the student's Physics, Chemistry, and Mathematics plan."
+                "\n\nIf the student has uploaded syllabus or portion documents, use those topics and scope as helpful context, not as a restriction. "
+                "Keep the scope JEE-only, but always answer the student's actual Physics, Chemistry, or Mathematics question first even if it is outside the current plan."
             )
             outgoing_message += (
                 "\n\nAdaptive teaching profile for this student: "
