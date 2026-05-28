@@ -181,15 +181,14 @@
         </div>
         <div class="nav-hub nav-hub-learn" data-section-group="learn" data-nav-group-container="learn">
           <p class="nav-hub-label">Learn</p>
-          <p class="nav-hub-cue">Tutor Text for written help, Tutor Room for live voice tutoring, Video Tutor for video answers, then Practice, Mock Test, rescue, or tip.</p>
+          <p class="nav-hub-cue">Tutor with voice controls, Video Tutor, Practice, Tips, Last Minute, and Mock Test.</p>
           <div class="nav-hub-buttons">
             <button class="tab-button" data-tab="tutorTab" data-tab-key="tutor" data-nav-group="learn" role="tab" aria-selected="false">Tutor</button>
-            <button class="tab-button" data-tab="tutorRoomTab" data-tab-key="tutorroom" data-nav-group="learn" role="tab" aria-selected="false">Tutor Room</button>
             <button class="tab-button" data-tab="videoTutorTab" data-tab-key="videotutor" data-nav-group="learn" role="tab" aria-selected="false">Video Tutor</button>
             <button class="tab-button" data-tab="practiceTab" data-tab-key="practice" data-nav-group="learn" role="tab" aria-selected="false">Practice</button>
-            <button class="tab-button" data-tab="mockTestTab" data-tab-key="mocktest" data-nav-group="learn" role="tab" aria-selected="false">Mock Test</button>
-            <button class="tab-button" data-tab="lastMinuteTab" data-tab-key="lastminute" data-nav-group="learn" role="tab" aria-selected="false">Last Minute</button>
             <button class="tab-button" data-tab="tipsTab" data-tab-key="tips" data-nav-group="learn" role="tab" aria-selected="false">Tips</button>
+            <button class="tab-button" data-tab="lastMinuteTab" data-tab-key="lastminute" data-nav-group="learn" role="tab" aria-selected="false">Last Minute</button>
+            <button class="tab-button" data-tab="mockTestTab" data-tab-key="mocktest" data-nav-group="learn" role="tab" aria-selected="false">Mock Test</button>
           </div>
         </div>
         <div class="nav-hub nav-hub-plan" data-section-group="plan" data-nav-group-container="plan">
@@ -237,7 +236,28 @@
               </div>
               <p id="tutorLevelHint" class="muted">Level 3 gives a balanced explanation. Switch lower for simple answers or higher for deeper detail.</p>
               <div class="tutor-controls-inline-actions">
-                <button id="openTutorRoomBtn" type="button" class="tutor-text-link" title="Open Tutor Room">â†’ Tutor Room</button>
+                <label class="toggle-row tutor-inline-toggle">
+                  <input id="readingComfortMode" type="checkbox">
+                  <span>Reading comfort</span>
+                </label>
+                <div class="studio-field tutor-pacing-field">
+                  <label for="responsePacingSelect">Pacing</label>
+                  <select id="responsePacingSelect">
+                    <option value="standard">Standard</option>
+                    <option value="gentle">Gentle</option>
+                    <option value="slow">Slow</option>
+                  </select>
+                </div>
+                <button id="tutorVoiceInlineToggleBtn" type="button" class="ghost-button" title="Voice on/off">Voice off</button>
+                <button id="speakLastReplyBtn" class="ghost-button" type="button">Speak last reply</button>
+                <button id="pauseVoiceBtn" class="ghost-button" type="button">Pause reply</button>
+                <button id="resumeVoiceBtn" class="ghost-button" type="button">Resume reply</button>
+                <button id="stopVoiceBtn" class="ghost-button hidden" type="button">Stop voice</button>
+                <label class="toggle-row tutor-inline-toggle">
+                  <input id="autoSpeakReplies" type="checkbox">
+                  <span>Auto-speak</span>
+                </label>
+                <input id="voiceChatMode" type="checkbox" class="hidden">
                 <button type="button" class="tutor-mode-pill tutor-mode-pill-inline active" data-tutor-mode="calm" title="Calm mode">Calm</button>
                 <div class="tutor-language-picker">
                   <button id="tutorLanguageChip" type="button" class="tutor-language-chip" title="Change tutor language">ðŸŒ English</button>
@@ -344,95 +364,6 @@
         </div>
       </section>
 
-      <section id="tutorRoomTab" class="tab-panel" role="tabpanel">
-        <div class="tutor-room-layout">
-          <div class="table-card tutor-room-hero-card">
-            <div class="card-header">
-              <div>
-                <p class="eyebrow">Tutor Room</p>
-                <h2>Big-screen voice and 3D tutor presence</h2>
-                <p class="muted">Talk, type, interrupt, and continue from the exact checkpoint while the spoken response and 3D stage stay centered on a larger screen.</p>
-              </div>
-              <div class="mini-action-row">
-                <button id="backToTutorTextBtn" type="button" class="ghost-button">Back to written Tutor</button>
-                <button id="fullscreenStudioBtn" type="button" class="ghost-button studio-fullscreen-button">Fullscreen</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="table-card tutor-room-avatar-card">
-            <div class="card-header">
-              <div>
-                <p class="card-title">Avatar Stage</p>
-                <p class="muted">A lightweight speaking tutor stage with a clean 2D fallback when the 3D avatar is not available.</p>
-              </div>
-              <span class="pill">Avatar</span>
-            </div>
-            <div id="avatar-stage-container">
-              <canvas id="avatar-canvas" width="400" height="500"></canvas>
-              <div class="avatar-name-badge" id="avatar-name-badge">Calm Mentor</div>
-              <div class="avatar-controls-bar">
-                <button id="avatar-speak-btn" type="button" onclick="avatarSpeak()">▶ Speak Last Reply</button>
-                <button id="avatar-stop-btn" type="button" onclick="avatarStop()">⏸ Stop</button>
-                <span id="avatar-status-text">Ready</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="table-card tutor-room-live-card">
-            <div class="card-header">
-              <div>
-                <p class="card-title">Live Tutor Desk</p>
-                <p id="tutorRoomLiveSummary" class="muted">Speak or type a doubt, interrupt mid-answer, and resume naturally from the last checkpoint.</p>
-              </div>
-              <span id="tutorRoomLivePill" class="pill">Ready</span>
-            </div>
-            <div class="tutor-live-grid">
-              <div class="tutor-live-panel">
-                <div class="live-status-line">
-                  <span id="tutorRoomVoiceState" class="focus-pill">Voice off</span>
-                  <span id="tutorRoomSpeakState" class="focus-pill">Auto-speak off</span>
-                  <span id="tutorRoomCaptionState" class="focus-pill">Captions on</span>
-                  <span id="tutorRoomReadState" class="focus-pill">Reading comfort off</span>
-                  <span id="tutorRoomPaceState" class="focus-pill">Pacing standard</span>
-                  <span id="tutorRoomLevelState" class="focus-pill">Level 3</span>
-                </div>
-                <p id="tutorRoomLiveHint" class="muted">Press Enter to send a question. Press Esc while Astra is speaking to pause the reply and save a checkpoint.</p>
-                <div class="mini-action-row tutor-room-live-actions">
-                  <button id="tutorRoomSpeakLastBtn" type="button" class="ghost-button">Speak last reply</button>
-                  <button id="tutorRoomPauseBtn" type="button" class="ghost-button">Pause reply</button>
-                  <button id="tutorRoomResumeBtn" type="button" class="ghost-button">Resume reply</button>
-                  <button id="tutorRoomStopBtn" type="button" class="ghost-button">Stop and checkpoint</button>
-                </div>
-              </div>
-
-              <form id="tutorRoomForm" class="composer tutor-room-composer">
-                <textarea id="tutorRoomMessageInput" rows="4" placeholder="Talk to Astra like a live tutor. You can ask a doubt, interrupt mid-answer, or ask to continue from the checkpoint..."></textarea>
-                <div class="composer-actions">
-                  <span class="muted">Type here for direct tutoring. Shift+Enter makes a new line.</span>
-                  <div class="mini-action-row">
-                    <button id="tutorRoomBackToTutorBtn" type="button" class="ghost-button">Open written Tutor</button>
-                    <button type="submit">Send</button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <div class="table-card tutor-room-history-card">
-            <div class="card-header">
-              <div>
-                <p class="card-title">Tutor Room Transcript</p>
-                <p class="muted">This mirrors the live tutor chat so you can keep track of the full conversation right where you are studying.</p>
-              </div>
-              <span class="pill">History</span>
-            </div>
-            <div id="tutorRoomTranscript" class="chat-feed tutor-feed tutor-room-transcript"></div>
-          </div>
-
-        </div>
-      </section>
-
       <section id="guideTab" class="tab-panel" role="tabpanel">
         <div class="practice-layout">
           <div class="table-card practice-main-card">
@@ -508,44 +439,6 @@
               </div>
             </form>
 
-            <div class="table-card practice-review-card">
-              <div class="card-header">
-                <div>
-                  <p class="card-title">Log Your Attempt</p>
-                  <p class="muted">Track how long you took and how accurate you were so the app can adjust speed and challenge better.</p>
-                </div>
-                <span class="pill">Analytics</span>
-              </div>
-              <div class="card-header compact-header">
-                <div>
-                  <p class="card-title">Baseline mock scores</p>
-                  <p class="muted">Add your first subject-wise mock scores so Astra can estimate where to push, where to slow down, and what to repair first.</p>
-                </div>
-                <span class="pill">Baseline</span>
-              </div>
-              <div class="practice-review-grid">
-                <input id="mockExamInput" type="text" placeholder="Exam, for example JEE Main">
-                <input id="mockPhysicsInput" type="number" min="0" max="100" step="1" placeholder="Physics %">
-                <input id="mockChemistryInput" type="number" min="0" max="100" step="1" placeholder="Chemistry %">
-                <input id="mockMathInput" type="number" min="0" max="100" step="1" placeholder="Mathematics %">
-              </div>
-              <div class="subtab-action-row">
-                <button id="saveMockScoresBtn" type="button" class="ghost-button">Save mock baseline</button>
-              </div>
-              <div class="practice-review-grid">
-                <input id="practiceTimeInput" type="number" min="0" step="0.5" placeholder="Time taken in minutes">
-                <input id="practiceAccuracyInput" type="number" min="0" max="100" step="1" placeholder="Accuracy %">
-                <input id="practiceQuestionCountInput" type="number" min="0" step="1" placeholder="Questions attempted">
-              <input id="practiceExamInput" type="text" placeholder="Exam, for example JEE Main">
-              </div>
-              <div class="inline-form review-notes-row">
-                <input id="practiceNotesInput" type="text" placeholder="Optional note: where you got stuck or what went wrong">
-                <button id="submitPracticeReviewBtn" type="button" class="ghost-button">Save attempt</button>
-              </div>
-              <div id="practiceAnalyticsCard" class="practice-analytics-card">
-                <p class="muted">Your latest speed and accuracy summary will appear here.</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -578,12 +471,59 @@
                   <li>The final report turns your strengths and weak spots into a weekly study plan.</li>
                 </ul>
               </div>
+              <div class="table-card">
+                <div class="card-header compact-header">
+                  <div>
+                    <p class="card-title">Available Physics mocks</p>
+                    <p class="muted">Choose a paper and Astra will load the real test flow here.</p>
+                  </div>
+                  <span class="pill">Physics</span>
+                </div>
+                <div id="mockCatalogueList" class="practice-mode-grid"></div>
+              </div>
               <div class="practice-review-grid">
                 <input id="mockTestExamInput" type="text" placeholder="Exam, for example JEE Main">
                 <input id="mockTestCountInput" type="number" min="6" max="15" step="1" placeholder="Questions, default 9">
               </div>
               <div class="subtab-action-row">
                 <button id="startMockTestBtn" type="button" class="ghost-button">Open mock test room</button>
+              </div>
+              <div class="table-card">
+                <div class="card-header compact-header">
+                  <div>
+                    <p class="card-title">Took a test outside Astra?</p>
+                    <p class="muted">Add the score and Astra will turn it into a recovery plan.</p>
+                  </div>
+                  <span class="pill">Analysis</span>
+                </div>
+                <div class="practice-review-grid">
+                  <select id="mockExternalExamType">
+                    <option value="JEE Main">JEE Main</option>
+                    <option value="JEE Advanced">JEE Advanced</option>
+                    <option value="Coaching Mock">Coaching Mock</option>
+                  </select>
+                  <input id="mockExternalTotalScore" type="number" placeholder="Total score">
+                  <input id="mockExternalMaxScore" type="number" placeholder="Max marks">
+                  <input id="mockExternalTimeTaken" type="number" placeholder="Time taken in minutes">
+                  <input id="mockExternalPhysicsScore" type="number" placeholder="Physics score optional">
+                  <input id="mockExternalChemistryScore" type="number" placeholder="Chemistry score optional">
+                  <input id="mockExternalMathsScore" type="number" placeholder="Maths score optional">
+                </div>
+                <textarea id="mockExternalNotes" rows="3" placeholder="Notes: what felt hard, where time went, or what surprised you"></textarea>
+                <div class="subtab-action-row">
+                  <button id="mockExternalAnalyseBtn" type="button" class="ghost-button">Get Astra's Analysis</button>
+                </div>
+                <div id="mockExternalAnalysisResult" class="mock-report-body"></div>
+              </div>
+              <div class="table-card">
+                <div class="card-header compact-header">
+                  <div>
+                    <p class="card-title">Recent Tests</p>
+                    <p class="muted">Your last few mock results will appear here.</p>
+                  </div>
+                  <span class="pill">History</span>
+                </div>
+                <div id="mockHistoryList" class="mock-report-body"></div>
               </div>
               <p id="mockTestStatus" class="muted">When you start, Astra will open one question at a time and then evaluate the full paper at the end.</p>
             </div>
@@ -601,6 +541,9 @@
               </div>
               <div id="mockTestQuestionText" class="mock-question-text"></div>
               <div id="mockTestOptionList" class="mock-option-list"></div>
+              <div class="inline-form hidden">
+                <input id="mockTestIntegerInput" type="text" placeholder="Enter integer answer">
+              </div>
               <div class="mock-nav-row">
                 <button id="mockTestNavPrev" type="button" class="ghost-button">Previous</button>
                 <button id="mockTestNavNext" type="button" class="ghost-button">Next</button>
@@ -621,7 +564,7 @@
               </div>
               <div id="mockTestReportBody" class="mock-report-body"></div>
               <div class="subtab-action-row">
-                <button id="mockTestWeeklyPlanBtn" type="button" class="ghost-button">Open weekly plan</button>
+                <button id="mockTestWeeklyPlanBtn" type="button" class="ghost-button">Update Study Plan</button>
                 <button id="mockTestRetakeBtn" type="button" class="ghost-button">Retake baseline</button>
               </div>
             </div>
@@ -721,6 +664,15 @@
                   <p class="muted">A live tutor presence for direct conversation and a premium 3D learning flow.</p>
                 </div>
                 <span class="pill">3D Avatar</span>
+              </div>
+              <div id="avatar-stage-container">
+                <canvas id="avatar-canvas" width="400" height="500"></canvas>
+                <div class="avatar-name-badge" id="avatar-name-badge">Calm Mentor</div>
+                <div class="avatar-controls-bar">
+                  <button id="avatar-speak-btn" type="button" onclick="avatarSpeak()">▶ Speak Last Reply</button>
+                  <button id="avatar-stop-btn" type="button" onclick="avatarStop()">⏸ Stop</button>
+                  <span id="avatar-status-text">Ready</span>
+                </div>
               </div>
               <canvas id="threeTutorCanvas" class="three-stage-canvas" width="960" height="640" aria-label="3D tutor avatar stage"></canvas>
               <p class="muted">Your tutor stays here as the main stage, and the room will gently focus here after a fresh reply so the flow stays clean.</p>
@@ -2064,32 +2016,6 @@
           <div class="table-card settings-card">
             <div class="card-header">
               <div>
-                <p class="card-title">Voice Controls</p>
-                <p class="muted">Speak or pause tutor replies here so the sidebar stays clean.</p>
-              </div>
-              <span class="pill">Voice Web</span>
-            </div>
-            <div class="voice-controls">
-              <button id="speakLastReplyBtn" class="ghost-button" type="button">Speak last reply</button>
-              <button id="pauseVoiceBtn" class="ghost-button" type="button">Pause reply</button>
-              <button id="resumeVoiceBtn" class="ghost-button" type="button">Resume reply</button>
-              <button id="stopVoiceBtn" class="ghost-button" type="button">Stop voice</button>
-            </div>
-            <div class="settings-stack">
-              <label class="toggle-row">
-                <input id="autoSpeakReplies" type="checkbox">
-                <span>Auto-speak tutor replies</span>
-              </label>
-              <label class="toggle-row">
-                <input id="voiceChatMode" type="checkbox">
-                <span>Voice-chat style replies</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="table-card settings-card">
-            <div class="card-header">
-              <div>
                 <p class="card-title">Saved Data</p>
                 <p id="dataSaveStatus" class="muted">Checking what is stored for your profile...</p>
               </div>
@@ -2131,22 +2057,9 @@
                 <span>Reduced motion</span>
               </label>
               <label class="toggle-row">
-                <input id="readingComfortMode" type="checkbox">
-                <span>Reading comfort mode</span>
-              </label>
-              <label class="toggle-row">
                 <input id="chunkedReplyMode" type="checkbox" checked>
                 <span>Chunk replies into smaller parts</span>
               </label>
-              <div class="studio-field">
-                <label for="responsePacingSelect">Reply pacing</label>
-                <select id="responsePacingSelect">
-                  <option value="standard">Standard</option>
-                  <option value="gentle">Gentle</option>
-                  <option value="slow">Slow</option>
-                </select>
-                <p class="muted">Gentle and slow pacing ask Astra to use shorter sentences, clearer breaks, and a calmer rhythm.</p>
-              </div>
               <input id="autoCaptionMode" type="checkbox" checked class="hidden">
             </div>
           </div>

@@ -5,6 +5,7 @@ from contextvars import ContextVar
 import json
 import logging
 import os
+import random
 import re
 import time
 from uuid import uuid4
@@ -204,9 +205,13 @@ USER_ID = "student"
 WEB_DIR = Path("web")
 VIDEO_RENDER_JOB_DIR = Path("app_data") / "render_jobs"
 VIDEO_AUDIO_DIR = Path("app_data") / "audio"
+MOCK_TEST_DIR = Path("app_data") / "mock_tests"
+MOCK_TEST_CATALOGUE_PATH = MOCK_TEST_DIR / "mock_test_catalogue.json"
+MOCK_TEST_BANK_PATH = MOCK_TEST_DIR / "physics_mock_bank.json"
 APP_DATA_DIRECTORIES = [
     Path("app_data") / "render_jobs",
     Path("app_data") / "audio",
+    Path("app_data") / "mock_tests",
     Path("app_data") / "profiles",
     Path("app_data") / "planner",
     Path("app_data") / "sessions",
@@ -265,6 +270,7 @@ PUBLIC_API_PATHS = {
 def _ensure_app_data_directories():
     for directory in APP_DATA_DIRECTORIES:
         directory.mkdir(parents=True, exist_ok=True)
+    os.makedirs("app_data/mock_tests", exist_ok=True)
 
 
 def _warn_missing_startup_env_vars():
@@ -993,6 +999,25 @@ class MockTestGenerateRequest(BaseModel):
     mode: str = "diagnostic"
 
 
+class MockSubmitRequest(BaseModel):
+    student_id: str
+    answers: dict[str, object] = Field(default_factory=dict)
+    time_taken_minutes: float = 0
+    question_times: dict[str, float] = Field(default_factory=dict)
+
+
+class ExternalMockAnalysisRequest(BaseModel):
+    student_id: str
+    exam_type: str
+    total_score: float
+    max_score: float
+    physics_score: float | None = None
+    chemistry_score: float | None = None
+    maths_score: float | None = None
+    time_taken: float = 0
+    notes: str = ""
+
+
 class ProgressItemRequest(BaseModel):
     student_name: str
     exam: str = ""
@@ -1255,6 +1280,197 @@ def _extract_json_payload(text):
     if start == -1 or end == -1 or end <= start:
         raise ValueError("No JSON object found in model output.")
     return json.loads(cleaned[start : end + 1])
+
+
+def _default_mock_catalogue():
+    return {
+        "mock_tests": [
+            {
+                "id": "physics_mock_1",
+                "title": "JEE Main - Mechanics",
+                "subject": "physics",
+                "type": "jee_main",
+                "total_questions": 25,
+                "duration_minutes": 60,
+                "max_marks": 100,
+                "topics_covered": ["Kinematics", "Laws of Motion", "Work Energy Power", "Rotational Motion", "Gravitation"],
+                "difficulty": "medium",
+            },
+            {
+                "id": "physics_mock_2",
+                "title": "JEE Main - Waves and Optics",
+                "subject": "physics",
+                "type": "jee_main",
+                "total_questions": 25,
+                "duration_minutes": 60,
+                "max_marks": 100,
+                "topics_covered": ["SHM", "Waves", "Ray Optics", "Wave Optics", "Modern Physics"],
+                "difficulty": "medium",
+            },
+            {
+                "id": "physics_mock_3",
+                "title": "JEE Main - Electromagnetism",
+                "subject": "physics",
+                "type": "jee_main",
+                "total_questions": 25,
+                "duration_minutes": 60,
+                "max_marks": 100,
+                "topics_covered": ["Electrostatics", "Current Electricity", "Magnetic Effects", "EMI", "AC Circuits"],
+                "difficulty": "hard",
+            },
+            {
+                "id": "physics_mock_4",
+                "title": "JEE Advanced - Full Physics 1",
+                "subject": "physics",
+                "type": "jee_advanced",
+                "total_questions": 18,
+                "duration_minutes": 60,
+                "max_marks": 66,
+                "topics_covered": ["All units"],
+                "difficulty": "hard",
+            },
+            {
+                "id": "physics_mock_5",
+                "title": "JEE Advanced - Full Physics 2",
+                "subject": "physics",
+                "type": "jee_advanced",
+                "total_questions": 18,
+                "duration_minutes": 60,
+                "max_marks": 66,
+                "topics_covered": ["All units"],
+                "difficulty": "hard",
+            },
+        ]
+    }
+
+
+def _load_mock_catalogue():
+    try:
+        if not MOCK_TEST_CATALOGUE_PATH.exists():
+            MOCK_TEST_DIR.mkdir(parents=True, exist_ok=True)
+            MOCK_TEST_CATALOGUE_PATH.write_text(json.dumps(_default_mock_catalogue(), indent=2), encoding="utf-8")
+        with MOCK_TEST_CATALOGUE_PATH.open("r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+        if not isinstance(payload.get("mock_tests"), list):
+            return _default_mock_catalogue()
+        return payload
+    except Exception as exc:
+        logging.warning("Could not load mock catalogue: %s", exc)
+        return _default_mock_catalogue()
+
+
+def _load_mock_bank():
+    try:
+        if not MOCK_TEST_BANK_PATH.exists():
+            return {"questions": []}
+        with MOCK_TEST_BANK_PATH.open("r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+        if isinstance(payload, list):
+            return {"questions": payload}
+        if not isinstance(payload.get("questions"), list):
+            return {"questions": []}
+        return payload
+    except Exception as exc:
+        logging.warning("Could not load mock question bank: %s", exc)
+        return {"questions": []}
+
+
+def _mock_test_by_id(test_id):
+    return next((item for item in _load_mock_catalogue().get("mock_tests", []) if item.get("id") == test_id), None)
+
+
+def _question_bank_for_test(test_id):
+    return [item for item in _load_mock_bank().get("questions", []) if item.get("mock_test_id") == test_id]
+
+
+def _strip_mock_answer_fields(question):
+    public_question = dict(question)
+    for key in ("correct_answer", "correct_options", "solution"):
+        public_question.pop(key, None)
+    return public_question
+
+
+def _answer_letters(value):
+    if value is None:
+        return []
+    if isinstance(value, list):
+        raw_values = value
+    else:
+        raw_values = re.split(r"[,;\s]+", str(value))
+    letters = []
+    for raw in raw_values:
+        text = str(raw or "").strip().upper()
+        if not text:
+            continue
+        letter = text[0]
+        if letter in {"A", "B", "C", "D"} and letter not in letters:
+            letters.append(letter)
+    return letters
+
+
+def _score_mock_answer(question, answer):
+    q_type = str(question.get("type") or "mcq_single").strip().lower()
+    if answer is None or answer == "" or answer == []:
+        return 0, "skipped", False
+    if q_type == "integer":
+        expected = str(question.get("correct_answer") or "").strip().lower()
+        given = str(answer or "").strip().lower()
+        is_correct = bool(expected) and given == expected
+        return (4 if is_correct else 0), ("correct" if is_correct else "wrong"), is_correct
+    if q_type == "mcq_multi":
+        selected = set(_answer_letters(answer))
+        correct = set(_answer_letters(question.get("correct_options") or question.get("correct_answer")))
+        if not selected:
+            return 0, "skipped", False
+        if selected == correct:
+            return 4, "correct", True
+        if selected - correct:
+            return -2, "wrong", False
+        partial = max(1, int(4 * len(selected) / max(1, len(correct))))
+        return partial, "partial", False
+    expected = _answer_letters(question.get("correct_answer") or question.get("correct_options"))
+    given = _answer_letters(answer)
+    is_correct = bool(expected and given and given[0] == expected[0])
+    return (4 if is_correct else -1), ("correct" if is_correct else "wrong"), is_correct
+
+
+def _fallback_mock_analysis(score, max_score, title, topic_scores):
+    percentage = round((float(score) / max(1.0, float(max_score))) * 100, 1)
+    sorted_topics = sorted(topic_scores.items(), key=lambda item: item[1].get("percentage", 0))
+    weakest = sorted_topics[0][0] if sorted_topics else "Physics fundamentals"
+    strongest = sorted_topics[-1][0] if sorted_topics else "Physics fundamentals"
+    return {
+        "overall_assessment": f"You scored {percentage}%. This gives Astra a clear baseline for targeted Physics practice.",
+        "strongest_topic": strongest,
+        "weakest_topic": weakest,
+        "time_management": "Review any question that took more than 150 seconds and ask whether the principle was identified early.",
+        "top_3_actions": [
+            f"Revise {weakest} with 8-10 focused problems.",
+            "Redo all wrong and skipped questions without looking at options first.",
+            "Write the principle before substituting numbers in each Physics solution.",
+        ],
+        "next_week_focus": weakest,
+    }
+
+
+def _gemini_mock_analysis(title, score, max_score, correct, wrong, skipped, topic_scores):
+    fallback = _fallback_mock_analysis(score, max_score, title, topic_scores)
+    if not genai_client:
+        return fallback
+    try:
+        prompt = (
+            f"Student scored {score}/{max_score} on {title}.\n"
+            f"Correct: {correct}, Wrong: {wrong}, Skipped: {skipped}\n"
+            f"Topic breakdown: {json.dumps(topic_scores, ensure_ascii=False)}\n\n"
+            "Generate JSON with: overall_assessment, strongest_topic, weakest_topic, "
+            "time_management, top_3_actions, next_week_focus. Return JSON only."
+        )
+        response = genai_client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+        payload = _extract_json_payload(response.text)
+        return {**fallback, **{key: value for key, value in payload.items() if value}}
+    except Exception as exc:
+        logging.warning("Mock analysis fell back to local analysis: %s", exc)
+        return fallback
 
 
 def _normalize_subject_name(subject):
@@ -5652,6 +5868,233 @@ def planner_mock_scores(request: MockScoreRequest):
         "weekly_plan": get_weekly_schedule_data(profile),
         "today_plan": format_today_schedule(profile),
         "adaptive_profile": get_adaptive_learning_profile(profile),
+    }
+
+
+@app.get("/api/mock/catalogue/physics")
+def get_physics_mock_catalogue():
+    return _load_mock_catalogue()
+
+
+@app.get("/api/mock/test/{test_id}")
+def get_mock_test(test_id: str):
+    test = _mock_test_by_id(test_id)
+    if not test:
+        raise HTTPException(status_code=404, detail="Mock test not found.")
+    questions = _question_bank_for_test(test_id)
+    if not questions:
+        raise HTTPException(status_code=404, detail="Question bank not seeded yet. Run tools/seed_mock_tests.py first.")
+    public_questions = [_strip_mock_answer_fields(question) for question in questions]
+    random.shuffle(public_questions)
+    return {
+        "test": test,
+        "questions": public_questions,
+    }
+
+
+@app.post("/api/mock/submit/{test_id}")
+def submit_mock_test(test_id: str, request: MockSubmitRequest):
+    test = _mock_test_by_id(test_id)
+    if not test:
+        raise HTTPException(status_code=404, detail="Mock test not found.")
+    questions = _question_bank_for_test(test_id)
+    if not questions:
+        raise HTTPException(status_code=404, detail="Question bank not seeded yet. Run tools/seed_mock_tests.py first.")
+
+    question_by_id = {str(question.get("id")): question for question in questions}
+    score = 0
+    correct = 0
+    wrong = 0
+    skipped = 0
+    topic_scores = {}
+    review = []
+
+    for question in questions:
+        qid = str(question.get("id"))
+        answer = request.answers.get(qid)
+        marks, status, is_correct = _score_mock_answer(question, answer)
+        score += marks
+        if status == "correct":
+            correct += 1
+        elif status == "skipped":
+            skipped += 1
+        elif status == "wrong":
+            wrong += 1
+        topic = str(question.get("unit") or question.get("topic") or "Physics")
+        topic_scores.setdefault(topic, {"score": 0, "max": 0, "correct": 0, "total": 0})
+        topic_scores[topic]["score"] += marks
+        topic_scores[topic]["max"] += int(question.get("marks_correct") or 4)
+        topic_scores[topic]["correct"] += 1 if is_correct else 0
+        topic_scores[topic]["total"] += 1
+        review.append(
+            {
+                "id": qid,
+                "question_number": question.get("question_number"),
+                "question": question.get("question"),
+                "type": question.get("type"),
+                "options": question.get("options", []),
+                "student_answer": answer,
+                "correct_answer": question.get("correct_answer"),
+                "correct_options": question.get("correct_options", []),
+                "solution": question.get("solution", ""),
+                "topic": question.get("topic"),
+                "unit": question.get("unit"),
+                "status": status,
+                "marks_awarded": marks,
+                "time_taken_seconds": request.question_times.get(qid),
+            }
+        )
+
+    for stats in topic_scores.values():
+        stats["percentage"] = round((stats["score"] / max(1, stats["max"])) * 100, 1)
+
+    max_score = int(test.get("max_marks") or sum(int(question.get("marks_correct") or 4) for question in questions))
+    percentage = round((score / max(1, max_score)) * 100, 1)
+    analysis = _gemini_mock_analysis(test.get("title", test_id), score, max_score, correct, wrong, skipped, topic_scores)
+
+    database.safe_write(
+        """
+        INSERT INTO mock_results (
+            student_id, exam_type, total_score, max_score, percentage,
+            physics_score, chemistry_score, maths_score, time_taken, analysis
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            request.student_id,
+            test.get("title", test_id),
+            int(score),
+            int(max_score),
+            float(percentage),
+            int(score),
+            None,
+            None,
+            int(request.time_taken_minutes or 0),
+            json.dumps({"test_id": test_id, "test_title": test.get("title"), "analysis": analysis}, ensure_ascii=False),
+        ),
+    )
+
+    weak_topics = [
+        topic for topic, stats in sorted(topic_scores.items(), key=lambda item: item[1].get("percentage", 0))[:3]
+    ]
+    for topic in weak_topics:
+        try:
+            record_topic_outcome(
+                request.student_id,
+                topic,
+                "physics",
+                topic,
+                topic_scores[topic].get("percentage", 0),
+                int(request.time_taken_minutes or 0),
+                "mock_test",
+            )
+        except Exception as exc:
+            logging.warning("Could not update planner from mock weak topic %s: %s", topic, exc)
+
+    return {
+        "test": test,
+        "score": score,
+        "max_score": max_score,
+        "percentage": percentage,
+        "correct": correct,
+        "wrong": wrong,
+        "skipped": skipped,
+        "topic_scores": topic_scores,
+        "analysis": analysis,
+        "weak_topics": weak_topics,
+        "question_review": review,
+    }
+
+
+@app.get("/api/mock/history/{student_id}")
+def get_mock_history(student_id: str):
+    rows = database.execute_query(
+        """
+        SELECT id, student_id, exam_type, total_score, max_score, percentage,
+               physics_score, chemistry_score, maths_score, time_taken, analysis, taken_at
+        FROM mock_results
+        WHERE student_id = ?
+        ORDER BY taken_at DESC, id DESC
+        LIMIT 10
+        """,
+        (student_id,),
+    ) or []
+    history = []
+    for row in rows:
+        analysis_payload = {}
+        try:
+            analysis_payload = json.loads(row["analysis"] or "{}")
+        except Exception:
+            analysis_payload = {"analysis": row["analysis"]}
+        history.append(
+            {
+                "id": row["id"],
+                "exam_type": row["exam_type"],
+                "total_score": row["total_score"],
+                "max_score": row["max_score"],
+                "percentage": row["percentage"],
+                "physics_score": row["physics_score"],
+                "chemistry_score": row["chemistry_score"],
+                "maths_score": row["maths_score"],
+                "time_taken": row["time_taken"],
+                "analysis": analysis_payload,
+                "taken_at": row["taken_at"],
+            }
+        )
+    return {"student_id": student_id, "results": history}
+
+
+@app.post("/api/mock/analyse-external")
+def analyse_external_mock(request: ExternalMockAnalysisRequest):
+    if request.max_score <= 0:
+        raise HTTPException(status_code=400, detail="Max score must be greater than zero.")
+    percentage = round((float(request.total_score) / max(1.0, float(request.max_score))) * 100, 1)
+    topic_scores = {
+        "Physics": {"score": request.physics_score or 0, "max": request.max_score, "percentage": percentage},
+        "Chemistry": {"score": request.chemistry_score or 0, "max": request.max_score, "percentage": percentage},
+        "Mathematics": {"score": request.maths_score or 0, "max": request.max_score, "percentage": percentage},
+    }
+    analysis = _fallback_mock_analysis(request.total_score, request.max_score, request.exam_type, topic_scores)
+    if genai_client:
+        try:
+            prompt = (
+                f"Student scored {request.total_score}/{request.max_score} on {request.exam_type}.\n"
+                f"Physics: {request.physics_score}, Chemistry: {request.chemistry_score}, Maths: {request.maths_score}\n"
+                f"Time taken: {request.time_taken} minutes\n"
+                f"Notes: {request.notes}\n\n"
+                "Generate JSON with: overall_assessment, strongest_topic, weakest_topic, "
+                "time_management, top_3_actions, next_week_focus. Return JSON only."
+            )
+            response = genai_client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+            payload = _extract_json_payload(response.text)
+            analysis = {**analysis, **{key: value for key, value in payload.items() if value}}
+        except Exception as exc:
+            logging.warning("External mock analysis fell back to local analysis: %s", exc)
+
+    database.safe_write(
+        """
+        INSERT INTO mock_results (
+            student_id, exam_type, total_score, max_score, percentage,
+            physics_score, chemistry_score, maths_score, time_taken, analysis
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            request.student_id,
+            request.exam_type,
+            int(request.total_score),
+            int(request.max_score),
+            float(percentage),
+            int(request.physics_score) if request.physics_score is not None else None,
+            int(request.chemistry_score) if request.chemistry_score is not None else None,
+            int(request.maths_score) if request.maths_score is not None else None,
+            int(request.time_taken or 0),
+            json.dumps({"analysis": analysis, "notes": request.notes}, ensure_ascii=False),
+        ),
+    )
+    return {
+        "student_id": request.student_id,
+        "exam_type": request.exam_type,
+        "percentage": percentage,
+        "analysis": analysis,
     }
 
 

@@ -352,6 +352,24 @@ def init_db():
         )
         cursor.execute(
             """
+            CREATE TABLE IF NOT EXISTS mock_results (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                student_id TEXT,
+                exam_type TEXT,
+                total_score INTEGER,
+                max_score INTEGER,
+                percentage REAL,
+                physics_score INTEGER,
+                chemistry_score INTEGER,
+                maths_score INTEGER,
+                time_taken INTEGER,
+                analysis TEXT,
+                taken_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS knowledge_base_docs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 subject TEXT,

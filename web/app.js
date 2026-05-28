@@ -1,4 +1,4 @@
-const splashScreen = document.getElementById("splashScreen");
+﻿const splashScreen = document.getElementById("splashScreen");
 const astraPixels = document.getElementById("astraPixels");
 const enterAstraBtn = document.getElementById("enterAstraBtn");
 const skipAstraBtn = document.getElementById("skipAstraBtn");
@@ -91,8 +91,6 @@ const refreshWeeklyPlanBtnAlt = document.getElementById("refreshWeeklyPlanBtnAlt
 const openWeeklyTabBtn = document.getElementById("openWeeklyTabBtn");
 const openProgressTabBtn = document.getElementById("openProgressTabBtn");
 const jumpToTutorBtn = document.getElementById("jumpToTutorBtn");
-const openTutorRoomBtn = document.getElementById("openTutorRoomBtn");
-const backToTutorTextBtn = document.getElementById("backToTutorTextBtn");
 const viewAllTutorChatsBtn = document.getElementById("viewAllTutorChatsBtn");
 const closeTutorConversationDrawerBtn = document.getElementById("closeTutorConversationDrawerBtn");
 const tutorConversationDrawer = document.getElementById("tutorConversationDrawer");
@@ -326,18 +324,6 @@ const practiceForm = document.getElementById("practiceForm");
 const practiceMessageInput = document.getElementById("practiceMessageInput");
 const lastMinuteForm = document.getElementById("lastMinuteForm");
 const lastMinuteMessageInput = document.getElementById("lastMinuteMessageInput");
-const practiceTimeInput = document.getElementById("practiceTimeInput");
-const practiceAccuracyInput = document.getElementById("practiceAccuracyInput");
-const practiceQuestionCountInput = document.getElementById("practiceQuestionCountInput");
-const practiceExamInput = document.getElementById("practiceExamInput");
-const practiceNotesInput = document.getElementById("practiceNotesInput");
-const submitPracticeReviewBtn = document.getElementById("submitPracticeReviewBtn");
-const mockExamInput = document.getElementById("mockExamInput");
-const mockPhysicsInput = document.getElementById("mockPhysicsInput");
-const mockChemistryInput = document.getElementById("mockChemistryInput");
-const mockMathInput = document.getElementById("mockMathInput");
-const saveMockScoresBtn = document.getElementById("saveMockScoresBtn");
-const practiceAnalyticsCard = document.getElementById("practiceAnalyticsCard");
 const mockTestIntroCard = document.getElementById("mockTestIntroCard");
 const startMockTestBtn = document.getElementById("startMockTestBtn");
 const mockTestSetupCard = document.getElementById("mockTestSetupCard");
@@ -360,6 +346,18 @@ const mockTestWeeklyPlanBtn = document.getElementById("mockTestWeeklyPlanBtn");
 const mockTestExitBtn = document.getElementById("mockTestExitBtn");
 const mockTestExitBtnReport = document.getElementById("mockTestExitBtnReport");
 const mockTestTab = document.getElementById("mockTestTab");
+const mockCatalogueList = document.getElementById("mockCatalogueList");
+const mockExternalExamType = document.getElementById("mockExternalExamType");
+const mockExternalTotalScore = document.getElementById("mockExternalTotalScore");
+const mockExternalMaxScore = document.getElementById("mockExternalMaxScore");
+const mockExternalPhysicsScore = document.getElementById("mockExternalPhysicsScore");
+const mockExternalChemistryScore = document.getElementById("mockExternalChemistryScore");
+const mockExternalMathsScore = document.getElementById("mockExternalMathsScore");
+const mockExternalTimeTaken = document.getElementById("mockExternalTimeTaken");
+const mockExternalNotes = document.getElementById("mockExternalNotes");
+const mockExternalAnalyseBtn = document.getElementById("mockExternalAnalyseBtn");
+const mockExternalAnalysisResult = document.getElementById("mockExternalAnalysisResult");
+const mockHistoryList = document.getElementById("mockHistoryList");
 const tipsForm = document.getElementById("tipsForm");
 const tipsMessageInput = document.getElementById("tipsMessageInput");
 const tipsResourceList = document.getElementById("tipsResourceList");
@@ -462,6 +460,7 @@ const autoCaptionMode = document.getElementById("autoCaptionMode");
 const tutorCaptionText = document.getElementById("tutorCaptionText");
 const autoSpeakReplies = document.getElementById("autoSpeakReplies");
 const speakLastReplyBtn = document.getElementById("speakLastReplyBtn");
+const tutorVoiceInlineToggleBtn = document.getElementById("tutorVoiceInlineToggleBtn");
 const pauseVoiceBtn = document.getElementById("pauseVoiceBtn");
 const resumeVoiceBtn = document.getElementById("resumeVoiceBtn");
 const stopVoiceBtn = document.getElementById("stopVoiceBtn");
@@ -540,6 +539,7 @@ let activeVideoSubjectQuery = "";
 let videoSubjectTabButtons = [];
 const dismissedVideoSuggestionTopics = new Set();
 const LoungeSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+const LEGACY_TUTOR_ROOM_KEY = "tutor" + "room";
 let loungeVoiceRecognition = null;
 let loungeVoiceDraft = "";
 let loungeVoicePrefix = "";
@@ -560,8 +560,8 @@ let walkthroughParticleFrame = null;
 let walkthroughParticleNodes = [];
 let walkthroughTransitionTimer = null;
 const DEFAULT_TAB_ORDER = Array.isArray(APP_CONFIG.default_tab_order) && APP_CONFIG.default_tab_order.length
-  ? APP_CONFIG.default_tab_order
-  : ["overview", "tutor", "tutorroom", "videotutor", "practice", "mocktest", "lastminute", "tips", "weekly", "progress", "lounge", "network", "league", "personalize", "guide", "assist"];
+  ? APP_CONFIG.default_tab_order.filter((key) => key !== LEGACY_TUTOR_ROOM_KEY)
+  : ["overview", "tutor", "videotutor", "practice", "tips", "lastminute", "mocktest", "weekly", "progress", "lounge", "network", "league", "personalize", "guide", "assist"];
 let currentTabOrder = [...DEFAULT_TAB_ORDER];
 let isSending = false;
 let loungeTimerInterval = null;
@@ -616,6 +616,11 @@ let activeMockIndex = 0;
 let activeMockAnswers = [];
 let activeMockStartAt = null;
 let activeMockTimerInterval = null;
+let activeMockDurationMinutes = 60;
+let activeMockQuestionTimes = {};
+let activeMockQuestionStartedAt = null;
+let mockCatalogue = [];
+let selectedMockTestId = "";
 let lastNonMockTabId = "practiceTab";
 
 const TUTOR_PERSONALITY_TRAITS = [
@@ -784,8 +789,7 @@ function updateExamBrandCopy(profile = activeProfile, mode = "signin") {
 
 const TAB_CONFIG = {
   overview: { buttonTab: "overviewTab", label: "Overview" },
-  tutor: { buttonTab: "tutorTab", label: "Tutor Text" },
-  tutorroom: { buttonTab: "tutorRoomTab", label: "Tutor Room" },
+  tutor: { buttonTab: "tutorTab", label: "Tutor" },
   videotutor: { buttonTab: "videoTutorTab", label: "Video Tutor" },
   practice: { buttonTab: "practiceTab", label: "Practice" },
   mocktest: { buttonTab: "mockTestTab", label: "Mock Test" },
@@ -830,7 +834,7 @@ let dailyBriefingLoadedDate = "";
 let dailyBriefingDismissedDate = "";
 let toastTimer = null;
 if (sessionActivityToggleBtn && sessionActivityPanel && sessionActivityPanel.classList.contains("hidden")) {
-  sessionActivityToggleBtn.textContent = "Session log ▸";
+  sessionActivityToggleBtn.textContent = "Session log â–¸";
 }
 
 function refreshTabCollections() {
@@ -1127,7 +1131,7 @@ function updateOverviewCommandCenter() {
   if (astraStatusBar) {
     setAstraStatus(
       focus.topic
-        ? `Astra is ready. Today's focus: ${focus.topic} — ${focus.subject || "study"}`
+        ? `Astra is ready. Today's focus: ${focus.topic} â€” ${focus.subject || "study"}`
         : "Astra is ready. Today's focus: -",
       "idle"
     );
@@ -1195,6 +1199,7 @@ function syncTutorControlStrip() {
   const levelValue = String((tutorLevelSelect && tutorLevelSelect.value) || "3");
 
   _setTutorTopToggle(document.getElementById("tutorVoiceToggleBtn"), voiceOn, "Voice on", "Voice off");
+  _setTutorTopToggle(tutorVoiceInlineToggleBtn, voiceOn, "Voice on", "Voice off");
   _setTutorTopToggle(document.getElementById("tutorSpeakToggleBtn"), speakOn, "Speak on", "Speak off");
   _setTutorTopToggle(document.getElementById("tutorCaptionToggleBtn"), captionOn, "Captions on", "Captions off");
   _setTutorTopToggle(document.getElementById("tutorReadingToggleBtn"), readingOn, "Read on", "Read off");
@@ -1343,7 +1348,7 @@ function toggleSidePanel() {
   tutorTabLayout.classList.toggle("panel-collapsed", tutorSidePanelCollapsed);
   const btn = document.getElementById("panelToggleBtn");
   if (btn) {
-    btn.textContent = tutorSidePanelCollapsed ? "⟩" : "⟨";
+    btn.textContent = tutorSidePanelCollapsed ? "âŸ©" : "âŸ¨";
     btn.title = tutorSidePanelCollapsed ? "Open side panel" : "Collapse side panel";
   }
 }
@@ -1354,7 +1359,7 @@ function updateTutorInputTopicChip() {
     return;
   }
   const focus = getActiveTutorFocus();
-  const text = focus.topic ? `${focus.topic} • ${focus.subject || "topic"}` : "No topic selected";
+  const text = focus.topic ? `${focus.topic} â€¢ ${focus.subject || "topic"}` : "No topic selected";
   chip.textContent = text;
 }
 
@@ -1432,11 +1437,11 @@ function buildTutorControlStrip() {
       </select>
     </div>
     <div class="tutor-strip-group tutor-strip-right">
-      <button id="tutorSpeakLastCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Speak last reply">🔊</button>
-      <button id="tutorPauseCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Pause">⏸</button>
-      <button id="tutorResumeCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Resume">▶</button>
-      <button id="tutorStopCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Stop and checkpoint">⏹</button>
-      <button id="tutorFullscreenCompactBtn" type="button" class="ghost-button compact-strip-btn tutor-fullscreen-button" title="Expand to fullscreen">⛶</button>
+      <button id="tutorSpeakLastCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Speak last reply">ðŸ”Š</button>
+      <button id="tutorPauseCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Pause">â¸</button>
+      <button id="tutorResumeCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Resume">â–¶</button>
+      <button id="tutorStopCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Stop and checkpoint">â¹</button>
+      <button id="tutorFullscreenCompactBtn" type="button" class="ghost-button compact-strip-btn tutor-fullscreen-button" title="Expand to fullscreen">â›¶</button>
     </div>
   `;
 
@@ -1448,7 +1453,7 @@ function buildTutorControlStrip() {
   sidePanel.className = "tutor-side-panel";
   sidePanel.id = "tutorSidePanel";
   sidePanel.innerHTML = `
-    <button id="panelToggleBtn" type="button" class="panel-toggle-btn" title="Collapse side panel">⟩</button>
+    <button id="panelToggleBtn" type="button" class="panel-toggle-btn" title="Collapse side panel">âŸ©</button>
     <div class="tutor-side-panel-tabs">
       <button type="button" class="active" data-tutor-side-tab="session" aria-selected="true">Session</button>
       <button type="button" data-tutor-side-tab="voice" aria-selected="false">Voice</button>
@@ -2150,7 +2155,7 @@ function _setTutorFullscreenButtonState(isFullscreen) {
   if (!tutorFullscreenBtn) {
     return;
   }
-  tutorFullscreenBtn.textContent = isFullscreen ? "⤢" : "⛶";
+  tutorFullscreenBtn.textContent = isFullscreen ? "â¤¢" : "â›¶";
   tutorFullscreenBtn.title = isFullscreen ? "Exit fullscreen" : "Expand to fullscreen";
   tutorFullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Expand to fullscreen");
 }
@@ -2177,7 +2182,7 @@ function _setTutorFullscreenButtonState(isFullscreen) {
   if (!tutorFullscreenBtn) {
     return;
   }
-  tutorFullscreenBtn.textContent = isFullscreen ? "✕ Exit" : "⛶ Fullscreen";
+  tutorFullscreenBtn.textContent = isFullscreen ? "âœ• Exit" : "â›¶ Fullscreen";
   tutorFullscreenBtn.title = isFullscreen ? "Exit fullscreen" : "Expand to fullscreen";
   tutorFullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Expand to fullscreen");
 }
@@ -2228,7 +2233,7 @@ function toggleTutorFullscreen() {
   const exitButton = document.createElement("button");
   exitButton.type = "button";
   exitButton.className = "tutor-fullscreen-exit-btn ghost-button";
-  exitButton.textContent = "✕ Exit";
+  exitButton.textContent = "âœ• Exit";
   exitButton.addEventListener("click", exitTutorFullscreen);
 
   const messages = document.createElement("div");
@@ -2288,7 +2293,7 @@ function _setTutorFullscreenButtonState(isFullscreen) {
   if (!tutorFullscreenBtn) {
     return;
   }
-  tutorFullscreenBtn.textContent = isFullscreen ? "✕ Exit Fullscreen" : "⛶ Fullscreen";
+  tutorFullscreenBtn.textContent = isFullscreen ? "âœ• Exit Fullscreen" : "â›¶ Fullscreen";
   tutorFullscreenBtn.title = isFullscreen ? "Exit fullscreen" : "Expand to fullscreen";
   tutorFullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Expand to fullscreen");
 }
@@ -2390,7 +2395,7 @@ function openTutorFullscreen() {
   topbar.className = "tutor-fullscreen-topbar";
   topbar.innerHTML = `
     <span class="fs-title">Astra Tutor</span>
-    <button class="tutor-fullscreen-exit-btn" onclick="closeTutorFullscreen()">✕ Exit Fullscreen</button>
+    <button class="tutor-fullscreen-exit-btn" onclick="closeTutorFullscreen()">âœ• Exit Fullscreen</button>
   `;
 
   const messagesArea = document.createElement("div");
@@ -2837,7 +2842,7 @@ function updateTutorRoomLivePanel() {
   }
   if (tutorRoomPaceState) {
     const paceLabel = pacingMode === "slow" ? "Pacing slow" : pacingMode === "gentle" ? "Pacing gentle" : "Pacing standard";
-    tutorRoomPaceState.textContent = chunkedOn ? `${paceLabel} • chunked` : paceLabel;
+    tutorRoomPaceState.textContent = chunkedOn ? `${paceLabel} â€¢ chunked` : paceLabel;
   }
   if (tutorRoomLevelState) {
     tutorRoomLevelState.textContent = `Level ${tutorLevel}`;
@@ -3179,7 +3184,7 @@ function renderVideoTutorCurrentTopic(topic, subject) {
   const cleanTopic = String(topic || "").trim();
   const displaySubject = String(subject || "").trim();
   if (vtTopicName) {
-    vtTopicName.textContent = cleanTopic || "—";
+    vtTopicName.textContent = cleanTopic || "â€”";
   }
   if (vtTopicSubject) {
     vtTopicSubject.textContent = displaySubject ? displaySubject : "";
@@ -3965,7 +3970,7 @@ async function generateVideoAnswerBrief() {
     return;
   }
   const question = (videoTutorQuestionInput && videoTutorQuestionInput.value.trim())
-    || (lastTutorQuestion || (tutorRoomMessageInput && tutorRoomMessageInput.value) || lastTutorReply || "").trim();
+    || (lastTutorQuestion || (messageInput && messageInput.value) || lastTutorReply || "").trim();
   if (!question) {
     if (videoRenderStatus) {
       videoRenderStatus.textContent = "Ask Astra a question first, then generate the tutor video.";
@@ -4029,7 +4034,7 @@ async function generateVideoAnswerBrief() {
       generateVideoAnswerBtn.disabled = false;
       generateVideoAnswerBtn.textContent = "Generate";
     }
-    setAstraStatus(`Astra is ready. Today's focus: ${briefTopic} — ${briefSubject}`, "success", true);
+    setAstraStatus(`Astra is ready. Today's focus: ${briefTopic} â€” ${briefSubject}`, "success", true);
     updateTutorRoomLivePanel();
   }
 }
@@ -4074,7 +4079,7 @@ async function requestTutorVideo(question, topic, subject) {
     question
     || (videoTutorQuestionInput && videoTutorQuestionInput.value)
     || lastTutorQuestion
-    || (tutorRoomMessageInput && tutorRoomMessageInput.value)
+    || (messageInput && messageInput.value)
     || lastTutorReply
     || ""
   ).trim();
@@ -4473,7 +4478,7 @@ function renderStudentInsightsLegacy(payload) {
     (snapshot.coaching_actions || []).slice(0, 4).forEach((item) => {
       const line = document.createElement("p");
       line.className = "muted";
-      line.textContent = `• ${item}`;
+      line.textContent = `â€¢ ${item}`;
       actionCard.appendChild(line);
     });
 
@@ -4639,7 +4644,7 @@ function renderStudentInsights(payload) {
     (snapshot.coaching_actions || []).slice(0, 3).forEach((item) => {
       const line = document.createElement("p");
       line.className = "muted";
-      line.textContent = `• ${item}`;
+      line.textContent = `â€¢ ${item}`;
       actionCard.appendChild(line);
     });
 
@@ -4935,8 +4940,8 @@ function renderExamManager(exams) {
 
     const meta = document.createElement("p");
     meta.className = "muted";
-    const portionText = exam.portion ? ` • Portion: ${exam.portion}` : "";
-    meta.textContent = `${exam.exam_date} • ${((exam.subjects || []).join(", ")) || "Subjects pending"}${portionText}`;
+    const portionText = exam.portion ? ` â€¢ Portion: ${exam.portion}` : "";
+    meta.textContent = `${exam.exam_date} â€¢ ${((exam.subjects || []).join(", ")) || "Subjects pending"}${portionText}`;
 
     details.appendChild(title);
     details.appendChild(meta);
@@ -5068,7 +5073,7 @@ function renderTipsResources(resources) {
 
     const meta = document.createElement("p");
     meta.className = "muted";
-    meta.textContent = `${resource.source} • ${resource.tip}`;
+    meta.textContent = `${resource.source} â€¢ ${resource.tip}`;
 
     card.appendChild(title);
     card.appendChild(meta);
@@ -5128,47 +5133,6 @@ function renderLearningSourcePack(pack, routeText) {
   }
 }
 
-function renderPracticeAnalytics(summary) {
-  if (!practiceAnalyticsCard) {
-    return;
-  }
-
-  practiceAnalyticsCard.innerHTML = "";
-  if (!summary || !summary.total_attempts) {
-    const empty = document.createElement("p");
-    empty.className = "muted";
-    empty.textContent = "Your latest speed and accuracy summary will appear here.";
-    practiceAnalyticsCard.appendChild(empty);
-    return;
-  }
-
-  const title = document.createElement("p");
-  title.className = "exam-chip-title";
-  title.textContent = `Attempts logged: ${summary.total_attempts}`;
-
-  const stats = document.createElement("p");
-  stats.className = "muted";
-  stats.textContent = `Average time: ${summary.average_time_minutes} min • Average accuracy: ${summary.average_accuracy}% • Recent speed: ${summary.speed_signal} • Current difficulty signal: ${summary.difficulty_signal}`;
-
-  const note = document.createElement("p");
-  note.className = "muted";
-  note.textContent = summary.coach_note;
-
-  const focus = document.createElement("p");
-  focus.className = "muted";
-  focus.textContent = `Best current focus: ${summary.focus_recommendation || "Keep balancing concept review and practice."}`;
-
-  const trend = document.createElement("p");
-  trend.className = "muted";
-  trend.textContent = `Trend signal: ${summary.trend_signal || "building"} | Top exam focus: ${summary.top_exam_focus || "not enough data yet"} | Top mode focus: ${summary.top_mode_focus || "not enough data yet"}`;
-
-  practiceAnalyticsCard.appendChild(title);
-  practiceAnalyticsCard.appendChild(stats);
-  practiceAnalyticsCard.appendChild(note);
-  practiceAnalyticsCard.appendChild(focus);
-  practiceAnalyticsCard.appendChild(trend);
-}
-
 function clearMockTestTimer() {
   if (activeMockTimerInterval) {
     window.clearInterval(activeMockTimerInterval);
@@ -5180,16 +5144,36 @@ function normalizeMockValue(value) {
   return String(value ?? "").trim().replace(/\s+/g, " ").toLowerCase();
 }
 
+function getMockAnswerKey(option, optionIndex) {
+  const text = String(option || "").trim();
+  const match = text.match(/^([A-D])[\).\s-]/i);
+  return match ? match[1].toUpperCase() : String.fromCharCode(65 + optionIndex);
+}
+
+function formatMockAnswer(answer) {
+  if (Array.isArray(answer)) {
+    return answer.join(", ");
+  }
+  return String(answer || "");
+}
+
 function updateMockTimerLabel() {
   if (!mockTestTimer) {
     return;
   }
   if (!activeMockStartAt) {
-    mockTestTimer.textContent = "60 min";
+    mockTestTimer.textContent = `${activeMockDurationMinutes || 60} min`;
     return;
   }
-  const elapsedMinutes = Math.max(0, Math.round((Date.now() - activeMockStartAt) / 60000));
-  mockTestTimer.textContent = `${elapsedMinutes} min`;
+  const elapsedSeconds = Math.max(0, Math.floor((Date.now() - activeMockStartAt) / 1000));
+  const totalSeconds = Math.max(60, Number(activeMockDurationMinutes || 60) * 60);
+  const remaining = Math.max(0, totalSeconds - elapsedSeconds);
+  const minutes = Math.floor(remaining / 60);
+  const seconds = remaining % 60;
+  mockTestTimer.textContent = `${minutes}:${String(seconds).padStart(2, "0")}`;
+  if (remaining <= 0) {
+    finishMockTest();
+  }
 }
 
 function setMockPanelVisibility({ intro = true, question = false, report = false } = {}) {
@@ -5224,6 +5208,9 @@ function resetMockTestState() {
   activeMockIndex = 0;
   activeMockAnswers = [];
   activeMockStartAt = null;
+  activeMockDurationMinutes = 60;
+  activeMockQuestionTimes = {};
+  activeMockQuestionStartedAt = null;
   if (mockTestStatus) {
     mockTestStatus.textContent = "When you start, Astra will open one question at a time and then evaluate the full paper at the end.";
   }
@@ -5248,6 +5235,19 @@ function resetMockTestState() {
   updateMockTimerLabel();
 }
 
+function recordCurrentMockQuestionTime() {
+  if (!activeMockTest || !activeMockQuestionStartedAt) {
+    return;
+  }
+  const question = activeMockTest.questions && activeMockTest.questions[activeMockIndex];
+  if (!question || !question.id) {
+    return;
+  }
+  const elapsed = Math.max(0, Math.round((Date.now() - activeMockQuestionStartedAt) / 1000));
+  activeMockQuestionTimes[question.id] = (activeMockQuestionTimes[question.id] || 0) + elapsed;
+  activeMockQuestionStartedAt = Date.now();
+}
+
 function renderMockQuestion() {
   if (!activeMockTest || !activeMockTest.questions || !activeMockTest.questions.length) {
     resetMockTestState();
@@ -5267,11 +5267,12 @@ function renderMockQuestion() {
     mockTestProgress.textContent = `${activeMockIndex + 1}/${activeMockTest.questions.length}`;
   }
   if (mockTestQuestionMeta) {
-    mockTestQuestionMeta.textContent = `${question.subject || "General"} • ${question.type || "mcq"} • ${question.difficulty || "medium"}`;
+    mockTestQuestionMeta.textContent = `${question.unit || question.subject || "Physics"} - ${question.type || "mcq_single"} - ${question.difficulty || "medium"}`;
   }
   if (mockTestOptionList) {
     mockTestOptionList.innerHTML = "";
-    if ((question.type || "mcq") === "integer") {
+    const qType = String(question.type || "mcq_single");
+    if (qType === "integer") {
       if (mockTestIntegerInput) {
         mockTestIntegerInput.parentElement.classList.remove("hidden");
         mockTestIntegerInput.value = activeMockAnswers[activeMockIndex] || "";
@@ -5280,17 +5281,29 @@ function renderMockQuestion() {
       if (mockTestIntegerInput) {
         mockTestIntegerInput.parentElement.classList.add("hidden");
       }
-      (question.options || []).forEach((option, optionIndex) => {
+      const options = Array.isArray(question.options) ? question.options.slice(0, 4) : [];
+      options.forEach((option, optionIndex) => {
+        const answerKey = getMockAnswerKey(option, optionIndex);
+        const currentAnswer = activeMockAnswers[activeMockIndex];
+        const selected = qType === "mcq_multi"
+          ? Array.isArray(currentAnswer) && currentAnswer.includes(answerKey)
+          : normalizeMockValue(currentAnswer) === normalizeMockValue(answerKey);
         const button = document.createElement("button");
         button.type = "button";
         button.className = "mock-option";
-        const selected = normalizeMockValue(activeMockAnswers[activeMockIndex]) === normalizeMockValue(option);
         if (selected) {
           button.classList.add("selected");
         }
-        button.textContent = `${String.fromCharCode(65 + optionIndex)}. ${option}`;
+        button.textContent = option;
         button.addEventListener("click", () => {
-          activeMockAnswers[activeMockIndex] = option;
+          if (qType === "mcq_multi") {
+            const existing = Array.isArray(activeMockAnswers[activeMockIndex]) ? activeMockAnswers[activeMockIndex].slice() : [];
+            activeMockAnswers[activeMockIndex] = existing.includes(answerKey)
+              ? existing.filter((item) => item !== answerKey)
+              : existing.concat(answerKey).sort();
+          } else {
+            activeMockAnswers[activeMockIndex] = answerKey;
+          }
           renderMockQuestion();
         });
         mockTestOptionList.appendChild(button);
@@ -5306,103 +5319,102 @@ function renderMockQuestion() {
   if (mockTestStatus) {
     mockTestStatus.textContent = "Choose the answer, move forward, and Astra will grade the full paper at the end.";
   }
+  activeMockQuestionStartedAt = Date.now();
   updateMockTimerLabel();
 }
 
-function renderMockQuestionV2() {
-  if (!activeMockTest || !activeMockTest.questions || !activeMockTest.questions.length) {
-    resetMockTestState();
+async function loadMockCatalogue() {
+  if (!activeProfile) {
     return;
   }
-
-  const question = activeMockTest.questions[activeMockIndex];
-  if (!question) {
-    return;
+  if (mockCatalogueList) {
+    mockCatalogueList.innerHTML = "<p class=\"muted\">Loading Physics mocks...</p>";
   }
-
-  setMockPanelVisibility({ intro: false, question: true, report: false });
-  if (mockTestQuestionText) {
-    mockTestQuestionText.textContent = question.question || "Question unavailable.";
-  }
-  if (mockTestProgress) {
-    mockTestProgress.textContent = `${activeMockIndex + 1}/${activeMockTest.questions.length}`;
-  }
-  if (mockTestQuestionMeta) {
-    mockTestQuestionMeta.textContent = `${question.subject || "General"} • MCQ • ${question.difficulty || "medium"}`;
-  }
-  if (mockTestOptionList) {
-    mockTestOptionList.innerHTML = "";
-    if (mockTestIntegerInput) {
-      mockTestIntegerInput.parentElement.classList.add("hidden");
+  try {
+    const response = await fetch("/api/mock/catalogue/physics");
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load mock catalogue.");
     }
-    const options = Array.isArray(question.options) ? question.options.slice(0, 4) : [];
-    if (!options.length) {
-      const emptyState = document.createElement("p");
-      emptyState.className = "muted";
-      emptyState.textContent = "This question is missing options. Astra will regenerate the paper if needed.";
-      mockTestOptionList.appendChild(emptyState);
-    } else {
-      options.forEach((option, optionIndex) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "mock-option";
-        const selected = normalizeMockValue(activeMockAnswers[activeMockIndex]) === normalizeMockValue(option);
-        if (selected) {
-          button.classList.add("selected");
-        }
-        button.textContent = `${String.fromCharCode(65 + optionIndex)}. ${option}`;
-        button.addEventListener("click", () => {
-          activeMockAnswers[activeMockIndex] = option;
-          renderMockQuestionV2();
-        });
-        mockTestOptionList.appendChild(button);
-      });
+    mockCatalogue = Array.isArray(payload.mock_tests) ? payload.mock_tests : [];
+    selectedMockTestId = selectedMockTestId || (mockCatalogue[0] && mockCatalogue[0].id) || "";
+    renderMockCatalogue();
+  } catch (error) {
+    if (mockCatalogueList) {
+      mockCatalogueList.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
     }
   }
-  if (mockTestNavPrev) {
-    mockTestNavPrev.disabled = activeMockIndex === 0;
-  }
-  if (mockTestNavNext) {
-    mockTestNavNext.textContent = activeMockIndex === activeMockTest.questions.length - 1 ? "Finish test" : "Next";
-  }
-  if (mockTestStatus) {
-    mockTestStatus.textContent = "Choose the answer, move forward, and Astra will grade the full paper at the end.";
-  }
-  updateMockTimerLabel();
 }
 
-async function startMockTest() {
+function renderMockCatalogue() {
+  if (!mockCatalogueList) {
+    return;
+  }
+  mockCatalogueList.innerHTML = "";
+  if (!mockCatalogue.length) {
+    mockCatalogueList.innerHTML = "<p class=\"muted\">No Physics mocks are available yet.</p>";
+    return;
+  }
+  mockCatalogue.forEach((test) => {
+    const card = document.createElement("div");
+    card.className = "practice-mode-card";
+    const title = document.createElement("h3");
+    title.textContent = test.title || "Physics mock";
+    const meta = document.createElement("p");
+    meta.className = "muted";
+    meta.textContent = `${test.total_questions || 0} questions - ${test.duration_minutes || 60} min - ${test.max_marks || 0} marks`;
+    const topics = document.createElement("p");
+    topics.className = "muted";
+    topics.textContent = Array.isArray(test.topics_covered) ? test.topics_covered.join(", ") : "";
+    const badge = document.createElement("span");
+    badge.className = "pill";
+    badge.textContent = test.difficulty || "medium";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "ghost-button";
+    button.textContent = "Start Test";
+    button.addEventListener("click", () => {
+      selectedMockTestId = test.id;
+      startMockTest(test.id);
+    });
+    card.appendChild(title);
+    card.appendChild(meta);
+    card.appendChild(topics);
+    card.appendChild(badge);
+    card.appendChild(button);
+    mockCatalogueList.appendChild(card);
+  });
+}
+
+async function startMockTest(testId = "") {
   if (!activeProfile) {
     return;
   }
 
-  const exam = (mockTestExamInput && mockTestExamInput.value.trim()) || (activeProfile.exams && activeProfile.exams[0] && activeProfile.exams[0].name) || "JEE Main";
-  const questionCount = Number((mockTestCountInput && mockTestCountInput.value) || "9");
+  const nextTestId = testId || selectedMockTestId || (mockCatalogue[0] && mockCatalogue[0].id) || "physics_mock_1";
+  selectedMockTestId = nextTestId;
   setActiveTab("mockTestTab");
   if (mockTestStatus) {
-    mockTestStatus.textContent = "Astra is preparing your mock test room...";
+    mockTestStatus.textContent = "Astra is loading your Physics mock...";
   }
   if (startMockTestBtn) {
     startMockTestBtn.disabled = true;
   }
   try {
-    const response = await fetch("/api/mock-test/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        student_name: activeProfile.name,
-        exam,
-        question_count: Number.isFinite(questionCount) ? questionCount : 9,
-        mode: "diagnostic",
-      }),
-    });
+    const response = await fetch(`/api/mock/test/${encodeURIComponent(nextTestId)}`);
     const payload = await response.json();
     if (!response.ok) {
       throw new Error(payload.detail || "Could not create the mock test right now.");
     }
-    activeMockTest = payload;
+    activeMockTest = {
+      ...(payload.test || {}),
+      questions: Array.isArray(payload.questions) ? payload.questions : [],
+    };
     activeMockIndex = 0;
-    activeMockAnswers = new Array((payload.questions || []).length).fill("");
+    activeMockAnswers = new Array((activeMockTest.questions || []).length).fill("");
+    activeMockQuestionTimes = {};
+    activeMockQuestionStartedAt = Date.now();
+    activeMockDurationMinutes = Number(activeMockTest.duration_minutes || activeMockTest.time_limit_minutes || 60);
     activeMockStartAt = Date.now();
     clearMockTestTimer();
     activeMockTimerInterval = window.setInterval(updateMockTimerLabel, 1000);
@@ -5410,7 +5422,7 @@ async function startMockTest() {
     if (mockTestTab) {
       mockTestTab.scrollTop = 0;
     }
-    renderMockQuestionV2();
+    renderMockQuestion();
   } catch (error) {
     if (mockTestStatus) {
       mockTestStatus.textContent = error.message;
@@ -5431,8 +5443,9 @@ function renderMockReport(report) {
   const metrics = document.createElement("div");
   metrics.className = "mock-report-metrics";
   [
-    { label: "Overall score", value: `${report.overall_score}%` },
-    { label: "Correct", value: `${report.correct_count}/${report.total_questions}` },
+    { label: "Score", value: `${report.score}/${report.max_score}` },
+    { label: "Accuracy", value: `${report.percentage}%` },
+    { label: "Correct", value: `${report.correct}/${(report.question_review || []).length}` },
     { label: "Time taken", value: `${report.time_taken_minutes} min` },
   ].forEach((item) => {
     const card = document.createElement("div");
@@ -5448,118 +5461,77 @@ function renderMockReport(report) {
   });
   mockTestReportBody.appendChild(metrics);
 
-  const subjectBox = document.createElement("div");
-  subjectBox.className = "mock-metric-card";
-  subjectBox.innerHTML = `<p class="memory-heading">Subject breakdown</p>${Object.entries(report.subject_scores || {})
-    .map(([subject, score]) => `<p class="muted">${subject}: ${score}%</p>`)
+  const topicBox = document.createElement("div");
+  topicBox.className = "mock-metric-card";
+  topicBox.innerHTML = `<p class="memory-heading">Topic breakdown</p>${Object.entries(report.topic_scores || {})
+    .map(([topic, stats]) => `<p class="muted">${escapeHtml(topic)}: ${stats.percentage}% (${stats.score}/${stats.max})</p>`)
     .join("")}`;
-  mockTestReportBody.appendChild(subjectBox);
+  mockTestReportBody.appendChild(topicBox);
 
   const insight = document.createElement("div");
   insight.className = "mock-metric-card";
-  insight.innerHTML = `<p class="memory-heading">Astra's read</p><p class="muted">${report.analysis || "Your baseline report will help Astra personalize planning and practice."}</p><p class="muted">${report.next_step || "Return to Tutor or Weekly Plan once you want to improve a weak subject."}</p>`;
+  const analysis = report.analysis || {};
+  const actions = Array.isArray(analysis.top_3_actions) ? analysis.top_3_actions : [];
+  insight.innerHTML = `<p class="memory-heading">Astra's read</p><p class="muted">${escapeHtml(analysis.overall_assessment || "Your baseline report will help Astra personalize planning and practice.")}</p><p class="muted">Weakest: ${escapeHtml(analysis.weakest_topic || "Review needed")} | Strongest: ${escapeHtml(analysis.strongest_topic || "Building")}</p><p class="muted">${escapeHtml(analysis.time_management || "")}</p>${actions.map((action) => `<p class="muted">- ${escapeHtml(action)}</p>`).join("")}`;
   mockTestReportBody.appendChild(insight);
 
+  const reviewBox = document.createElement("div");
+  reviewBox.className = "mock-metric-card";
+  reviewBox.innerHTML = `<p class="memory-heading">Question review</p>${(report.question_review || []).map((item, index) => {
+    const correct = item.type === "mcq_multi" ? (item.correct_options || []).join(", ") : (item.correct_answer || (item.correct_options || []).join(", "));
+    return `<details><summary>Q${index + 1}: ${escapeHtml(item.status)} (${item.marks_awarded} marks)</summary><p class="muted">${escapeHtml(item.question)}</p><p class="muted">Your answer: ${escapeHtml(formatMockAnswer(item.student_answer) || "Skipped")} | Correct: ${escapeHtml(correct)}</p><p class="muted">${escapeHtml(item.solution || "")}</p></details>`;
+  }).join("")}`;
+  mockTestReportBody.appendChild(reviewBox);
+
   setMockPanelVisibility({ intro: false, question: false, report: true });
-}
-
-function evaluateMockTest() {
-  if (!activeMockTest || !activeMockTest.questions || !activeMockTest.questions.length) {
-    return null;
-  }
-
-  const questions = activeMockTest.questions;
-  const subjectStats = {};
-  let correctCount = 0;
-  const answerLines = [];
-
-  questions.forEach((question, index) => {
-    const subject = question.subject || "General";
-    subjectStats[subject] = subjectStats[subject] || { correct: 0, total: 0 };
-    subjectStats[subject].total += 1;
-
-    const given = normalizeMockValue(activeMockAnswers[index]);
-    const expected = normalizeMockValue(question.correct_answer);
-    const isCorrect = given && expected && given === expected;
-    if (isCorrect) {
-      correctCount += 1;
-      subjectStats[subject].correct += 1;
-    }
-    answerLines.push(`${index + 1}. ${subject}: ${isCorrect ? "correct" : "check"}`);
-  });
-
-  const subjectScores = {};
-  Object.entries(subjectStats).forEach(([subject, stats]) => {
-    subjectScores[subject] = Math.round((stats.correct / Math.max(1, stats.total)) * 100);
-  });
-
-  const overallScore = Math.round((correctCount / Math.max(1, questions.length)) * 100);
-  const weakest = Object.entries(subjectScores).sort((a, b) => a[1] - b[1])[0];
-  const strongest = Object.entries(subjectScores).sort((a, b) => b[1] - a[1])[0];
-  const analysis = overallScore >= 75
-    ? "Strong baseline. Astra can push you a little more confidently."
-    : overallScore >= 55
-    ? "Solid starting point. There is enough evidence to plan a targeted improvement path."
-    : "This is a true baseline. Astra should slow down, simplify, and rebuild the foundations gently.";
-  const nextStep = weakest
-    ? `Next best step: spend extra time on ${weakest[0]} while keeping ${strongest ? strongest[0] : "your stronger areas"} active.`
-    : "Next best step: review the areas that felt most uncertain and then return to a short targeted practice set.";
-  return {
-    overall_score: overallScore,
-    correct_count: correctCount,
-    total_questions: questions.length,
-    time_taken_minutes: Math.max(1, Math.round((Date.now() - (activeMockStartAt || Date.now())) / 60000)),
-    subject_scores: subjectScores,
-    analysis,
-    next_step: nextStep,
-    answer_lines: answerLines,
-  };
 }
 
 async function finishMockTest() {
-  const report = evaluateMockTest();
-  if (!report) {
+  if (!activeMockTest || !activeMockTest.questions || !activeMockTest.questions.length || !activeProfile) {
     return;
   }
-
-  setActiveTab("mockTestTab");
-  renderMockReport(report);
-  if (mockTestStatus) {
-    mockTestStatus.textContent = `Baseline complete. Overall score ${report.overall_score}%. Astra is now ready to adjust your plan.`;
-  }
-
-  const subjectScores = {};
-  Object.entries(report.subject_scores || {}).forEach(([subject, score]) => {
-    const subjectName = String(subject || "").trim();
-    if (subjectName) {
-      subjectScores[subjectName] = score;
+  saveCurrentMockAnswer();
+  recordCurrentMockQuestionTime();
+  clearMockTestTimer();
+  const answers = {};
+  activeMockTest.questions.forEach((question, index) => {
+    if (activeMockAnswers[index] !== "" && activeMockAnswers[index] !== null && activeMockAnswers[index] !== undefined) {
+      answers[question.id] = activeMockAnswers[index];
     }
   });
-
-  if (Object.keys(subjectScores).length) {
-    try {
-      const response = await fetch("/api/planner/mock-scores", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          student_name: activeProfile.name,
-          exam: (mockTestExamInput && mockTestExamInput.value.trim()) || (activeMockTest && activeMockTest.exam) || "JEE Main",
-          subject_scores: subjectScores,
-        }),
-      });
-      const payload = await response.json();
-      if (response.ok) {
-        renderWeeklyPlan(payload.weekly_plan || null);
-        renderAdaptiveProfile(payload.adaptive_profile || null);
-      }
-    } catch (error) {
-      appendMessage("practice", "tutor", `Astra could not save the baseline yet: ${error.message}`);
+  const timeTaken = Math.max(1, Math.round((Date.now() - (activeMockStartAt || Date.now())) / 60000));
+  if (mockTestStatus) {
+    mockTestStatus.textContent = "Astra is grading your paper...";
+  }
+  try {
+    const response = await fetch(`/api/mock/submit/${encodeURIComponent(activeMockTest.id || selectedMockTestId)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: activeProfile.name,
+        answers,
+        time_taken_minutes: timeTaken,
+        question_times: activeMockQuestionTimes,
+      }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not submit the mock test.");
+    }
+    payload.time_taken_minutes = timeTaken;
+    setActiveTab("mockTestTab");
+    renderMockReport(payload);
+    if (mockTestStatus) {
+      mockTestStatus.textContent = `Mock complete. Score ${payload.score}/${payload.max_score} (${payload.percentage}%).`;
+    }
+    await loadMockHistory();
+    await fetchStudentInsights(activeProfile.name);
+    await fetchStorageStatus(activeProfile.name);
+  } catch (error) {
+    if (mockTestStatus) {
+      mockTestStatus.textContent = error.message;
     }
   }
-
-  await fetchStudentInsights(activeProfile.name);
-  await fetchStorageStatus(activeProfile.name);
-  setMockPanelVisibility({ intro: false, question: false, report: true });
 }
 
 function saveCurrentMockAnswer() {
@@ -5580,12 +5552,115 @@ function goToMockQuestion(direction) {
     return;
   }
   saveCurrentMockAnswer();
+  recordCurrentMockQuestionTime();
   const nextIndex = activeMockIndex + direction;
-  if (nextIndex < 0 || nextIndex >= activeMockTest.questions.length) {
+  if (nextIndex >= activeMockTest.questions.length) {
+    finishMockTest();
+    return;
+  }
+  if (nextIndex < 0) {
     return;
   }
   activeMockIndex = nextIndex;
-  renderMockQuestionV2();
+  renderMockQuestion();
+}
+
+async function analyseExternalMock() {
+  if (!activeProfile) {
+    return;
+  }
+  const payload = {
+    student_id: activeProfile.name,
+    exam_type: mockExternalExamType ? mockExternalExamType.value : "JEE Main",
+    total_score: Number(mockExternalTotalScore && mockExternalTotalScore.value),
+    max_score: Number(mockExternalMaxScore && mockExternalMaxScore.value),
+    physics_score: mockExternalPhysicsScore && mockExternalPhysicsScore.value ? Number(mockExternalPhysicsScore.value) : null,
+    chemistry_score: mockExternalChemistryScore && mockExternalChemistryScore.value ? Number(mockExternalChemistryScore.value) : null,
+    maths_score: mockExternalMathsScore && mockExternalMathsScore.value ? Number(mockExternalMathsScore.value) : null,
+    time_taken: Number(mockExternalTimeTaken && mockExternalTimeTaken.value) || 0,
+    notes: mockExternalNotes ? mockExternalNotes.value.trim() : "",
+  };
+  if (!Number.isFinite(payload.total_score) || !Number.isFinite(payload.max_score) || payload.max_score <= 0) {
+    if (mockExternalAnalysisResult) {
+      mockExternalAnalysisResult.innerHTML = "<p class=\"muted\">Enter total score and max marks first.</p>";
+    }
+    return;
+  }
+  if (mockExternalAnalyseBtn) {
+    mockExternalAnalyseBtn.disabled = true;
+  }
+  try {
+    const response = await fetch("/api/mock/analyse-external", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.detail || "Could not analyse this mock.");
+    }
+    renderExternalMockAnalysis(result);
+    await loadMockHistory();
+  } catch (error) {
+    if (mockExternalAnalysisResult) {
+      mockExternalAnalysisResult.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+    }
+  } finally {
+    if (mockExternalAnalyseBtn) {
+      mockExternalAnalyseBtn.disabled = false;
+    }
+  }
+}
+
+function renderExternalMockAnalysis(result) {
+  if (!mockExternalAnalysisResult) {
+    return;
+  }
+  const analysis = result.analysis || {};
+  const actions = Array.isArray(analysis.top_3_actions) ? analysis.top_3_actions : [];
+  mockExternalAnalysisResult.innerHTML = `<div class="mock-metric-card"><p class="memory-heading">Astra's analysis</p><p class="muted">Score: ${escapeHtml(result.percentage)}%</p><p class="muted">${escapeHtml(analysis.overall_assessment || "")}</p><p class="muted">Next focus: ${escapeHtml(analysis.next_week_focus || analysis.weakest_topic || "Targeted revision")}</p>${actions.map((action) => `<p class="muted">- ${escapeHtml(action)}</p>`).join("")}</div>`;
+}
+
+async function loadMockHistory() {
+  if (!activeProfile || !mockHistoryList) {
+    return;
+  }
+  mockHistoryList.innerHTML = "<p class=\"muted\">Loading recent tests...</p>";
+  try {
+    const response = await fetch(`/api/mock/history/${encodeURIComponent(activeProfile.name)}`);
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load mock history.");
+    }
+    renderMockHistory((payload.results || []).slice(0, 5));
+  } catch (error) {
+    mockHistoryList.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+function renderMockHistory(results) {
+  if (!mockHistoryList) {
+    return;
+  }
+  mockHistoryList.innerHTML = "";
+  if (!results.length) {
+    mockHistoryList.innerHTML = "<p class=\"muted\">No mock tests saved yet.</p>";
+    return;
+  }
+  results.forEach((item) => {
+    const percentage = Number(item.percentage || 0);
+    const color = percentage > 70 ? "#42d392" : percentage >= 50 ? "#ffd166" : "#ff6b6b";
+    const details = document.createElement("details");
+    details.className = "mock-metric-card";
+    const summary = document.createElement("summary");
+    summary.innerHTML = `${escapeHtml(item.taken_at || "")} - ${escapeHtml(item.exam_type || "Mock test")} <span class="pill" style="border-color:${color};color:${color}">${percentage}%</span>`;
+    const analysis = item.analysis && (item.analysis.analysis || item.analysis) || {};
+    const body = document.createElement("div");
+    body.innerHTML = `<p class="muted">Score: ${escapeHtml(item.total_score)}/${escapeHtml(item.max_score)}</p><p class="muted">${escapeHtml(analysis.overall_assessment || "")}</p><p class="muted">Next focus: ${escapeHtml(analysis.next_week_focus || analysis.weakest_topic || "")}</p>`;
+    details.appendChild(summary);
+    details.appendChild(body);
+    mockHistoryList.appendChild(details);
+  });
 }
 
 function renderNetworkStats(stats) {
@@ -5754,7 +5829,7 @@ function buildGroupStudyMemberCard(item) {
   if (item.compatibility_band && item.role !== "You") {
     const band = document.createElement("span");
     band.className = "memory-chip";
-    band.textContent = `${item.compatibility_band}${item.compatibility_score ? ` • ${item.compatibility_score}/100` : ""}`;
+    band.textContent = `${item.compatibility_band}${item.compatibility_score ? ` â€¢ ${item.compatibility_score}/100` : ""}`;
     card.appendChild(band);
   }
 
@@ -5903,7 +5978,7 @@ function createProgressItemCard(item) {
   const meta = document.createElement("p");
   meta.className = "progress-meta";
   const examBits = [item.exam, item.subject].filter(Boolean);
-  meta.textContent = examBits.length ? examBits.join(" • ") : "General progress item";
+  meta.textContent = examBits.length ? examBits.join(" â€¢ ") : "General progress item";
 
   copy.appendChild(topic);
   copy.appendChild(meta);
@@ -6152,7 +6227,7 @@ function renderChapterMasteryBoard(payload) {
     const scoreText = chapter.chapter_test_score !== null && chapter.chapter_test_score !== undefined ? `${Math.round(Number(chapter.chapter_test_score) || 0)}%` : "Not started";
     button.innerHTML = `
       <strong>${escapeHtml(chapter.chapter_name || "Chapter")}</strong>
-      <span>${escapeHtml(String(chapter.subject || "").toUpperCase() || "GENERAL")} · ${escapeHtml(chapter.mastery_level || "not_started")} · ${escapeHtml(scoreText)}</span>
+      <span>${escapeHtml(String(chapter.subject || "").toUpperCase() || "GENERAL")} Â· ${escapeHtml(chapter.mastery_level || "not_started")} Â· ${escapeHtml(scoreText)}</span>
     `;
     button.addEventListener("click", () => {
       renderChapterDetailPanel(chapter);
@@ -6172,7 +6247,7 @@ function renderChapterDetailPanel(chapter) {
   chapterDetailList.innerHTML = "";
   if (chapterDetailSummary) {
     const score = chapter.chapter_test_score !== null && chapter.chapter_test_score !== undefined ? `${Math.round(Number(chapter.chapter_test_score) || 0)}%` : "Not started";
-    chapterDetailSummary.textContent = `${chapter.chapter_name || "Chapter"} • Mastery: ${chapter.mastery_level || "not_started"} • Score: ${score}`;
+    chapterDetailSummary.textContent = `${chapter.chapter_name || "Chapter"} â€¢ Mastery: ${chapter.mastery_level || "not_started"} â€¢ Score: ${score}`;
   }
   const rows = [
     `Subject: ${chapter.subject || "-"}`,
@@ -6260,7 +6335,7 @@ function renderChapterRevisionTracker(payload) {
     title.textContent = chapter.chapter_name || "Chapter";
     const meta = document.createElement("p");
     meta.className = "muted";
-    meta.textContent = `${chapter.mastery_level || "not_started"} · ${chapter.chapter_test_score !== null && chapter.chapter_test_score !== undefined ? `${Math.round(Number(chapter.chapter_test_score) || 0)}%` : "No test yet"}`;
+    meta.textContent = `${chapter.mastery_level || "not_started"} Â· ${chapter.chapter_test_score !== null && chapter.chapter_test_score !== undefined ? `${Math.round(Number(chapter.chapter_test_score) || 0)}%` : "No test yet"}`;
     row.append(title, meta);
     chapterRevisionList.appendChild(row);
   });
@@ -6306,7 +6381,7 @@ function renderChapterResumeCard(summary) {
       <div class="card-header">
         <div>
           <p class="card-title">Resume ${escapeHtml(summary.unit_name || "Chapter")}</p>
-          <p class="muted">${escapeHtml(String(summary.subject || "").toUpperCase() || "GENERAL")} • ${done} of ${totalSubtopics} subtopics complete</p>
+          <p class="muted">${escapeHtml(String(summary.subject || "").toUpperCase() || "GENERAL")} â€¢ ${done} of ${totalSubtopics} subtopics complete</p>
         </div>
         <span class="pill">Resume</span>
       </div>
@@ -6347,7 +6422,7 @@ function renderChapterResumeCard(summary) {
         <span>You have an active session: ${escapeHtml(summary.unit_name || "Chapter")} - ${done} of ${totalSubtopics} subtopics complete. Continue?</span>
         <div class="chapter-resume-banner-actions">
           <button type="button" id="chapterResumeGoBtn" class="ghost-button">Go to session</button>
-          <button type="button" id="chapterResumeCloseBtn" class="ghost-button chapter-resume-close-btn" aria-label="Close resume notice">✕</button>
+          <button type="button" id="chapterResumeCloseBtn" class="ghost-button chapter-resume-close-btn" aria-label="Close resume notice">âœ•</button>
         </div>
       </div>
     `;
@@ -6641,7 +6716,7 @@ function renderChapterTestReport(report, summary) {
       <div class="card-header">
         <div>
           <p class="card-title">Chapter Test Result</p>
-          <p class="muted">Score ${scoreLabel} • ${escapeHtml(masteryLevel.replace(/_/g, " "))}</p>
+          <p class="muted">Score ${scoreLabel} â€¢ ${escapeHtml(masteryLevel.replace(/_/g, " "))}</p>
         </div>
         <span class="pill">${escapeHtml(masteryLevel)}</span>
       </div>
@@ -6730,7 +6805,7 @@ function renderChapterTest(questions, meta = {}) {
       <div class="card-header">
         <div>
           <p class="card-title">Chapter Test - ${escapeHtml(activeChapterTest.unit_name)}</p>
-          <p class="muted">All questions are shown at once. JEE Main format • ${activeChapterTest.questions.length} questions • ${activeChapterTest.duration_minutes} minutes • ${escapeHtml(activeChapterTest.marking)}</p>
+          <p class="muted">All questions are shown at once. JEE Main format â€¢ ${activeChapterTest.questions.length} questions â€¢ ${activeChapterTest.duration_minutes} minutes â€¢ ${escapeHtml(activeChapterTest.marking)}</p>
         </div>
         <span class="pill chapter-test-timer" data-chapter-test-timer>30:00</span>
       </div>
@@ -6757,7 +6832,7 @@ function renderChapterTest(questions, meta = {}) {
     title.textContent = `Question ${index + 1}`;
     const metaLine = document.createElement("p");
     metaLine.className = "muted";
-    metaLine.textContent = `${question.subtopic || activeChapterTest.unit_name} • ${question.difficulty || "medium"}`;
+    metaLine.textContent = `${question.subtopic || activeChapterTest.unit_name} â€¢ ${question.difficulty || "medium"}`;
     header.append(title, metaLine);
 
     const questionBody = document.createElement("div");
@@ -6954,7 +7029,7 @@ async function startSelectedChapterSession() {
       first_subtopic: payload.first_subtopic || {},
     };
     if (chapterDetailSummary && payload.first_subtopic) {
-      chapterDetailSummary.textContent = `${selectedChapterSnapshot.chapter_name || "Chapter"} • Starting ${payload.first_subtopic.subtopic_name || "the first subtopic"}`;
+      chapterDetailSummary.textContent = `${selectedChapterSnapshot.chapter_name || "Chapter"} â€¢ Starting ${payload.first_subtopic.subtopic_name || "the first subtopic"}`;
     }
     setActiveTab("tutorTab");
     appendMessage("tutor", "tutor", `We are starting ${selectedChapterSnapshot.chapter_name || "this chapter"} from ${payload.first_subtopic.subtopic_name || "the first subtopic"}. I will teach the full chapter one subtopic at a time and checkpoint after each part.`);
@@ -8981,11 +9056,11 @@ function useActiveTutorVideoInTutor() {
     return;
   }
   const promptSeed = activeTutorVideo.topic || activeTutorVideo.title || "this concept";
-  const targetInput = tutorRoomMessageInput || messageInput;
+  const targetInput = messageInput;
   if (targetInput) {
     targetInput.value = `Teach me ${promptSeed} using the same style as the selected tutor video and then connect it to a 3D visual explanation.`;
   }
-  setActiveTab("tutorRoomTab");
+  setActiveTab("tutorTab");
   if (targetInput) {
     targetInput.focus();
   }
@@ -9219,7 +9294,7 @@ function renderTutorCheckpointWidget(checkpoint, { practiceMode = false } = {}) 
   const headingCopy = document.createElement("div");
   const heading = document.createElement("p");
   heading.className = "card-title";
-  heading.textContent = checkpoint.heading || (practiceMode ? "More practice" : "Quick Check — let's see if this clicked");
+  heading.textContent = checkpoint.heading || (practiceMode ? "More practice" : "Quick Check â€” let's see if this clicked");
   const meta = document.createElement("p");
   meta.className = "muted checkpoint-meta";
   const metaBits = [];
@@ -9232,7 +9307,7 @@ function renderTutorCheckpointWidget(checkpoint, { practiceMode = false } = {}) 
   if (checkpoint.explanation_level) {
     metaBits.push(`Level ${checkpoint.explanation_level}`);
   }
-  meta.textContent = metaBits.length ? metaBits.join(" • ") : "JEE checkpoint";
+  meta.textContent = metaBits.length ? metaBits.join(" â€¢ ") : "JEE checkpoint";
   headingCopy.append(heading, meta);
   const badge = document.createElement("span");
   badge.className = "pill";
@@ -9268,10 +9343,10 @@ function renderTutorCheckpointWidget(checkpoint, { practiceMode = false } = {}) 
     result.classList.remove("hidden");
     result.innerHTML = "";
     const resultHeading = document.createElement("strong");
-    resultHeading.textContent = evaluation.is_correct ? "Correct" : "Let’s fix that together";
+    resultHeading.textContent = evaluation.is_correct ? "Correct" : "Letâ€™s fix that together";
     const feedback = document.createElement("p");
     feedback.className = "muted";
-    feedback.textContent = evaluation.feedback || (evaluation.is_correct ? "Nice work — that clicked." : "That needs one more pass.");
+    feedback.textContent = evaluation.feedback || (evaluation.is_correct ? "Nice work â€” that clicked." : "That needs one more pass.");
     result.append(resultHeading, feedback);
 
     if (evaluation.is_correct) {
@@ -9309,7 +9384,7 @@ function renderTutorCheckpointWidget(checkpoint, { practiceMode = false } = {}) 
       reExplain.textContent = evaluation.re_explanation || "Try the same concept through a different example.";
       const correctAnswer = document.createElement("p");
       correctAnswer.className = "checkpoint-detail";
-      correctAnswer.textContent = `Correct answer: ${evaluation.correct_answer || checkpoint.correct_answer} — ${evaluation.correct_explanation || checkpoint.correct_explanation || ""}`;
+      correctAnswer.textContent = `Correct answer: ${evaluation.correct_answer || checkpoint.correct_answer} â€” ${evaluation.correct_explanation || checkpoint.correct_explanation || ""}`;
       result.append(wrongReason, reExplain, correctAnswer);
       morePracticeBtn.classList.add("hidden");
     }
@@ -9428,7 +9503,7 @@ function renderTutorPracticeSet(practiceQuestions, anchorCard, options = {}) {
     if (question.difficulty) {
       metaBits.push(question.difficulty);
     }
-    meta.textContent = metaBits.length ? metaBits.join(" • ") : "Practice question";
+    meta.textContent = metaBits.length ? metaBits.join(" â€¢ ") : "Practice question";
     headingCopy.append(heading, meta);
     const badge = document.createElement("span");
     badge.className = "pill";
@@ -9453,7 +9528,7 @@ function renderTutorPracticeSet(practiceQuestions, anchorCard, options = {}) {
       feedback.textContent = evaluation.is_correct ? "Correct" : "Review this one";
       const detail = document.createElement("p");
       detail.className = "muted";
-      detail.textContent = evaluation.feedback || (evaluation.is_correct ? "Nice work." : "Let’s use the explanation to tighten the idea.");
+      detail.textContent = evaluation.feedback || (evaluation.is_correct ? "Nice work." : "Letâ€™s use the explanation to tighten the idea.");
       const explanation = document.createElement("p");
       explanation.className = "checkpoint-detail";
       explanation.textContent = evaluation.correct_explanation || question.correct_explanation || "";
@@ -9587,7 +9662,7 @@ async function loadTutorCheckpoint(topic, subject, explanationLevel, originalExp
       renderTutorCheckpointWidget(checkpoint);
     }
     showKnowledgeBaseTag("", false);
-    setAstraStatus(`Astra is ready. Today's focus: ${topicLabel} — ${subjectLabel}`, "idle");
+    setAstraStatus(`Astra is ready. Today's focus: ${topicLabel} â€” ${subjectLabel}`, "idle");
     return checkpoint;
   } catch (error) {
     console.warn("Checkpoint generation skipped:", error);
@@ -9698,7 +9773,7 @@ async function streamTutorReply(mode, text) {
 
   updateResumeControls();
   const activeTabId = document.querySelector(".tab-panel.active")?.id || "";
-  const stepDelay = mode === "tutor" && activeTabId === "tutorRoomTab" ? 10 : 22;
+  const stepDelay = 22;
   while (narration.index < narration.chunks.length) {
     if (narration.cancelled) {
       break;
@@ -9751,7 +9826,6 @@ function setActiveTab(tabId) {
   const tabSectionMap = {
     overviewTab: "home",
     tutorTab: "learn",
-    tutorRoomTab: "learn",
     videoTutorTab: "learn",
     practiceTab: "learn",
     mockTestTab: "learn",
@@ -9773,16 +9847,6 @@ function setActiveTab(tabId) {
     if (tabId === "videoTutorTab" && activeStudioPane !== "threeConceptPanel") {
       setActiveStudioPane("threeConceptPanel");
     }
-    if (tabId === "tutorRoomTab" && voiceChatMode && !voiceChatMode.checked) {
-      voiceChatMode.checked = true;
-      applyAccessibilityPreferences();
-    }
-    if (tabId === "tutorRoomTab") {
-      if (activeStudioPane !== "threeTutorPanel") {
-        setActiveStudioPane("threeTutorPanel");
-      }
-      void initAvatar();
-    }
     if (tabId === "weeklyTab" && activeProfile) {
       window.setTimeout(() => {
         refreshWeeklyPlan();
@@ -9793,6 +9857,12 @@ function setActiveTab(tabId) {
   if (tabId === "progressTab" && activeProfile) {
     window.setTimeout(() => {
       fetchProgress(activeProfile.name);
+    }, 0);
+  }
+  if (tabId === "mockTestTab" && activeProfile) {
+    window.setTimeout(() => {
+      void loadMockCatalogue();
+      void loadMockHistory();
     }, 0);
   }
   if (tabId !== "mockTestTab") {
@@ -9818,12 +9888,7 @@ function setActiveTab(tabId) {
     setHomeSubtab("overview");
   }
 
-  if (tabId === "tutorRoomTab" && tutorRoomMessageInput) {
-    window.setTimeout(() => tutorRoomMessageInput.focus(), 0);
-    syncTutorRoomTranscript();
-    ensureTutorRoomPersona();
-    void initAvatar();
-  } else if (tabId === "tutorTab" && messageInput) {
+  if (tabId === "tutorTab" && messageInput) {
     window.setTimeout(() => messageInput.focus(), 0);
     if (activeProfile) {
       window.setTimeout(() => {
@@ -9923,16 +9988,7 @@ function loadAccessibilityPreferences() {
   const validSavedOrder = savedOrderList.filter((key) => TAB_CONFIG[key]);
   const missingKeys = Object.keys(TAB_CONFIG).filter((key) => !validSavedOrder.includes(key));
   currentTabOrder = [...validSavedOrder, ...missingKeys];
-  if (currentTabOrder.includes("tutor") && currentTabOrder.includes("tutorroom")) {
-    currentTabOrder = currentTabOrder.filter((key) => key !== "tutorroom");
-    const tutorIndex = currentTabOrder.indexOf("tutor");
-    currentTabOrder.splice(Math.max(0, tutorIndex + 1), 0, "tutorroom");
-  }
-  if (currentTabOrder.includes("tutorroom") && currentTabOrder.includes("videotutor")) {
-    currentTabOrder = currentTabOrder.filter((key) => key !== "videotutor");
-    const roomIndex = currentTabOrder.indexOf("tutorroom");
-    currentTabOrder.splice(Math.max(0, roomIndex + 1), 0, "videotutor");
-  }
+  currentTabOrder = currentTabOrder.filter((key) => key !== LEGACY_TUTOR_ROOM_KEY);
 
   if (languageSelect) {
     languageSelect.value = currentLanguage;
@@ -10132,14 +10188,14 @@ function applyLanguage() {
 
 const LANGUAGE_OPTIONS = [
   { key: "english", native: "English", label: "English (Default)" },
-  { key: "hindi", native: "हिंदी", label: "Hindi" },
+  { key: "hindi", native: "à¤¹à¤¿à¤‚à¤¦à¥€", label: "Hindi" },
   { key: "hinglish", native: "Hinglish", label: "Hindi + English" },
-  { key: "telugu", native: "తెలుగు", label: "Telugu" },
-  { key: "tamil", native: "தமிழ்", label: "Tamil" },
-  { key: "kannada", native: "ಕನ್ನಡ", label: "Kannada" },
-  { key: "marathi", native: "मराठी", label: "Marathi" },
-  { key: "bengali", native: "বাংলা", label: "Bengali" },
-  { key: "gujarati", native: "ગુજરાતી", label: "Gujarati" },
+  { key: "telugu", native: "à°¤à±†à°²à±à°—à±", label: "Telugu" },
+  { key: "tamil", native: "à®¤à®®à®¿à®´à¯", label: "Tamil" },
+  { key: "kannada", native: "à²•à²¨à³à²¨à²¡", label: "Kannada" },
+  { key: "marathi", native: "à¤®à¤°à¤¾à¤ à¥€", label: "Marathi" },
+  { key: "bengali", native: "à¦¬à¦¾à¦‚à¦²à¦¾", label: "Bengali" },
+  { key: "gujarati", native: "àª—à«àªœàª°àª¾àª¤à«€", label: "Gujarati" },
 ];
 
 function normalizeLanguageSelection(language) {
@@ -10151,22 +10207,22 @@ function normalizeLanguageSelection(language) {
     english: "english",
     eng: "english",
     hindi: "hindi",
-    "हिंदी": "hindi",
+    "à¤¹à¤¿à¤‚à¤¦à¥€": "hindi",
     hinglish: "hinglish",
     "hindi + english": "hinglish",
     "hindi english": "hinglish",
     telugu: "telugu",
-    "తెలుగు": "telugu",
+    "à°¤à±†à°²à±à°—à±": "telugu",
     tamil: "tamil",
-    "தமிழ்": "tamil",
+    "à®¤à®®à®¿à®´à¯": "tamil",
     kannada: "kannada",
-    "ಕನ್ನಡ": "kannada",
+    "à²•à²¨à³à²¨à²¡": "kannada",
     marathi: "marathi",
-    "मराठी": "marathi",
+    "à¤®à¤°à¤¾à¤ à¥€": "marathi",
     bengali: "bengali",
-    "বাংলা": "bengali",
+    "à¦¬à¦¾à¦‚à¦²à¦¾": "bengali",
     gujarati: "gujarati",
-    "ગુજરાતી": "gujarati",
+    "àª—à«àªœàª°àª¾àª¤à«€": "gujarati",
   };
   const supportedKeys = ["english", "hindi", "hinglish", "telugu", "tamil", "kannada", "marathi", "bengali", "gujarati"];
   return aliases[value] || (supportedKeys.includes(value) ? value : "english");
@@ -10186,7 +10242,7 @@ function updateTutorLanguageChip() {
   if (!tutorLanguageChip) {
     return;
   }
-  tutorLanguageChip.textContent = `🌐 ${getLanguageDisplayLabel(currentLanguage).replace(" (Default)", "")}`;
+  tutorLanguageChip.textContent = `ðŸŒ ${getLanguageDisplayLabel(currentLanguage).replace(" (Default)", "")}`;
 }
 
 function updateLanguageSelectionCards() {
@@ -10213,7 +10269,7 @@ function renderTutorLanguageDropdown() {
     return;
   }
   tutorLanguageDropdown.innerHTML = LANGUAGE_OPTIONS.map((option) => (
-    `<button type="button" data-language-option="${option.key}">${option.native} · ${option.label.replace(" (Default)", "")}</button>`
+    `<button type="button" data-language-option="${option.key}">${option.native} Â· ${option.label.replace(" (Default)", "")}</button>`
   )).join("");
 }
 
@@ -10325,7 +10381,7 @@ const WALKTHROUGH_STEPS = [
 function buildWalkthroughAstraAnswer(question) {
   const text = String(question || "").toLowerCase();
   if (!text) {
-    return "Ask me anything about how Astra works, and I’ll answer in a simple, honest way.";
+    return "Ask me anything about how Astra works, and Iâ€™ll answer in a simple, honest way.";
   }
   if (text.includes("private") || text.includes("privacy")) {
     return "Astra only uses what you choose to share, and you can change or remove those settings later.";
@@ -10555,7 +10611,7 @@ function renderWalkthroughStepLegacy() {
   if (walkthroughBackBtn) {
     walkthroughBackBtn.disabled = walkthroughStepIndex === 0;
   }
-  setWalkthroughAnswerText("Ask Astra a question about how it works, and I’ll answer it here.");
+  setWalkthroughAnswerText("Ask Astra a question about how it works, and Iâ€™ll answer it here.");
 }
 
 function renderWalkthroughStep() {
@@ -10629,7 +10685,7 @@ function renderWalkthroughStep() {
   } else if (isIntro) {
     setWalkthroughAnswerText("Read the message, then press Next when you are ready.");
   } else {
-    setWalkthroughAnswerText("Ask Astra a question about how it works, and I’ll answer it here.");
+    setWalkthroughAnswerText("Ask Astra a question about how it works, and Iâ€™ll answer it here.");
   }
 }
 
@@ -11006,7 +11062,7 @@ function renderWeeklyPreview(plan) {
       const pill = document.createElement("span");
       pill.className = "focus-pill";
       const topic = task.topic || task.subject;
-      pill.textContent = `${task.exam} ${task.subject} · ${topic}`;
+      pill.textContent = `${task.exam} ${task.subject} Â· ${topic}`;
       focusRow.appendChild(pill);
     });
 
@@ -11425,7 +11481,7 @@ function renderJourneyMasterySummary(masteryMap = null) {
     return acc;
   }, { new: 0, low: 0, medium: 0, good: 0, strong: 0 });
   const summaryText = entries.length
-    ? `New: ${counts.new || 0} • Low: ${counts.low || 0} • Medium: ${counts.medium || 0} • Good: ${counts.good || 0} • Strong: ${counts.strong || 0}`
+    ? `New: ${counts.new || 0} â€¢ Low: ${counts.low || 0} â€¢ Medium: ${counts.medium || 0} â€¢ Good: ${counts.good || 0} â€¢ Strong: ${counts.strong || 0}`
     : "No mastery data yet. Start a session to build this map.";
   journeyMasteryCard.classList.remove("hidden");
   if (journeyMasterySummary) {
@@ -11450,7 +11506,7 @@ function renderJourneyMasterySummary(masteryMap = null) {
       meta.className = "muted";
       const score = item.best_score !== undefined ? `${Math.round(Number(item.best_score) || 0)}%` : "n/a";
       const studied = item.times_studied !== undefined ? item.times_studied : 0;
-      meta.textContent = `Confidence: ${item.confidence_level || "new"} • Best score: ${score} • Studied: ${studied} time(s)`;
+      meta.textContent = `Confidence: ${item.confidence_level || "new"} â€¢ Best score: ${score} â€¢ Studied: ${studied} time(s)`;
       const actions = document.createElement("div");
       actions.className = "chapter-mastery-actions";
       if (String(item.status || "not_started").toLowerCase() !== "not_started") {
@@ -11458,7 +11514,7 @@ function renderJourneyMasterySummary(masteryMap = null) {
         resetBtn.type = "button";
         resetBtn.className = "ghost-button chapter-reset-btn";
         resetBtn.title = "Restart this chapter from the beginning";
-        resetBtn.textContent = "↺";
+        resetBtn.textContent = "â†º";
         resetBtn.addEventListener("click", (event) => {
           event.stopPropagation();
           resetChapterFromUI({
@@ -11617,7 +11673,7 @@ async function startJourneySession() {
       : null;
     setAstraStatus(
       focusPreview
-        ? `Astra is ready. Today's focus: ${focusPreview.topic || "today's topic"} — ${focusPreview.subject || "study"}`
+        ? `Astra is ready. Today's focus: ${focusPreview.topic || "today's topic"} â€” ${focusPreview.subject || "study"}`
         : "Astra is ready. Preparing today's focus...",
       "idle"
     );
@@ -11709,7 +11765,7 @@ async function completeJourneySessionFromCheckpoint(checkpointScore) {
     const nextRevisionDays = nextRevisionDate && !Number.isNaN(nextRevisionDate.getTime())
       ? Math.max(1, Math.round((nextRevisionDate.getTime() - Date.now()) / 86400000))
       : null;
-    showToast(`Plan updated — ${morning.topic || "topic"} marked as ${(payload.result && payload.result.confidence_level) || "updated"}. Next revision in ${nextRevisionDays || "a few"} days.`);
+    showToast(`Plan updated â€” ${morning.topic || "topic"} marked as ${(payload.result && payload.result.confidence_level) || "updated"}. Next revision in ${nextRevisionDays || "a few"} days.`);
     logSessionActivity(`Checkpoint completed for ${morning.topic || "current topic"}: ${checkpointScore}%`);
     renderSessionStats(morning.topic || "Today", (payload.result && payload.result.confidence_level) || "updated", checkpointScore);
     if (payload.weekly_plan_updated) {
@@ -11918,8 +11974,8 @@ function stopTalkingFace() {
     utterance.rate = ((avatar && avatar.voice_rate) || 0.96) * pacingScale;
     utterance.pitch = (avatar && avatar.voice_pitch) || 1.0;
     setCaption(text);
-    const tutorRoomActive = document.querySelector(".tab-panel.active")?.id === "tutorRoomTab";
-    if (avatarRenderer && tutorRoomActive) {
+    const videoTutorActive = document.querySelector(".tab-panel.active")?.id === "videoTutorTab";
+    if (avatarRenderer && videoTutorActive) {
       avatarRenderer.startSpeakingAnimation();
     }
     setAvatarStatusText("Speaking");
@@ -11939,7 +11995,7 @@ function stopTalkingFace() {
   };
 
     utterance.onend = () => {
-      if (avatarRenderer && tutorRoomActive) {
+      if (avatarRenderer && videoTutorActive) {
         avatarRenderer.stopSpeakingAnimation();
         avatarRenderer.playNodGesture();
       }
@@ -11955,7 +12011,7 @@ function stopTalkingFace() {
   };
 
     utterance.onerror = () => {
-      if (avatarRenderer && tutorRoomActive) {
+      if (avatarRenderer && videoTutorActive) {
         avatarRenderer.stopSpeakingAnimation();
       }
       setAvatarStatusText("Ready");
@@ -12084,8 +12140,6 @@ function getActiveConversationModeFromUI() {
     ? "last_minute"
     : activeTab === "tipsTab"
     ? "tips"
-    : activeTab === "tutorRoomTab"
-    ? "tutor"
     : "tutor";
 }
 
@@ -12930,123 +12984,6 @@ async function analyzeDoubtImage() {
   }
 }
 
-async function submitPracticeReview() {
-  if (!activeProfile) {
-    return;
-  }
-
-  const timeTaken = Number(practiceTimeInput.value || "0");
-  const accuracy = Number(practiceAccuracyInput.value || "0");
-  const questionCount = Number(practiceQuestionCountInput.value || "0");
-  const exam = practiceExamInput.value.trim();
-  const notes = practiceNotesInput.value.trim();
-
-  if (!(timeTaken > 0) || accuracy < 0 || accuracy > 100) {
-    renderPracticeAnalytics({
-      total_attempts: 0,
-      coach_note: "Enter a valid time taken and an accuracy value between 0 and 100.",
-    });
-    return;
-  }
-
-  submitPracticeReviewBtn.disabled = true;
-  try {
-    const response = await fetch("/api/analytics/practice", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        student_name: activeProfile.name,
-        mode: lastPracticeMode,
-        time_taken_minutes: timeTaken,
-        accuracy_percent: accuracy,
-        exam,
-        question_count: questionCount,
-        notes,
-      }),
-    });
-    const payload = await response.json();
-    if (!response.ok) {
-      throw new Error(payload.detail || "Could not save that attempt.");
-    }
-
-    renderPracticeAnalytics(payload);
-    await fetchStudentInsights(activeProfile.name);
-    await fetchNetwork(activeProfile.name);
-    await fetchEngagement(activeProfile.name);
-    practiceTimeInput.value = "";
-    practiceAccuracyInput.value = "";
-    practiceQuestionCountInput.value = "";
-    practiceExamInput.value = "";
-    practiceNotesInput.value = "";
-    appendMessage("practice", "tutor", "Practice analytics saved. I will use this speed and accuracy pattern to guide tougher or slower drills more intelligently.");
-    await fetchStorageStatus(activeProfile.name);
-    await fetchFeatureHealth(activeProfile.name);
-  } catch (error) {
-    appendMessage("practice", "tutor", `Something went wrong: ${error.message}`);
-  } finally {
-    submitPracticeReviewBtn.disabled = false;
-  }
-}
-
-async function saveMockBaseline() {
-  if (!activeProfile) {
-    return;
-  }
-
-  const exam = (mockExamInput && mockExamInput.value.trim()) || "JEE Main";
-  const physics = Number(mockPhysicsInput && mockPhysicsInput.value ? mockPhysicsInput.value : "NaN");
-  const chemistry = Number(mockChemistryInput && mockChemistryInput.value ? mockChemistryInput.value : "NaN");
-  const mathematics = Number(mockMathInput && mockMathInput.value ? mockMathInput.value : "NaN");
-
-  if ([physics, chemistry, mathematics].every((value) => Number.isNaN(value))) {
-    appendMessage("practice", "tutor", "Please enter at least one mock subject score before saving the baseline.");
-    return;
-  }
-
-  if (saveMockScoresBtn) {
-    saveMockScoresBtn.disabled = true;
-  }
-
-  try {
-    const response = await fetch("/api/planner/mock-scores", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        student_name: activeProfile.name,
-        exam,
-        physics: Number.isNaN(physics) ? null : physics,
-        chemistry: Number.isNaN(chemistry) ? null : chemistry,
-        mathematics: Number.isNaN(mathematics) ? null : mathematics,
-      }),
-    });
-    const payload = await response.json();
-    if (!response.ok) {
-      throw new Error(payload.detail || "Could not save the mock baseline.");
-    }
-
-    if (mockExamInput) mockExamInput.value = "";
-    if (mockPhysicsInput) mockPhysicsInput.value = "";
-    if (mockChemistryInput) mockChemistryInput.value = "";
-    if (mockMathInput) mockMathInput.value = "";
-    appendMessage(
-      "practice",
-      "tutor",
-      `Mock baseline saved for ${payload.exam}. I will now use those subject signals to adjust planning and practice more accurately.`
-    );
-    renderWeeklyPlan(payload.weekly_plan || null);
-    renderAdaptiveProfile(payload.adaptive_profile || null);
-    await fetchStudentInsights(activeProfile.name);
-    await fetchStorageStatus(activeProfile.name);
-    await fetchFeatureHealth(activeProfile.name);
-  } catch (error) {
-    appendMessage("practice", "tutor", `Something went wrong: ${error.message}`);
-  } finally {
-    if (saveMockScoresBtn) {
-      saveMockScoresBtn.disabled = false;
-    }
-  }
-}
-
 async function sendMessage(message) {
   if (!activeProfile || isSending) {
     return;
@@ -13155,9 +13092,6 @@ async function sendMessage(message) {
       renderVisualLearning(payload.visual_learning || null);
       renderVideoExplanation(payload.video_explanation || null);
       renderReasoningPanel(payload.video_explanation || null);
-      if (activeTab === "tutorRoomTab") {
-        focusTutorRoomStage("fresh-reply");
-      }
     } else if (mode === "practice" || mode === "tips" || mode === "guide" || mode === "last_minute") {
       renderVisualLearning(null);
       renderVideoExplanation(null);
@@ -13173,7 +13107,7 @@ async function sendMessage(message) {
     if (mode === "tutor") {
       logSessionActivity(`Astra answered ${activeFocus.topic}`);
     }
-    const shouldSpeakReply = autoSpeakReplies.checked || activeTab === "tutorRoomTab";
+    const shouldSpeakReply = autoSpeakReplies.checked;
     if (shouldSpeakReply) {
       speakText(payload.reply);
     } else if (autoCaptionMode.checked && mode === "tutor") {
@@ -13221,7 +13155,7 @@ async function sendMessage(message) {
     await fetchStorageStatus(activeProfile.name);
     setAstraStatus(
       mode === "tutor"
-        ? `Astra is ready. Today's focus: ${activeFocus.topic} — ${activeFocus.subject}`
+        ? `Astra is ready. Today's focus: ${activeFocus.topic} â€” ${activeFocus.subject}`
         : "Astra is ready.",
       "success",
       true
@@ -13296,14 +13230,6 @@ document.body.addEventListener("click", (event) => {
     setActiveTab(tabButton.dataset.tab);
   }
 
-  if (event.target.closest("#openTutorRoomBtn")) {
-    setActiveTab("tutorRoomTab");
-  }
-
-  if (event.target.closest("#backToTutorTextBtn")) {
-    setActiveTab("tutorTab");
-  }
-
   if (event.target.closest("#motivationQuickAccessBtn") && motivationSection) {
     setActiveTab("overviewTab");
     setHomeSubtab("motivation");
@@ -13367,7 +13293,7 @@ document.body.addEventListener("click", (event) => {
     const shouldHide = !sessionActivityPanel.classList.contains("hidden");
     sessionActivityPanel.classList.toggle("hidden", shouldHide);
     if (sessionActivityToggleBtn) {
-      sessionActivityToggleBtn.textContent = shouldHide ? "Session log ▸" : "Session log ▾";
+      sessionActivityToggleBtn.textContent = shouldHide ? "Session log â–¸" : "Session log â–¾";
     }
   }
 
@@ -13823,32 +13749,6 @@ openWeeklyTabBtn.addEventListener("click", () => setActiveTab("weeklyTab"));
 if (openProgressTabBtn) {
   openProgressTabBtn.addEventListener("click", () => setActiveTab("progressTab"));
 }
-if (tutorRoomBackToTutorBtn) {
-  tutorRoomBackToTutorBtn.addEventListener("click", () => setActiveTab("tutorTab"));
-}
-  if (tutorRoomSpeakLastBtn) {
-    tutorRoomSpeakLastBtn.addEventListener("click", () => {
-      avatarSpeak(lastTutorReplyText || lastRepliesByMode.tutor || lastTutorReply || ((activeAvatar && activeAvatar.sample_line) || ""));
-    });
-  }
-  if (tutorRoomPauseBtn) {
-    tutorRoomPauseBtn.addEventListener("click", () => {
-      pauseTutorNarration();
-  });
-}
-if (tutorRoomResumeBtn) {
-  tutorRoomResumeBtn.addEventListener("click", async () => {
-    await resumeTutorCheckpoint("tutor");
-    updateTutorRoomLivePanel();
-  });
-}
-  if (tutorRoomStopBtn) {
-    tutorRoomStopBtn.addEventListener("click", () => {
-      interruptTutorOutput("tutor");
-      stopSpeaking();
-      updateTutorRoomLivePanel();
-    });
-  }
   if (generateVideoAnswerBtn) {
     generateVideoAnswerBtn.addEventListener("click", generateVideoAnswerBrief);
   }
@@ -13875,7 +13775,7 @@ if (generateRequestedFullVideoBtn) {
 if (videoAnswerBtn) {
   videoAnswerBtn.addEventListener("click", () => {
     const question = (videoTutorQuestionInput && videoTutorQuestionInput.value.trim())
-      || (lastTutorQuestion || (tutorRoomMessageInput && tutorRoomMessageInput.value) || lastTutorReply || "").trim();
+      || (lastTutorQuestion || (messageInput && messageInput.value) || lastTutorReply || "").trim();
     const topic = (lastVideoAnswerBrief && lastVideoAnswerBrief.topic) || question;
     const subject = (lastVideoAnswerBrief && lastVideoAnswerBrief.subject) || activeProfile?.exam || "";
     requestTutorVideo(question, topic, subject);
@@ -13899,28 +13799,6 @@ stopVoiceBtn.addEventListener("click", () => {
   interruptTutorOutput(getActiveConversationModeFromUI());
   stopSpeaking();
 });
-if (tutorRoomForm) {
-  tutorRoomForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const message = tutorRoomMessageInput ? tutorRoomMessageInput.value.trim() : "";
-    if (!message) {
-      return;
-    }
-    if (tutorRoomMessageInput) {
-      tutorRoomMessageInput.value = "";
-    }
-    setActiveTab("tutorRoomTab");
-    await sendMessage(message);
-  });
-}
-if (tutorRoomMessageInput) {
-  tutorRoomMessageInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      tutorRoomForm.requestSubmit();
-    }
-  });
-}
 stopLoungeTimerBtn.addEventListener("click", () => {
   clearLoungeTimer();
   updateLoungeTimerLabel();
@@ -13965,6 +13843,14 @@ if (voiceChatMode) {
     applyAccessibilityPreferences();
     updateTutorRoomLivePanel();
     syncTutorControlStrip();
+  });
+}
+if (tutorVoiceInlineToggleBtn) {
+  tutorVoiceInlineToggleBtn.addEventListener("click", () => {
+    if (voiceChatMode) {
+      voiceChatMode.checked = !voiceChatMode.checked;
+      voiceChatMode.dispatchEvent(new Event("change", { bubbles: true }));
+    }
   });
 }
 if (responsePacingSelect) {
@@ -14090,12 +13976,8 @@ tipsForm.addEventListener("submit", async (event) => {
   await sendMessage(message);
 });
 
-submitPracticeReviewBtn.addEventListener("click", submitPracticeReview);
-if (saveMockScoresBtn) {
-  saveMockScoresBtn.addEventListener("click", saveMockBaseline);
-}
 if (startMockTestBtn) {
-  startMockTestBtn.addEventListener("click", startMockTest);
+  startMockTestBtn.addEventListener("click", () => startMockTest());
 }
 if (mockTestNavPrev) {
   mockTestNavPrev.addEventListener("click", () => goToMockQuestion(-1));
@@ -14107,7 +13989,14 @@ if (mockTestSubmitBtn) {
   mockTestSubmitBtn.addEventListener("click", finishMockTest);
 }
 if (mockTestRetakeBtn) {
-  mockTestRetakeBtn.addEventListener("click", resetMockTestState);
+  mockTestRetakeBtn.addEventListener("click", () => {
+    resetMockTestState();
+    void loadMockCatalogue();
+    void loadMockHistory();
+  });
+}
+if (mockExternalAnalyseBtn) {
+  mockExternalAnalyseBtn.addEventListener("click", analyseExternalMock);
 }
 if (mockTestWeeklyPlanBtn) {
   mockTestWeeklyPlanBtn.addEventListener("click", () => setActiveTab("weeklyTab"));
@@ -14132,16 +14021,12 @@ document.addEventListener("keydown", (event) => {
     return;
   }
   if (event.key === "Escape") {
-    const activeTabElement = document.querySelector(".tab-panel.active");
-    const activeTab = activeTabElement ? activeTabElement.id : "";
-    if (activeTab === "tutorRoomTab") {
-      const hasTutorReply = (lastRepliesByMode.tutor || lastTutorReply || "").trim();
-      if (hasTutorReply || activeTutorNarration) {
-        event.preventDefault();
-        interruptTutorOutput("tutor");
-        stopSpeaking();
-        updateTutorRoomLivePanel();
-      }
+    const hasTutorReply = (lastRepliesByMode.tutor || lastTutorReply || "").trim();
+    if (hasTutorReply || activeTutorNarration) {
+      event.preventDefault();
+      interruptTutorOutput("tutor");
+      stopSpeaking();
+      updateTutorRoomLivePanel();
     }
   }
 });
