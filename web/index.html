@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Astra</title>
-  <link rel="stylesheet" href="/styles.css?v=20260408l">
+  <link rel="stylesheet" href="/styles.css?v=20260531-formulas1">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body data-theme="midnight" data-background="glow">
@@ -64,7 +64,7 @@
         <p class="muted">Create your account, then take a short walk with Astra. These questions help Astra understand your style, build trust, and shape the kind of mentor you actually want beside you.</p>
         <div class="auth-form-card onboarding-card">
           <p class="auth-form-title">Walk With Astra</p>
-          <p class="muted">Astra asks a few gentle questions first so it can learn your vibe, avoid assumptions, and build a mentor youâ€™ll actually want to open up to.</p>
+          <p class="muted">Astra asks a few gentle questions first so it can learn your vibe, avoid assumptions, and build a mentor you'll actually want to open up to.</p>
           <textarea id="signupWhyAstra" rows="2" placeholder="Why do you want Astra in your corner?"></textarea>
           <textarea id="signupInterests" rows="2" placeholder="What do you enjoy outside studies, like hobbies or topics you love?"></textarea>
           <textarea id="signupDislikes" rows="2" placeholder="What should Astra avoid or never do?"></textarea>
@@ -185,6 +185,7 @@
           <div class="nav-hub-buttons">
             <button class="tab-button" data-tab="tutorTab" data-tab-key="tutor" data-nav-group="learn" role="tab" aria-selected="false">Tutor</button>
             <button class="tab-button" data-tab="videoTutorTab" data-tab-key="videotutor" data-nav-group="learn" role="tab" aria-selected="false">Video Tutor</button>
+            <button class="tab-button" data-tab="formulasTab" data-tab-key="formulas" data-nav-group="learn" role="tab" aria-selected="false">Formulas</button>
             <button class="tab-button" data-tab="practiceTab" data-tab-key="practice" data-nav-group="learn" role="tab" aria-selected="false">Practice</button>
             <button class="tab-button" data-tab="tipsTab" data-tab-key="tips" data-nav-group="learn" role="tab" aria-selected="false">Tips</button>
             <button class="tab-button" data-tab="lastMinuteTab" data-tab-key="lastminute" data-nav-group="learn" role="tab" aria-selected="false">Last Minute</button>
@@ -193,10 +194,8 @@
         </div>
         <div class="nav-hub nav-hub-plan" data-section-group="plan" data-nav-group-container="plan">
           <p class="nav-hub-label">Plan</p>
-          <p class="nav-hub-cue">Check Progress, then open Weekly Plan for the next route.</p>
           <div class="nav-hub-buttons">
-            <button class="tab-button" data-tab="weeklyTab" data-tab-key="weekly" data-nav-group="plan" role="tab" aria-selected="false">Weekly Plan</button>
-            <button class="tab-button" data-tab="progressTab" data-tab-key="progress" data-nav-group="plan" role="tab" aria-selected="false">Progress</button>
+            <button class="tab-button" data-tab="weeklyTab" data-tab-key="weekly" data-nav-group="plan" role="tab" aria-selected="false">Plan</button>
           </div>
         </div>
         <div class="nav-hub nav-hub-connect" data-section-group="connect" data-nav-group-container="connect">
@@ -260,7 +259,7 @@
                 <input id="voiceChatMode" type="checkbox" class="hidden">
                 <button type="button" class="tutor-mode-pill tutor-mode-pill-inline active" data-tutor-mode="calm" title="Calm mode">Calm</button>
                 <div class="tutor-language-picker">
-                  <button id="tutorLanguageChip" type="button" class="tutor-language-chip" title="Change tutor language">ðŸŒ English</button>
+                  <button id="tutorLanguageChip" type="button" class="tutor-language-chip" title="Change tutor language">English</button>
                   <div id="tutorLanguageDropdown" class="tutor-language-dropdown hidden" aria-label="Tutor language selector"></div>
                 </div>
               </div>
@@ -287,7 +286,7 @@
             <div class="tutor-workspace">
               <div class="tutor-chat-column">
                 <div class="recent-chats-compact">
-                  <button id="recent-chats-toggle" type="button" onclick="toggleRecentChats()">Recent Chats â–¾</button>
+                  <button id="recent-chats-toggle" type="button" onclick="toggleRecentChats()">Recent Chats v</button>
                   <div id="recent-chats-dropdown" class="recent-chats-dropdown hidden">
                     <div class="chat-thread-actions recent-chats-actions">
                       <button id="newTutorChatBtn" type="button" class="ghost-button">New chat</button>
@@ -311,11 +310,11 @@
                 <form id="chatForm" class="composer">
                   <textarea id="messageInput" rows="3" placeholder="Ask your tutor for an academic explanation, strategy, or concept breakdown..."></textarea>
                 <div class="image-doubt-row compact">
-                  <label for="doubtImageInput" class="ghost-button icon-button" title="Attach image" aria-label="Attach image">ðŸ“Ž</label>
+                  <label for="doubtImageInput" class="ghost-button icon-button" title="Attach image" aria-label="Attach image">Attach</label>
                   <input id="doubtImageInput" type="file" accept="image/*" class="hidden-file-input">
                   <button id="analyzeImageBtn" type="button" class="ghost-button">Scan doubt image</button>
                   <button id="summarizeTutorBtn" type="button" class="ghost-button">Summarize answer</button>
-                  <button id="tutor-fullscreen-btn" type="button" class="ghost-button tutor-fullscreen-button" title="Expand to fullscreen" aria-label="Expand to fullscreen">â›¶ Fullscreen</button>
+                  <button id="tutor-fullscreen-btn" type="button" class="ghost-button tutor-fullscreen-button" title="Expand to fullscreen" aria-label="Expand to fullscreen">Fullscreen</button>
                   <button type="submit">Send</button>
                 </div>
                 <p id="imageUploadStatus" class="muted hidden"></p>
@@ -397,6 +396,7 @@
               </div>
             </form>
           </div>
+        </div>
         </div>
       </section>
 
@@ -610,7 +610,7 @@
             </div>
             <div class="vt-smart-search">
               <div class="vt-search-bar">
-                <span class="vt-search-icon">⟳</span>
+                <span class="vt-search-icon">Search</span>
                 <input
                   type="text"
                   id="video-topic-search"
@@ -669,8 +669,8 @@
                 <canvas id="avatar-canvas" width="400" height="500"></canvas>
                 <div class="avatar-name-badge" id="avatar-name-badge">Calm Mentor</div>
                 <div class="avatar-controls-bar">
-                  <button id="avatar-speak-btn" type="button" onclick="avatarSpeak()">▶ Speak Last Reply</button>
-                  <button id="avatar-stop-btn" type="button" onclick="avatarStop()">⏸ Stop</button>
+                  <button id="avatar-speak-btn" type="button" onclick="avatarSpeak()">Speak Last Reply</button>
+                  <button id="avatar-stop-btn" type="button" onclick="avatarStop()">Stop</button>
                   <span id="avatar-status-text">Ready</span>
                 </div>
               </div>
@@ -728,6 +728,69 @@
                   </div>
                 </div>
                 <div id="tutorVideoList" class="video-library-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="formulasTab" class="tab-panel" role="tabpanel">
+        <div class="formulas-layout">
+          <div class="table-card formulas-main-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Formula Vault</p>
+                <h2>JEE Formula Sheets</h2>
+              </div>
+              <span class="pill">Physics Chemistry Maths</span>
+            </div>
+
+            <div class="formulas-topbar">
+              <input id="formulasSearchInput" type="search" placeholder="Search any formula...">
+              <div class="formula-filter-row" role="group" aria-label="Formula subject filters">
+                <button type="button" class="ghost-button active" data-formula-subject="physics">Physics</button>
+                <button type="button" class="ghost-button active" data-formula-subject="chemistry">Chemistry</button>
+                <button type="button" class="ghost-button active" data-formula-subject="mathematics">Maths</button>
+              </div>
+              <label class="toggle-row formulas-weak-toggle">
+                <input id="formulasWeakToggle" type="checkbox">
+                <span>Weak Topics First</span>
+              </label>
+            </div>
+
+            <div id="formulasStatus" class="muted">Loading formulas...</div>
+
+            <div class="formulas-shell">
+              <aside class="formula-chapter-pane">
+                <div id="formulasChapterList" class="formula-chapter-list"></div>
+              </aside>
+              <div class="formula-detail-pane">
+                <div class="card-header">
+                  <div>
+                    <p id="formulasChapterSubject" class="eyebrow">Select Chapter</p>
+                    <h2 id="formulasChapterTitle">Formula sheet</h2>
+                  </div>
+                  <span id="formulasWeightageChip" class="pill">Weightage</span>
+                </div>
+
+                <div class="formula-section">
+                  <p class="card-title">Formulas</p>
+                  <div id="formulasFormulaList" class="formula-card-list"></div>
+                </div>
+
+                <div class="formula-section">
+                  <p class="card-title">Shortcuts</p>
+                  <div id="formulasShortcutList" class="formula-shortcut-list"></div>
+                </div>
+
+                <div class="formula-section">
+                  <p class="card-title">Common Mistakes</p>
+                  <ul id="formulasMistakeList" class="formula-mistake-list"></ul>
+                </div>
+
+                <div class="subtab-action-row">
+                  <button id="formulasDownloadBtn" type="button" class="ghost-button">Download as PDF</button>
+                </div>
               </div>
             </div>
           </div>
@@ -1370,19 +1433,19 @@
       </section>
 
       <section id="weeklyTab" class="tab-panel" role="tabpanel">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">JEE Plan Board</p>
-            <h2>This Week For JEE Main And Advanced</h2>
-          </div>
-          <button id="refreshWeeklyPlanBtnAlt" class="ghost-button">Refresh weekly plan</button>
+        <div class="home-subtab-bar" role="tablist" aria-label="Plan sections">
+          <button class="home-subtab-button active" data-plan-subtab="today" type="button">Today</button>
+          <button class="home-subtab-button" data-plan-subtab="thisweek" type="button">This Week</button>
+          <button class="home-subtab-button" data-plan-subtab="journey" type="button">Journey</button>
+          <button class="home-subtab-button" data-plan-subtab="strategy" type="button">Strategy</button>
+          <button class="home-subtab-button" data-plan-subtab="progress" type="button">Progress</button>
         </div>
 
+        <div class="home-subtab-panel active" data-plan-subtab-panel="today" style="display: block;">
         <div id="journey-setup-card" class="table-card journey-card hidden">
           <div class="card-header">
             <div>
               <p class="card-title">Your JEE Journey</p>
-              <p class="muted">Hi, I am going to build your complete JEE journey right now.</p>
             </div>
             <span class="pill">Setup</span>
           </div>
@@ -1390,7 +1453,6 @@
             <div class="studio-field">
               <label for="journey-exam-date">When is your JEE exam?</label>
               <input id="journey-exam-date" type="date">
-              <p class="muted">Select your JEE exam date</p>
             </div>
             <div class="studio-field">
               <label for="journeyHoursInput">How many hours can you study daily?</label>
@@ -1403,14 +1465,14 @@
             <button id="journeyExamDateSaveBtn" type="button" class="ghost-button">Save</button>
             <button id="beginJourneyBtn" type="button" class="ghost-button">Begin My Journey</button>
           </div>
-          <p id="journeySetupStatus" class="muted">We will map your syllabus, revision loop, and daily rhythm from here.</p>
+          <p id="journeySetupStatus" class="muted"></p>
         </div>
 
-        <div id="todays-focus-card" class="table-card journey-card hidden">
+        <div id="todays-focus-card" class="table-card journey-card">
           <div class="card-header">
             <div>
               <p class="card-title">Today's Focus</p>
-              <p id="todaysFocusSummary" class="muted">Your morning session will appear here once the journey is ready.</p>
+              <p id="todaysFocusSummary" class="muted"></p>
             </div>
             <span id="todaysSessionBadge" class="pill">Learning</span>
           </div>
@@ -1432,22 +1494,21 @@
           </div>
         </div>
 
-        <div id="session-timer" class="table-card journey-card hidden">
+        <div id="session-timer" class="table-card journey-card">
           <div class="card-header">
             <div>
               <p class="card-title">Session Timer</p>
-              <p class="muted">Stay on rhythm while Astra teaches, then checkpoint and continue.</p>
             </div>
             <span id="sessionTimerPill" class="pill">00:00</span>
           </div>
           <p id="sessionTimerText" class="muted">Session timer idle.</p>
         </div>
 
-        <div id="session-summary-card" class="table-card journey-card hidden">
+        <div id="session-summary-card" class="table-card journey-card">
           <div class="card-header">
             <div>
               <p class="card-title">Session Summary</p>
-              <p id="sessionSummaryText" class="muted">Your score, confidence update, and next revision will appear here.</p>
+              <p id="sessionSummaryText" class="muted"></p>
             </div>
             <span id="sessionSummaryBadge" class="pill">Complete</span>
           </div>
@@ -1457,62 +1518,17 @@
             <p id="sessionTomorrowText" class="muted">Tomorrow's topic: -</p>
           </div>
         </div>
-
-        <div id="journey-progress-sidebar" class="table-card journey-card hidden">
-          <div class="card-header">
-            <div>
-              <p class="card-title">Journey Progress</p>
-              <p class="muted">A compact view of covered topics, streak, and your next milestone.</p>
-            </div>
-            <span class="pill">Progress</span>
-          </div>
-          <p id="journeyCoveredText" class="memory-heading">Topics covered: 0/0</p>
-          <p id="journeyStreakText" class="muted">Current streak: 0 days</p>
-          <p id="journeyOverallText" class="muted">Overall journey: 0%</p>
-          <p id="journeyMilestoneText" class="muted">Next milestone: -</p>
         </div>
 
-        <div id="journey-mastery-card" class="table-card journey-card hidden">
-          <div class="card-header">
-            <div>
-              <p class="card-title">Mastery Map</p>
-              <p class="muted">A quick view of what is new, learning, revising, and already strong.</p>
-            </div>
-            <span class="pill">Mastery</span>
-          </div>
-          <p id="journeyMasterySummary" class="memory-heading">Mastery summary will appear here.</p>
-          <div id="journeyMasteryList" class="weekly-strategy-list">
-            <p class="muted">Your mastery map will appear here.</p>
-          </div>
-        </div>
-
-        <div class="table-card section-progress-card">
-          <div class="card-header">
-            <div>
-              <p class="card-title">Section Progress</p>
-              <p class="muted">As Physics, Chemistry, and Mathematics sections get completed, this board highlights strengths, weaknesses, and where you are still losing time.</p>
-            </div>
-            <span class="pill">Progress Lens</span>
-          </div>
-          <div id="sectionProgressList" class="section-progress-list">
-            <p class="muted">Your section summaries will appear here once your schedule starts moving.</p>
-          </div>
-        </div>
-
-        <div class="table-card weekly-strategy-card">
-          <div class="card-header">
-              <div>
-                <p class="card-title">Weekly Strategy</p>
-                <p class="muted">A clear JEE study logic board shaped by PCM strengths, with JEE Main as the first scoring target and JEE Advanced kept alive through smaller depth bridges.</p>
-              </div>
-            <span class="pill">Clear Plan</span>
-          </div>
-          <div id="weeklyStrategyList" class="weekly-strategy-list">
-            <p class="muted">Your weekly strategy notes will appear here.</p>
-          </div>
-        </div>
-
+        <div class="home-subtab-panel" data-plan-subtab-panel="thisweek" style="display: none;">
         <div class="table-card weekly-table-card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">JEE Plan Board</p>
+              <h2>This Week For JEE Main And Advanced</h2>
+            </div>
+            <button id="refreshWeeklyPlanBtnAlt" class="ghost-button">Refresh weekly plan</button>
+          </div>
           <table id="weeklyPlanTable" class="weekly-table">
             <thead>
               <tr>
@@ -1526,9 +1542,66 @@
             <tbody></tbody>
           </table>
         </div>
-      </section>
+        </div>
 
-      <section id="progressTab" class="tab-panel" role="tabpanel">
+        <div class="home-subtab-panel" data-plan-subtab-panel="journey" style="display: none;">
+        <div id="journey-progress-sidebar" class="table-card journey-card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Journey Progress</p>
+            </div>
+            <span class="pill">Progress</span>
+          </div>
+          <p id="journeyCoveredText" class="memory-heading">Topics covered: 0/0</p>
+          <p id="journeyStreakText" class="muted">Current streak: 0 days</p>
+          <p id="journeyOverallText" class="muted">Overall journey: 0%</p>
+          <p id="journeyMilestoneText" class="muted">Next milestone: -</p>
+        </div>
+
+        <div id="journey-mastery-card" class="table-card journey-card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Mastery Map</p>
+            </div>
+            <span class="pill">Mastery</span>
+          </div>
+          <p id="journeyMasterySummary" class="memory-heading">Mastery summary will appear here.</p>
+          <div id="journeyMasteryList" class="weekly-strategy-list"></div>
+        </div>
+
+        <div class="table-card section-progress-card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">Section Progress</p>
+            </div>
+            <span class="pill">Progress Lens</span>
+          </div>
+          <div id="sectionProgressList" class="section-progress-list"></div>
+        </div>
+        </div>
+
+        <div class="home-subtab-panel" data-plan-subtab-panel="strategy" style="display: none;">
+        <div class="table-card section-progress-card">
+          <div class="card-header">
+            <div>
+              <p class="card-title">JEE Main Subject Breakdown</p>
+            </div>
+            <span class="pill">PCM</span>
+          </div>
+          <div id="planSubjectBreakdownList" class="section-progress-list"></div>
+        </div>
+        <div class="table-card weekly-strategy-card">
+          <div class="card-header">
+              <div>
+                <p class="card-title">Weekly Strategy</p>
+              </div>
+            <span class="pill">Clear Plan</span>
+          </div>
+          <div id="weeklyStrategyList" class="weekly-strategy-list"></div>
+        </div>
+        </div>
+
+        <div class="home-subtab-panel" data-plan-subtab-panel="progress" style="display: none;">
         <div class="network-layout">
           <div class="table-card network-hero-card">
             <div class="card-header">
@@ -1538,9 +1611,7 @@
               </div>
               <button id="refreshProgressBtn" class="ghost-button" type="button">Refresh progress</button>
             </div>
-            <p id="progressReminderText" class="muted">
-              Track what is done, what still needs revision, and what is still pending so nothing silently slips through.
-            </p>
+            <p id="progressReminderText" class="muted"></p>
             <div id="progressStats" class="network-stat-grid">
               <div class="network-stat-card">
                 <strong id="progressDoneCount">0</strong>
@@ -1565,7 +1636,7 @@
             <div class="card-header">
               <div>
                 <p class="card-title">Week Over Week</p>
-                <p id="progressWeekSummary" class="muted">How your progress changed from the previous week will appear here.</p>
+                <p id="progressWeekSummary" class="muted"></p>
               </div>
               <span class="pill">Trend Lens</span>
             </div>
@@ -1590,7 +1661,7 @@
             <div class="progress-chart-card">
               <canvas id="progressWeeklyCanvas" width="1200" height="360" aria-label="Weekly progress comparison chart"></canvas>
             </div>
-            <p id="progressComparisonText" class="muted progress-comparison-text">Your week-over-week trend will be explained here.</p>
+            <p id="progressComparisonText" class="muted progress-comparison-text"></p>
           </div>
 
           <div id="analytics-insight-card" class="table-card progress-analytics-card">
@@ -1601,14 +1672,14 @@
               </div>
               <span class="pill">Insight</span>
             </div>
-            <p class="progress-insight-text muted">A personalized insight will appear here.</p>
+            <p class="progress-insight-text muted"></p>
           </div>
 
           <div id="performance-chart" class="table-card progress-analytics-card">
             <div class="card-header">
               <div>
                 <p class="card-title">Performance Chart</p>
-                <p id="performanceChartSummary" class="muted">Your last 7 days of average scores will appear here.</p>
+                <p id="performanceChartSummary" class="muted"></p>
               </div>
               <span class="pill">7 Days</span>
             </div>
@@ -1619,7 +1690,6 @@
             <div class="card-header">
               <div>
                 <p class="card-title">Subject Breakdown</p>
-                <p class="muted">Physics, Chemistry, and Mathematics mastery at a glance.</p>
               </div>
               <span class="pill">Subjects</span>
             </div>
@@ -1630,7 +1700,7 @@
             <div class="card-header">
               <div>
                 <p class="card-title">Consistency Tracker</p>
-                <p id="consistencyTrackerSummary" class="muted">Your study streak across the last 7 days.</p>
+                <p id="consistencyTrackerSummary" class="muted"></p>
               </div>
               <span class="pill">Streak</span>
             </div>
@@ -1652,12 +1722,11 @@
             <div class="card-header">
               <div>
                 <p class="card-title">Chapter Mastery Board</p>
-                <p id="chapterMasterySummary" class="muted">Your chapters will be color-coded by mastery level here.</p>
+                <p id="chapterMasterySummary" class="muted"></p>
               </div>
               <span class="pill">Chapter Map</span>
             </div>
             <div id="chapterMasteryGrid" class="chapter-mastery-grid">
-              <p class="muted">No chapter mastery data yet.</p>
             </div>
           </div>
 
@@ -1669,12 +1738,11 @@
             <div class="card-header">
               <div>
                 <p class="card-title">Performance Analytics</p>
-                <p id="chapterAnalyticsSummary" class="muted">Subject averages, trends, and strongest chapters will appear here.</p>
+                <p id="chapterAnalyticsSummary" class="muted"></p>
               </div>
-              <span class="pill">Analytics</span>
+              <button id="analyticsDashboardBtn" type="button" class="ghost-button">Analytics</button>
             </div>
             <div id="chapterAnalyticsList" class="weekly-strategy-list">
-              <p class="muted">Analytics data will appear here.</p>
             </div>
           </div>
 
@@ -1682,12 +1750,11 @@
             <div class="card-header">
               <div>
                 <p class="card-title">Revision Tracker</p>
-                <p id="chapterRevisionSummary" class="muted">Chapters due today and the next 7 days will appear here.</p>
+                <p id="chapterRevisionSummary" class="muted"></p>
               </div>
               <span class="pill">Revision</span>
             </div>
             <div id="chapterRevisionList" class="weekly-strategy-list">
-              <p class="muted">Revision schedule will appear here.</p>
             </div>
           </div>
 
@@ -1695,7 +1762,7 @@
             <div class="card-header">
               <div>
                 <p class="card-title">Chapter Detail</p>
-                <p id="chapterDetailSummary" class="muted">Select a chapter to inspect its scores and revision needs.</p>
+                <p id="chapterDetailSummary" class="muted"></p>
               </div>
               <div class="card-header-actions">
                 <span class="pill">Detail</span>
@@ -1703,34 +1770,9 @@
               </div>
             </div>
             <div id="chapterDetailList" class="weekly-strategy-list">
-              <p class="muted">Chapter detail will appear here.</p>
             </div>
             <div class="mini-action-row">
               <button id="startChapterSessionBtn" type="button">Start Chapter Session</button>
-            </div>
-          </div>
-
-          <div class="table-card practice-main-card">
-            <div class="card-header">
-              <div>
-                <p class="card-title">Add Or Update A Topic</p>
-                <p class="muted">Mark chapters, topics, or units as done, pending, or needing revision.</p>
-              </div>
-              <span class="pill">Quick Update</span>
-            </div>
-            <div class="practice-review-grid progress-form-grid">
-              <input id="progressExamInput" type="text" placeholder="Exam, for example JEE Main or JEE Advanced">
-              <input id="progressSubjectInput" type="text" placeholder="Subject, for example Thermodynamics">
-              <input id="progressTopicInput" type="text" placeholder="Topic or chapter name">
-              <select id="progressStatusSelect">
-                <option value="pending">Red: Pending</option>
-                <option value="revise">Brown: Needs revision</option>
-                <option value="done">Green: Done</option>
-              </select>
-            </div>
-            <div class="inline-form review-notes-row">
-              <input id="progressNoteInput" type="text" placeholder="Optional note, like revise formulas once more or numericals still weak">
-              <button id="saveProgressItemBtn" type="button" class="ghost-button">Save progress item</button>
             </div>
           </div>
 
@@ -1739,12 +1781,10 @@
               <div class="card-header">
                 <div>
                   <p class="card-title">Green Check</p>
-                  <p class="muted">Completed and reasonably confident.</p>
                 </div>
                 <span class="pill progress-pill done-pill">Done</span>
               </div>
               <div id="progressDoneList" class="network-list">
-                <p class="muted">Done topics will appear here.</p>
               </div>
             </div>
 
@@ -1752,12 +1792,10 @@
               <div class="card-header">
                 <div>
                   <p class="card-title">Brown Mark</p>
-                  <p class="muted">Covered once but still needs another pass.</p>
                 </div>
                 <span class="pill progress-pill revise-pill">Revise</span>
               </div>
               <div id="progressReviseList" class="network-list">
-                <p class="muted">Revision-needed topics will appear here.</p>
               </div>
             </div>
 
@@ -1765,15 +1803,14 @@
               <div class="card-header">
                 <div>
                   <p class="card-title">Red Mark</p>
-                  <p class="muted">Still pending and worth checking soon.</p>
                 </div>
                 <span class="pill progress-pill pending-pill">Pending</span>
               </div>
               <div id="progressPendingList" class="network-list">
-                <p class="muted">Pending topics will appear here.</p>
               </div>
             </div>
           </div>
+        </div>
         </div>
       </section>
 
@@ -1783,7 +1820,7 @@
             <div class="card-header">
               <div>
                 <p class="card-title">Walk With Astra</p>
-                <p class="muted">Run the same friendly interview again any time you want to refresh Astraâ€™s understanding of you.</p>
+                <p class="muted">Run the same friendly interview again any time you want to refresh Astra's understanding of you.</p>
               </div>
               <span class="pill">Bond First</span>
             </div>
@@ -1938,7 +1975,7 @@
                       <span class="english-name">English (Default)</span>
                     </button>
                     <button type="button" class="language-card" data-language="hindi" data-language-ui="Hindi">
-                      <span class="native-name">à¤¹à¤¿à¤‚à¤¦à¥€</span>
+                      <span class="native-name">Hindi</span>
                       <span class="english-name">Hindi</span>
                     </button>
                     <button type="button" class="language-card" data-language="hinglish" data-language-ui="Hinglish">
@@ -1946,27 +1983,27 @@
                       <span class="english-name">Hindi + English</span>
                     </button>
                     <button type="button" class="language-card" data-language="telugu" data-language-ui="Telugu">
-                      <span class="native-name">à°¤à±†à°²à±à°—à±</span>
+                      <span class="native-name">Telugu</span>
                       <span class="english-name">Telugu</span>
                     </button>
                     <button type="button" class="language-card" data-language="tamil" data-language-ui="Tamil">
-                      <span class="native-name">à®¤à®®à®¿à®´à¯</span>
+                      <span class="native-name">Tamil</span>
                       <span class="english-name">Tamil</span>
                     </button>
                     <button type="button" class="language-card" data-language="kannada" data-language-ui="Kannada">
-                      <span class="native-name">à²•à²¨à³à²¨à²¡</span>
+                      <span class="native-name">Kannada</span>
                       <span class="english-name">Kannada</span>
                     </button>
                     <button type="button" class="language-card" data-language="marathi" data-language-ui="Marathi">
-                      <span class="native-name">à¤®à¤°à¤¾à¤ à¥€</span>
+                      <span class="native-name">Marathi</span>
                       <span class="english-name">Marathi</span>
                     </button>
                     <button type="button" class="language-card" data-language="bengali" data-language-ui="Bengali">
-                      <span class="native-name">à¦¬à¦¾à¦‚à¦²à¦¾</span>
+                      <span class="native-name">Bengali</span>
                       <span class="english-name">Bengali</span>
                     </button>
                     <button type="button" class="language-card" data-language="gujarati" data-language-ui="Gujarati">
-                      <span class="native-name">àª—à«àªœàª°àª¾àª¤à«€</span>
+                      <span class="native-name">Gujarati</span>
                       <span class="english-name">Gujarati</span>
                     </button>
                   </div>
@@ -2117,7 +2154,7 @@
   <script src="/avatar_renderer.js?v=20260518"></script>
   <script src="/app-config.js?v=20260426"></script>
   <script src="/api-client.js?v=20260426"></script>
-  <script src="/app.js?v=20260408l"></script>
+  <script src="/app.js?v=20260531-formulas1"></script>
   <script src="/three_visualizer.js?v=20260408l"></script>
 </body>
 </html>

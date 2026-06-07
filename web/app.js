@@ -150,6 +150,7 @@ const weeklyFocusSplit = document.getElementById("weeklyFocusSplit");
 const weeklyPlanTableBody = document.querySelector("#weeklyPlanTable tbody");
 const weeklyPreviewCards = document.getElementById("weeklyPreviewCards");
 const sectionProgressList = document.getElementById("sectionProgressList");
+const planSubjectBreakdownList = document.getElementById("planSubjectBreakdownList");
 const weeklyStrategyList = document.getElementById("weeklyStrategyList");
 const memorySummary = document.getElementById("memorySummary");
 const studentInsightSummary = document.getElementById("studentInsightSummary");
@@ -410,12 +411,25 @@ const chapterMasteryGrid = document.getElementById("chapterMasteryGrid");
 const chapterAnalyticsCard = document.getElementById("chapter-analytics-card");
 const chapterAnalyticsSummary = document.getElementById("chapterAnalyticsSummary");
 const chapterAnalyticsList = document.getElementById("chapterAnalyticsList");
+const analyticsDashboardBtn = document.getElementById("analyticsDashboardBtn");
 const chapterRevisionCard = document.getElementById("chapter-revision-card");
 const chapterRevisionSummary = document.getElementById("chapterRevisionSummary");
 const chapterRevisionList = document.getElementById("chapterRevisionList");
 const chapterDetailCard = document.getElementById("chapter-detail-card");
 const chapterDetailSummary = document.getElementById("chapterDetailSummary");
 const chapterDetailList = document.getElementById("chapterDetailList");
+const formulasSearchInput = document.getElementById("formulasSearchInput");
+const formulaSubjectButtons = Array.from(document.querySelectorAll("[data-formula-subject]"));
+const formulasWeakToggle = document.getElementById("formulasWeakToggle");
+const formulasChapterList = document.getElementById("formulasChapterList");
+const formulasStatus = document.getElementById("formulasStatus");
+const formulasChapterSubject = document.getElementById("formulasChapterSubject");
+const formulasChapterTitle = document.getElementById("formulasChapterTitle");
+const formulasWeightageChip = document.getElementById("formulasWeightageChip");
+const formulasFormulaList = document.getElementById("formulasFormulaList");
+const formulasShortcutList = document.getElementById("formulasShortcutList");
+const formulasMistakeList = document.getElementById("formulasMistakeList");
+const formulasDownloadBtn = document.getElementById("formulasDownloadBtn");
 const startChapterSessionBtn = document.getElementById("startChapterSessionBtn");
 const progressWeeklyCanvas = document.getElementById("progressWeeklyCanvas");
 const progressExamInput = document.getElementById("progressExamInput");
@@ -560,8 +574,8 @@ let walkthroughParticleFrame = null;
 let walkthroughParticleNodes = [];
 let walkthroughTransitionTimer = null;
 const DEFAULT_TAB_ORDER = Array.isArray(APP_CONFIG.default_tab_order) && APP_CONFIG.default_tab_order.length
-  ? APP_CONFIG.default_tab_order.filter((key) => key !== LEGACY_TUTOR_ROOM_KEY)
-  : ["overview", "tutor", "videotutor", "practice", "tips", "lastminute", "mocktest", "weekly", "progress", "lounge", "network", "league", "personalize", "guide", "assist"];
+  ? APP_CONFIG.default_tab_order.filter((key) => key !== LEGACY_TUTOR_ROOM_KEY && key !== "progress")
+  : ["overview", "tutor", "videotutor", "formulas", "practice", "tips", "lastminute", "mocktest", "weekly", "lounge", "network", "league", "personalize", "guide", "assist"];
 let currentTabOrder = [...DEFAULT_TAB_ORDER];
 let isSending = false;
 let loungeTimerInterval = null;
@@ -591,6 +605,12 @@ let chapterMasterySnapshot = null;
 let chapterAnalyticsSnapshot = null;
 let chapterRevisionSnapshot = null;
 let selectedChapterSnapshot = null;
+let formulasDatabase = null;
+let formulaChapters = [];
+let selectedFormulaChapterKey = "";
+let activeFormulaSubjects = new Set(["physics", "chemistry", "mathematics"]);
+let formulaWeakTopicTerms = new Set();
+let formulaWeakLoadedFor = "";
 let activeChapterSession = null;
 let activeChapterSubtopic = null;
 let activeChapterTest = null;
@@ -791,12 +811,12 @@ const TAB_CONFIG = {
   overview: { buttonTab: "overviewTab", label: "Overview" },
   tutor: { buttonTab: "tutorTab", label: "Tutor" },
   videotutor: { buttonTab: "videoTutorTab", label: "Video Tutor" },
+  formulas: { buttonTab: "formulasTab", label: "Formulas" },
   practice: { buttonTab: "practiceTab", label: "Practice" },
   mocktest: { buttonTab: "mockTestTab", label: "Mock Test" },
   lastminute: { buttonTab: "lastMinuteTab", label: "Last Minute" },
   tips: { buttonTab: "tipsTab", label: "Tips" },
-  weekly: { buttonTab: "weeklyTab", label: "Weekly Plan" },
-  progress: { buttonTab: "progressTab", label: "Progress" },
+  weekly: { buttonTab: "weeklyTab", label: "Plan" },
   lounge: { buttonTab: "loungeTab", label: "Lounge" },
   network: { buttonTab: "networkTab", label: "Network" },
   league: { buttonTab: "leagueTab", label: "League" },
@@ -818,8 +838,12 @@ let motivationStories = [];
 let activeMotivationStoryIndex = 0;
 let motivationStoryOpen = false;
 let activeHomeSubtab = "overview";
+let activePlanSubtab = "today";
+let pendingPlanSubtab = "";
 let homeSubtabButtons = [];
 let homeSubtabPanels = [];
+let planSubtabButtons = [];
+let planSubtabPanels = [];
 let sectionNavButtons = [];
 let activeSectionGroup = "home";
 let astraStatusTimer = null;
@@ -834,7 +858,7 @@ let dailyBriefingLoadedDate = "";
 let dailyBriefingDismissedDate = "";
 let toastTimer = null;
 if (sessionActivityToggleBtn && sessionActivityPanel && sessionActivityPanel.classList.contains("hidden")) {
-  sessionActivityToggleBtn.textContent = "Session log â–¸";
+  sessionActivityToggleBtn.textContent = "Session log >";
 }
 
 function refreshTabCollections() {
@@ -843,6 +867,8 @@ function refreshTabCollections() {
   sectionNavButtons = Array.from(document.querySelectorAll(".section-nav-button"));
   homeSubtabButtons = Array.from(document.querySelectorAll("[data-home-subtab]"));
   homeSubtabPanels = Array.from(document.querySelectorAll("[data-home-subtab-panel]"));
+  planSubtabButtons = Array.from(document.querySelectorAll("[data-plan-subtab]"));
+  planSubtabPanels = Array.from(document.querySelectorAll("[data-plan-subtab-panel]"));
   videoSubjectTabButtons = Array.from(document.querySelectorAll("[data-video-subject-tab]"));
   homeSubtabButtons.forEach((button) => {
     if (button.dataset.homeSubtabBound === "1") {
@@ -854,6 +880,20 @@ function refreshTabCollections() {
         setActiveTab("overviewTab");
       }
       setHomeSubtab(button.dataset.homeSubtab);
+    });
+  });
+  planSubtabButtons.forEach((button) => {
+    if (button.dataset.planSubtabBound === "1") {
+      return;
+    }
+    button.dataset.planSubtabBound = "1";
+    button.addEventListener("click", () => {
+      if (document.querySelector("#weeklyTab") && !document.querySelector("#weeklyTab").classList.contains("active")) {
+        pendingPlanSubtab = button.dataset.planSubtab || "today";
+        setActiveTab("weeklyTab");
+        return;
+      }
+      setPlanSubtab(button.dataset.planSubtab);
     });
   });
   videoSubjectTabButtons.forEach((button) => {
@@ -874,6 +914,38 @@ function refreshTabCollections() {
       setActiveSectionGroup(button.dataset.sectionGroup);
     });
   });
+}
+
+function keepTabPanelNearTop(tabId) {
+  const panel = document.getElementById(tabId);
+  const statusBar = document.getElementById("astra-status-bar");
+  if (!panel || !statusBar || !statusBar.parentElement) {
+    return;
+  }
+  if (statusBar.nextElementSibling !== panel) {
+    statusBar.insertAdjacentElement("afterend", panel);
+  }
+}
+
+function keepPlanPanelNearTop() {
+  keepTabPanelNearTop("weeklyTab");
+}
+
+function scrollActivePanelToTop(tabId) {
+  const panel = document.getElementById(tabId);
+  if (!panel || !panel.classList.contains("active")) {
+    return;
+  }
+  window.setTimeout(() => {
+    const target = document.getElementById("tabBar") || panel;
+    if (target && typeof target.scrollIntoView === "function") {
+      target.scrollIntoView({ block: "start" });
+    }
+  }, 0);
+}
+
+function scrollPlanPanelToTop() {
+  scrollActivePanelToTop("weeklyTab");
 }
 
 function setActiveSectionGroup(section = "home", { skipTabSwitch = false } = {}) {
@@ -935,6 +1007,58 @@ function setHomeSubtab(subtab = "overview") {
     updateOverviewSnapshotStripFromWeeklyPlan(null);
   }
   updateOverviewCommandCenter();
+  scrollActivePanelToTop("overviewTab");
+}
+
+function setPlanSubtab(subtab = "today") {
+  keepPlanPanelNearTop();
+  const nextSubtab = ["today", "thisweek", "journey", "strategy", "progress"].includes(String(subtab || "").trim())
+    ? String(subtab || "").trim()
+    : "today";
+  activePlanSubtab = nextSubtab;
+  planSubtabButtons.forEach((button) => {
+    const isActive = button.dataset.planSubtab === activePlanSubtab;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
+  });
+  planSubtabPanels.forEach((panel) => {
+    const isActive = panel.dataset.planSubtabPanel === activePlanSubtab;
+    panel.classList.toggle("active", isActive);
+    panel.classList.remove("hidden");
+    panel.style.display = isActive ? "block" : "none";
+    panel.setAttribute("aria-hidden", String(!isActive));
+  });
+  if (!activeProfile) {
+    scrollPlanPanelToTop();
+    return;
+  }
+  if (activePlanSubtab === "progress") {
+    window.setTimeout(() => {
+      fetchProgress(activeProfile.name);
+    }, 0);
+  } else if (activePlanSubtab === "thisweek") {
+    window.setTimeout(() => {
+      refreshWeeklyPlan();
+    }, 0);
+  } else if (activePlanSubtab === "journey") {
+    window.setTimeout(() => {
+      refreshJourneyDashboard();
+      refreshActiveChapterSession();
+      fetchProgress(activeProfile.name);
+    }, 0);
+  } else if (activePlanSubtab === "strategy") {
+    window.setTimeout(() => {
+      refreshWeeklyPlan();
+      refreshJourneyDashboard();
+      refreshActiveChapterSession();
+    }, 0);
+  }
+  scrollPlanPanelToTop();
+}
+
+function openPlanSubtab(subtab = "today") {
+  pendingPlanSubtab = subtab;
+  setActiveTab("weeklyTab");
 }
 
 function setAstraStatus(message, type = "idle", autoClear = false) {
@@ -1131,7 +1255,7 @@ function updateOverviewCommandCenter() {
   if (astraStatusBar) {
     setAstraStatus(
       focus.topic
-        ? `Astra is ready. Today's focus: ${focus.topic} â€” ${focus.subject || "study"}`
+        ? `Astra is ready. Today's focus: ${focus.topic} - ${focus.subject || "study"}`
         : "Astra is ready. Today's focus: -",
       "idle"
     );
@@ -1348,7 +1472,7 @@ function toggleSidePanel() {
   tutorTabLayout.classList.toggle("panel-collapsed", tutorSidePanelCollapsed);
   const btn = document.getElementById("panelToggleBtn");
   if (btn) {
-    btn.textContent = tutorSidePanelCollapsed ? "âŸ©" : "âŸ¨";
+    btn.textContent = tutorSidePanelCollapsed ? "<" : ">";
     btn.title = tutorSidePanelCollapsed ? "Open side panel" : "Collapse side panel";
   }
 }
@@ -1359,7 +1483,7 @@ function updateTutorInputTopicChip() {
     return;
   }
   const focus = getActiveTutorFocus();
-  const text = focus.topic ? `${focus.topic} â€¢ ${focus.subject || "topic"}` : "No topic selected";
+  const text = focus.topic ? `${focus.topic} - ${focus.subject || "topic"}` : "No topic selected";
   chip.textContent = text;
 }
 
@@ -1437,11 +1561,11 @@ function buildTutorControlStrip() {
       </select>
     </div>
     <div class="tutor-strip-group tutor-strip-right">
-      <button id="tutorSpeakLastCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Speak last reply">ðŸ”Š</button>
-      <button id="tutorPauseCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Pause">â¸</button>
-      <button id="tutorResumeCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Resume">â–¶</button>
-      <button id="tutorStopCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Stop and checkpoint">â¹</button>
-      <button id="tutorFullscreenCompactBtn" type="button" class="ghost-button compact-strip-btn tutor-fullscreen-button" title="Expand to fullscreen">â›¶</button>
+      <button id="tutorSpeakLastCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Speak last reply">Speak</button>
+      <button id="tutorPauseCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Pause">Pause</button>
+      <button id="tutorResumeCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Resume">Resume</button>
+      <button id="tutorStopCompactBtn" type="button" class="ghost-button compact-strip-btn" title="Stop and checkpoint">Stop</button>
+      <button id="tutorFullscreenCompactBtn" type="button" class="ghost-button compact-strip-btn tutor-fullscreen-button" title="Expand to fullscreen">Fullscreen</button>
     </div>
   `;
 
@@ -1453,7 +1577,7 @@ function buildTutorControlStrip() {
   sidePanel.className = "tutor-side-panel";
   sidePanel.id = "tutorSidePanel";
   sidePanel.innerHTML = `
-    <button id="panelToggleBtn" type="button" class="panel-toggle-btn" title="Collapse side panel">âŸ©</button>
+    <button id="panelToggleBtn" type="button" class="panel-toggle-btn" title="Collapse side panel"><</button>
     <div class="tutor-side-panel-tabs">
       <button type="button" class="active" data-tutor-side-tab="session" aria-selected="true">Session</button>
       <button type="button" data-tutor-side-tab="voice" aria-selected="false">Voice</button>
@@ -1923,6 +2047,55 @@ function renderAnalyticsDashboard(payload) {
   if (progressInsightCard && analyticsInsightCard) {
     progressInsightCard.classList.add("hidden");
   }
+  if (chapterAnalyticsList) {
+    chapterAnalyticsList.innerHTML = "";
+    const addAnalyticsRow = (titleText, metaText) => {
+      const row = document.createElement("div");
+      row.className = "weekly-strategy-item";
+      const title = document.createElement("strong");
+      title.textContent = titleText;
+      const meta = document.createElement("p");
+      meta.className = "muted";
+      meta.textContent = metaText;
+      row.append(title, meta);
+      chapterAnalyticsList.appendChild(row);
+    };
+    const dailyScores = Array.isArray(trends.daily_scores) ? trends.daily_scores : [];
+    addAnalyticsRow(
+      "Performance trend",
+      dailyScores.length
+        ? `Weekly improvement ${Number(trends.weekly_improvement || 0).toFixed(1)}%, best day ${trends.best_day || "n/a"}.`
+        : "Complete your first session to see analytics here."
+    );
+    addAnalyticsRow(
+      "Consistency",
+      `Current streak ${Number(consistency.current_streak || 0)} day(s), consistency ${Number(consistency.consistency_percent || 0).toFixed(0)}%.`
+    );
+    const formatTopicList = (items) => (Array.isArray(items) ? items : [])
+      .slice(0, 5)
+      .map((item) => {
+        if (typeof item === "string") {
+          return item;
+        }
+        const topic = item && (item.topic || item.unit_name || item.chapter_name);
+        const score = item && (item.best_score ?? item.score ?? item.chapter_test_score);
+        return topic ? `${topic}${score !== undefined && score !== null ? ` (${Number(score).toFixed(0)}%)` : ""}` : "";
+      })
+      .filter(Boolean);
+    const weakTopics = formatTopicList(weakStrong.weak_topics);
+    const strongTopics = formatTopicList(weakStrong.strong_topics);
+    addAnalyticsRow(
+      "Weak topics",
+      weakTopics.length ? weakTopics.join(", ") : "No weak-topic signal yet."
+    );
+    addAnalyticsRow(
+      "Strong topics",
+      strongTopics.length ? strongTopics.join(", ") : "No strong-topic signal yet."
+    );
+  }
+  if (chapterAnalyticsSummary) {
+    chapterAnalyticsSummary.textContent = insightText || "Analytics dashboard loaded.";
+  }
 }
 
 function setTutorMode(mode = "calm") {
@@ -2155,7 +2328,7 @@ function _setTutorFullscreenButtonState(isFullscreen) {
   if (!tutorFullscreenBtn) {
     return;
   }
-  tutorFullscreenBtn.textContent = isFullscreen ? "â¤¢" : "â›¶";
+  tutorFullscreenBtn.textContent = isFullscreen ? "Exit fullscreen" : "Fullscreen";
   tutorFullscreenBtn.title = isFullscreen ? "Exit fullscreen" : "Expand to fullscreen";
   tutorFullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Expand to fullscreen");
 }
@@ -2182,7 +2355,7 @@ function _setTutorFullscreenButtonState(isFullscreen) {
   if (!tutorFullscreenBtn) {
     return;
   }
-  tutorFullscreenBtn.textContent = isFullscreen ? "âœ• Exit" : "â›¶ Fullscreen";
+  tutorFullscreenBtn.textContent = isFullscreen ? "Exit fullscreen" : "Fullscreen";
   tutorFullscreenBtn.title = isFullscreen ? "Exit fullscreen" : "Expand to fullscreen";
   tutorFullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Expand to fullscreen");
 }
@@ -2233,7 +2406,7 @@ function toggleTutorFullscreen() {
   const exitButton = document.createElement("button");
   exitButton.type = "button";
   exitButton.className = "tutor-fullscreen-exit-btn ghost-button";
-  exitButton.textContent = "âœ• Exit";
+  exitButton.textContent = "Exit fullscreen";
   exitButton.addEventListener("click", exitTutorFullscreen);
 
   const messages = document.createElement("div");
@@ -2293,7 +2466,7 @@ function _setTutorFullscreenButtonState(isFullscreen) {
   if (!tutorFullscreenBtn) {
     return;
   }
-  tutorFullscreenBtn.textContent = isFullscreen ? "âœ• Exit Fullscreen" : "â›¶ Fullscreen";
+  tutorFullscreenBtn.textContent = isFullscreen ? "Exit fullscreen" : "Fullscreen";
   tutorFullscreenBtn.title = isFullscreen ? "Exit fullscreen" : "Expand to fullscreen";
   tutorFullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Expand to fullscreen");
 }
@@ -2395,7 +2568,7 @@ function openTutorFullscreen() {
   topbar.className = "tutor-fullscreen-topbar";
   topbar.innerHTML = `
     <span class="fs-title">Astra Tutor</span>
-    <button class="tutor-fullscreen-exit-btn" onclick="closeTutorFullscreen()">âœ• Exit Fullscreen</button>
+    <button class="tutor-fullscreen-exit-btn" onclick="closeTutorFullscreen()">Exit fullscreen</button>
   `;
 
   const messagesArea = document.createElement("div");
@@ -2842,7 +3015,7 @@ function updateTutorRoomLivePanel() {
   }
   if (tutorRoomPaceState) {
     const paceLabel = pacingMode === "slow" ? "Pacing slow" : pacingMode === "gentle" ? "Pacing gentle" : "Pacing standard";
-    tutorRoomPaceState.textContent = chunkedOn ? `${paceLabel} â€¢ chunked` : paceLabel;
+    tutorRoomPaceState.textContent = chunkedOn ? `${paceLabel} - chunked` : paceLabel;
   }
   if (tutorRoomLevelState) {
     tutorRoomLevelState.textContent = `Level ${tutorLevel}`;
@@ -3184,7 +3357,7 @@ function renderVideoTutorCurrentTopic(topic, subject) {
   const cleanTopic = String(topic || "").trim();
   const displaySubject = String(subject || "").trim();
   if (vtTopicName) {
-    vtTopicName.textContent = cleanTopic || "â€”";
+    vtTopicName.textContent = cleanTopic || "-";
   }
   if (vtTopicSubject) {
     vtTopicSubject.textContent = displaySubject ? displaySubject : "";
@@ -3415,6 +3588,7 @@ function switchVideoSubjectTab(subject = "physics") {
     button.setAttribute("aria-selected", String(isActive));
   });
   renderVideoTutorSubjectItems(activeVideoSearchQuery);
+  scrollActivePanelToTop("videoTutorTab");
 }
 
 function _videoSearchNormalize(value) {
@@ -4034,7 +4208,7 @@ async function generateVideoAnswerBrief() {
       generateVideoAnswerBtn.disabled = false;
       generateVideoAnswerBtn.textContent = "Generate";
     }
-    setAstraStatus(`Astra is ready. Today's focus: ${briefTopic} â€” ${briefSubject}`, "success", true);
+    setAstraStatus(`Astra is ready. Today's focus: ${briefTopic} - ${briefSubject}`, "success", true);
     updateTutorRoomLivePanel();
   }
 }
@@ -4478,7 +4652,7 @@ function renderStudentInsightsLegacy(payload) {
     (snapshot.coaching_actions || []).slice(0, 4).forEach((item) => {
       const line = document.createElement("p");
       line.className = "muted";
-      line.textContent = `â€¢ ${item}`;
+      line.textContent = `- ${item}`;
       actionCard.appendChild(line);
     });
 
@@ -4644,7 +4818,7 @@ function renderStudentInsights(payload) {
     (snapshot.coaching_actions || []).slice(0, 3).forEach((item) => {
       const line = document.createElement("p");
       line.className = "muted";
-      line.textContent = `â€¢ ${item}`;
+      line.textContent = `- ${item}`;
       actionCard.appendChild(line);
     });
 
@@ -4940,8 +5114,8 @@ function renderExamManager(exams) {
 
     const meta = document.createElement("p");
     meta.className = "muted";
-    const portionText = exam.portion ? ` â€¢ Portion: ${exam.portion}` : "";
-    meta.textContent = `${exam.exam_date} â€¢ ${((exam.subjects || []).join(", ")) || "Subjects pending"}${portionText}`;
+    const portionText = exam.portion ? ` - Portion: ${exam.portion}` : "";
+    meta.textContent = `${exam.exam_date} - ${((exam.subjects || []).join(", ")) || "Subjects pending"}${portionText}`;
 
     details.appendChild(title);
     details.appendChild(meta);
@@ -5073,7 +5247,7 @@ function renderTipsResources(resources) {
 
     const meta = document.createElement("p");
     meta.className = "muted";
-    meta.textContent = `${resource.source} â€¢ ${resource.tip}`;
+    meta.textContent = `${resource.source} - ${resource.tip}`;
 
     card.appendChild(title);
     card.appendChild(meta);
@@ -5829,7 +6003,7 @@ function buildGroupStudyMemberCard(item) {
   if (item.compatibility_band && item.role !== "You") {
     const band = document.createElement("span");
     band.className = "memory-chip";
-    band.textContent = `${item.compatibility_band}${item.compatibility_score ? ` â€¢ ${item.compatibility_score}/100` : ""}`;
+    band.textContent = `${item.compatibility_band}${item.compatibility_score ? ` - ${item.compatibility_score}/100` : ""}`;
     card.appendChild(band);
   }
 
@@ -5978,7 +6152,7 @@ function createProgressItemCard(item) {
   const meta = document.createElement("p");
   meta.className = "progress-meta";
   const examBits = [item.exam, item.subject].filter(Boolean);
-  meta.textContent = examBits.length ? examBits.join(" â€¢ ") : "General progress item";
+  meta.textContent = examBits.length ? examBits.join(" - ") : "General progress item";
 
   copy.appendChild(topic);
   copy.appendChild(meta);
@@ -6030,6 +6204,82 @@ function renderProgressColumn(target, items, emptyText) {
     return;
   }
   items.forEach((item) => target.appendChild(createProgressItemCard(item)));
+}
+
+function createChapterStatusCard(chapter) {
+  const card = document.createElement("div");
+  card.className = "progress-item-card";
+
+  const top = document.createElement("div");
+  top.className = "progress-item-top";
+
+  const copy = document.createElement("div");
+  const title = document.createElement("p");
+  title.className = "progress-topic";
+  title.textContent = chapter.chapter_name || chapter.unit_name || "Untitled chapter";
+
+  const meta = document.createElement("p");
+  meta.className = "progress-meta";
+  meta.textContent = chapter.subject || "General";
+
+  copy.append(title, meta);
+
+  const score = chapter.chapter_test_score;
+  const scorePill = document.createElement("span");
+  scorePill.className = "pill";
+  scorePill.textContent = score !== null && score !== undefined ? `${Math.round(Number(score) || 0)}%` : "No score";
+
+  top.append(copy, scorePill);
+  card.appendChild(top);
+
+  const lastStudied = chapter.last_studied || chapter.completed_date || chapter.updated_at || "";
+  const details = document.createElement("p");
+  details.className = "muted";
+  details.textContent = `Last studied: ${lastStudied ? String(lastStudied).slice(0, 10) : "-"}`;
+  card.appendChild(details);
+
+  return card;
+}
+
+function renderChapterStatusColumn(target, chapters) {
+  if (!target) {
+    return;
+  }
+  target.innerHTML = "";
+  if (!chapters || !chapters.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Complete your first session to see topics appear here";
+    target.appendChild(empty);
+    return;
+  }
+  chapters.forEach((chapter) => target.appendChild(createChapterStatusCard(chapter)));
+}
+
+function renderProgressStatusFromChapterMastery(payload) {
+  const chapters = Array.isArray(payload && payload.chapters) ? payload.chapters : [];
+  const done = [];
+  const revise = [];
+  const pending = [];
+  chapters.forEach((chapter) => {
+    const scoreValue = chapter.chapter_test_score;
+    const hasScore = scoreValue !== null && scoreValue !== undefined && scoreValue !== "";
+    const score = hasScore ? Number(scoreValue) : null;
+    const level = String(chapter.mastery_level || chapter.status || "").trim().toLowerCase();
+    const status = String(chapter.status || "").trim().toLowerCase();
+    if ((level === "mastered" || status === "mastered" || (score !== null && score >= 85))) {
+      done.push(chapter);
+    } else if (status === "not_started" || level === "not_started" || score === null || score < 50) {
+      pending.push(chapter);
+    } else if (["proficient", "developing"].includes(level) || ["proficient", "developing"].includes(status) || (score >= 50 && score <= 84)) {
+      revise.push(chapter);
+    } else {
+      pending.push(chapter);
+    }
+  });
+  renderChapterStatusColumn(progressDoneList, done);
+  renderChapterStatusColumn(progressReviseList, revise);
+  renderChapterStatusColumn(progressPendingList, pending);
 }
 
 function formatSignedPercent(value) {
@@ -6193,15 +6443,11 @@ function renderProgressSnapshot(snapshot) {
       : `This week: ${counts.done || 0} done, ${counts.revise || 0} revise, ${counts.pending || 0} pending. ${focus}`;
   }
   drawProgressChart(progressWeeklyCanvas, weeklyHistory);
-
-  const grouped = (snapshot && snapshot.grouped) || {};
-  renderProgressColumn(progressDoneList, grouped.done || [], "Done topics will appear here.");
-  renderProgressColumn(progressReviseList, grouped.revise || [], "Revision-needed topics will appear here.");
-  renderProgressColumn(progressPendingList, grouped.pending || [], "Pending topics will appear here.");
 }
 
 function renderChapterMasteryBoard(payload) {
   chapterMasterySnapshot = payload || null;
+  renderProgressStatusFromChapterMastery(payload || null);
   if (!chapterMasteryCard || !chapterMasteryGrid) {
     return;
   }
@@ -6227,7 +6473,7 @@ function renderChapterMasteryBoard(payload) {
     const scoreText = chapter.chapter_test_score !== null && chapter.chapter_test_score !== undefined ? `${Math.round(Number(chapter.chapter_test_score) || 0)}%` : "Not started";
     button.innerHTML = `
       <strong>${escapeHtml(chapter.chapter_name || "Chapter")}</strong>
-      <span>${escapeHtml(String(chapter.subject || "").toUpperCase() || "GENERAL")} Â· ${escapeHtml(chapter.mastery_level || "not_started")} Â· ${escapeHtml(scoreText)}</span>
+      <span>${escapeHtml(String(chapter.subject || "").toUpperCase() || "GENERAL")} - ${escapeHtml(chapter.mastery_level || "not_started")} - ${escapeHtml(scoreText)}</span>
     `;
     button.addEventListener("click", () => {
       renderChapterDetailPanel(chapter);
@@ -6247,7 +6493,7 @@ function renderChapterDetailPanel(chapter) {
   chapterDetailList.innerHTML = "";
   if (chapterDetailSummary) {
     const score = chapter.chapter_test_score !== null && chapter.chapter_test_score !== undefined ? `${Math.round(Number(chapter.chapter_test_score) || 0)}%` : "Not started";
-    chapterDetailSummary.textContent = `${chapter.chapter_name || "Chapter"} â€¢ Mastery: ${chapter.mastery_level || "not_started"} â€¢ Score: ${score}`;
+    chapterDetailSummary.textContent = `${chapter.chapter_name || "Chapter"} - Mastery: ${chapter.mastery_level || "not_started"} - Score: ${score}`;
   }
   const rows = [
     `Subject: ${chapter.subject || "-"}`,
@@ -6335,7 +6581,7 @@ function renderChapterRevisionTracker(payload) {
     title.textContent = chapter.chapter_name || "Chapter";
     const meta = document.createElement("p");
     meta.className = "muted";
-    meta.textContent = `${chapter.mastery_level || "not_started"} Â· ${chapter.chapter_test_score !== null && chapter.chapter_test_score !== undefined ? `${Math.round(Number(chapter.chapter_test_score) || 0)}%` : "No test yet"}`;
+    meta.textContent = `${chapter.mastery_level || "not_started"} - ${chapter.chapter_test_score !== null && chapter.chapter_test_score !== undefined ? `${Math.round(Number(chapter.chapter_test_score) || 0)}%` : "No test yet"}`;
     row.append(title, meta);
     chapterRevisionList.appendChild(row);
   });
@@ -6381,7 +6627,7 @@ function renderChapterResumeCard(summary) {
       <div class="card-header">
         <div>
           <p class="card-title">Resume ${escapeHtml(summary.unit_name || "Chapter")}</p>
-          <p class="muted">${escapeHtml(String(summary.subject || "").toUpperCase() || "GENERAL")} â€¢ ${done} of ${totalSubtopics} subtopics complete</p>
+          <p class="muted">${escapeHtml(String(summary.subject || "").toUpperCase() || "GENERAL")} - ${done} of ${totalSubtopics} subtopics complete</p>
         </div>
         <span class="pill">Resume</span>
       </div>
@@ -6422,7 +6668,7 @@ function renderChapterResumeCard(summary) {
         <span>You have an active session: ${escapeHtml(summary.unit_name || "Chapter")} - ${done} of ${totalSubtopics} subtopics complete. Continue?</span>
         <div class="chapter-resume-banner-actions">
           <button type="button" id="chapterResumeGoBtn" class="ghost-button">Go to session</button>
-          <button type="button" id="chapterResumeCloseBtn" class="ghost-button chapter-resume-close-btn" aria-label="Close resume notice">âœ•</button>
+          <button type="button" id="chapterResumeCloseBtn" class="ghost-button chapter-resume-close-btn" aria-label="Close resume notice">Close</button>
         </div>
       </div>
     `;
@@ -6716,7 +6962,7 @@ function renderChapterTestReport(report, summary) {
       <div class="card-header">
         <div>
           <p class="card-title">Chapter Test Result</p>
-          <p class="muted">Score ${scoreLabel} â€¢ ${escapeHtml(masteryLevel.replace(/_/g, " "))}</p>
+          <p class="muted">Score ${scoreLabel} - ${escapeHtml(masteryLevel.replace(/_/g, " "))}</p>
         </div>
         <span class="pill">${escapeHtml(masteryLevel)}</span>
       </div>
@@ -6752,7 +6998,7 @@ function renderChapterTestReport(report, summary) {
   const nextPracticeBtn = chapterTestContainer.querySelector("#chapterTestStartNextPracticeBtn");
   if (backBtn) {
     backBtn.addEventListener("click", () => {
-      setActiveTab("progressTab");
+      openPlanSubtab("progress");
       refreshProgress(activeProfile ? activeProfile.name : "");
     });
   }
@@ -6805,7 +7051,7 @@ function renderChapterTest(questions, meta = {}) {
       <div class="card-header">
         <div>
           <p class="card-title">Chapter Test - ${escapeHtml(activeChapterTest.unit_name)}</p>
-          <p class="muted">All questions are shown at once. JEE Main format â€¢ ${activeChapterTest.questions.length} questions â€¢ ${activeChapterTest.duration_minutes} minutes â€¢ ${escapeHtml(activeChapterTest.marking)}</p>
+          <p class="muted">All questions are shown at once. JEE Main format - ${activeChapterTest.questions.length} questions - ${activeChapterTest.duration_minutes} minutes - ${escapeHtml(activeChapterTest.marking)}</p>
         </div>
         <span class="pill chapter-test-timer" data-chapter-test-timer>30:00</span>
       </div>
@@ -6832,7 +7078,7 @@ function renderChapterTest(questions, meta = {}) {
     title.textContent = `Question ${index + 1}`;
     const metaLine = document.createElement("p");
     metaLine.className = "muted";
-    metaLine.textContent = `${question.subtopic || activeChapterTest.unit_name} â€¢ ${question.difficulty || "medium"}`;
+    metaLine.textContent = `${question.subtopic || activeChapterTest.unit_name} - ${question.difficulty || "medium"}`;
     header.append(title, metaLine);
 
     const questionBody = document.createElement("div");
@@ -6977,7 +7223,7 @@ async function loadChapterTestForCurrentSession({ immediate = true } = {}) {
   if (!unitName) {
     return;
   }
-  setActiveTab("progressTab");
+  openPlanSubtab("progress");
   if (chapterTestContainer) {
     chapterTestContainer.classList.remove("hidden");
     chapterTestContainer.innerHTML = `<p class="muted">Loading chapter test for ${escapeHtml(unitName)}...</p>`;
@@ -7029,7 +7275,7 @@ async function startSelectedChapterSession() {
       first_subtopic: payload.first_subtopic || {},
     };
     if (chapterDetailSummary && payload.first_subtopic) {
-      chapterDetailSummary.textContent = `${selectedChapterSnapshot.chapter_name || "Chapter"} â€¢ Starting ${payload.first_subtopic.subtopic_name || "the first subtopic"}`;
+      chapterDetailSummary.textContent = `${selectedChapterSnapshot.chapter_name || "Chapter"} - Starting ${payload.first_subtopic.subtopic_name || "the first subtopic"}`;
     }
     setActiveTab("tutorTab");
     appendMessage("tutor", "tutor", `We are starting ${selectedChapterSnapshot.chapter_name || "this chapter"} from ${payload.first_subtopic.subtopic_name || "the first subtopic"}. I will teach the full chapter one subtopic at a time and checkpoint after each part.`);
@@ -7099,7 +7345,7 @@ async function completeChapterSubtopicFromCheckpoint(checkpointScore, timeSpentM
     }
     if (payload.ready_for_chapter_test) {
       appendMessage("tutor", "tutor", `${payload.encouragement || "That subtopic is complete."} The chapter test is ready whenever you are.`);
-      setActiveTab("progressTab");
+      openPlanSubtab("progress");
       renderChapterCompletionCard({
         unitName: selectedChapterSnapshot && selectedChapterSnapshot.chapter_name ? selectedChapterSnapshot.chapter_name : (activeChapterSession && activeChapterSession.unit_name) || getActiveChapterTitle(),
         questionCount: 15,
@@ -7773,7 +8019,7 @@ function appendFeedMessage(feed, mode, role, text) {
   if (role === "tutor") {
     // MARKED RENDERING FIXED
     window.marked.setOptions({ breaks: true, gfm: true });
-    paragraph.innerHTML = marked.parse(text || "");
+    paragraph.innerHTML = marked.parse(normalizeTutorMathText(text || ""));
   } else {
     paragraph.textContent = text;
   }
@@ -9294,7 +9540,7 @@ function renderTutorCheckpointWidget(checkpoint, { practiceMode = false } = {}) 
   const headingCopy = document.createElement("div");
   const heading = document.createElement("p");
   heading.className = "card-title";
-  heading.textContent = checkpoint.heading || (practiceMode ? "More practice" : "Quick Check â€” let's see if this clicked");
+  heading.textContent = checkpoint.heading || (practiceMode ? "More practice" : "Quick Check - let's see if this clicked");
   const meta = document.createElement("p");
   meta.className = "muted checkpoint-meta";
   const metaBits = [];
@@ -9307,7 +9553,7 @@ function renderTutorCheckpointWidget(checkpoint, { practiceMode = false } = {}) 
   if (checkpoint.explanation_level) {
     metaBits.push(`Level ${checkpoint.explanation_level}`);
   }
-  meta.textContent = metaBits.length ? metaBits.join(" â€¢ ") : "JEE checkpoint";
+  meta.textContent = metaBits.length ? metaBits.join(" - ") : "JEE checkpoint";
   headingCopy.append(heading, meta);
   const badge = document.createElement("span");
   badge.className = "pill";
@@ -9343,10 +9589,10 @@ function renderTutorCheckpointWidget(checkpoint, { practiceMode = false } = {}) 
     result.classList.remove("hidden");
     result.innerHTML = "";
     const resultHeading = document.createElement("strong");
-    resultHeading.textContent = evaluation.is_correct ? "Correct" : "Letâ€™s fix that together";
+    resultHeading.textContent = evaluation.is_correct ? "Correct" : "Let's fix that together";
     const feedback = document.createElement("p");
     feedback.className = "muted";
-    feedback.textContent = evaluation.feedback || (evaluation.is_correct ? "Nice work â€” that clicked." : "That needs one more pass.");
+    feedback.textContent = evaluation.feedback || (evaluation.is_correct ? "Nice work - that clicked." : "That needs one more pass.");
     result.append(resultHeading, feedback);
 
     if (evaluation.is_correct) {
@@ -9384,7 +9630,7 @@ function renderTutorCheckpointWidget(checkpoint, { practiceMode = false } = {}) 
       reExplain.textContent = evaluation.re_explanation || "Try the same concept through a different example.";
       const correctAnswer = document.createElement("p");
       correctAnswer.className = "checkpoint-detail";
-      correctAnswer.textContent = `Correct answer: ${evaluation.correct_answer || checkpoint.correct_answer} â€” ${evaluation.correct_explanation || checkpoint.correct_explanation || ""}`;
+      correctAnswer.textContent = `Correct answer: ${evaluation.correct_answer || checkpoint.correct_answer} - ${evaluation.correct_explanation || checkpoint.correct_explanation || ""}`;
       result.append(wrongReason, reExplain, correctAnswer);
       morePracticeBtn.classList.add("hidden");
     }
@@ -9503,7 +9749,7 @@ function renderTutorPracticeSet(practiceQuestions, anchorCard, options = {}) {
     if (question.difficulty) {
       metaBits.push(question.difficulty);
     }
-    meta.textContent = metaBits.length ? metaBits.join(" â€¢ ") : "Practice question";
+    meta.textContent = metaBits.length ? metaBits.join(" - ") : "Practice question";
     headingCopy.append(heading, meta);
     const badge = document.createElement("span");
     badge.className = "pill";
@@ -9528,7 +9774,7 @@ function renderTutorPracticeSet(practiceQuestions, anchorCard, options = {}) {
       feedback.textContent = evaluation.is_correct ? "Correct" : "Review this one";
       const detail = document.createElement("p");
       detail.className = "muted";
-      detail.textContent = evaluation.feedback || (evaluation.is_correct ? "Nice work." : "Letâ€™s use the explanation to tighten the idea.");
+      detail.textContent = evaluation.feedback || (evaluation.is_correct ? "Nice work." : "Let's use the explanation to tighten the idea.");
       const explanation = document.createElement("p");
       explanation.className = "checkpoint-detail";
       explanation.textContent = evaluation.correct_explanation || question.correct_explanation || "";
@@ -9662,7 +9908,7 @@ async function loadTutorCheckpoint(topic, subject, explanationLevel, originalExp
       renderTutorCheckpointWidget(checkpoint);
     }
     showKnowledgeBaseTag("", false);
-    setAstraStatus(`Astra is ready. Today's focus: ${topicLabel} â€” ${subjectLabel}`, "idle");
+    setAstraStatus(`Astra is ready. Today's focus: ${topicLabel} - ${subjectLabel}`, "idle");
     return checkpoint;
   } catch (error) {
     console.warn("Checkpoint generation skipped:", error);
@@ -9701,11 +9947,435 @@ function escapeHtml(text) {
     .replace(/'/g, "&#39;");
 }
 
+function normalizeTutorMathText(text) {
+  let source = String(text || "");
+  if (!source) {
+    return "";
+  }
+  source = source.replace(/\\frac\{\\text\{d\}\}\{\\text\{dt\}\}/g, "d/dt");
+  source = source.replace(/\\frac\{d\}\{dt\}/g, "d/dt");
+  source = source.replace(/\\frac\{([^{}\n]+)\}\{([^{}\n]+)\}/g, "($1)/($2)");
+  source = source.replace(/\\text\{([^{}]*)\}/g, "$1");
+  source = source.replace(/\\sqrt\{([^{}]*)\}/g, "sqrt($1)");
+  source = source.replace(/\\left|\\right/g, "");
+  source = source.replace(/\\times/g, " x ");
+  source = source.replace(/\\cdot/g, " * ");
+  source = source.replace(/\\pi/g, "pi");
+  source = source.replace(/\\theta/g, "theta");
+  source = source.replace(/\\alpha/g, "alpha");
+  source = source.replace(/\\beta/g, "beta");
+  source = source.replace(/\\Delta/g, "Delta");
+  source = source.replace(/\\[a-zA-Z]+/g, "");
+  source = source.replace(/\$/g, "");
+  source = source.replace(/[{}]/g, "");
+  source = source.replace(/[ \t]{2,}/g, " ");
+  return source;
+}
+
+function normalizeFormulaSubject(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  if (normalized === "math" || normalized === "maths") {
+    return "mathematics";
+  }
+  return normalized || "physics";
+}
+
+function formulaSubjectLabel(subject) {
+  const normalized = normalizeFormulaSubject(subject);
+  if (normalized === "mathematics") {
+    return "Maths";
+  }
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+function formulaChapterKey(chapter) {
+  return `${normalizeFormulaSubject(chapter.subject)}:${chapter.id}`;
+}
+
+function normalizeFormulaTerm(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function formulaMatchesWeak(chapter) {
+  if (!formulaWeakTopicTerms.size) {
+    return false;
+  }
+  const chapterTerms = [
+    normalizeFormulaTerm(chapter.id),
+    normalizeFormulaTerm(chapter.name),
+    normalizeFormulaTerm(chapter.subject),
+  ].filter(Boolean);
+  return chapterTerms.some((term) => {
+    if (formulaWeakTopicTerms.has(term)) {
+      return true;
+    }
+    return Array.from(formulaWeakTopicTerms).some((weakTerm) => term.includes(weakTerm) || weakTerm.includes(term));
+  });
+}
+
+function flattenFormulaDatabase(database) {
+  const subjects = database && database.subjects ? database.subjects : {};
+  return Object.entries(subjects).flatMap(([subject, payload]) => {
+    const chapters = Array.isArray(payload && payload.chapters) ? payload.chapters : [];
+    return chapters.map((chapter) => ({
+      ...chapter,
+      subject: normalizeFormulaSubject(subject),
+    }));
+  });
+}
+
+function highlightFormulaMatch(text, query) {
+  const source = escapeHtml(text);
+  const needle = String(query || "").trim();
+  if (!needle) {
+    return source;
+  }
+  const escapedNeedle = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return source.replace(new RegExp(`(${escapedNeedle})`, "ig"), '<mark class="formula-highlight">$1</mark>');
+}
+
+function getFormulaSearchBlob(chapter, formula) {
+  const variables = formula && typeof formula.variables === "object" && formula.variables ? formula.variables : {};
+  return [
+    chapter.subject,
+    chapter.name,
+    chapter.id,
+    formula.id,
+    formula.name,
+    formula.formula,
+    formula.condition,
+    formula.jee_tip,
+    formula.quick_memory,
+    Object.keys(variables).join(" "),
+    Object.values(variables).join(" "),
+  ].join(" ").toLowerCase();
+}
+
+function setFormulasStatus(message) {
+  if (formulasStatus) {
+    formulasStatus.textContent = message || "";
+    formulasStatus.classList.toggle("hidden", !message);
+  }
+}
+
+async function loadFormulaDatabase(force = false) {
+  if (!formulasChapterList || (!force && formulasDatabase)) {
+    if (formulasDatabase) {
+      renderFormulaChapterList();
+      renderFormulaDetail();
+    }
+    return;
+  }
+  try {
+    setFormulasStatus("Loading formulas...");
+    const response = await fetch("/api/formulas/all");
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load formulas.");
+    }
+    formulasDatabase = payload;
+    formulaChapters = flattenFormulaDatabase(payload);
+    if (!selectedFormulaChapterKey && formulaChapters.length) {
+      selectedFormulaChapterKey = formulaChapterKey(formulaChapters[0]);
+    }
+    setFormulasStatus("");
+    renderFormulaChapterList();
+    renderFormulaDetail();
+  } catch (error) {
+    console.warn("Could not load formulas:", error);
+    setFormulasStatus(`Could not load formulas: ${error.message}`);
+  }
+}
+
+function getVisibleFormulaChapters() {
+  const visible = formulaChapters.filter((chapter) => activeFormulaSubjects.has(normalizeFormulaSubject(chapter.subject)));
+  if (!formulasWeakToggle || !formulasWeakToggle.checked) {
+    return visible;
+  }
+  return [...visible].sort((first, second) => {
+    const firstWeak = formulaMatchesWeak(first) ? 0 : 1;
+    const secondWeak = formulaMatchesWeak(second) ? 0 : 1;
+    if (firstWeak !== secondWeak) {
+      return firstWeak - secondWeak;
+    }
+    return (first.unit_number || 0) - (second.unit_number || 0);
+  });
+}
+
+function renderFormulaChapterList() {
+  if (!formulasChapterList) {
+    return;
+  }
+  const chapters = getVisibleFormulaChapters();
+  if (!chapters.length) {
+    formulasChapterList.innerHTML = '<p class="muted">No chapters match the selected subjects.</p>';
+    return;
+  }
+  if (!chapters.some((chapter) => formulaChapterKey(chapter) === selectedFormulaChapterKey)) {
+    selectedFormulaChapterKey = formulaChapterKey(chapters[0]);
+  }
+  formulasChapterList.innerHTML = chapters.map((chapter) => {
+    const key = formulaChapterKey(chapter);
+    const subject = normalizeFormulaSubject(chapter.subject);
+    const formulaCount = Array.isArray(chapter.formulas) ? chapter.formulas.length : 0;
+    const focusBadge = formulaMatchesWeak(chapter) ? '<span class="pill">Focus Here</span>' : "";
+    return `
+      <button type="button" class="formula-chapter-button ${key === selectedFormulaChapterKey ? "active" : ""}" data-formula-chapter="${escapeHtml(key)}">
+        <div class="formula-chapter-title-row">
+          <span><span class="formula-subject-dot ${escapeHtml(subject)}"></span> <strong>${escapeHtml(chapter.name)}</strong></span>
+          ${focusBadge}
+        </div>
+        <div class="formula-card-meta">
+          <span class="pill">${escapeHtml(formulaSubjectLabel(subject))}</span>
+          <span class="pill">${formulaCount} formulas</span>
+          <span class="pill">${escapeHtml(String(chapter.jee_weightage || 0))}% weightage</span>
+        </div>
+      </button>
+    `;
+  }).join("");
+  formulasChapterList.querySelectorAll("[data-formula-chapter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      selectedFormulaChapterKey = button.dataset.formulaChapter || "";
+      if (formulasSearchInput) {
+        formulasSearchInput.value = "";
+      }
+      renderFormulaChapterList();
+      renderFormulaDetail();
+    });
+  });
+}
+
+function renderFormulaCard(formula, query = "") {
+  const variables = formula && typeof formula.variables === "object" && formula.variables ? formula.variables : {};
+  const variableChips = Object.entries(variables).map(([key, value]) => (
+    `<span class="pill"><strong>${highlightFormulaMatch(key, query)}</strong>: ${highlightFormulaMatch(value, query)}</span>`
+  )).join("");
+  return `
+    <article class="formula-card">
+      <p class="card-title">${highlightFormulaMatch(formula.name || "Formula", query)}</p>
+      <div class="formula-display-text">${highlightFormulaMatch(formula.formula || "-", query)}</div>
+      <div class="formula-chip-row">${variableChips}</div>
+      ${formula.condition ? `<p class="muted">Condition: ${highlightFormulaMatch(formula.condition, query)}</p>` : ""}
+      ${formula.jee_tip ? `<div class="formula-tip-box"><strong>JEE Tip:</strong> ${highlightFormulaMatch(formula.jee_tip, query)}</div>` : ""}
+      ${formula.quick_memory ? `<p class="muted"><strong>Quick memory:</strong> ${highlightFormulaMatch(formula.quick_memory, query)}</p>` : ""}
+    </article>
+  `;
+}
+
+function renderFormulaChapterDetail(chapter, query = "") {
+  if (!chapter) {
+    return;
+  }
+  if (formulasChapterSubject) {
+    formulasChapterSubject.textContent = formulaSubjectLabel(chapter.subject);
+  }
+  if (formulasChapterTitle) {
+    formulasChapterTitle.textContent = chapter.name || "Formula sheet";
+  }
+  if (formulasWeightageChip) {
+    formulasWeightageChip.textContent = `${chapter.jee_weightage || 0}% weightage`;
+  }
+  const formulas = Array.isArray(chapter.formulas) ? chapter.formulas : [];
+  const shortcuts = Array.isArray(chapter.shortcuts) ? chapter.shortcuts : [];
+  const mistakes = Array.isArray(chapter.common_mistakes) ? chapter.common_mistakes : [];
+  if (formulasFormulaList) {
+    formulasFormulaList.innerHTML = formulas.length
+      ? formulas.map((formula) => renderFormulaCard(formula, query)).join("")
+      : '<p class="muted">No formulas found for this chapter yet.</p>';
+  }
+  if (formulasShortcutList) {
+    formulasShortcutList.innerHTML = shortcuts.length
+      ? shortcuts.map((shortcut) => `
+        <article class="formula-shortcut-card">
+          <p class="card-title">${highlightFormulaMatch(shortcut.title || "Shortcut", query)}</p>
+          <p class="muted">${highlightFormulaMatch(shortcut.detail || "", query)}</p>
+        </article>
+      `).join("")
+      : '<p class="muted">No shortcuts listed for this chapter yet.</p>';
+  }
+  if (formulasMistakeList) {
+    formulasMistakeList.innerHTML = mistakes.length
+      ? mistakes.map((mistake) => `<li>${highlightFormulaMatch(mistake, query)}</li>`).join("")
+      : '<li>No common mistakes listed yet.</li>';
+  }
+}
+
+function renderFormulaSearchResults(query) {
+  const normalizedQuery = String(query || "").trim().toLowerCase();
+  const chapters = getVisibleFormulaChapters();
+  const groups = chapters.map((chapter) => {
+    const formulas = (chapter.formulas || []).filter((formula) => getFormulaSearchBlob(chapter, formula).includes(normalizedQuery));
+    const shortcuts = (chapter.shortcuts || []).filter((shortcut) => (
+      `${shortcut.title || ""} ${shortcut.detail || ""} ${chapter.name || ""}`.toLowerCase().includes(normalizedQuery)
+    ));
+    return { chapter, formulas, shortcuts };
+  }).filter((group) => group.formulas.length || group.shortcuts.length);
+  if (formulasChapterSubject) {
+    formulasChapterSubject.textContent = "Search Results";
+  }
+  if (formulasChapterTitle) {
+    formulasChapterTitle.textContent = `Matches for "${query}"`;
+  }
+  if (formulasWeightageChip) {
+    formulasWeightageChip.textContent = `${groups.length} chapters`;
+  }
+  if (!groups.length) {
+    if (formulasFormulaList) {
+      formulasFormulaList.innerHTML = '<p class="muted">No formulas match that search.</p>';
+    }
+    if (formulasShortcutList) {
+      formulasShortcutList.innerHTML = "";
+    }
+    if (formulasMistakeList) {
+      formulasMistakeList.innerHTML = "";
+    }
+    return;
+  }
+  if (formulasFormulaList) {
+    formulasFormulaList.innerHTML = groups.map((group) => `
+      <section class="formula-section">
+        <div class="formula-card-meta">
+          <span class="pill">${escapeHtml(formulaSubjectLabel(group.chapter.subject))}</span>
+          <strong>${escapeHtml(group.chapter.name)}</strong>
+        </div>
+        <div class="formula-card-list">${group.formulas.map((formula) => renderFormulaCard(formula, query)).join("")}</div>
+      </section>
+    `).join("");
+  }
+  if (formulasShortcutList) {
+    const shortcuts = groups.flatMap((group) => group.shortcuts.map((shortcut) => ({ shortcut, chapter: group.chapter })));
+    formulasShortcutList.innerHTML = shortcuts.length
+      ? shortcuts.map(({ shortcut, chapter }) => `
+        <article class="formula-shortcut-card">
+          <p class="card-title">${highlightFormulaMatch(shortcut.title || "Shortcut", query)}</p>
+          <p class="muted">${escapeHtml(chapter.name)} - ${highlightFormulaMatch(shortcut.detail || "", query)}</p>
+        </article>
+      `).join("")
+      : "";
+  }
+  if (formulasMistakeList) {
+    formulasMistakeList.innerHTML = "";
+  }
+}
+
+function renderFormulaDetail() {
+  const query = formulasSearchInput ? formulasSearchInput.value.trim() : "";
+  if (query) {
+    renderFormulaSearchResults(query);
+    return;
+  }
+  const chapter = formulaChapters.find((item) => formulaChapterKey(item) === selectedFormulaChapterKey) || formulaChapters[0];
+  renderFormulaChapterDetail(chapter);
+}
+
+function collectFormulaWeakTerms(payload) {
+  const terms = new Set();
+  const addTerm = (value) => {
+    const term = normalizeFormulaTerm(value);
+    if (term) {
+      terms.add(term);
+    }
+  };
+  const weakStrong = payload && payload.weak_strong ? payload.weak_strong : {};
+  const candidates = [
+    weakStrong.weak_topics,
+    weakStrong.weak_chapters,
+    weakStrong.needs_focus,
+    weakStrong.revision_topics,
+    payload && payload.weak_topics,
+  ];
+  candidates.forEach((candidate) => {
+    if (Array.isArray(candidate)) {
+      candidate.forEach((item) => {
+        if (typeof item === "string") {
+          addTerm(item);
+        } else if (item && typeof item === "object") {
+          addTerm(item.topic || item.chapter || item.name || item.unit_name || item.title);
+        }
+      });
+    } else if (candidate && typeof candidate === "object") {
+      Object.values(candidate).forEach((value) => addTerm(value));
+    }
+  });
+  return terms;
+}
+
+async function loadFormulaWeakTopics() {
+  if (!activeProfile || !formulasWeakToggle || !formulasWeakToggle.checked) {
+    return;
+  }
+  const studentName = activeProfile.name || activeProfile.student_id || "";
+  if (!studentName || formulaWeakLoadedFor === studentName) {
+    return;
+  }
+  try {
+    const response = await fetch(`/api/analytics/dashboard/${encodeURIComponent(studentName)}`);
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load weak topics.");
+    }
+    formulaWeakTopicTerms = collectFormulaWeakTerms(payload);
+    formulaWeakLoadedFor = studentName;
+  } catch (error) {
+    console.warn("Could not load weak topics for formulas:", error);
+    setFormulasStatus("Could not reorder weak topics right now.");
+  }
+}
+
+function downloadFormulaChapterPdf() {
+  const chapter = formulaChapters.find((item) => formulaChapterKey(item) === selectedFormulaChapterKey) || formulaChapters[0];
+  if (!chapter) {
+    return;
+  }
+  const formulas = (chapter.formulas || []).map((formula) => {
+    const variables = formula.variables && typeof formula.variables === "object"
+      ? Object.entries(formula.variables).map(([key, value]) => `${key}: ${value}`).join("\n")
+      : "";
+    return `${formula.name}\n${formula.formula}\n${variables}\nCondition: ${formula.condition || "-"}\nJEE Tip: ${formula.jee_tip || "-"}\nQuick memory: ${formula.quick_memory || "-"}`;
+  }).join("\n\n");
+  const shortcuts = (chapter.shortcuts || []).map((shortcut) => `${shortcut.title}: ${shortcut.detail}`).join("\n");
+  const mistakes = (chapter.common_mistakes || []).map((mistake) => `- ${mistake}`).join("\n");
+  const printable = `
+    <html>
+      <head><title>${escapeHtml(chapter.name)} Formulas</title></head>
+      <body>
+        <pre style="font-family: Arial, sans-serif; white-space: pre-wrap; line-height: 1.5;">
+${escapeHtml(`${chapter.name} (${formulaSubjectLabel(chapter.subject)})
+JEE weightage: ${chapter.jee_weightage || 0}%
+
+FORMULAS
+
+${formulas}
+
+SHORTCUTS
+
+${shortcuts || "-"}
+
+COMMON MISTAKES
+
+${mistakes || "-"}`)}
+        </pre>
+        <script>window.print();</script>
+      </body>
+    </html>
+  `;
+  const printWindow = window.open("", "_blank");
+  if (!printWindow) {
+    showToast("Allow popups to download this formula sheet as PDF.", "warning");
+    return;
+  }
+  printWindow.document.write(printable);
+  printWindow.document.close();
+}
+
 function renderMarkdownElement(element, text) {
   if (!element) {
     return;
   }
-  const source = String(text || "").trim();
+  const source = normalizeTutorMathText(text).trim();
   if (!source) {
     element.textContent = "";
     return;
@@ -9802,7 +10472,7 @@ async function streamTutorReply(mode, text) {
     narration.resumed = false;
     // MARKED RENDERING FIXED
     window.marked.setOptions({ breaks: true, gfm: true });
-    paragraph.innerHTML = marked.parse(narration.output || "");
+    paragraph.innerHTML = marked.parse(normalizeTutorMathText(narration.output || ""));
     if (mode === "tutor" && autoCaptionMode.checked) {
       setCaption(narration.output || preparedText);
     }
@@ -9820,6 +10490,11 @@ async function streamTutorReply(mode, text) {
   }
 
 function setActiveTab(tabId) {
+  if (tabId === "progressTab") {
+    pendingPlanSubtab = "progress";
+    tabId = "weeklyTab";
+  }
+  keepTabPanelNearTop(tabId);
   if (tabId !== "loungeTab") {
     stopLoungeVoiceInput();
   }
@@ -9827,6 +10502,7 @@ function setActiveTab(tabId) {
     overviewTab: "home",
     tutorTab: "learn",
     videoTutorTab: "learn",
+    formulasTab: "learn",
     practiceTab: "learn",
     mockTestTab: "learn",
     lastMinuteTab: "learn",
@@ -9843,6 +10519,7 @@ function setActiveTab(tabId) {
   setActiveSectionGroup(tabSectionMap[tabId] || "home", { skipTabSwitch: true });
   if (tabId === "leagueTab" && !isLeagueTabEnabled()) {
     tabId = "overviewTab";
+    keepTabPanelNearTop(tabId);
   }
     if (tabId === "videoTutorTab" && activeStudioPane !== "threeConceptPanel") {
       setActiveStudioPane("threeConceptPanel");
@@ -9854,15 +10531,15 @@ function setActiveTab(tabId) {
         refreshActiveChapterSession();
     }, 0);
   }
-  if (tabId === "progressTab" && activeProfile) {
-    window.setTimeout(() => {
-      fetchProgress(activeProfile.name);
-    }, 0);
-  }
   if (tabId === "mockTestTab" && activeProfile) {
     window.setTimeout(() => {
       void loadMockCatalogue();
       void loadMockHistory();
+    }, 0);
+  }
+  if (tabId === "formulasTab") {
+    window.setTimeout(() => {
+      void loadFormulaDatabase();
     }, 0);
   }
   if (tabId !== "mockTestTab") {
@@ -9878,6 +10555,7 @@ function setActiveTab(tabId) {
   tabPanels.forEach((panel) => {
     panel.classList.toggle("active", panel.id === tabId);
   });
+  scrollActivePanelToTop(tabId);
   updateContextPanel(tabId);
   if (tabId === "overviewTab") {
     void loadDailyBriefingIfNeeded();
@@ -9886,6 +10564,12 @@ function setActiveTab(tabId) {
 
   if (tabId === "overviewTab") {
     setHomeSubtab("overview");
+  }
+
+  if (tabId === "weeklyTab") {
+    const nextPlanSubtab = pendingPlanSubtab || "today";
+    pendingPlanSubtab = "";
+    setPlanSubtab(nextPlanSubtab);
   }
 
   if (tabId === "tutorTab" && messageInput) {
@@ -9985,7 +10669,7 @@ function loadAccessibilityPreferences() {
   leagueTabVisible = localStorage.getItem("alt_show_league_tab") !== "0";
   const savedOrder = safeJsonParse(localStorage.getItem("alt_tab_order") || "[]", []);
   const savedOrderList = Array.isArray(savedOrder) ? savedOrder : [];
-  const validSavedOrder = savedOrderList.filter((key) => TAB_CONFIG[key]);
+  const validSavedOrder = savedOrderList.filter((key) => TAB_CONFIG[key] && key !== "progress");
   const missingKeys = Object.keys(TAB_CONFIG).filter((key) => !validSavedOrder.includes(key));
   currentTabOrder = [...validSavedOrder, ...missingKeys];
   currentTabOrder = currentTabOrder.filter((key) => key !== LEGACY_TUTOR_ROOM_KEY);
@@ -10188,14 +10872,14 @@ function applyLanguage() {
 
 const LANGUAGE_OPTIONS = [
   { key: "english", native: "English", label: "English (Default)" },
-  { key: "hindi", native: "à¤¹à¤¿à¤‚à¤¦à¥€", label: "Hindi" },
+  { key: "hindi", native: "Hindi", label: "Hindi" },
   { key: "hinglish", native: "Hinglish", label: "Hindi + English" },
-  { key: "telugu", native: "à°¤à±†à°²à±à°—à±", label: "Telugu" },
-  { key: "tamil", native: "à®¤à®®à®¿à®´à¯", label: "Tamil" },
-  { key: "kannada", native: "à²•à²¨à³à²¨à²¡", label: "Kannada" },
-  { key: "marathi", native: "à¤®à¤°à¤¾à¤ à¥€", label: "Marathi" },
-  { key: "bengali", native: "à¦¬à¦¾à¦‚à¦²à¦¾", label: "Bengali" },
-  { key: "gujarati", native: "àª—à«àªœàª°àª¾àª¤à«€", label: "Gujarati" },
+  { key: "telugu", native: "Telugu", label: "Telugu" },
+  { key: "tamil", native: "Tamil", label: "Tamil" },
+  { key: "kannada", native: "Kannada", label: "Kannada" },
+  { key: "marathi", native: "Marathi", label: "Marathi" },
+  { key: "bengali", native: "Bengali", label: "Bengali" },
+  { key: "gujarati", native: "Gujarati", label: "Gujarati" },
 ];
 
 function normalizeLanguageSelection(language) {
@@ -10207,22 +10891,15 @@ function normalizeLanguageSelection(language) {
     english: "english",
     eng: "english",
     hindi: "hindi",
-    "à¤¹à¤¿à¤‚à¤¦à¥€": "hindi",
     hinglish: "hinglish",
     "hindi + english": "hinglish",
     "hindi english": "hinglish",
     telugu: "telugu",
-    "à°¤à±†à°²à±à°—à±": "telugu",
     tamil: "tamil",
-    "à®¤à®®à®¿à®´à¯": "tamil",
     kannada: "kannada",
-    "à²•à²¨à³à²¨à²¡": "kannada",
     marathi: "marathi",
-    "à¤®à¤°à¤¾à¤ à¥€": "marathi",
     bengali: "bengali",
-    "à¦¬à¦¾à¦‚à¦²à¦¾": "bengali",
     gujarati: "gujarati",
-    "àª—à«àªœàª°àª¾àª¤à«€": "gujarati",
   };
   const supportedKeys = ["english", "hindi", "hinglish", "telugu", "tamil", "kannada", "marathi", "bengali", "gujarati"];
   return aliases[value] || (supportedKeys.includes(value) ? value : "english");
@@ -10242,7 +10919,7 @@ function updateTutorLanguageChip() {
   if (!tutorLanguageChip) {
     return;
   }
-  tutorLanguageChip.textContent = `ðŸŒ ${getLanguageDisplayLabel(currentLanguage).replace(" (Default)", "")}`;
+  tutorLanguageChip.textContent = getLanguageDisplayLabel(currentLanguage).replace(" (Default)", "");
 }
 
 function updateLanguageSelectionCards() {
@@ -10269,7 +10946,7 @@ function renderTutorLanguageDropdown() {
     return;
   }
   tutorLanguageDropdown.innerHTML = LANGUAGE_OPTIONS.map((option) => (
-    `<button type="button" data-language-option="${option.key}">${option.native} Â· ${option.label.replace(" (Default)", "")}</button>`
+    `<button type="button" data-language-option="${option.key}">${option.native} - ${option.label.replace(" (Default)", "")}</button>`
   )).join("");
 }
 
@@ -10381,7 +11058,7 @@ const WALKTHROUGH_STEPS = [
 function buildWalkthroughAstraAnswer(question) {
   const text = String(question || "").toLowerCase();
   if (!text) {
-    return "Ask me anything about how Astra works, and Iâ€™ll answer in a simple, honest way.";
+    return "Ask me anything about how Astra works, and I'll answer in a simple, honest way.";
   }
   if (text.includes("private") || text.includes("privacy")) {
     return "Astra only uses what you choose to share, and you can change or remove those settings later.";
@@ -10611,7 +11288,7 @@ function renderWalkthroughStepLegacy() {
   if (walkthroughBackBtn) {
     walkthroughBackBtn.disabled = walkthroughStepIndex === 0;
   }
-  setWalkthroughAnswerText("Ask Astra a question about how it works, and Iâ€™ll answer it here.");
+  setWalkthroughAnswerText("Ask Astra a question about how it works, and I'll answer it here.");
 }
 
 function renderWalkthroughStep() {
@@ -10685,7 +11362,7 @@ function renderWalkthroughStep() {
   } else if (isIntro) {
     setWalkthroughAnswerText("Read the message, then press Next when you are ready.");
   } else {
-    setWalkthroughAnswerText("Ask Astra a question about how it works, and Iâ€™ll answer it here.");
+    setWalkthroughAnswerText("Ask Astra a question about how it works, and I'll answer it here.");
   }
 }
 
@@ -11062,7 +11739,7 @@ function renderWeeklyPreview(plan) {
       const pill = document.createElement("span");
       pill.className = "focus-pill";
       const topic = task.topic || task.subject;
-      pill.textContent = `${task.exam} ${task.subject} Â· ${topic}`;
+      pill.textContent = `${task.exam} ${task.subject} - ${topic}`;
       focusRow.appendChild(pill);
     });
 
@@ -11073,49 +11750,56 @@ function renderWeeklyPreview(plan) {
 }
 
 function renderSectionProgress(items) {
-  if (!sectionProgressList) {
+  const targets = [sectionProgressList, planSubjectBreakdownList].filter(Boolean);
+  if (!targets.length) {
     return;
   }
 
-  sectionProgressList.innerHTML = "";
+  targets.forEach((target) => {
+    target.innerHTML = "";
+  });
   if (!items || !items.length) {
-    const empty = document.createElement("p");
-    empty.className = "muted";
-    empty.textContent = "Your section summaries will appear here once your schedule starts moving.";
-    sectionProgressList.appendChild(empty);
+    targets.forEach((target) => {
+      const empty = document.createElement("p");
+      empty.className = "muted";
+      empty.textContent = "No section data yet.";
+      target.appendChild(empty);
+    });
     return;
   }
 
-  items.forEach((item) => {
-    const card = document.createElement("div");
-    card.className = "section-progress-item";
+  targets.forEach((target) => {
+    items.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "section-progress-item";
 
-    const title = document.createElement("p");
-    title.className = "exam-chip-title";
-    title.textContent = `${item.exam} | ${item.subject}`;
+      const title = document.createElement("p");
+      title.className = "exam-chip-title";
+      title.textContent = `${item.exam} | ${item.subject}`;
 
-    const summary = document.createElement("p");
-    summary.className = "muted";
-    summary.textContent = item.summary;
+      const summary = document.createElement("p");
+      summary.className = "muted";
+      summary.textContent = item.summary;
 
-    const stats = document.createElement("p");
-    stats.className = "muted";
-    stats.textContent = `Completed: ${item.completed_hours}h across ${item.completed_sessions} sessions | Mock: ${item.mock_score !== null && item.mock_score !== undefined ? item.mock_score : "not set"} | Backlog: ${item.backlog_hours}h`;
+      const stats = document.createElement("p");
+      stats.className = "muted";
+      stats.textContent = `Completed: ${item.completed_hours}h across ${item.completed_sessions} sessions | Mock: ${item.mock_score !== null && item.mock_score !== undefined ? item.mock_score : "not set"} | Backlog: ${item.backlog_hours}h`;
 
-    const strengths = document.createElement("p");
-    strengths.className = "memory-heading";
-    strengths.textContent = `Strengths: ${(item.strengths || []).join(", ")}`;
+      const strengths = document.createElement("p");
+      strengths.className = "memory-heading";
+      strengths.textContent = `Strengths: ${(item.strengths || []).join(", ")}`;
 
-    const weaknesses = document.createElement("p");
-    weaknesses.className = "memory-heading";
-    weaknesses.textContent = `Watch-outs: ${(item.weaknesses || []).join(", ")}`;
+      const weaknesses = document.createElement("p");
+      weaknesses.className = "memory-heading";
+      weaknesses.textContent = `Watch-outs: ${(item.weaknesses || []).join(", ")}`;
 
-    card.appendChild(title);
-    card.appendChild(summary);
-    card.appendChild(stats);
-    card.appendChild(strengths);
-    card.appendChild(weaknesses);
-    sectionProgressList.appendChild(card);
+      card.appendChild(title);
+      card.appendChild(summary);
+      card.appendChild(stats);
+      card.appendChild(strengths);
+      card.appendChild(weaknesses);
+      target.appendChild(card);
+    });
   });
 }
 
@@ -11481,7 +12165,7 @@ function renderJourneyMasterySummary(masteryMap = null) {
     return acc;
   }, { new: 0, low: 0, medium: 0, good: 0, strong: 0 });
   const summaryText = entries.length
-    ? `New: ${counts.new || 0} â€¢ Low: ${counts.low || 0} â€¢ Medium: ${counts.medium || 0} â€¢ Good: ${counts.good || 0} â€¢ Strong: ${counts.strong || 0}`
+    ? `New: ${counts.new || 0} - Low: ${counts.low || 0} - Medium: ${counts.medium || 0} - Good: ${counts.good || 0} - Strong: ${counts.strong || 0}`
     : "No mastery data yet. Start a session to build this map.";
   journeyMasteryCard.classList.remove("hidden");
   if (journeyMasterySummary) {
@@ -11506,7 +12190,7 @@ function renderJourneyMasterySummary(masteryMap = null) {
       meta.className = "muted";
       const score = item.best_score !== undefined ? `${Math.round(Number(item.best_score) || 0)}%` : "n/a";
       const studied = item.times_studied !== undefined ? item.times_studied : 0;
-      meta.textContent = `Confidence: ${item.confidence_level || "new"} â€¢ Best score: ${score} â€¢ Studied: ${studied} time(s)`;
+      meta.textContent = `Confidence: ${item.confidence_level || "new"} - Best score: ${score} - Studied: ${studied} time(s)`;
       const actions = document.createElement("div");
       actions.className = "chapter-mastery-actions";
       if (String(item.status || "not_started").toLowerCase() !== "not_started") {
@@ -11514,7 +12198,7 @@ function renderJourneyMasterySummary(masteryMap = null) {
         resetBtn.type = "button";
         resetBtn.className = "ghost-button chapter-reset-btn";
         resetBtn.title = "Restart this chapter from the beginning";
-        resetBtn.textContent = "â†º";
+        resetBtn.textContent = "Reset";
         resetBtn.addEventListener("click", (event) => {
           event.stopPropagation();
           resetChapterFromUI({
@@ -11673,7 +12357,7 @@ async function startJourneySession() {
       : null;
     setAstraStatus(
       focusPreview
-        ? `Astra is ready. Today's focus: ${focusPreview.topic || "today's topic"} â€” ${focusPreview.subject || "study"}`
+        ? `Astra is ready. Today's focus: ${focusPreview.topic || "today's topic"} - ${focusPreview.subject || "study"}`
         : "Astra is ready. Preparing today's focus...",
       "idle"
     );
@@ -11765,7 +12449,7 @@ async function completeJourneySessionFromCheckpoint(checkpointScore) {
     const nextRevisionDays = nextRevisionDate && !Number.isNaN(nextRevisionDate.getTime())
       ? Math.max(1, Math.round((nextRevisionDate.getTime() - Date.now()) / 86400000))
       : null;
-    showToast(`Plan updated â€” ${morning.topic || "topic"} marked as ${(payload.result && payload.result.confidence_level) || "updated"}. Next revision in ${nextRevisionDays || "a few"} days.`);
+    showToast(`Plan updated - ${morning.topic || "topic"} marked as ${(payload.result && payload.result.confidence_level) || "updated"}. Next revision in ${nextRevisionDays || "a few"} days.`);
     logSessionActivity(`Checkpoint completed for ${morning.topic || "current topic"}: ${checkpointScore}%`);
     renderSessionStats(morning.topic || "Today", (payload.result && payload.result.confidence_level) || "updated", checkpointScore);
     if (payload.weekly_plan_updated) {
@@ -12199,6 +12883,8 @@ function applyTabOrder() {
     }
   });
   localStorage.setItem("alt_tab_order", JSON.stringify(currentTabOrder));
+  const activePanelId = document.querySelector(".tab-panel.active")?.id || "overviewTab";
+  keepTabPanelNearTop(activePanelId);
   refreshTabCollections();
   renderTabManager();
   applyLeagueVisibility();
@@ -12352,7 +13038,7 @@ async function summarizeLatestTutorAnswer() {
 }
 
 async function saveProgressItem() {
-  if (!activeProfile) {
+  if (!activeProfile || !progressTopicInput || !saveProgressItemBtn) {
     return;
   }
 
@@ -13155,7 +13841,7 @@ async function sendMessage(message) {
     await fetchStorageStatus(activeProfile.name);
     setAstraStatus(
       mode === "tutor"
-        ? `Astra is ready. Today's focus: ${activeFocus.topic} â€” ${activeFocus.subject}`
+        ? `Astra is ready. Today's focus: ${activeFocus.topic} - ${activeFocus.subject}`
         : "Astra is ready.",
       "success",
       true
@@ -13271,7 +13957,7 @@ document.body.addEventListener("click", (event) => {
   }
 
   if (event.target.closest("#openProgressFromHomeBtn")) {
-    setActiveTab("progressTab");
+    openPlanSubtab("progress");
   }
 
   const tutorIntentChip = event.target.closest(".tutor-intent-chip");
@@ -13293,7 +13979,7 @@ document.body.addEventListener("click", (event) => {
     const shouldHide = !sessionActivityPanel.classList.contains("hidden");
     sessionActivityPanel.classList.toggle("hidden", shouldHide);
     if (sessionActivityToggleBtn) {
-      sessionActivityToggleBtn.textContent = shouldHide ? "Session log â–¸" : "Session log â–¾";
+      sessionActivityToggleBtn.textContent = shouldHide ? "Session log >" : "Session log v";
     }
   }
 
@@ -13315,7 +14001,7 @@ document.body.addEventListener("click", (event) => {
   const commandButton = event.target.closest("[data-command]");
   if (commandButton) {
     if (commandButton.dataset.command === "Show weekly plan") {
-      setActiveTab("weeklyTab");
+      openPlanSubtab("thisweek");
     }
     sendMessage(commandButton.dataset.command);
   }
@@ -13582,9 +14268,12 @@ if (startSessionBtn) {
 }
 if (openJourneySummaryBtn) {
   openJourneySummaryBtn.addEventListener("click", () => {
-    if (journeyProgressSidebar && typeof journeyProgressSidebar.scrollIntoView === "function") {
-      journeyProgressSidebar.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    openPlanSubtab("journey");
+    window.setTimeout(() => {
+      if (journeyProgressSidebar && typeof journeyProgressSidebar.scrollIntoView === "function") {
+        journeyProgressSidebar.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 0);
   });
 }
 if (startChapterSessionBtn) {
@@ -13745,9 +14434,54 @@ if (refreshProgressBtn) {
     }
   });
 }
-openWeeklyTabBtn.addEventListener("click", () => setActiveTab("weeklyTab"));
+if (analyticsDashboardBtn) {
+  analyticsDashboardBtn.addEventListener("click", async () => {
+    if (!activeProfile) {
+      return;
+    }
+    analyticsDashboardBtn.disabled = true;
+    try {
+      await loadProgressInsight();
+    } finally {
+      analyticsDashboardBtn.disabled = false;
+    }
+  });
+}
+openWeeklyTabBtn.addEventListener("click", () => openPlanSubtab("thisweek"));
 if (openProgressTabBtn) {
-  openProgressTabBtn.addEventListener("click", () => setActiveTab("progressTab"));
+  openProgressTabBtn.addEventListener("click", () => openPlanSubtab("progress"));
+}
+if (formulasSearchInput) {
+  formulasSearchInput.addEventListener("input", () => {
+    renderFormulaDetail();
+  });
+}
+formulaSubjectButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const subject = normalizeFormulaSubject(button.dataset.formulaSubject);
+    if (activeFormulaSubjects.has(subject) && activeFormulaSubjects.size > 1) {
+      activeFormulaSubjects.delete(subject);
+    } else {
+      activeFormulaSubjects.add(subject);
+    }
+    button.classList.toggle("active", activeFormulaSubjects.has(subject));
+    renderFormulaChapterList();
+    renderFormulaDetail();
+  });
+});
+if (formulasWeakToggle) {
+  formulasWeakToggle.addEventListener("change", async () => {
+    if (formulasWeakToggle.checked) {
+      await loadFormulaWeakTopics();
+    } else {
+      setFormulasStatus("");
+    }
+    renderFormulaChapterList();
+    renderFormulaDetail();
+  });
+}
+if (formulasDownloadBtn) {
+  formulasDownloadBtn.addEventListener("click", downloadFormulaChapterPdf);
 }
   if (generateVideoAnswerBtn) {
     generateVideoAnswerBtn.addEventListener("click", generateVideoAnswerBrief);
@@ -14030,7 +14764,9 @@ document.addEventListener("keydown", (event) => {
     }
   }
 });
-saveProgressItemBtn.addEventListener("click", saveProgressItem);
+if (saveProgressItemBtn) {
+  saveProgressItemBtn.addEventListener("click", saveProgressItem);
+}
 
 [signinEmailInput, signinPasswordInput].forEach((input) => input.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
@@ -14073,7 +14809,7 @@ practiceMessageInput.addEventListener("keydown", (event) => {
   }
 });
 
-[progressExamInput, progressSubjectInput, progressTopicInput, progressNoteInput].forEach((input) => {
+[progressExamInput, progressSubjectInput, progressTopicInput, progressNoteInput].filter(Boolean).forEach((input) => {
   input.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();

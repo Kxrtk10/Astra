@@ -206,6 +206,8 @@ WEB_DIR = Path("web")
 VIDEO_RENDER_JOB_DIR = Path("app_data") / "render_jobs"
 VIDEO_AUDIO_DIR = Path("app_data") / "audio"
 MOCK_TEST_DIR = Path("app_data") / "mock_tests"
+FORMULAS_DIR = Path("app_data") / "formulas"
+FORMULAS_PATH = FORMULAS_DIR / "jee_formulas.json"
 MOCK_TEST_CATALOGUE_PATH = MOCK_TEST_DIR / "mock_test_catalogue.json"
 MOCK_TEST_BANK_PATH = MOCK_TEST_DIR / "physics_mock_bank.json"
 APP_DATA_DIRECTORIES = [
@@ -223,6 +225,7 @@ APP_DATA_DIRECTORIES = [
     Path("app_data") / "video_briefs",
     Path("app_data") / "video_requests",
     Path("app_data") / "logs",
+    Path("app_data") / "formulas",
 ]
 RELOAD_EXCLUDES = [
     "personal_memory/*",
@@ -386,6 +389,57 @@ def _read_json_file(path: Path):
     except Exception as exc:
         print(f"WARNING: Could not read JSON file {path}: {exc}")
         return None
+
+
+def _load_formula_database():
+    FORMULAS_DIR.mkdir(parents=True, exist_ok=True)
+    if not FORMULAS_PATH.exists():
+        return {"subjects": {}}
+    data = _read_json_file(FORMULAS_PATH)
+    if not isinstance(data, dict):
+        raise HTTPException(status_code=500, detail="Formula database is not available right now.")
+    data.setdefault("subjects", {})
+    return data
+
+
+def _normalize_formula_subject(subject: str) -> str:
+    normalized = str(subject or "").strip().lower()
+    aliases = {
+        "phy": "physics",
+        "physics": "physics",
+        "chem": "chemistry",
+        "chemistry": "chemistry",
+        "math": "mathematics",
+        "maths": "mathematics",
+        "mathematics": "mathematics",
+    }
+    return aliases.get(normalized, normalized)
+
+
+def _get_formula_subject(database: dict, subject: str):
+    normalized = _normalize_formula_subject(subject)
+    payload = (database.get("subjects") or {}).get(normalized)
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=404, detail="Formula subject not found.")
+    return normalized, payload
+
+
+def _formula_search_blob(subject: str, chapter: dict, formula: dict) -> str:
+    variables = formula.get("variables") if isinstance(formula.get("variables"), dict) else {}
+    parts = [
+        subject,
+        chapter.get("id", ""),
+        chapter.get("name", ""),
+        formula.get("id", ""),
+        formula.get("name", ""),
+        formula.get("formula", ""),
+        formula.get("condition", ""),
+        formula.get("jee_tip", ""),
+        formula.get("quick_memory", ""),
+        " ".join(str(key) for key in variables.keys()),
+        " ".join(str(value) for value in variables.values()),
+    ]
+    return " ".join(str(part) for part in parts).lower()
 
 
 def _migrate_student_profiles_to_db():
@@ -3292,6 +3346,64 @@ def health():
             "uptime_seconds": int(time.time() - APP_START_TIME),
             "version": "1.0.0",
         }
+
+
+@app.get("/api/formulas/all")
+def formulas_all():
+    return _load_formula_database()
+
+
+@app.get("/api/formulas/search")
+def formulas_search(q: str = ""):
+    query = str(q or "").strip().lower()
+    database_payload = _load_formula_database()
+    if not query:
+        return {"query": q, "results": []}
+    results = []
+    for subject, subject_payload in (database_payload.get("subjects") or {}).items():
+        chapters = subject_payload.get("chapters") if isinstance(subject_payload, dict) else []
+        for chapter in chapters or []:
+            matching_formulas = []
+            for formula in chapter.get("formulas", []) or []:
+                if query in _formula_search_blob(subject, chapter, formula):
+                    matching_formulas.append(formula)
+            matching_shortcuts = []
+            for shortcut in chapter.get("shortcuts", []) or []:
+                shortcut_blob = " ".join(
+                    str(shortcut.get(key, "")) for key in ("id", "title", "detail")
+                ).lower()
+                if query in shortcut_blob or query in str(chapter.get("name", "")).lower():
+                    matching_shortcuts.append(shortcut)
+            if matching_formulas or matching_shortcuts:
+                results.append(
+                    {
+                        "subject": subject,
+                        "chapter_id": chapter.get("id"),
+                        "chapter_name": chapter.get("name"),
+                        "jee_weightage": chapter.get("jee_weightage"),
+                        "formulas": matching_formulas,
+                        "shortcuts": matching_shortcuts,
+                    }
+                )
+    return {"query": q, "results": results}
+
+
+@app.get("/api/formulas/{subject}")
+def formulas_subject(subject: str):
+    database_payload = _load_formula_database()
+    normalized, payload = _get_formula_subject(database_payload, subject)
+    return {"subject": normalized, **payload}
+
+
+@app.get("/api/formulas/{subject}/{chapter_id}")
+def formulas_chapter(subject: str, chapter_id: str):
+    database_payload = _load_formula_database()
+    normalized, payload = _get_formula_subject(database_payload, subject)
+    wanted = str(chapter_id or "").strip().lower()
+    for chapter in payload.get("chapters", []) or []:
+        if str(chapter.get("id", "")).strip().lower() == wanted:
+            return {"subject": normalized, **chapter}
+    raise HTTPException(status_code=404, detail="Formula chapter not found.")
 
 
 @app.get("/api/analytics/dashboard/{student_id}")

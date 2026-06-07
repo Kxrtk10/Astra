@@ -86,6 +86,8 @@ body[data-theme="midnight"] .preview-card,
 body[data-theme="midnight"] .auth-form-card,
 body[data-theme="midnight"] .network-item-card,
 body[data-theme="midnight"] .network-stat-card,
+body[data-theme="midnight"] .progress-chart-card,
+body[data-theme="midnight"] .subject-breakdown-card,
 body[data-theme="midnight"] .practice-analytics-card,
 body[data-theme="midnight"] .tips-resource-item,
 body[data-theme="midnight"] .weekly-strategy-item,
@@ -171,6 +173,143 @@ body[data-theme="midnight"] .home-subtab-button.active {
   border-color: rgba(95, 179, 255, 0.4);
 }
 
+.formulas-layout,
+.formula-card-list,
+.formula-shortcut-list {
+  display: grid;
+  gap: 16px;
+}
+
+.formulas-topbar,
+.formula-filter-row,
+.formula-chip-row,
+.formula-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.formulas-topbar input {
+  flex: 1 1 280px;
+}
+
+.formulas-shell {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.3fr) minmax(0, 0.7fr);
+  gap: 18px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.formula-chapter-list {
+  display: grid;
+  gap: 10px;
+  max-height: 720px;
+  overflow: auto;
+}
+
+.formula-chapter-button,
+.formula-card,
+.formula-shortcut-card,
+.formula-tip-box {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.formula-chapter-button {
+  width: 100%;
+  padding: 14px;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.formula-chapter-button.active {
+  border-color: rgba(31, 122, 255, 0.5);
+  background: var(--accent-soft);
+}
+
+.formula-chapter-title-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.formula-subject-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.formula-subject-dot.physics {
+  background: #5fb3ff;
+}
+
+.formula-subject-dot.chemistry {
+  background: #34d399;
+}
+
+.formula-subject-dot.mathematics {
+  background: #f59e0b;
+}
+
+.formula-card,
+.formula-shortcut-card {
+  padding: 16px;
+}
+
+.formula-display-text {
+  margin: 12px 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.formula-chip-row .pill,
+.formula-card-meta .pill {
+  font-size: 0.82rem;
+}
+
+.formula-tip-box {
+  padding: 12px;
+  margin-top: 12px;
+  background: var(--accent-soft);
+}
+
+.formula-section {
+  margin-top: 20px;
+}
+
+.formula-highlight {
+  color: var(--ink);
+  background: rgba(243, 171, 63, 0.36);
+  border-radius: 4px;
+  padding: 0 2px;
+}
+
+body[data-theme="midnight"] .formula-chapter-button,
+body[data-theme="midnight"] .formula-card,
+body[data-theme="midnight"] .formula-shortcut-card,
+body[data-theme="midnight"] .formula-tip-box {
+  background: rgba(6, 11, 22, 0.92);
+  border-color: rgba(95, 179, 255, 0.14);
+}
+
+@media (max-width: 900px) {
+  .formulas-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .formula-chapter-list {
+    max-height: 360px;
+  }
+}
+
 body[data-theme="midnight"] #conceptCanvas {
   border-color: rgba(95, 179, 255, 0.16);
   background: linear-gradient(160deg, #020409, #071225, #0b1c35);
@@ -218,6 +357,8 @@ body[data-theme="midnight"] .weekly-strategy-item,
 body[data-theme="midnight"] .progress-item-card,
 body[data-theme="midnight"] .network-item-card,
 body[data-theme="midnight"] .network-stat-card,
+body[data-theme="midnight"] .progress-chart-card,
+body[data-theme="midnight"] .subject-breakdown-card,
 body[data-theme="midnight"] .group-study-summary-card,
 body[data-theme="midnight"] .practice-analytics-card,
 body[data-theme="midnight"] .tips-resource-item {
@@ -1826,6 +1967,20 @@ body[data-theme="midnight"] .section-nav-button:hover {
   border: 1px solid var(--line);
 }
 
+body[data-theme="midnight"] .subject-breakdown-card {
+  min-height: 0;
+  align-content: start;
+  gap: 18px;
+  padding: 18px;
+  background:
+    radial-gradient(circle at top, rgba(95, 179, 255, 0.12), transparent 42%),
+    linear-gradient(160deg, rgba(7, 14, 29, 0.96), rgba(5, 10, 21, 0.94));
+  border-color: rgba(95, 179, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 18px 38px rgba(0, 0, 0, 0.34);
+}
+
 .subject-circle {
   --progress: 0;
   width: 108px;
@@ -1840,6 +1995,15 @@ body[data-theme="midnight"] .section-nav-button:hover {
   padding: 10px;
 }
 
+body[data-theme="midnight"] .subject-circle {
+  width: 118px;
+  height: 118px;
+  background: conic-gradient(#5fb3ff calc(var(--progress) * 1%), rgba(95, 179, 255, 0.12) 0);
+  box-shadow:
+    0 0 0 12px rgba(95, 179, 255, 0.04),
+    0 16px 32px rgba(0, 0, 0, 0.26);
+}
+
 .subject-circle::before {
   content: "";
   position: absolute;
@@ -1847,6 +2011,12 @@ body[data-theme="midnight"] .section-nav-button:hover {
   border-radius: 50%;
   background: #0f1720;
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body[data-theme="midnight"] .subject-circle::before {
+  background: linear-gradient(160deg, #07111f, #050914);
+  border-color: rgba(95, 179, 255, 0.18);
+  box-shadow: inset 0 0 18px rgba(95, 179, 255, 0.06);
 }
 
 .subject-circle strong,
@@ -1860,14 +2030,39 @@ body[data-theme="midnight"] .section-nav-button:hover {
   font-size: 1.25rem;
 }
 
+body[data-theme="midnight"] .subject-circle strong {
+  color: #edf4ff;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
 .subject-circle span {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.65);
 }
 
+body[data-theme="midnight"] .subject-circle span {
+  margin-top: 6px;
+  color: rgba(214, 229, 255, 0.72);
+}
+
 .subject-breakdown-list {
   display: grid;
   gap: 4px;
+}
+
+body[data-theme="midnight"] .subject-breakdown-list {
+  gap: 10px;
+}
+
+body[data-theme="midnight"] .subject-breakdown-list p {
+  margin: 0;
+  padding: 9px 10px;
+  border-radius: 12px;
+  background: rgba(95, 179, 255, 0.06);
+  border: 1px solid rgba(95, 179, 255, 0.1);
+  color: rgba(214, 229, 255, 0.86);
+  font-weight: 650;
 }
 
 .consistency-tracker-grid {
@@ -2367,7 +2562,7 @@ body[data-theme="midnight"] .progress-chart-card {
   margin-top: 12px;
 }
 
-/* ── VIDEO TUTOR CINEMATIC LAYOUT ── */
+/* VIDEO TUTOR CINEMATIC LAYOUT */
 .tutor-room-stage-panel {
   padding: 18px;
   border-radius: 28px;
