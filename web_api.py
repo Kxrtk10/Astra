@@ -8,10 +8,11 @@ import os
 import random
 import re
 import time
+from html import unescape
 from uuid import uuid4
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 import httpx
 from dotenv import load_dotenv
@@ -442,6 +443,78 @@ def _formula_search_blob(subject: str, chapter: dict, formula: dict) -> str:
     return " ".join(str(part) for part in parts).lower()
 
 
+LOUNGE_WEB_SEARCH_KEYWORDS = (
+    "world cup",
+    "match",
+    "score",
+    "news",
+    "today",
+    "right now",
+    "latest",
+    "current",
+    "2026",
+    "who won",
+    "tournament",
+)
+
+
+def _lounge_needs_web_search(message: str) -> bool:
+    normalized = str(message or "").lower()
+    return any(keyword in normalized for keyword in LOUNGE_WEB_SEARCH_KEYWORDS)
+
+
+def _strip_search_html(value: str) -> str:
+    text = re.sub(r"<[^>]+>", " ", str(value or ""))
+    text = unescape(text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _clean_duckduckgo_url(value: str) -> str:
+    href = unescape(str(value or ""))
+    parsed = urlparse(href)
+    if "duckduckgo.com" in parsed.netloc and parsed.path.startswith("/l/"):
+        uddg = parse_qs(parsed.query).get("uddg", [""])[0]
+        if uddg:
+            return unquote(uddg)
+    return href
+
+
+def _search_lounge_web_context(query: str) -> dict:
+    if not _lounge_needs_web_search(query):
+        return {"text": "", "sources": []}
+    try:
+        with httpx.Client(timeout=8.0, follow_redirects=True) as client:
+            response = client.get(
+                "https://duckduckgo.com/html/",
+                params={"q": query},
+                headers={"User-Agent": "Mozilla/5.0 AstraLearningStudio/1.0"},
+            )
+            response.raise_for_status()
+        html_text = response.text or ""
+        results = []
+        pattern = re.compile(
+            r'<a[^>]+class="[^"]*result__a[^"]*"[^>]+href="(?P<href>[^"]+)"[^>]*>(?P<title>.*?)</a>',
+            re.IGNORECASE | re.DOTALL,
+        )
+        for match in pattern.finditer(html_text):
+            title = _strip_search_html(match.group("title"))
+            url = _clean_duckduckgo_url(match.group("href"))
+            if title and url:
+                results.append({"title": title, "url": url})
+            if len(results) >= 3:
+                break
+        if not results:
+            return {"text": "", "sources": []}
+        lines = [f"{index}. {item['title']} ({item['url']})" for index, item in enumerate(results, start=1)]
+        return {
+            "text": "Current web information: " + "\n".join(lines) + "\nUse this to answer accurately.",
+            "sources": [{"title": item["title"], "url": item["url"]} for item in results],
+        }
+    except Exception as exc:
+        logging.warning("Lounge web search failed: %s", exc)
+        return {"text": "", "sources": []}
+
+
 def _migrate_student_profiles_to_db():
     migrated = 0
     candidate_dirs = [Path("profiles"), Path("app_data") / "profiles"]
@@ -509,6 +582,9 @@ def _migrate_planner_states_to_db():
             elif stem.endswith("_today"):
                 student_id = stem[:-6]
                 section = "today"
+            elif stem.endswith("_state"):
+                student_id = stem[:-6]
+                section = "combined"
             if not student_id or _planner_state_exists(student_id):
                 continue
             payload = _read_json_file(path)
@@ -529,6 +605,15 @@ def _migrate_planner_states_to_db():
                 journey = combined
                 weekly = combined.get("weekly", weekly or {})
                 today = combined.get("today", today or {})
+            profile = database.get_student_profile(student_id)
+            student_name = str((profile or {}).get("name") or student_id).strip() or student_id
+            database.execute_query(
+                """
+                INSERT OR IGNORE INTO students (student_id, name, created_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                """,
+                (student_id, student_name),
+            )
             database.save_planner_state(student_id, journey or {}, weekly or {}, today or {})
             migrated += 1
         except Exception as exc:
@@ -3172,6 +3257,18 @@ def _run_agent_reply(
                 "\n\nWhen the student seems emotionally heavy, listen first, reflect gently, and only then offer perspective or a soft next step. "
                 "The goal in Lounge is trust, relief, and emotional safety."
             )
+            lounge_web_context = _search_lounge_web_context(user_input)
+            if lounge_web_context["text"]:
+                live_context_bundle["text"] = "\n\n".join(
+                    part for part in [lounge_web_context["text"], live_context_bundle.get("text", "")] if part
+                )
+                live_context_bundle["sources"] = lounge_web_context["sources"] + live_context_bundle.get("sources", [])
+                outgoing_message = (
+                    f"{lounge_web_context['text']}\n\n"
+                    "Answer the student's Lounge message using the current web information above when it is relevant. "
+                    "If the web results are incomplete, say what is known and avoid guessing.\n\n"
+                    f"{outgoing_message}"
+                )
         if voice_chat_mode:
             outgoing_message += (
                 "\n\nVoice chat mode is on. Reply in a short, natural, conversational way. "
@@ -3200,7 +3297,13 @@ def _run_agent_reply(
                 f"\n\nReply in {response_language} unless the user explicitly asks you to switch languages."
             )
         if should_fetch_live_context(user_input):
-            live_context_bundle = build_live_context_bundle(user_input)
+            extra_live_context = build_live_context_bundle(user_input)
+            live_context_bundle = {
+                "text": "\n\n".join(
+                    part for part in [live_context_bundle.get("text", ""), extra_live_context.get("text", "")] if part
+                ),
+                "sources": live_context_bundle.get("sources", []) + extra_live_context.get("sources", []),
+            }
             if live_context_bundle["text"]:
                 outgoing_message += (
                     "\n\nUse this live context when answering current or real-world questions. "

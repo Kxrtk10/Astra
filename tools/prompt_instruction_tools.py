@@ -251,7 +251,7 @@ These formatting rules must never change regardless of tone or personality:
 - Always put formulas on their own line with ** around them
 - Write formulas in plain readable text only, never in LaTeX
 - Never use $, \frac, \text{}, \sqrt{}, \times, \left, \right, or other raw LaTeX syntax
-- Use normal symbols and words instead: d/dt, sqrt(x), x^2, v(t), m/s, alpha, beta, theta
+- Use normal readable symbols instead: d/dt, √x, x², v(t), m/s, α, β, θ, π
 - Always leave blank lines between sections
 - Structure every response as:
   Short paragraph for Level 1 explanation

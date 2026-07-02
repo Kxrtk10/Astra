@@ -259,6 +259,7 @@ const practiceFeed = document.getElementById("practiceFeed");
 const featureHealthList = document.getElementById("featureHealthList");
 const clearTutorChatBtn = document.getElementById("clearTutorChatBtn");
 const tutorFullscreenBtn = document.getElementById("tutor-fullscreen-btn");
+const loungeFullscreenBtn = document.getElementById("lounge-fullscreen-btn");
 const clearPracticeChatBtn = document.getElementById("clearPracticeChatBtn");
 const clearLoungeChatBtn = document.getElementById("clearLoungeChatBtn");
 const newTutorChatBtn = document.getElementById("newTutorChatBtn");
@@ -304,6 +305,11 @@ let tutorFullscreenTextarea = null;
 let tutorFullscreenSendButton = null;
 let tutorFullscreenMirrorObserver = null;
 let tutorFullscreenMirrorSource = null;
+let loungeFullscreenOverlay = null;
+let loungeFullscreenMessages = null;
+let loungeFullscreenTextarea = null;
+let loungeFullscreenMirrorObserver = null;
+let loungeFullscreenMirrorSource = null;
 let tutorTabLayout = null;
 let tutorControlStrip = null;
 let tutorChatZone = null;
@@ -421,6 +427,9 @@ const chapterDetailList = document.getElementById("chapterDetailList");
 const formulasSearchInput = document.getElementById("formulasSearchInput");
 const formulaSubjectButtons = Array.from(document.querySelectorAll("[data-formula-subject]"));
 const formulasWeakToggle = document.getElementById("formulasWeakToggle");
+const formulasChapterToggle = document.getElementById("formulasChapterToggle");
+const formulasChapterToggleText = document.getElementById("formulasChapterToggleText");
+const formulasChapterDropdownPanel = document.getElementById("formulasChapterDropdownPanel");
 const formulasChapterList = document.getElementById("formulasChapterList");
 const formulasStatus = document.getElementById("formulasStatus");
 const formulasChapterSubject = document.getElementById("formulasChapterSubject");
@@ -2630,6 +2639,149 @@ function toggleTutorFullscreen() {
     return;
   }
   openTutorFullscreen();
+}
+
+function _setLoungeFullscreenButtonState(isFullscreen) {
+  if (!loungeFullscreenBtn) {
+    return;
+  }
+  loungeFullscreenBtn.textContent = isFullscreen ? "Exit fullscreen" : "Fullscreen";
+  loungeFullscreenBtn.title = isFullscreen ? "Exit lounge fullscreen" : "Expand lounge to fullscreen";
+  loungeFullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit lounge fullscreen" : "Expand lounge to fullscreen");
+}
+
+function syncLoungeFullscreenOverlay() {
+  if (!loungeFullscreenOverlay || !loungeFullscreenMessages) {
+    return;
+  }
+  const sourceFeed = loungeFullscreenMirrorSource || loungeFeed;
+  if (sourceFeed) {
+    loungeFullscreenMessages.innerHTML = "";
+    Array.from(sourceFeed.children).forEach((node) => {
+      if (node.classList && node.classList.contains("message")) {
+        loungeFullscreenMessages.appendChild(_cloneFullscreenMessageNode(node));
+      }
+    });
+    loungeFullscreenMessages.scrollTop = loungeFullscreenMessages.scrollHeight;
+  }
+  if (loungeFullscreenTextarea && loungeMessageInput) {
+    loungeFullscreenTextarea.value = loungeMessageInput.value || "";
+  }
+}
+
+function closeLoungeFullscreen() {
+  if (loungeFullscreenMirrorObserver) {
+    loungeFullscreenMirrorObserver.disconnect();
+    loungeFullscreenMirrorObserver = null;
+  }
+  loungeFullscreenMirrorSource = null;
+  if (loungeFullscreenOverlay) {
+    loungeFullscreenOverlay.remove();
+  }
+  loungeFullscreenOverlay = null;
+  loungeFullscreenMessages = null;
+  loungeFullscreenTextarea = null;
+  _setLoungeFullscreenButtonState(false);
+}
+
+async function sendLoungeFullscreenMessage() {
+  if (!loungeFullscreenTextarea || !loungeMessageInput) {
+    return;
+  }
+  const text = loungeFullscreenTextarea.value.trim();
+  if (!text) {
+    return;
+  }
+  loungeFullscreenTextarea.value = "";
+  loungeMessageInput.value = text;
+  setActiveTab("loungeTab");
+  await sendMessage(text);
+  loungeMessageInput.value = "";
+  syncLoungeFullscreenOverlay();
+}
+
+function openLoungeFullscreen() {
+  if (loungeFullscreenOverlay) {
+    return;
+  }
+  if (!loungeFeed || !loungeMessageInput) {
+    return;
+  }
+
+  const overlay = document.createElement("div");
+  overlay.className = "tutor-fullscreen-overlay";
+  overlay.id = "lounge-fullscreen-overlay";
+
+  const topbar = document.createElement("div");
+  topbar.className = "tutor-fullscreen-topbar";
+
+  const title = document.createElement("span");
+  title.className = "fs-title";
+  title.textContent = "Astra Lounge";
+
+  const exitButton = document.createElement("button");
+  exitButton.type = "button";
+  exitButton.className = "tutor-fullscreen-exit-btn";
+  exitButton.textContent = "Exit fullscreen";
+  exitButton.addEventListener("click", closeLoungeFullscreen);
+  topbar.append(title, exitButton);
+
+  const messagesArea = document.createElement("div");
+  messagesArea.className = "tutor-fullscreen-messages";
+
+  const inputArea = document.createElement("div");
+  inputArea.className = "tutor-fullscreen-input-area";
+
+  const textarea = loungeMessageInput.cloneNode(true);
+  textarea.removeAttribute("id");
+  textarea.removeAttribute("style");
+  textarea.value = loungeMessageInput.value || "";
+  textarea.placeholder = "Talk in Lounge...";
+  textarea.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      void sendLoungeFullscreenMessage();
+    }
+  });
+
+  const sendButton = document.createElement("button");
+  sendButton.type = "button";
+  sendButton.className = "tutor-fullscreen-send-btn";
+  sendButton.textContent = "Send";
+  sendButton.addEventListener("click", () => {
+    void sendLoungeFullscreenMessage();
+  });
+
+  inputArea.append(textarea, sendButton);
+  overlay.append(topbar, messagesArea, inputArea);
+  document.body.appendChild(overlay);
+
+  loungeFullscreenOverlay = overlay;
+  loungeFullscreenMessages = messagesArea;
+  loungeFullscreenTextarea = textarea;
+  loungeFullscreenMirrorSource = loungeFeed;
+  _setLoungeFullscreenButtonState(true);
+
+  if (loungeFullscreenMirrorObserver) {
+    loungeFullscreenMirrorObserver.disconnect();
+  }
+  loungeFullscreenMirrorObserver = new MutationObserver(() => {
+    if (loungeFullscreenOverlay) {
+      syncLoungeFullscreenOverlay();
+    }
+  });
+  loungeFullscreenMirrorObserver.observe(loungeFeed, { childList: true, subtree: true });
+
+  syncLoungeFullscreenOverlay();
+  window.setTimeout(() => loungeFullscreenTextarea && loungeFullscreenTextarea.focus(), 0);
+}
+
+function toggleLoungeFullscreen() {
+  if (loungeFullscreenOverlay) {
+    closeLoungeFullscreen();
+    return;
+  }
+  openLoungeFullscreen();
 }
 
 function setAuthMode(mode) {
@@ -9491,6 +9643,7 @@ function appendMessage(mode, role, text) {
     appendFeedMessage(tutorRoomTranscriptFeed, mode, role, text);
   }
   syncTutorFullscreenOverlay();
+  syncLoungeFullscreenOverlay();
   return paragraph;
 }
 
@@ -9956,18 +10109,36 @@ function normalizeTutorMathText(text) {
   source = source.replace(/\\frac\{d\}\{dt\}/g, "d/dt");
   source = source.replace(/\\frac\{([^{}\n]+)\}\{([^{}\n]+)\}/g, "($1)/($2)");
   source = source.replace(/\\text\{([^{}]*)\}/g, "$1");
-  source = source.replace(/\\sqrt\{([^{}]*)\}/g, "sqrt($1)");
+  source = source.replace(/\\sqrt\{([^{}]*)\}/g, "√($1)");
   source = source.replace(/\\left|\\right/g, "");
-  source = source.replace(/\\times/g, " x ");
-  source = source.replace(/\\cdot/g, " * ");
-  source = source.replace(/\\pi/g, "pi");
-  source = source.replace(/\\theta/g, "theta");
-  source = source.replace(/\\alpha/g, "alpha");
-  source = source.replace(/\\beta/g, "beta");
-  source = source.replace(/\\Delta/g, "Delta");
+  source = source.replace(/\\times/g, " × ");
+  source = source.replace(/\\cdot/g, " · ");
+  source = source.replace(/\\pi/g, "π");
+  source = source.replace(/\\theta/g, "θ");
+  source = source.replace(/\\alpha/g, "α");
+  source = source.replace(/\\beta/g, "β");
+  source = source.replace(/\\gamma/g, "γ");
+  source = source.replace(/\\omega/g, "ω");
+  source = source.replace(/\\Delta/g, "Δ");
+  source = source.replace(/\\lambda/g, "λ");
+  source = source.replace(/\\mu/g, "μ");
   source = source.replace(/\\[a-zA-Z]+/g, "");
   source = source.replace(/\$/g, "");
   source = source.replace(/[{}]/g, "");
+  source = source.replace(/\btheta\b/g, "θ");
+  source = source.replace(/\balpha\b/g, "α");
+  source = source.replace(/\bbeta\b/g, "β");
+  source = source.replace(/\bgamma\b/g, "γ");
+  source = source.replace(/\bomega\b/g, "ω");
+  source = source.replace(/\bpi\b/g, "π");
+  source = source.replace(/\blambda\b/g, "λ");
+  source = source.replace(/\bmu\b/g, "μ");
+  source = source.replace(/\bDelta\b/g, "Δ");
+  source = source.replace(/sqrt\(([^()]+)\)/g, "√($1)");
+  source = source.replace(/\^2\b/g, "²");
+  source = source.replace(/\^3\b/g, "³");
+  source = source.replace(/\^\(([^)]+)\)/g, "^$1");
+  source = source.replace(/([A-Za-z0-9)²³])\s*\*\s*([A-Za-z0-9(θπαβγλωμ√])/g, "$1 · $2");
   source = source.replace(/[ \t]{2,}/g, " ");
   return source;
 }
@@ -10061,6 +10232,18 @@ function setFormulasStatus(message) {
   }
 }
 
+function setFormulaChapterDropdown(open) {
+  if (!formulasChapterDropdownPanel || !formulasChapterToggle) {
+    return;
+  }
+  formulasChapterDropdownPanel.classList.toggle("hidden", !open);
+  formulasChapterToggle.setAttribute("aria-expanded", String(open));
+}
+
+function closeFormulaChapterDropdown() {
+  setFormulaChapterDropdown(false);
+}
+
 async function loadFormulaDatabase(force = false) {
   if (!formulasChapterList || (!force && formulasDatabase)) {
     if (formulasDatabase) {
@@ -10117,6 +10300,12 @@ function renderFormulaChapterList() {
   if (!chapters.some((chapter) => formulaChapterKey(chapter) === selectedFormulaChapterKey)) {
     selectedFormulaChapterKey = formulaChapterKey(chapters[0]);
   }
+  const selectedChapter = chapters.find((chapter) => formulaChapterKey(chapter) === selectedFormulaChapterKey);
+  if (formulasChapterToggleText) {
+    formulasChapterToggleText.textContent = selectedChapter
+      ? `${formulaSubjectLabel(selectedChapter.subject)} - ${selectedChapter.name}`
+      : "Choose chapter";
+  }
   formulasChapterList.innerHTML = chapters.map((chapter) => {
     const key = formulaChapterKey(chapter);
     const subject = normalizeFormulaSubject(chapter.subject);
@@ -10144,6 +10333,7 @@ function renderFormulaChapterList() {
       }
       renderFormulaChapterList();
       renderFormulaDetail();
+      closeFormulaChapterDropdown();
     });
   });
 }
@@ -14217,9 +14407,14 @@ if (tutorFullscreenBtn) {
   tutorFullscreenBtn.addEventListener("click", toggleTutorFullscreen);
   _setTutorFullscreenButtonState(false);
 }
+if (loungeFullscreenBtn) {
+  loungeFullscreenBtn.addEventListener("click", toggleLoungeFullscreen);
+  _setLoungeFullscreenButtonState(false);
+}
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeTutorFullscreen();
+    closeLoungeFullscreen();
     if (chapterDetailCard && !chapterDetailCard.classList.contains("hidden")) {
       closeChapterDetailPanel();
     }
@@ -14456,6 +14651,25 @@ if (formulasSearchInput) {
     renderFormulaDetail();
   });
 }
+if (formulasChapterToggle) {
+  formulasChapterToggle.addEventListener("click", () => {
+    const isOpen = formulasChapterToggle.getAttribute("aria-expanded") === "true";
+    setFormulaChapterDropdown(!isOpen);
+  });
+}
+document.addEventListener("click", (event) => {
+  if (!formulasChapterDropdownPanel || !formulasChapterToggle) {
+    return;
+  }
+  const target = event.target;
+  if (
+    target instanceof Node
+    && !formulasChapterDropdownPanel.contains(target)
+    && !formulasChapterToggle.contains(target)
+  ) {
+    closeFormulaChapterDropdown();
+  }
+});
 formulaSubjectButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const subject = normalizeFormulaSubject(button.dataset.formulaSubject);

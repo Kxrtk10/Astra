@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Astra</title>
-  <link rel="stylesheet" href="/styles.css?v=20260531-formulas1">
+  <link rel="stylesheet" href="/styles.css?v=20260613-formula-dropdown1">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body data-theme="midnight" data-background="glow">
@@ -760,10 +760,17 @@
 
             <div id="formulasStatus" class="muted">Loading formulas...</div>
 
-            <div class="formulas-shell">
-              <aside class="formula-chapter-pane">
+            <div class="formula-chapter-dropdown">
+              <button id="formulasChapterToggle" type="button" class="formula-chapter-toggle" aria-expanded="false">
+                <span id="formulasChapterToggleText">Choose chapter</span>
+                <span class="formula-chapter-toggle-icon" aria-hidden="true">v</span>
+              </button>
+              <div id="formulasChapterDropdownPanel" class="formula-chapter-dropdown-panel hidden">
                 <div id="formulasChapterList" class="formula-chapter-list"></div>
-              </aside>
+              </div>
+            </div>
+
+            <div class="formulas-shell">
               <div class="formula-detail-pane">
                 <div class="card-header">
                   <div>
@@ -1151,11 +1158,12 @@
               <button id="clearLoungeChatBtn" type="button" class="ghost-button">Delete lounge chat</button>
             </div>
             <form id="loungeForm" class="composer lounge-composer">
-              <textarea id="loungeMessageInput" rows="3" placeholder="Talk about your day, football, a movie, a show, your mood, or anything you want off your chest..."></textarea>
+              <textarea id="loungeMessageInput" rows="3" style="pointer-events: auto; user-select: text;" placeholder="Talk about your day, football, a movie, a show, your mood, or anything you want off your chest..."></textarea>
               <div class="composer-actions">
                 <span class="muted">Examples: My day was hectic, I need to vent, Tell me something calming</span>
                 <div class="lounge-compose-actions">
                   <button id="loungeVoiceBtn" type="button" class="ghost-button">Voice message</button>
+                  <button id="lounge-fullscreen-btn" type="button" class="ghost-button tutor-fullscreen-button" title="Expand lounge to fullscreen" aria-label="Expand lounge to fullscreen">Fullscreen</button>
                   <button type="submit">Start lounge chat</button>
                 </div>
               </div>
@@ -2154,7 +2162,7 @@
   <script src="/avatar_renderer.js?v=20260518"></script>
   <script src="/app-config.js?v=20260426"></script>
   <script src="/api-client.js?v=20260426"></script>
-  <script src="/app.js?v=20260531-formulas1"></script>
+  <script src="/app.js?v=20260613-symbol-formulas1"></script>
   <script src="/three_visualizer.js?v=20260408l"></script>
 </body>
 </html>

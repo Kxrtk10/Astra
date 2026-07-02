@@ -195,17 +195,54 @@ body[data-theme="midnight"] .home-subtab-button.active {
 }
 
 .formulas-shell {
-  display: grid;
-  grid-template-columns: minmax(240px, 0.3fr) minmax(0, 0.7fr);
-  gap: 18px;
-  align-items: start;
+  display: block;
   margin-top: 18px;
+}
+
+.formula-chapter-dropdown {
+  margin-top: 16px;
+}
+
+.formula-chapter-toggle {
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(8, 16, 31, 0.88);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+}
+
+.formula-chapter-toggle-icon {
+  flex: 0 0 auto;
+  color: var(--muted);
+}
+
+.formula-chapter-dropdown-panel {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(6, 11, 22, 0.92);
+}
+
+.formula-chapter-dropdown-panel.hidden {
+  display: none;
 }
 
 .formula-chapter-list {
   display: grid;
-  gap: 10px;
-  max-height: 720px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  max-height: 360px;
   overflow: auto;
 }
 
@@ -293,6 +330,8 @@ body[data-theme="midnight"] .home-subtab-button.active {
 }
 
 body[data-theme="midnight"] .formula-chapter-button,
+body[data-theme="midnight"] .formula-chapter-toggle,
+body[data-theme="midnight"] .formula-chapter-dropdown-panel,
 body[data-theme="midnight"] .formula-card,
 body[data-theme="midnight"] .formula-shortcut-card,
 body[data-theme="midnight"] .formula-tip-box {
@@ -301,12 +340,9 @@ body[data-theme="midnight"] .formula-tip-box {
 }
 
 @media (max-width: 900px) {
-  .formulas-shell {
-    grid-template-columns: 1fr;
-  }
-
   .formula-chapter-list {
-    max-height: 360px;
+    grid-template-columns: 1fr;
+    max-height: 320px;
   }
 }
 
@@ -5413,11 +5449,19 @@ body[data-theme="midnight"] .intro-copy .hero-text {
 }
 
 .lounge-composer {
+  position: relative;
+  z-index: 2;
   padding: 18px 0 0;
   background: transparent;
   box-shadow: none;
   border: none;
   backdrop-filter: none;
+}
+
+.lounge-composer textarea,
+#loungeMessageInput {
+  pointer-events: auto !important;
+  user-select: text;
 }
 
 .lounge-compose-actions {
