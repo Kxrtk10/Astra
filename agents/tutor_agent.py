@@ -1,4 +1,5 @@
 from google.adk.agents import LlmAgent
+from google.genai import types
 from tools.agentic_context_tools import (
     get_student_context,
     get_weakness_summary,
@@ -11,6 +12,10 @@ tutor_agent = LlmAgent(
     name="TutorAgent",
 
     model="gemini-2.5-flash",
+    generate_content_config=types.GenerateContentConfig(
+        max_output_tokens=4096,
+        temperature=0.7,
+    ),
 
     description="Explains academic concepts and adapts to student emotional/academic state.",
 

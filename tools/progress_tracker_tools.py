@@ -469,11 +469,22 @@ def log_topic_completion(student_id, topic, subject, score, session_type, unit_n
     }
 
 
+def _canonical_status(status):
+    normalized = str(status or "").strip().lower().replace(" ", "_")
+    if normalized in {"done", "green", "complete", "completed", "mastered"}:
+        return "done"
+    if normalized in {"revise", "revision", "brown", "needs_revision", "needs-revision"}:
+        return "revise"
+    if normalized in {"pending", "red", "not_started", "not-started", "notstarted", ""}:
+        return "pending"
+    return "pending"
+
+
 def _count_items(items):
     counts = {
-        "done": sum(1 for item in items if item.get("status") == "done"),
-        "revise": sum(1 for item in items if item.get("status") == "revise"),
-        "pending": sum(1 for item in items if item.get("status") == "pending"),
+        "done": sum(1 for item in items if _canonical_status(item.get("status")) == "done"),
+        "revise": sum(1 for item in items if _canonical_status(item.get("status")) == "revise"),
+        "pending": sum(1 for item in items if _canonical_status(item.get("status")) == "pending"),
         "total": len(items),
     }
     counts["completion_rate"] = round((counts["done"] / counts["total"] * 100), 1) if counts["total"] else 0
@@ -596,16 +607,16 @@ def _build_exam_totals(items):
             exam_key,
             {"done": 0, "revise": 0, "pending": 0, "total": 0},
         )
-        status = item.get("status", "pending")
+        status = _canonical_status(item.get("status", "pending"))
         exam_bucket["total"] += 1
         exam_bucket[status if status in STATUS_META else "pending"] += 1
     return dict(sorted(exam_totals.items(), key=lambda item: (-item[1]["total"], item[0].lower())))
 
 
 def _build_topic_momentum(items):
-    pending = [item for item in items if item.get("status") == "pending"]
-    revise = [item for item in items if item.get("status") == "revise"]
-    done = [item for item in items if item.get("status") == "done"]
+    pending = [item for item in items if _canonical_status(item.get("status")) == "pending"]
+    revise = [item for item in items if _canonical_status(item.get("status")) == "revise"]
+    done = [item for item in items if _canonical_status(item.get("status")) == "done"]
     strongest = done[-5:]
     weakest = (pending[:5] + revise[:5])[:5]
     completion_rate = round((len(done) / len(items) * 100), 1) if items else 0
@@ -746,10 +757,67 @@ def _build_week_over_week(history, current_counts):
     }
 
 
+def _planner_today_pending_items(name):
+    planner_path = os.path.join("app_data", "planner", f"{name}_today.json")
+    if not os.path.exists(planner_path):
+        return []
+    try:
+        with open(planner_path, "r", encoding="utf-8-sig") as file:
+            payload = json.load(file)
+    except Exception:
+        return []
+
+    candidates = []
+    if isinstance(payload, dict):
+        for key in ("primary", "morning", "afternoon", "evening"):
+            value = payload.get(key)
+            if isinstance(value, dict):
+                candidates.append(value)
+        for value in payload.values():
+            if isinstance(value, dict):
+                candidates.append(value)
+            elif isinstance(value, list):
+                candidates.extend(item for item in value if isinstance(item, dict))
+    elif isinstance(payload, list):
+        candidates = [item for item in payload if isinstance(item, dict)]
+
+    seen = set()
+    items = []
+    for entry in candidates:
+        topic = str(entry.get("topic") or entry.get("revision_topic") or "").strip()
+        if not topic:
+            continue
+        subject = str(entry.get("subject") or "").strip() or "Mathematics"
+        exam = str(entry.get("exam") or "").strip() or "JEE MAIN"
+        key = (exam.lower(), subject.lower(), topic.lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        items.append(
+            {
+                "id": f"planner-{len(items) + 1}",
+                "exam": exam,
+                "subject": subject,
+                "topic": topic,
+                "status": "pending",
+                "note": "From today's planner",
+                "updated_at": str(payload.get("date") or payload.get("generated_at") or ""),
+            }
+        )
+    return items
+
+
 def get_progress_snapshot(name):
     state = load_progress_state(name)
+    raw_items = state.get("items", [])
+    if not raw_items:
+        raw_items = _planner_today_pending_items(name)
     items = sorted(
-        state.get("items", []),
+        [
+            {**item, "status": _canonical_status(item.get("status"))}
+            for item in raw_items
+            if isinstance(item, dict)
+        ],
         key=lambda item: (
             {"pending": 0, "revise": 1, "done": 2}.get(item.get("status"), 3),
             item.get("exam", ""),
@@ -759,9 +827,9 @@ def get_progress_snapshot(name):
     )
     counts = _count_items(items)
     grouped = {
-        "done": [item for item in items if item.get("status") == "done"],
-        "revise": [item for item in items if item.get("status") == "revise"],
-        "pending": [item for item in items if item.get("status") == "pending"],
+        "done": [item for item in items if _canonical_status(item.get("status")) == "done"],
+        "revise": [item for item in items if _canonical_status(item.get("status")) == "revise"],
+        "pending": [item for item in items if _canonical_status(item.get("status")) == "pending"],
     }
     exam_totals = _build_exam_totals(items)
     topic_momentum = _build_topic_momentum(items)

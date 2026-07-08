@@ -1,4 +1,4 @@
-﻿const splashScreen = document.getElementById("splashScreen");
+const splashScreen = document.getElementById("splashScreen");
 const astraPixels = document.getElementById("astraPixels");
 const enterAstraBtn = document.getElementById("enterAstraBtn");
 const skipAstraBtn = document.getElementById("skipAstraBtn");
@@ -48,6 +48,8 @@ const leagueTabProgressFill = document.getElementById("leagueTabProgressFill");
 const leagueTabLadder = document.getElementById("leagueTabLadder");
 const leagueTabMissions = document.getElementById("leagueTabMissions");
 const leagueTabRecent = document.getElementById("leagueTabRecent");
+const miniLeagueTier = document.getElementById("mini-league-tier");
+const miniLeagueLP = document.getElementById("mini-league-lp");
 const motivationQuickAccessBtn = document.getElementById("motivationQuickAccessBtn");
 const dailyMotivationQuote = document.getElementById("dailyMotivationQuote");
 const motivationBoostTokens = document.getElementById("motivationBoostTokens");
@@ -117,6 +119,12 @@ const journeyExamDateSaveBtn = document.getElementById("journeyExamDateSaveBtn")
 const beginJourneyBtn = document.getElementById("beginJourneyBtn");
 const journeySetupStatus = document.getElementById("journeySetupStatus");
 const todaysFocusCard = document.getElementById("todays-focus-card");
+const phaseBanner = document.getElementById("phase-banner");
+const phaseBannerText = document.getElementById("phase-banner-text");
+const phaseProgressFill = document.getElementById("phase-progress-fill");
+const phaseNextAction = document.getElementById("phase-next-action");
+const backlogIndicator = document.getElementById("backlog-indicator");
+const backlogText = document.getElementById("backlog-text");
 const todaysFocusSummary = document.getElementById("todaysFocusSummary");
 const todaysSessionBadge = document.getElementById("todaysSessionBadge");
 const todaysSubjectBadge = document.getElementById("todaysSubjectBadge");
@@ -270,6 +278,14 @@ const newLoungeChatBtn = document.getElementById("newLoungeChatBtn");
 const loungeConversationList = document.getElementById("loungeConversationList");
 const deletedLoungeConversationList = document.getElementById("deletedLoungeConversationList");
 const loungeChatSearchInput = document.getElementById("loungeChatSearchInput");
+const loungeConversationSelect = document.getElementById("loungeConversationSelect");
+const loungeRenameChatBtn = document.getElementById("loungeRenameChatBtn");
+const loungePinChatBtn = document.getElementById("loungePinChatBtn");
+const loungeDeleteChatBtn = document.getElementById("loungeDeleteChatBtn");
+const loungeConversationMeta = document.getElementById("loungeConversationMeta");
+const deletedLoungeConversationSelect = document.getElementById("deletedLoungeConversationSelect");
+const restoreLoungeChatBtn = document.getElementById("restoreLoungeChatBtn");
+const deletedLoungeConversationMeta = document.getElementById("deletedLoungeConversationMeta");
 const lastMinuteFeed = document.getElementById("lastMinuteFeed");
 const tipsFeed = document.getElementById("tipsFeed");
 const chatForm = document.getElementById("chatForm");
@@ -371,25 +387,25 @@ const tipsResourceList = document.getElementById("tipsResourceList");
 const learningSourcesList = document.getElementById("learningSourcesList");
 const learningSourcePackBadge = document.getElementById("learningSourcePackBadge");
 const learningSourceRouteNote = document.getElementById("learningSourceRouteNote");
-const networkStats = document.getElementById("networkStats");
-const networkNote = document.getElementById("networkNote");
-const groupStudyStatusPill = document.getElementById("groupStudyStatusPill");
-const groupStudyEnabledToggle = document.getElementById("groupStudyEnabledToggle");
-const groupStudyModeSelect = document.getElementById("groupStudyModeSelect");
-const groupStudySizeSelect = document.getElementById("groupStudySizeSelect");
-const groupStudyMinutesSelect = document.getElementById("groupStudyMinutesSelect");
-const groupStudyFocusInput = document.getElementById("groupStudyFocusInput");
-const saveGroupStudyBtn = document.getElementById("saveGroupStudyBtn");
-const rerollGroupStudyBtn = document.getElementById("rerollGroupStudyBtn");
-const soloGroupStudyBtn = document.getElementById("soloGroupStudyBtn");
-const groupStudySummary = document.getElementById("groupStudySummary");
-const groupStudyRuleChips = document.getElementById("groupStudyRuleChips");
-const groupStudyMembers = document.getElementById("groupStudyMembers");
-const groupStudyPlan = document.getElementById("groupStudyPlan");
-const tutorNetworkInsights = document.getElementById("tutorNetworkInsights");
-const studentMatchesList = document.getElementById("studentMatchesList");
-const studyCircleList = document.getElementById("studyCircleList");
-const refreshNetworkBtn = document.getElementById("refreshNetworkBtn");
+const studyGroupsStatus = document.getElementById("studyGroupsStatus");
+const refreshStudyGroupsBtn = document.getElementById("refreshStudyGroupsBtn");
+const activeGroupSessionPill = document.getElementById("activeGroupSessionPill");
+const activeGroupSessionCard = document.getElementById("activeGroupSessionCard");
+const groupCandidatesList = document.getElementById("groupCandidatesList");
+const groupSessionPanel = document.getElementById("groupSessionPanel");
+const groupSessionTitle = document.getElementById("groupSessionTitle");
+const groupSessionMeta = document.getElementById("groupSessionMeta");
+const groupMainFeed = document.getElementById("groupMainFeed");
+const groupMainForm = document.getElementById("groupMainForm");
+const groupMainInput = document.getElementById("groupMainInput");
+const groupTutorNextBtn = document.getElementById("groupTutorNextBtn");
+const groupStepOutBtn = document.getElementById("groupStepOutBtn");
+const groupBreakoutPanel = document.getElementById("groupBreakoutPanel");
+const groupBreakoutFeed = document.getElementById("groupBreakoutFeed");
+const groupBreakoutForm = document.getElementById("groupBreakoutForm");
+const groupBreakoutInput = document.getElementById("groupBreakoutInput");
+const groupRejoinBtn = document.getElementById("groupRejoinBtn");
+const groupVoiceToggle = document.getElementById("groupVoiceToggle");
 const refreshProgressBtn = document.getElementById("refreshProgressBtn");
 const progressReminderText = document.getElementById("progressReminderText");
 const progressWeekSummary = document.getElementById("progressWeekSummary");
@@ -402,6 +418,7 @@ const progressPreviousWeekRate = document.getElementById("progressPreviousWeekRa
 const progressImprovementRate = document.getElementById("progressImprovementRate");
 const progressNeedFocus = document.getElementById("progressNeedFocus");
 const progressComparisonText = document.getElementById("progressComparisonText");
+const progressTrendLensBtn = document.getElementById("progressTrendLensBtn");
 const analyticsInsightCard = document.getElementById("analytics-insight-card");
 const performanceChartCard = document.getElementById("performance-chart");
 const performanceChartSummary = document.getElementById("performanceChartSummary");
@@ -607,6 +624,9 @@ let activeTutorConversationId = null;
 let journeyPlanSnapshot = null;
 let journeyWeeklySnapshot = null;
 let todaysFocusSnapshot = null;
+let latestPhaseStatus = null;
+let latestBacklogSummary = null;
+let latestEngagementSnapshot = null;
 let journeyTimerInterval = null;
 let journeyTimerStartedAt = null;
 let activeJourneySession = null;
@@ -639,7 +659,10 @@ let deletedTutorConversationSnapshot = [];
 let activeTutorMode = localStorage.getItem("alt_tutor_mode") || "calm";
 let activeLoungeConversationId = null;
 let loungeConversationSearch = "";
+let loungeConversationSnapshot = [];
+let deletedLoungeConversationSnapshot = [];
 let selectedTutorTraits = [];
+let activeGroupSession = null;
 let activeMockTest = null;
 let activeMockIndex = 0;
 let activeMockAnswers = [];
@@ -827,7 +850,7 @@ const TAB_CONFIG = {
   tips: { buttonTab: "tipsTab", label: "Tips" },
   weekly: { buttonTab: "weeklyTab", label: "Plan" },
   lounge: { buttonTab: "loungeTab", label: "Lounge" },
-  network: { buttonTab: "networkTab", label: "Network" },
+  network: { buttonTab: "networkTab", label: "Study groups" },
   league: { buttonTab: "leagueTab", label: "League" },
   personalize: { buttonTab: "personalizeTab", label: "Personalize" },
   guide: { buttonTab: "guideTab", label: "Guide" },
@@ -987,7 +1010,7 @@ function setActiveSectionGroup(section = "home", { skipTabSwitch = false } = {})
 }
 
 function setHomeSubtab(subtab = "overview") {
-  const nextSubtab = ["overview", "motivation", "personality", "progress"].includes(String(subtab || "").trim())
+  const nextSubtab = ["overview", "motivation", "personality"].includes(String(subtab || "").trim())
     ? String(subtab || "").trim()
     : "overview";
   activeHomeSubtab = nextSubtab;
@@ -1012,8 +1035,6 @@ function setHomeSubtab(subtab = "overview") {
     } else {
       renderMotivationStory(activeMotivationStoryIndex);
     }
-  } else if (activeHomeSubtab === "progress") {
-    updateOverviewSnapshotStripFromWeeklyPlan(null);
   }
   updateOverviewCommandCenter();
   scrollActivePanelToTop("overviewTab");
@@ -1041,7 +1062,11 @@ function setPlanSubtab(subtab = "today") {
     scrollPlanPanelToTop();
     return;
   }
-  if (activePlanSubtab === "progress") {
+  if (activePlanSubtab === "today") {
+    window.setTimeout(() => {
+      void refreshTodayPhaseAndBacklog();
+    }, 0);
+  } else if (activePlanSubtab === "progress") {
     window.setTimeout(() => {
       fetchProgress(activeProfile.name);
     }, 0);
@@ -1110,6 +1135,56 @@ function showToast(message, type = "success") {
     toast.classList.add("hide-toast");
     window.setTimeout(() => toast.remove(), 220);
   }, 4000);
+}
+function showLPToast(amount, reason) {
+  const value = Number(amount || 0);
+  if (!value) {
+    return;
+  }
+  showToast(`+${value} LP - ${reason || "League points earned"}`, "success");
+}
+
+function showTierPromotion(oldTier, newTier) {
+  if (!oldTier || !newTier || oldTier === newTier) {
+    return;
+  }
+  const modal = document.createElement("div");
+  modal.className = "phase-transition-modal tier-promotion-modal";
+  modal.innerHTML = `
+    <div class="phase-transition-card">
+      <p class="eyebrow">League Promotion</p>
+      <h3>Tier Up!</h3>
+      <p>${escapeHtml(oldTier)} -> ${escapeHtml(newTier)}</p>
+      <button type="button">Nice</button>
+    </div>
+  `;
+  const close = () => modal.remove();
+  modal.querySelector("button").addEventListener("click", close);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      close();
+    }
+  });
+  document.body.appendChild(modal);
+  window.setTimeout(close, 5000);
+}
+
+function handleLPAwards(awards) {
+  const items = Array.isArray(awards) ? awards : [];
+  items.forEach((award) => {
+    showLPToast(award.amount || award.points, award.reason);
+  });
+}
+
+async function refreshEngagementAfterLPAward(awards) {
+  handleLPAwards(awards);
+  if (activeProfile) {
+    try {
+      await fetchEngagement(activeProfile.name);
+    } catch (error) {
+      console.warn("Could not refresh engagement after LP award:", error);
+    }
+  }
 }
 
 function showKnowledgeBaseTag(text, visible = false) {
@@ -2053,9 +2128,6 @@ function renderAnalyticsDashboard(payload) {
     });
   }
 
-  if (progressInsightCard && analyticsInsightCard) {
-    progressInsightCard.classList.add("hidden");
-  }
   if (chapterAnalyticsList) {
     chapterAnalyticsList.innerHTML = "";
     const addAnalyticsRow = (titleText, metaText) => {
@@ -2070,16 +2142,6 @@ function renderAnalyticsDashboard(payload) {
       chapterAnalyticsList.appendChild(row);
     };
     const dailyScores = Array.isArray(trends.daily_scores) ? trends.daily_scores : [];
-    addAnalyticsRow(
-      "Performance trend",
-      dailyScores.length
-        ? `Weekly improvement ${Number(trends.weekly_improvement || 0).toFixed(1)}%, best day ${trends.best_day || "n/a"}.`
-        : "Complete your first session to see analytics here."
-    );
-    addAnalyticsRow(
-      "Consistency",
-      `Current streak ${Number(consistency.current_streak || 0)} day(s), consistency ${Number(consistency.consistency_percent || 0).toFixed(0)}%.`
-    );
     const formatTopicList = (items) => (Array.isArray(items) ? items : [])
       .slice(0, 5)
       .map((item) => {
@@ -4981,11 +5043,16 @@ function renderStudentInsights(payload) {
 function renderEngagement(engagement) {
   const hasSidebarLeague = leagueName && leaguePoints && leagueNext && leagueRecent && leagueProgressFill && leagueMissions;
   const hasTabLeague = leagueTabName && leagueTabPoints && leagueTabStreak && leagueTabNext && leagueTabProgressFill && leagueTabLadder && leagueTabMissions && leagueTabRecent;
-  if (!hasSidebarLeague && !hasTabLeague) {
+  const hasMiniLeague = miniLeagueTier && miniLeagueLP;
+  if (!hasSidebarLeague && !hasTabLeague && !hasMiniLeague) {
     return;
   }
 
   if (!engagement) {
+    if (hasMiniLeague) {
+      miniLeagueTier.textContent = "Bronze 1";
+      miniLeagueLP.textContent = "0 LP";
+    }
     if (hasSidebarLeague) {
       leagueName.textContent = "Bronze 1";
       leaguePoints.textContent = "0 points collected so far.";
@@ -5021,6 +5088,11 @@ function renderEngagement(engagement) {
   const progressPercent = Math.max(0, Math.min(100, engagement.promotion_progress_percent || 0));
   const leagueIndex = Math.max(0, LEAGUE_ORDER.indexOf(currentLeague));
 
+  if (hasMiniLeague) {
+    miniLeagueTier.textContent = currentLeague;
+    miniLeagueLP.textContent = `${points} LP`;
+  }
+
   if (hasSidebarLeague) {
     leagueName.textContent = currentLeague;
     leaguePoints.textContent = `${points} points | Level ${engagement.level || 1} | ${streak}-day streak`;
@@ -5039,35 +5111,24 @@ function renderEngagement(engagement) {
       sidebarMissions.slice(0, 4).forEach((mission) => {
         const row = document.createElement("div");
         row.className = `league-mission-card ${mission.status === "done" ? "mission-done" : "mission-active"}`;
-
         const title = document.createElement("p");
         title.className = "memory-heading";
         title.textContent = mission.title;
-
         const detail = document.createElement("p");
         detail.className = "muted";
         detail.textContent = mission.detail;
-
-        const footer = document.createElement("div");
-        footer.className = "mission-footer";
-        const status = document.createElement("span");
-        status.className = `pill ${mission.status === "done" ? "done-pill" : "pending-pill"}`;
-        status.textContent = mission.status === "done" ? `Done +${mission.reward}` : `Active +${mission.reward}`;
-        footer.appendChild(status);
-
         row.appendChild(title);
         row.appendChild(detail);
-        row.appendChild(footer);
         leagueMissions.appendChild(row);
       });
     }
 
     leagueRecent.innerHTML = "";
-    const milestones = engagement.recent_milestones || [];
-    if (!milestones.length) {
-      leagueRecent.innerHTML = '<p class="muted">Finish tasks, revise topics, and log practice attempts to start climbing the leagues.</p>';
+    const recentEvents = engagement.recent_events || [];
+    if (!recentEvents.length) {
+      leagueRecent.innerHTML = '<p class="muted">Your latest point wins will appear here.</p>';
     } else {
-      milestones.slice().reverse().slice(0, 3).forEach((item) => {
+      recentEvents.slice(0, 5).forEach((item) => {
         const row = document.createElement("p");
         row.className = "muted";
         row.textContent = `+${item.points} points for ${item.reason}`;
@@ -5075,7 +5136,6 @@ function renderEngagement(engagement) {
       });
     }
   }
-
   if (hasTabLeague) {
     leagueTabName.textContent = currentLeague;
     leagueTabPoints.textContent = String(points);
@@ -5148,16 +5208,23 @@ function renderEngagement(engagement) {
 
 async function fetchEngagement(studentName) {
   if (!studentName) {
+    latestEngagementSnapshot = null;
     renderEngagement(null);
     return;
   }
 
+  const previousTier = latestEngagementSnapshot && latestEngagementSnapshot.current_league;
   const response = await fetch(`/api/engagement/${encodeURIComponent(studentName)}`);
   const payload = await response.json();
   if (!response.ok) {
     throw new Error(payload.detail || "Could not load league progress.");
   }
-  renderEngagement(payload.engagement || null);
+  latestEngagementSnapshot = payload.engagement || null;
+  renderEngagement(latestEngagementSnapshot);
+  const nextTier = latestEngagementSnapshot && latestEngagementSnapshot.current_league;
+  if (previousTier && nextTier && previousTier !== nextTier) {
+    showTierPromotion(previousTier, nextTier);
+  }
 }
 
 function renderMemoryManager(memory) {
@@ -5847,6 +5914,7 @@ async function finishMockTest() {
     payload.time_taken_minutes = timeTaken;
     setActiveTab("mockTestTab");
     renderMockReport(payload);
+    await refreshEngagementAfterLPAward(payload.lp_awards);
     if (mockTestStatus) {
       mockTestStatus.textContent = `Mock complete. Score ${payload.score}/${payload.max_score} (${payload.percentage}%).`;
     }
@@ -5926,6 +5994,7 @@ async function analyseExternalMock() {
       throw new Error(result.detail || "Could not analyse this mock.");
     }
     renderExternalMockAnalysis(result);
+    await refreshEngagementAfterLPAward(result.lp_awards);
     await loadMockHistory();
   } catch (error) {
     if (mockExternalAnalysisResult) {
@@ -5989,306 +6058,172 @@ function renderMockHistory(results) {
   });
 }
 
-function renderNetworkStats(stats) {
-  if (!networkStats) {
+function renderStudyGroupMessage(container, message, currentUserId) {
+  if (!container || !message) {
     return;
   }
-
-  networkStats.innerHTML = "";
-  const items = [
-    { label: "Peers in network", value: stats && stats.peer_count ? stats.peer_count : 0 },
-    { label: "Strong matches", value: stats && stats.match_count ? stats.match_count : 0 },
-    { label: "Study circles", value: stats && stats.circle_count ? stats.circle_count : 0 },
-    { label: "Tutor network", value: (stats && stats.tutor_network_ready) || "starter" },
-  ];
-
-  items.forEach((item) => {
-    const card = document.createElement("div");
-    card.className = "network-stat-card";
-
-    const value = document.createElement("strong");
-    value.textContent = item.value;
-
-    const label = document.createElement("span");
-    label.textContent = item.label;
-
-    card.appendChild(value);
-    card.appendChild(label);
-    networkStats.appendChild(card);
-  });
+  const bubble = document.createElement("div");
+  const isStudent = message.sender_type === "student";
+  const isOwn = isStudent && message.sender_id === currentUserId;
+  bubble.className = `message ${isStudent ? "student" : "tutor"}${isOwn ? " own-group-message" : ""}`;
+  const label = document.createElement("p");
+  label.className = "group-message-label";
+  label.textContent = isStudent ? (isOwn ? "You" : message.sender_id || "Student") : "Classroom tutor";
+  const body = document.createElement("p");
+  body.textContent = message.content || "";
+  bubble.appendChild(label);
+  bubble.appendChild(body);
+  container.appendChild(bubble);
 }
 
-function renderSimpleNetworkList(container, items, emptyText, buildCard) {
+function renderStudyGroupFeed(container, messages, emptyText) {
   if (!container) {
     return;
   }
-
   container.innerHTML = "";
-  if (!items || !items.length) {
-    const empty = document.createElement("p");
-    empty.className = "muted";
-    empty.textContent = emptyText;
+  if (!messages || !messages.length) {
+    const empty = document.createElement("div");
+    empty.className = "message tutor";
+    empty.innerHTML = `<p>${escapeHtml(emptyText)}</p>`;
     container.appendChild(empty);
     return;
   }
-
-  items.forEach((item) => {
-    container.appendChild(buildCard(item));
-  });
+  messages.forEach((message) => renderStudyGroupMessage(container, message, activeProfile && activeProfile.name));
+  container.scrollTop = container.scrollHeight;
 }
 
-function buildTutorInsightCard(item) {
-  const card = document.createElement("div");
-  card.className = "network-item-card";
-
+function renderActiveGroupSession(session) {
+  activeGroupSession = session || null;
+  if (activeGroupSessionPill) {
+    activeGroupSessionPill.textContent = session ? session.status || "scheduled" : "None";
+  }
+  if (!activeGroupSessionCard) {
+    return;
+  }
+  activeGroupSessionCard.innerHTML = "";
+  if (!session) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "No active group session yet.";
+    activeGroupSessionCard.appendChild(empty);
+    return;
+  }
   const title = document.createElement("p");
   title.className = "exam-chip-title";
-  title.textContent = item.title;
-
-  const detail = document.createElement("p");
-  detail.className = "muted";
-  detail.textContent = item.detail;
-
-  const signal = document.createElement("span");
-  signal.className = "memory-chip";
-  signal.textContent = item.signal || "network insight";
-
-  card.appendChild(title);
-  card.appendChild(detail);
-  card.appendChild(signal);
-  return card;
-}
-
-function buildStudentMatchCard(item) {
-  const card = document.createElement("div");
-  card.className = "network-item-card";
-
-  const title = document.createElement("p");
-  title.className = "exam-chip-title";
-  title.textContent = `${item.label} - ${item.compatibility_band}`;
-
+  title.textContent = session.topic || "Group session";
   const meta = document.createElement("p");
   meta.className = "muted";
-  meta.textContent = `Compatibility: ${item.compatibility_score}/100 | ${item.study_style}`;
-
-  const traits = document.createElement("div");
-  traits.className = "manager-chip-list";
-  (item.shared_traits || []).forEach((trait) => {
+  meta.textContent = `${session.exam || "JEE"} | ${session.pace_band || "steady"} pace | ${session.member_count || 0}/3 students`;
+  const members = document.createElement("div");
+  members.className = "manager-chip-list";
+  (session.members || []).forEach((member) => {
     const chip = document.createElement("span");
     chip.className = "memory-chip";
-    chip.textContent = trait;
-    traits.appendChild(chip);
+    chip.textContent = `${member.label || member.user_id}${member.status === "in_breakout" ? " - breakout" : ""}`;
+    members.appendChild(chip);
   });
-
-  card.appendChild(title);
-  card.appendChild(meta);
-  card.appendChild(traits);
-  return card;
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "ghost-button";
+  button.textContent = session.status === "scheduled" ? "Join session" : "Open session";
+  button.addEventListener("click", () => openGroupSession(session));
+  activeGroupSessionCard.appendChild(title);
+  activeGroupSessionCard.appendChild(meta);
+  activeGroupSessionCard.appendChild(members);
+  activeGroupSessionCard.appendChild(button);
 }
 
-function buildStudyCircleCard(item) {
+function renderGroupCandidateCard(group) {
   const card = document.createElement("div");
-  card.className = "network-item-card";
-
+  card.className = "study-group-option-card";
   const title = document.createElement("p");
   title.className = "exam-chip-title";
-  title.textContent = item.title;
-
+  title.textContent = group.topic || "Pending topic";
   const meta = document.createElement("p");
   meta.className = "muted";
-  meta.textContent = `${item.fit} | Potential peers: ${item.potential_peers}`;
-
-  const detail = document.createElement("p");
-  detail.className = "muted";
-  detail.textContent = item.reason;
-
+  meta.textContent = `${group.exam || "JEE"} | ${group.pace_band || "steady"} pace | ${group.member_count || 1}/3 students`;
+  const members = document.createElement("div");
+  members.className = "manager-chip-list";
+  (group.members || []).slice(0, 3).forEach((member) => {
+    const chip = document.createElement("span");
+    chip.className = "memory-chip";
+    chip.textContent = member.label || member.user_id || "Student";
+    members.appendChild(chip);
+  });
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = "Join";
+  button.addEventListener("click", () => joinStudyGroup(group));
   card.appendChild(title);
   card.appendChild(meta);
-  card.appendChild(detail);
+  card.appendChild(members);
+  card.appendChild(button);
   return card;
 }
 
-function getGroupStudyPreferencesFromForm() {
-  return {
-    enabled: !!(groupStudyEnabledToggle && groupStudyEnabledToggle.checked),
-    mode: groupStudyModeSelect ? groupStudyModeSelect.value : "solo",
-    group_size: Number(groupStudySizeSelect && groupStudySizeSelect.value ? groupStudySizeSelect.value : "3"),
-    session_minutes: Number(groupStudyMinutesSelect && groupStudyMinutesSelect.value ? groupStudyMinutesSelect.value : "60"),
-    focus: groupStudyFocusInput ? groupStudyFocusInput.value.trim() : "",
-  };
-}
-
-function applyGroupStudyPreferencesToForm(profile) {
-  const prefs = (profile && profile.group_study_preferences) || {};
-  if (groupStudyEnabledToggle) {
-    groupStudyEnabledToggle.checked = !!prefs.enabled;
-  }
-  if (groupStudyModeSelect) {
-    groupStudyModeSelect.value = prefs.mode || "solo";
-  }
-  if (groupStudySizeSelect) {
-    groupStudySizeSelect.value = String(prefs.group_size || 3);
-  }
-  if (groupStudyMinutesSelect) {
-    groupStudyMinutesSelect.value = String(prefs.session_minutes || 60);
-  }
-  if (groupStudyFocusInput) {
-    groupStudyFocusInput.value = prefs.focus || "";
-  }
-}
-
-function buildGroupStudyMemberCard(item) {
-  const card = document.createElement("div");
-  card.className = "network-item-card";
-
-  const title = document.createElement("p");
-  title.className = "exam-chip-title";
-  title.textContent = `${item.label}${item.role === "You" ? " (You)" : ""}`;
-
-  const meta = document.createElement("p");
-  meta.className = "muted";
-  meta.textContent = `${item.role} | Focus: ${item.focus || "general revision"} | ${item.study_style || "balanced support"}`;
-
-  card.appendChild(title);
-  card.appendChild(meta);
-
-  if (item.compatibility_band && item.role !== "You") {
-    const band = document.createElement("span");
-    band.className = "memory-chip";
-    band.textContent = `${item.compatibility_band}${item.compatibility_score ? ` - ${item.compatibility_score}/100` : ""}`;
-    card.appendChild(band);
-  }
-
-  if (Array.isArray(item.shared_traits) && item.shared_traits.length) {
-    const traits = document.createElement("div");
-    traits.className = "manager-chip-list";
-    item.shared_traits.slice(0, 3).forEach((trait) => {
-      const chip = document.createElement("span");
-      chip.className = "memory-chip";
-      chip.textContent = trait;
-      traits.appendChild(chip);
-    });
-    card.appendChild(traits);
-  }
-
-  return card;
-}
-
-function buildGroupStudyPlanCard(step) {
-  const card = document.createElement("div");
-  card.className = "network-item-card";
-
-  const title = document.createElement("p");
-  title.className = "exam-chip-title";
-  title.textContent = step.title;
-
-  const meta = document.createElement("p");
-  meta.className = "muted";
-  meta.textContent = `${step.minutes} min`;
-
-  const detail = document.createElement("p");
-  detail.className = "muted";
-  detail.textContent = step.detail;
-
-  card.appendChild(title);
-  card.appendChild(meta);
-  card.appendChild(detail);
-  return card;
-}
-
-function renderGroupStudy(groupStudy) {
-  if (!groupStudy) {
-    if (groupStudyStatusPill) {
-      groupStudyStatusPill.textContent = "Solo";
+function renderStudyGroups(payload) {
+  const activeSession = payload && payload.active_session;
+  renderActiveGroupSession(activeSession || null);
+  if (studyGroupsStatus) {
+    if (payload && payload.next_topic) {
+      studyGroupsStatus.textContent = `Next pending topic: ${payload.next_topic.topic || "topic"}. Pace band: ${payload.pace_band || "steady"}.`;
+    } else {
+      studyGroupsStatus.textContent = "Add a pending topic in Progress so Astra can match a group class.";
     }
-    if (groupStudySummary) {
-      groupStudySummary.textContent = "Turn on group study to let Astra build a shared room and a common plan.";
+  }
+  if (groupCandidatesList) {
+    groupCandidatesList.innerHTML = "";
+    const groups = (payload && payload.groups) || [];
+    if (!groups.length) {
+      const empty = document.createElement("p");
+      empty.className = "muted";
+      empty.textContent = "No group options are ready yet.";
+      groupCandidatesList.appendChild(empty);
+    } else {
+      groups.forEach((group) => groupCandidatesList.appendChild(renderGroupCandidateCard(group)));
     }
-    renderSimpleNetworkList(groupStudyMembers, [], "Matched learners will appear here when group study is active.", buildGroupStudyMemberCard);
-    renderSimpleNetworkList(groupStudyPlan, [], "The shared plan for the room will appear here.", buildGroupStudyPlanCard);
-    if (groupStudyRuleChips) {
-      groupStudyRuleChips.innerHTML = "";
-    }
+  }
+  if (activeSession && activeSession.main_messages) {
+    openGroupSession(activeSession, { silent: true });
+  }
+}
+
+function openGroupSession(session, options = {}) {
+  if (!session) {
     return;
   }
-
-  if (groupStudyStatusPill) {
-    groupStudyStatusPill.textContent = groupStudy.enabled ? "Active" : "Solo";
+  activeGroupSession = session;
+  if (groupSessionPanel) {
+    groupSessionPanel.classList.remove("hidden");
   }
-  if (groupStudySummary) {
-    const summaryParts = [];
-    if (groupStudy.room_title) {
-      summaryParts.push(groupStudy.room_title);
-    }
-    if (groupStudy.summary) {
-      summaryParts.push(groupStudy.summary);
-    }
-    if (groupStudy.actions && groupStudy.actions.length) {
-      summaryParts.push(groupStudy.actions.join(" "));
-    }
-    groupStudySummary.textContent = summaryParts.join(" ");
+  if (groupSessionTitle) {
+    groupSessionTitle.textContent = session.topic || "Group session";
   }
-  if (groupStudyRuleChips) {
-    groupStudyRuleChips.innerHTML = "";
-    (groupStudy.group_rules || []).forEach((rule) => {
-      const chip = document.createElement("span");
-      chip.className = "memory-chip";
-      chip.textContent = rule;
-      groupStudyRuleChips.appendChild(chip);
-    });
+  if (groupSessionMeta) {
+    groupSessionMeta.textContent = `${session.subject || "Subject"} | ${session.exam || "JEE"} | ${session.pace_band || "steady"} pace | ${session.member_count || 0}/3 students`;
   }
-  renderSimpleNetworkList(
-    groupStudyMembers,
-    groupStudy.members || [],
-    "Matched learners will appear here when group study is active.",
-    buildGroupStudyMemberCard,
-  );
-  renderSimpleNetworkList(
-    groupStudyPlan,
-    groupStudy.session_plan || [],
-    "The shared plan for the room will appear here.",
-    buildGroupStudyPlanCard,
-  );
+  renderStudyGroupFeed(groupMainFeed, session.main_messages || [], "The group class feed will appear here.");
+  renderStudyGroupFeed(groupBreakoutFeed, session.breakout_messages || [], "Step out when you need a private clarification.");
+  if (groupBreakoutPanel) {
+    groupBreakoutPanel.classList.toggle("hidden", session.current_user_status !== "in_breakout");
+  }
+  if (!options.silent && groupSessionPanel) {
+    groupSessionPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
 
-function renderNetwork(payload) {
-  if (!payload) {
-    renderNetworkStats(null);
-    renderGroupStudy(null);
-    renderSimpleNetworkList(tutorNetworkInsights, [], "Tutor-network insight cards will appear here.", buildTutorInsightCard);
-    renderSimpleNetworkList(studentMatchesList, [], "No strong learner matches yet.", buildStudentMatchCard);
-    renderSimpleNetworkList(studyCircleList, [], "Suggested circles will appear here.", buildStudyCircleCard);
-    if (networkNote) {
-      networkNote.textContent = "Your tutor stays personal to you. This layer shares anonymized teaching patterns, learner similarity, and opt-in group study without turning the app into distracting social media.";
-    }
+async function refreshActiveGroupMessages() {
+  if (!activeProfile || !activeGroupSession || !activeGroupSession.id) {
     return;
   }
-
-  renderNetworkStats(payload.stats || null);
-  renderGroupStudy(payload.group_study || null);
-  renderSimpleNetworkList(
-    tutorNetworkInsights,
-    (payload.tutor_network && payload.tutor_network.insights) || [],
-    "Tutor-network insight cards will appear here.",
-    buildTutorInsightCard,
-  );
-  renderSimpleNetworkList(
-    studentMatchesList,
-    payload.student_matches || [],
-    "The app needs a little more peer overlap before it can suggest similar learners here.",
-    buildStudentMatchCard,
-  );
-  renderSimpleNetworkList(
-    studyCircleList,
-    payload.study_circles || [],
-    "Suggested circles will appear here once enough academic overlap exists.",
-    buildStudyCircleCard,
-  );
-  if (networkNote) {
-    networkNote.textContent = payload.network_note || "This layer shares anonymized teaching patterns, learner similarity, and opt-in group study.";
+  const response = await fetch(`/api/group-sessions/${encodeURIComponent(activeGroupSession.id)}/messages?user_id=${encodeURIComponent(activeProfile.name)}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load group messages.");
   }
+  activeGroupSession = { ...(payload.session || activeGroupSession), main_messages: payload.main_messages || [], breakout_messages: payload.breakout_messages || [] };
+  openGroupSession(activeGroupSession, { silent: true });
 }
-
 function createProgressItemCard(item) {
   const card = document.createElement("div");
   card.className = "progress-item-card";
@@ -7339,6 +7274,7 @@ function renderChapterTest(questions, meta = {}) {
         submitBtn.disabled = false;
         submitBtn.textContent = "Submitted";
       }
+      await refreshEngagementAfterLPAward(payload.lp_awards);
       await refreshJourneyDashboard();
     } catch (error) {
       if (submitBtn) {
@@ -7486,6 +7422,7 @@ async function completeChapterSubtopicFromCheckpoint(checkpointScore, timeSpentM
     if (!response.ok) {
       throw new Error(payload.detail || "Could not complete the subtopic checkpoint.");
     }
+    await refreshEngagementAfterLPAward(payload.lp_awards);
     activeChapterSession = payload.session || activeChapterSession;
     activeChapterSubtopic = payload.next_subtopic || null;
     if (selectedChapterSnapshot) {
@@ -8452,108 +8389,115 @@ function closeTutorConversationDrawer() {
   }
 }
 
-function renderLoungeConversations(conversations) {
-  if (!loungeConversationList) {
-    return;
-  }
-  loungeConversationList.innerHTML = "";
-  if (!conversations || !conversations.length) {
-    loungeConversationList.innerHTML = `<p class="muted">No saved lounge chats yet. Click "New chat" to start one.</p>`;
-    return;
-  }
+function formatLoungeConversationLabel(conversation) {
+  const title = conversation && conversation.title ? conversation.title : "New chat";
+  const pinned = conversation && conversation.pinned_at ? "Pinned - " : "";
+  return `${pinned}${title}`;
+}
 
-  conversations.forEach((conversation) => {
-    const row = document.createElement("div");
-    row.className = `conversation-row${Number(conversation.id) === Number(activeLoungeConversationId) ? " active" : ""}`;
+function getSelectedLoungeConversation() {
+  return loungeConversationSnapshot.find((conversation) => Number(conversation.id) === Number(activeLoungeConversationId)) || null;
+}
 
-    const copy = document.createElement("div");
-    copy.className = "conversation-copy";
+function getSelectedDeletedLoungeConversation() {
+  const selectedId = deletedLoungeConversationSelect ? Number(deletedLoungeConversationSelect.value) : NaN;
+  return deletedLoungeConversationSnapshot.find((conversation) => Number(conversation.id) === selectedId) || null;
+}
 
-    const openButton = document.createElement("button");
-    openButton.type = "button";
-    openButton.className = "conversation-open";
-    openButton.textContent = `${conversation.pinned_at ? "Pinned: " : ""}${conversation.title || "New chat"}`;
-    openButton.addEventListener("click", async () => {
-      activeLoungeConversationId = conversation.id;
-      renderLoungeConversations(conversations);
-      await fetchChatHistory("lounge", activeLoungeConversationId);
-    });
-
-    const meta = document.createElement("span");
-    meta.className = "conversation-meta";
-    meta.textContent = conversation.updated_at || "";
-    copy.appendChild(openButton);
-    copy.appendChild(meta);
-
-    const actions = document.createElement("div");
-    actions.className = "conversation-actions";
-
-    const renameButton = document.createElement("button");
-    renameButton.type = "button";
-    renameButton.className = "ghost-button";
-    renameButton.textContent = "Rename";
-    renameButton.addEventListener("click", async () => {
-      const nextTitle = window.prompt("Rename this lounge chat", conversation.title || "New chat");
-      if (nextTitle === null) {
-        return;
-      }
-      await updateConversationByMode("lounge", conversation.id, { title: nextTitle });
-    });
-
-    const pinButton = document.createElement("button");
-    pinButton.type = "button";
-    pinButton.className = "ghost-button";
-    pinButton.textContent = conversation.pinned_at ? "Unpin" : "Pin";
-    pinButton.addEventListener("click", async () => {
-      await updateConversationByMode("lounge", conversation.id, { pinned: !conversation.pinned_at });
-    });
-
-    actions.appendChild(renameButton);
-    actions.appendChild(pinButton);
-    row.appendChild(copy);
-    row.appendChild(actions);
-    loungeConversationList.appendChild(row);
+function setLoungeActionState(conversation) {
+  const disabled = !conversation;
+  [loungeRenameChatBtn, loungePinChatBtn, loungeDeleteChatBtn].forEach((button) => {
+    if (button) {
+      button.disabled = disabled;
+    }
   });
+  if (loungePinChatBtn) {
+    loungePinChatBtn.textContent = conversation && conversation.pinned_at ? "Unpin" : "Pin";
+  }
+  if (loungeConversationMeta) {
+    loungeConversationMeta.textContent = conversation
+      ? `Selected: ${conversation.title || "New chat"}${conversation.updated_at ? ` - ${conversation.updated_at}` : ""}`
+      : "Start a new lounge chat when you want this space to remember the conversation.";
+  }
+}
+
+function renderLoungeConversations(conversations) {
+  loungeConversationSnapshot = Array.isArray(conversations) ? conversations : [];
+  if (!loungeConversationList || !loungeConversationSelect) {
+    return;
+  }
+
+  loungeConversationSelect.innerHTML = "";
+  if (!loungeConversationSnapshot.length) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "No saved lounge chats yet";
+    loungeConversationSelect.appendChild(option);
+    loungeConversationSelect.disabled = true;
+    activeLoungeConversationId = null;
+    setLoungeActionState(null);
+    return;
+  }
+
+  const activeStillExists = loungeConversationSnapshot.some((conversation) => Number(conversation.id) === Number(activeLoungeConversationId));
+  if (!activeStillExists) {
+    activeLoungeConversationId = loungeConversationSnapshot[0].id;
+  }
+
+  loungeConversationSnapshot.forEach((conversation) => {
+    const option = document.createElement("option");
+    option.value = String(conversation.id);
+    option.textContent = formatLoungeConversationLabel(conversation);
+    option.selected = Number(conversation.id) === Number(activeLoungeConversationId);
+    loungeConversationSelect.appendChild(option);
+  });
+  loungeConversationSelect.disabled = false;
+  setLoungeActionState(getSelectedLoungeConversation());
 }
 
 function renderDeletedLoungeConversations(conversations) {
-  if (!deletedLoungeConversationList) {
-    return;
-  }
-  deletedLoungeConversationList.innerHTML = "";
-  if (!conversations || !conversations.length) {
-    deletedLoungeConversationList.innerHTML = `<p class="muted">Deleted lounge chats will appear here when available.</p>`;
+  deletedLoungeConversationSnapshot = Array.isArray(conversations) ? conversations : [];
+  if (!deletedLoungeConversationList || !deletedLoungeConversationSelect) {
     return;
   }
 
-  conversations.forEach((conversation) => {
-    const row = document.createElement("div");
-    row.className = "conversation-row deleted";
+  deletedLoungeConversationSelect.innerHTML = "";
+  if (!deletedLoungeConversationSnapshot.length) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "No deleted lounge chats";
+    deletedLoungeConversationSelect.appendChild(option);
+    deletedLoungeConversationSelect.disabled = true;
+    if (restoreLoungeChatBtn) {
+      restoreLoungeChatBtn.disabled = true;
+    }
+    if (deletedLoungeConversationMeta) {
+      deletedLoungeConversationMeta.textContent = "Deleted lounge chats will appear here when available.";
+    }
+    return;
+  }
 
-    const copy = document.createElement("div");
-    copy.className = "conversation-copy";
-    const title = document.createElement("strong");
-    title.textContent = conversation.title || "Deleted lounge chat";
-    const meta = document.createElement("span");
-    meta.className = "conversation-meta";
-    meta.textContent = conversation.deleted_at || conversation.updated_at || "";
-    copy.appendChild(title);
-    copy.appendChild(meta);
-
-    const restoreButton = document.createElement("button");
-    restoreButton.type = "button";
-    restoreButton.className = "ghost-button";
-    restoreButton.textContent = "Restore";
-    restoreButton.addEventListener("click", async () => {
-      await restoreConversationByMode("lounge", conversation.id);
+  deletedLoungeConversationSnapshot.forEach((conversation, index) => {
+    const option = document.createElement("option");
+    option.value = String(conversation.id);
+    option.textContent = formatLoungeConversationLabel({
+      ...conversation,
+      updated_at: conversation.deleted_at || conversation.updated_at || "",
     });
-
-    row.appendChild(copy);
-    row.appendChild(restoreButton);
-    deletedLoungeConversationList.appendChild(row);
+    option.selected = index === 0;
+    deletedLoungeConversationSelect.appendChild(option);
   });
+  deletedLoungeConversationSelect.disabled = false;
+  if (restoreLoungeChatBtn) {
+    restoreLoungeChatBtn.disabled = false;
+  }
+  const selected = getSelectedDeletedLoungeConversation() || deletedLoungeConversationSnapshot[0];
+  if (deletedLoungeConversationMeta) {
+    deletedLoungeConversationMeta.textContent = selected
+      ? `Recover: ${selected.title || "Deleted lounge chat"}${selected.deleted_at ? ` - ${selected.deleted_at}` : ""}`
+      : "Deleted lounge chats will appear here when available.";
+  }
 }
-
 function renderChatHistory(mode, messages) {
   const feed = getFeedForMode(mode);
   if (!feed) {
@@ -8603,7 +8547,7 @@ async function deleteChatHistory(mode) {
     body: JSON.stringify({
       student_name: activeProfile.name,
       conversation_mode: mode,
-      conversation_id: mode === "tutor" ? activeTutorConversationId : null,
+      conversation_id: mode === "tutor" ? activeTutorConversationId : mode === "lounge" ? activeLoungeConversationId : null,
     }),
   });
   const payload = await response.json();
@@ -8999,7 +8943,8 @@ function renderVideoLibrary(snapshot) {
       tutorVideoPlayer.removeAttribute("src");
       tutorVideoPlayer.load();
     }
-    if (openVideoBridgeBtn) {
+    
+if (openVideoBridgeBtn) {
       openVideoBridgeBtn.disabled = true;
     }
     if (useVideoInTutorBtn) {
@@ -10109,36 +10054,36 @@ function normalizeTutorMathText(text) {
   source = source.replace(/\\frac\{d\}\{dt\}/g, "d/dt");
   source = source.replace(/\\frac\{([^{}\n]+)\}\{([^{}\n]+)\}/g, "($1)/($2)");
   source = source.replace(/\\text\{([^{}]*)\}/g, "$1");
-  source = source.replace(/\\sqrt\{([^{}]*)\}/g, "√($1)");
+  source = source.replace(/\\sqrt\{([^{}]*)\}/g, "âˆš($1)");
   source = source.replace(/\\left|\\right/g, "");
-  source = source.replace(/\\times/g, " × ");
-  source = source.replace(/\\cdot/g, " · ");
-  source = source.replace(/\\pi/g, "π");
-  source = source.replace(/\\theta/g, "θ");
-  source = source.replace(/\\alpha/g, "α");
-  source = source.replace(/\\beta/g, "β");
-  source = source.replace(/\\gamma/g, "γ");
-  source = source.replace(/\\omega/g, "ω");
-  source = source.replace(/\\Delta/g, "Δ");
-  source = source.replace(/\\lambda/g, "λ");
-  source = source.replace(/\\mu/g, "μ");
+  source = source.replace(/\\times/g, " Ã— ");
+  source = source.replace(/\\cdot/g, " Â· ");
+  source = source.replace(/\\pi/g, "Ï€");
+  source = source.replace(/\\theta/g, "Î¸");
+  source = source.replace(/\\alpha/g, "Î±");
+  source = source.replace(/\\beta/g, "Î²");
+  source = source.replace(/\\gamma/g, "Î³");
+  source = source.replace(/\\omega/g, "Ï‰");
+  source = source.replace(/\\Delta/g, "Î”");
+  source = source.replace(/\\lambda/g, "Î»");
+  source = source.replace(/\\mu/g, "Î¼");
   source = source.replace(/\\[a-zA-Z]+/g, "");
   source = source.replace(/\$/g, "");
   source = source.replace(/[{}]/g, "");
-  source = source.replace(/\btheta\b/g, "θ");
-  source = source.replace(/\balpha\b/g, "α");
-  source = source.replace(/\bbeta\b/g, "β");
-  source = source.replace(/\bgamma\b/g, "γ");
-  source = source.replace(/\bomega\b/g, "ω");
-  source = source.replace(/\bpi\b/g, "π");
-  source = source.replace(/\blambda\b/g, "λ");
-  source = source.replace(/\bmu\b/g, "μ");
-  source = source.replace(/\bDelta\b/g, "Δ");
-  source = source.replace(/sqrt\(([^()]+)\)/g, "√($1)");
-  source = source.replace(/\^2\b/g, "²");
-  source = source.replace(/\^3\b/g, "³");
+  source = source.replace(/\btheta\b/g, "Î¸");
+  source = source.replace(/\balpha\b/g, "Î±");
+  source = source.replace(/\bbeta\b/g, "Î²");
+  source = source.replace(/\bgamma\b/g, "Î³");
+  source = source.replace(/\bomega\b/g, "Ï‰");
+  source = source.replace(/\bpi\b/g, "Ï€");
+  source = source.replace(/\blambda\b/g, "Î»");
+  source = source.replace(/\bmu\b/g, "Î¼");
+  source = source.replace(/\bDelta\b/g, "Î”");
+  source = source.replace(/sqrt\(([^()]+)\)/g, "âˆš($1)");
+  source = source.replace(/\^2\b/g, "Â²");
+  source = source.replace(/\^3\b/g, "Â³");
   source = source.replace(/\^\(([^)]+)\)/g, "^$1");
-  source = source.replace(/([A-Za-z0-9)²³])\s*\*\s*([A-Za-z0-9(θπαβγλωμ√])/g, "$1 · $2");
+  source = source.replace(/([A-Za-z0-9)Â²Â³])\s*\*\s*([A-Za-z0-9(Î¸Ï€Î±Î²Î³Î»Ï‰Î¼âˆš])/g, "$1 Â· $2");
   source = source.replace(/[ \t]{2,}/g, " ");
   return source;
 }
@@ -10876,6 +10821,7 @@ function loadAccessibilityPreferences() {
   renderTutorLanguageDropdown();
   applyLeagueVisibility();
 }
+
 
 function applySidebarState() {
   if (!appShell) {
@@ -11906,6 +11852,9 @@ function toggleLoungeVoiceInput() {
 }
 
 function renderWeeklyPreview(plan) {
+  if (!weeklyPreviewCards) {
+    return;
+  }
   weeklyPreviewCards.innerHTML = "";
   if (!plan || plan.message) {
     const emptyCard = document.createElement("div");
@@ -12640,12 +12589,14 @@ async function completeJourneySessionFromCheckpoint(checkpointScore) {
       ? Math.max(1, Math.round((nextRevisionDate.getTime() - Date.now()) / 86400000))
       : null;
     showToast(`Plan updated - ${morning.topic || "topic"} marked as ${(payload.result && payload.result.confidence_level) || "updated"}. Next revision in ${nextRevisionDays || "a few"} days.`);
+    await refreshEngagementAfterLPAward(payload.lp_awards);
     logSessionActivity(`Checkpoint completed for ${morning.topic || "current topic"}: ${checkpointScore}%`);
     renderSessionStats(morning.topic || "Today", (payload.result && payload.result.confidence_level) || "updated", checkpointScore);
     if (payload.weekly_plan_updated) {
       await refreshWeeklyPlan();
     }
     await refreshJourneyDashboard();
+    await refreshTodayPhaseAndBacklog();
     setAstraStatus(
       payload.next_topic_preview && payload.next_topic_preview.topic
         ? `Plan updated. Next up: ${payload.next_topic_preview.topic}`
@@ -12660,6 +12611,9 @@ async function completeJourneySessionFromCheckpoint(checkpointScore) {
 }
 
 function renderAvatars(selectedAvatarId) {
+  if (!avatarGrid) {
+    return;
+  }
   avatarGrid.innerHTML = "";
   avatarPresets.forEach((avatar) => {
     const card = document.createElement("button");
@@ -13115,14 +13069,17 @@ async function fetchTipsResources(studentName) {
   renderTipsResources(payload.resources || []);
 }
 
-async function fetchNetwork(studentName) {
+async function fetchStudyGroups(studentName) {
   if (!studentName) {
-    renderNetwork(null);
+    renderStudyGroups(null);
     return;
   }
-  const response = await fetch(`/api/network/${encodeURIComponent(studentName)}`);
+  const response = await fetch(`/api/group-sessions/matches/${encodeURIComponent(studentName)}`);
   const payload = await response.json();
-  renderNetwork(payload);
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not load study groups.");
+  }
+  renderStudyGroups(payload);
 }
 
 async function fetchProgress(studentName) {
@@ -13260,7 +13217,7 @@ async function saveProgressItem() {
     }
     renderProgressSnapshot(payload);
     await fetchStudentInsights(activeProfile.name);
-    await fetchEngagement(activeProfile.name);
+    await refreshEngagementAfterLPAward(payload.lp_awards);
     await fetchVideoLibrary(activeProfile.name);
     progressTopicInput.value = "";
     progressNoteInput.value = "";
@@ -13295,7 +13252,7 @@ async function updateProgressItemStatus(itemId, status) {
     }
     renderProgressSnapshot(payload);
     await fetchStudentInsights(activeProfile.name);
-    await fetchEngagement(activeProfile.name);
+    await refreshEngagementAfterLPAward(payload.lp_awards);
     await fetchVideoLibrary(activeProfile.name);
     await fetchStorageStatus(activeProfile.name);
     await fetchFeatureHealth(activeProfile.name);
@@ -13314,6 +13271,58 @@ async function fetchPracticeAnalytics(studentName) {
   const response = await fetch(`/api/analytics/${encodeURIComponent(studentName)}`);
   const payload = await response.json();
   renderPracticeAnalytics(payload);
+}
+
+function renderPracticeAnalytics(payload) {
+  if (!payload) {
+    if (performanceChartSummary) {
+      performanceChartSummary.textContent = "Your practice trend will appear here.";
+    }
+    if (performanceChartBars) {
+      performanceChartBars.innerHTML = '<p class="muted">No practice attempts logged yet.</p>';
+    }
+    return;
+  }
+
+  const attempts = Array.isArray(payload.attempts) ? payload.attempts.slice(-7) : [];
+  if (performanceChartSummary) {
+    const totalAttempts = Number(payload.total_attempts || 0);
+    const recentAccuracy = Number(payload.recent_accuracy || payload.average_accuracy || 0);
+    const trend = String(payload.trend_signal || "building").replace(/_/g, " ");
+    performanceChartSummary.textContent = totalAttempts
+      ? `${totalAttempts} practice attempt(s) logged | recent accuracy ${recentAccuracy.toFixed(0)}% | ${trend}`
+      : "Your practice trend will appear here.";
+  }
+  if (!performanceChartBars) {
+    return;
+  }
+  performanceChartBars.innerHTML = "";
+  if (!attempts.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "No practice attempts logged yet.";
+    performanceChartBars.appendChild(empty);
+    return;
+  }
+  attempts.forEach((attempt) => {
+    const row = document.createElement("div");
+    row.className = "performance-bar-row";
+    const label = document.createElement("span");
+    label.className = "performance-bar-label";
+    label.textContent = attempt.timestamp ? String(attempt.timestamp).slice(5, 10) : String(attempt.mode || "Practice");
+    const track = document.createElement("div");
+    track.className = "performance-bar-track";
+    const fill = document.createElement("div");
+    fill.className = "performance-bar-fill";
+    const accuracy = Math.max(0, Math.min(100, Number(attempt.accuracy_percent || 0)));
+    fill.style.width = `${Math.max(6, Math.round(accuracy))}%`;
+    const value = document.createElement("span");
+    value.className = "performance-bar-value";
+    value.textContent = `${accuracy.toFixed(0)}%`;
+    track.appendChild(fill);
+    row.append(label, track, value);
+    performanceChartBars.appendChild(row);
+  });
 }
 
 async function selectAvatar(avatarId) {
@@ -13342,7 +13351,9 @@ async function selectAvatar(avatarId) {
     renderAvatars(activeProfile.selected_avatar);
     renderHomeTutorPersonalityGrid();
   preferTutorVideosForAvatar(payload.avatar);
-  studentSubcopy.textContent = `Current AI teacher style: ${payload.avatar.name}.`;
+  if (studentSubcopy) {
+    studentSubcopy.textContent = `Current AI teacher style: ${payload.avatar.name}.`;
+  }
   appendMessage("tutor", "tutor", `I will now guide you with the ${payload.avatar.name} persona.`);
   speakText(payload.avatar.sample_line);
 }
@@ -13378,50 +13389,114 @@ async function saveTutorName() {
   setAvatarStage(activeAvatar || avatarPresets[0]);
   renderTutorBrain(buildLocalTutorBrain(activeProfile, activeAvatar || avatarPresets[0], "tutor"));
   updateTutorSummary(activeProfile);
-  await fetchNetwork(activeProfile.name);
+  await fetchStudyGroups(activeProfile.name);
   appendMessage("tutor", "tutor", `Perfect. I will show up as ${activeProfile.tutor_name} with the style you described.`);
 }
 
-async function saveGroupStudyPreferences(action = "save") {
-  if (!activeProfile) {
+async function joinStudyGroup(group) {
+  if (!activeProfile || !group) {
     return;
   }
-
-  const currentPrefs = (activeProfile.group_study_preferences && typeof activeProfile.group_study_preferences === "object")
-    ? activeProfile.group_study_preferences
-    : {};
-  const formPrefs = getGroupStudyPreferencesFromForm();
-  const payload = {
-    student_name: activeProfile.name,
-    enabled: action === "solo" ? false : formPrefs.enabled,
-    mode: action === "solo" ? "solo" : formPrefs.mode,
-    group_size: formPrefs.group_size || currentPrefs.group_size || 3,
-    session_minutes: formPrefs.session_minutes || currentPrefs.session_minutes || 60,
-    focus: formPrefs.focus || currentPrefs.focus || "",
-    rotation_index: Number(currentPrefs.rotation_index || 0),
-    action,
-  };
-
-  if (action === "reroll") {
-    payload.enabled = true;
-  }
-
-  const response = await fetch("/api/network/group-study/preferences", {
+  const response = await fetch("/api/group-sessions/join", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      user_id: activeProfile.name,
+      topic: group.topic || "",
+      subject: group.subject || "",
+      exam: group.exam || "",
+      pace_band: group.pace_band || "",
+    }),
   });
-  const result = await response.json();
+  const payload = await response.json();
   if (!response.ok) {
-    appendMessage("tutor", "tutor", result.detail || "I could not update the group study room yet.");
-    return;
+    throw new Error(payload.detail || "Could not join that study group.");
   }
-
-  activeProfile = result.profile || activeProfile;
-  applyGroupStudyPreferencesToForm(activeProfile);
-  await fetchNetwork(activeProfile.name);
+  renderActiveGroupSession(payload.session || null);
+  openGroupSession(payload.session || null);
+  await fetchStudyGroups(activeProfile.name);
 }
 
+async function sendGroupMainMessage(content, senderType = "student") {
+  if (!activeProfile || !activeGroupSession || !activeGroupSession.id) {
+    return;
+  }
+  const response = await fetch(`/api/group-sessions/${encodeURIComponent(activeGroupSession.id)}/main-message`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      user_id: activeProfile.name,
+      sender_type: senderType,
+      content: content || "",
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not send that group message.");
+  }
+  activeGroupSession = { ...(payload.session || activeGroupSession), main_messages: payload.main_messages || [] };
+  openGroupSession(activeGroupSession, { silent: true });
+}
+
+async function stepIntoGroupBreakout() {
+  if (!activeProfile || !activeGroupSession || !activeGroupSession.id) {
+    return;
+  }
+  const response = await fetch(`/api/group-sessions/${encodeURIComponent(activeGroupSession.id)}/breakout`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: activeProfile.name }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not open breakout.");
+  }
+  activeGroupSession = { ...(payload.session || activeGroupSession), breakout_messages: payload.breakout_messages || [], current_user_status: "in_breakout" };
+  openGroupSession(activeGroupSession, { silent: true });
+}
+
+async function sendGroupBreakoutMessage(content) {
+  if (!activeProfile || !activeGroupSession || !activeGroupSession.id) {
+    return;
+  }
+  const response = await fetch(`/api/group-sessions/${encodeURIComponent(activeGroupSession.id)}/breakout-message`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      user_id: activeProfile.name,
+      sender_type: "student",
+      content,
+    }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not send that breakout message.");
+  }
+  activeGroupSession = { ...(payload.session || activeGroupSession), breakout_messages: payload.breakout_messages || [], current_user_status: "in_breakout" };
+  openGroupSession(activeGroupSession, { silent: true });
+}
+
+async function rejoinGroupSession() {
+  if (!activeProfile || !activeGroupSession || !activeGroupSession.id) {
+    return;
+  }
+  const response = await fetch(`/api/group-sessions/${encodeURIComponent(activeGroupSession.id)}/rejoin`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: activeProfile.name }),
+  });
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.detail || "Could not rejoin the group session.");
+  }
+  activeGroupSession = {
+    ...(payload.session || activeGroupSession),
+    main_messages: payload.main_messages || [],
+    breakout_messages: payload.breakout_messages || [],
+    current_user_status: "in_main",
+  };
+  openGroupSession(activeGroupSession, { silent: true });
+}
 async function saveExamPlans(exams, successMessage) {
   if (!activeProfile) {
     return;
@@ -13447,15 +13522,11 @@ async function saveExamPlans(exams, successMessage) {
   await fetchTipsResources(activeProfile.name);
   await fetchLearningSources(activeProfile.name);
   await fetchVideoLibrary(activeProfile.name);
-  await fetchNetwork(activeProfile.name);
+  await fetchStudyGroups(activeProfile.name);
   await fetchStudentInsights(activeProfile.name);
   await fetchFeatureHealth(activeProfile.name);
   updateExamBrandCopy(activeProfile);
-  const examsLabel = getActiveExamListLabel(activeProfile);
-  studentSubcopy.textContent = examsLabel
-    ? `Start with your tutor first, then move into ${examsLabel} at your own pace.`
-    : `Start with your tutor first, then add ${getActiveExamLabel(activeProfile)} whenever you are ready.`;
-  appendMessage("tutor", "tutor", successMessage || "Your exam list has been updated and your schedule will adapt from the next plan refresh.");
+appendMessage("tutor", "tutor", successMessage || "Your exam list has been updated and your schedule will adapt from the next plan refresh.");
 }
 
 async function addExamPlan() {
@@ -13529,7 +13600,7 @@ async function updateMemory(category, value, action) {
   renderMemoryManager(payload.personal_memory || {});
   renderFunFact(payload.fun_fact);
   await fetchStudentInsights(activeProfile.name);
-  await fetchNetwork(activeProfile.name);
+  await fetchStudyGroups(activeProfile.name);
   await fetchFeatureHealth(activeProfile.name);
 }
 
@@ -13573,6 +13644,153 @@ async function refreshWeeklyPlan() {
   renderWeeklyPlan(payload);
 }
 
+async function fetchPhaseStatus(silent = false) {
+  if (!activeProfile) {
+    return null;
+  }
+  try {
+    const response = await fetch(`/api/phase/status/${encodeURIComponent(activeProfile.name)}`);
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load phase status.");
+    }
+    latestPhaseStatus = payload;
+    updatePhaseBanner(payload);
+    return payload;
+  } catch (error) {
+    if (!silent) {
+      setAstraStatus(`Could not load phase status: ${error.message}`, "warning", true);
+    }
+    return null;
+  }
+}
+
+async function transitionLearningPhase(silent = true) {
+  if (!activeProfile) {
+    return null;
+  }
+  try {
+    const response = await fetch(`/api/phase/transition/${encodeURIComponent(activeProfile.name)}`, { method: "POST" });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not check phase transition.");
+    }
+    if (payload.transitioned) {
+      await fetchPhaseStatus(true);
+      await refreshEngagementAfterLPAward(payload.lp_awards);
+      showPhaseTransitionModal(payload);
+    }
+    return payload;
+  } catch (error) {
+    if (!silent) {
+      setAstraStatus(`Could not check phase transition: ${error.message}`, "warning", true);
+    }
+    return null;
+  }
+}
+
+function updatePhaseBanner(phaseStatus) {
+  if (!phaseBanner || !phaseStatus) {
+    return;
+  }
+  const phase = String(phaseStatus.current_phase || "phase1_coverage");
+  const coverage = Math.max(0, Math.min(100, Number(phaseStatus.coverage_percent) || 0));
+  const red = Number(phaseStatus.topics_red) || 0;
+  const brown = Number(phaseStatus.topics_brown) || 0;
+  const green = Number(phaseStatus.topics_green) || 0;
+  const cycle = Number(phaseStatus.current_cycle) || 1;
+  const days = phaseStatus.days_to_exam;
+  let text = `Phase 1 - Coverage | ${coverage}% complete | ${red} topics remaining`;
+  let progress = coverage;
+  phaseBanner.classList.remove("phase-phase2", "phase-phase3");
+  if (phase === "phase2_revision") {
+    const revisionTotal = Math.max(1, brown + green);
+    progress = Math.round((green / revisionTotal) * 100);
+    text = `Phase 2 - Revision Cycle ${cycle} | ${brown} topics to strengthen`;
+    phaseBanner.classList.add("phase-phase2");
+  } else if (phase === "phase3_exam_prep") {
+    const safeDays = Number(days);
+    progress = Number.isFinite(safeDays) ? Math.max(0, Math.min(100, Math.round(((30 - safeDays) / 30) * 100))) : 0;
+    text = `Phase 3 - Exam Prep | ${Number.isFinite(safeDays) ? safeDays : "Set exam date"} days remaining`;
+    phaseBanner.classList.add("phase-phase3");
+  }
+  phaseBanner.classList.remove("hidden");
+  if (phaseBannerText) phaseBannerText.textContent = text;
+  if (phaseProgressFill) phaseProgressFill.style.width = `${Math.max(0, Math.min(100, progress))}%`;
+  if (phaseNextAction) phaseNextAction.textContent = phaseStatus.next_action || "";
+}
+
+async function fetchBacklogSummary(silent = false) {
+  if (!activeProfile) {
+    return null;
+  }
+  try {
+    const response = await fetch(`/api/backlog/summary/${encodeURIComponent(activeProfile.name)}`);
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || "Could not load backlog summary.");
+    }
+    latestBacklogSummary = payload;
+    updateBacklogIndicator(payload);
+    return payload;
+  } catch (error) {
+    if (!silent) {
+      setAstraStatus(`Could not load backlog: ${error.message}`, "warning", true);
+    }
+    return null;
+  }
+}
+
+function updateBacklogIndicator(summary) {
+  if (!backlogIndicator || !backlogText) {
+    return;
+  }
+  if (!summary || !summary.has_backlog) {
+    backlogIndicator.classList.add("hidden");
+    return;
+  }
+  backlogIndicator.classList.remove("hidden");
+  backlogText.textContent = summary.recovery_message || `${summary.backlog_hours_total || 0} backlog hours will be redistributed.`;
+}
+
+async function refreshTodayPhaseAndBacklog() {
+  await fetchPhaseStatus(true);
+  await fetchBacklogSummary(true);
+}
+
+function showPhaseTransitionModal(transition) {
+  if (!transition || !transition.transitioned) {
+    return;
+  }
+  const existing = document.querySelector(".phase-transition-modal");
+  if (existing) {
+    existing.remove();
+  }
+  const modal = document.createElement("div");
+  modal.className = "phase-transition-modal";
+  modal.innerHTML = `
+    <div class="phase-transition-card" role="dialog" aria-modal="true" aria-label="Phase transition">
+      <h3>${transition.new_phase === "phase3_exam_prep" ? "Exam Prep Activated" : "Revision Mode Activated"}</h3>
+      <p>${transition.message || "Your study phase has been updated."}</p>
+      <button type="button">Continue to Today's Focus</button>
+    </div>
+  `;
+  const close = () => modal.remove();
+  modal.querySelector("button").addEventListener("click", close);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) close();
+  });
+  document.body.appendChild(modal);
+}
+
+window.showRecoveryPlan = function showRecoveryPlan() {
+  const summary = latestBacklogSummary;
+  const message = summary && summary.recovery_message
+    ? summary.recovery_message
+    : "No recovery plan is needed right now.";
+  window.alert(message);
+};
+
 async function safeStudioStep(stepFn) {
   try {
     await stepFn();
@@ -13603,7 +13821,6 @@ async function enterLearningStudio(studentName, options = {}) {
   }
   tutorNameInput.value = activeProfile.tutor_name || "Astra";
   applyTutorPersonalityToForm(activeProfile);
-  applyGroupStudyPreferencesToForm(activeProfile);
   tutorAppearanceInput.value = activeProfile.appearance_description || "";
   updateTutorSummary(activeProfile);
     setTutorMode(activeTutorMode);
@@ -13614,23 +13831,26 @@ async function enterLearningStudio(studentName, options = {}) {
   renderMemoryManager(payload.personal_memory || {});
   renderExamManager(activeProfile.exams || []);
   renderFunFact(payload.fun_fact);
-  await safeStudioStep(() => fetchMotivationSection());
-  await safeStudioStep(() => fetchTipsResources(activeProfile.name));
-  await safeStudioStep(() => fetchLearningSources(activeProfile.name));
-  await safeStudioStep(() => fetchVideoLibrary(activeProfile.name));
-  await safeStudioStep(() => fetchNetwork(activeProfile.name));
-  await safeStudioStep(() => fetchProgress(activeProfile.name));
-  await safeStudioStep(() => fetchPracticeAnalytics(activeProfile.name));
-  await safeStudioStep(() => fetchEngagement(activeProfile.name));
-  await safeStudioStep(() => fetchStudentInsights(activeProfile.name));
-  await safeStudioStep(() => fetchStorageStatus(activeProfile.name));
-  await safeStudioStep(() => fetchFeatureHealth(activeProfile.name));
-  await safeStudioStep(() => fetchSyllabusDocuments(activeProfile.name));
-  await safeStudioStep(() => fetchTutorConversations());
-  await safeStudioStep(() => fetchLoungeConversations());
-  await safeStudioStep(() => fetchChatHistory("practice"));
-  await safeStudioStep(() => refreshActiveChapterSession());
-  await safeStudioStep(() => loadChapterResumeState(true));
+  const studioSteps = [
+    () => fetchMotivationSection(),
+    () => fetchTipsResources(activeProfile.name),
+    () => fetchLearningSources(activeProfile.name),
+    () => fetchVideoLibrary(activeProfile.name),
+    () => fetchStudyGroups(activeProfile.name),
+    () => fetchProgress(activeProfile.name),
+    () => fetchPracticeAnalytics(activeProfile.name),
+    () => fetchEngagement(activeProfile.name),
+    () => fetchStudentInsights(activeProfile.name),
+    () => fetchStorageStatus(activeProfile.name),
+    () => fetchFeatureHealth(activeProfile.name),
+    () => fetchSyllabusDocuments(activeProfile.name),
+    () => fetchTutorConversations(),
+    () => fetchLoungeConversations(),
+    () => fetchChatHistory("practice"),
+    () => refreshActiveChapterSession(),
+    () => loadChapterResumeState(true),
+  ];
+  await Promise.allSettled(studioSteps.map((step) => safeStudioStep(step)));
   renderJourneySetup(journeyPlanSnapshot);
   renderLiveSources([]);
   renderVisualLearning(null);
@@ -13642,6 +13862,9 @@ async function enterLearningStudio(studentName, options = {}) {
   renderAvatars(activeProfile.selected_avatar);
   renderHomeTutorPersonalityGrid();
   await refreshWeeklyPlan();
+  await safeStudioStep(() => fetchPhaseStatus(true));
+  const phaseTransition = await transitionLearningPhase(true);
+  await safeStudioStep(() => refreshTodayPhaseAndBacklog());
   applyTabOrder();
   setHomeSubtab("overview");
   setCaption("No speech playing right now.");
@@ -13653,11 +13876,15 @@ async function enterLearningStudio(studentName, options = {}) {
   }
   renderJourneySetup(journeyPlanSnapshot);
 
-  studentWelcome.textContent = `Welcome, ${activeProfile.name}`;
+  if (studentWelcome) {
+    studentWelcome.textContent = `Welcome, ${activeProfile.name}`;
+  }
   const exams = getActiveExamListLabel(activeProfile);
-  studentSubcopy.textContent = exams
-    ? `Start with your tutor first, then move into ${exams} at your own pace.`
-    : `Start with your tutor first, then add ${getActiveExamLabel(activeProfile)} in Personalize whenever you are ready.`;
+  if (studentSubcopy) {
+    studentSubcopy.textContent = exams
+      ? `Start with your tutor first, then move into ${exams} at your own pace.`
+      : `Start with your tutor first, then add ${getActiveExamLabel(activeProfile)} in Personalize whenever you are ready.`;
+  }
   if (showIntro) {
     openIntroScreen(activeProfile, introMode);
   } else {
@@ -13666,7 +13893,12 @@ async function enterLearningStudio(studentName, options = {}) {
     }
     loginScreen.classList.add("hidden");
     appShell.classList.remove("hidden");
-    setActiveTab("tutorTab");
+    pendingPlanSubtab = "today";
+    setActiveTab("weeklyTab");
+    setPlanSubtab("today");
+    if (phaseTransition && phaseTransition.transitioned) {
+      showPhaseTransitionModal(phaseTransition);
+    }
   }
   if (activeProfile.jee_mvp_initialized && activeProfile.legacy_exam_scope && activeProfile.legacy_exam_scope.length) {
     appendMessage(
@@ -14188,6 +14420,7 @@ document.body.addEventListener("click", (event) => {
     renderMotivationStory(activeMotivationStoryIndex + 1);
   }
 
+
   const commandButton = event.target.closest("[data-command]");
   if (commandButton) {
     if (commandButton.dataset.command === "Show weekly plan") {
@@ -14314,7 +14547,7 @@ if (walkthroughNextBtn) {
         if (walkthroughContext === "signup") {
           profileStatus.textContent = "Walkthrough saved. You can now create your account or continue editing.";
         } else if (activeProfile) {
-          await fetchNetwork(activeProfile.name);
+          await fetchStudyGroups(activeProfile.name);
           await fetchStudentInsights(activeProfile.name);
           profileStatus.textContent = "Walkthrough saved to your profile.";
         }
@@ -14336,7 +14569,7 @@ if (walkthroughSaveBtn) {
         applyWalkthroughAnswersToSignupFields();
         profileStatus.textContent = "Walkthrough saved. You can now create your account or continue editing.";
       } else if (activeProfile) {
-        await fetchNetwork(activeProfile.name);
+        await fetchStudyGroups(activeProfile.name);
         await fetchStudentInsights(activeProfile.name);
         profileStatus.textContent = "Walkthrough saved to your profile.";
       }
@@ -14372,6 +14605,7 @@ if (askAstraBtn) {
 if (logoutBtn) {
   logoutBtn.addEventListener("click", logoutAndShowAuth);
 }
+
 if (studioMenuToggleBtn) {
   studioMenuToggleBtn.addEventListener("click", () => {
     isSidebarCollapsed = !isSidebarCollapsed;
@@ -14548,6 +14782,95 @@ if (loungeChatSearchInput) {
     }
   });
 }
+if (loungeConversationSelect) {
+  loungeConversationSelect.addEventListener("change", async () => {
+    const nextId = Number(loungeConversationSelect.value);
+    if (!Number.isFinite(nextId) || !nextId) {
+      return;
+    }
+    activeLoungeConversationId = nextId;
+    setLoungeActionState(getSelectedLoungeConversation());
+    try {
+      await fetchChatHistory("lounge", activeLoungeConversationId);
+    } catch (error) {
+      appendMessage("lounge", "tutor", error.message);
+    }
+  });
+}
+if (loungeRenameChatBtn) {
+  loungeRenameChatBtn.addEventListener("click", async () => {
+    const conversation = getSelectedLoungeConversation();
+    if (!conversation) {
+      return;
+    }
+    const nextTitle = window.prompt("Rename this lounge chat", conversation.title || "New chat");
+    if (nextTitle === null) {
+      return;
+    }
+    try {
+      await updateConversationByMode("lounge", conversation.id, { title: nextTitle });
+    } catch (error) {
+      appendMessage("lounge", "tutor", error.message);
+    }
+  });
+}
+if (loungePinChatBtn) {
+  loungePinChatBtn.addEventListener("click", async () => {
+    const conversation = getSelectedLoungeConversation();
+    if (!conversation) {
+      return;
+    }
+    try {
+      await updateConversationByMode("lounge", conversation.id, { pinned: !conversation.pinned_at });
+    } catch (error) {
+      appendMessage("lounge", "tutor", error.message);
+    }
+  });
+}
+if (loungeDeleteChatBtn) {
+  loungeDeleteChatBtn.addEventListener("click", async () => {
+    const conversation = getSelectedLoungeConversation();
+    if (!conversation) {
+      return;
+    }
+    const ok = window.confirm(`Delete "${conversation.title || "New chat"}"? You can recover it from Recently Deleted.`);
+    if (!ok) {
+      return;
+    }
+    activeLoungeConversationId = conversation.id;
+    try {
+      await deleteChatHistory("lounge");
+    } catch (error) {
+      appendMessage("lounge", "tutor", error.message);
+    }
+  });
+}
+if (deletedLoungeConversationSelect) {
+  deletedLoungeConversationSelect.addEventListener("change", () => {
+    const selected = getSelectedDeletedLoungeConversation();
+    if (restoreLoungeChatBtn) {
+      restoreLoungeChatBtn.disabled = !selected;
+    }
+    if (deletedLoungeConversationMeta) {
+      deletedLoungeConversationMeta.textContent = selected
+        ? `Recover: ${selected.title || "Deleted lounge chat"}${selected.deleted_at ? ` - ${selected.deleted_at}` : ""}`
+        : "Deleted lounge chats will appear here when available.";
+    }
+  });
+}
+if (restoreLoungeChatBtn) {
+  restoreLoungeChatBtn.addEventListener("click", async () => {
+    const conversation = getSelectedDeletedLoungeConversation();
+    if (!conversation) {
+      return;
+    }
+    try {
+      await restoreConversationByMode("lounge", conversation.id);
+    } catch (error) {
+      appendMessage("lounge", "tutor", error.message);
+    }
+  });
+}
 if (clearPracticeChatBtn) {
   clearPracticeChatBtn.addEventListener("click", async () => {
     try {
@@ -14582,43 +14905,74 @@ if (tutorModeButtons.length) {
 }
 refreshWeeklyPlanBtn.addEventListener("click", refreshWeeklyPlan);
 refreshWeeklyPlanBtnAlt.addEventListener("click", refreshWeeklyPlan);
-if (refreshNetworkBtn) {
-  refreshNetworkBtn.addEventListener("click", () => {
+if (refreshStudyGroupsBtn) {
+  refreshStudyGroupsBtn.addEventListener("click", () => {
     if (activeProfile) {
-      fetchNetwork(activeProfile.name);
+      fetchStudyGroups(activeProfile.name).catch((error) => setAstraStatus(error.message, "warning", true));
     }
   });
 }
-if (saveGroupStudyBtn) {
-  saveGroupStudyBtn.addEventListener("click", () => {
-    saveGroupStudyPreferences("save");
-  });
-}
-if (rerollGroupStudyBtn) {
-  rerollGroupStudyBtn.addEventListener("click", () => {
-    saveGroupStudyPreferences("reroll");
-  });
-}
-if (soloGroupStudyBtn) {
-  soloGroupStudyBtn.addEventListener("click", () => {
-    if (groupStudyEnabledToggle) {
-      groupStudyEnabledToggle.checked = false;
+if (groupMainForm) {
+  groupMainForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const content = groupMainInput ? groupMainInput.value.trim() : "";
+    if (!content) {
+      return;
     }
-    if (groupStudyModeSelect) {
-      groupStudyModeSelect.value = "solo";
+    if (groupMainInput) {
+      groupMainInput.value = "";
     }
-    saveGroupStudyPreferences("solo");
-  });
-}
-if (groupStudyModeSelect && groupStudyEnabledToggle) {
-  groupStudyModeSelect.addEventListener("change", () => {
-    if (groupStudyModeSelect.value === "solo") {
-      groupStudyEnabledToggle.checked = false;
+    try {
+      await sendGroupMainMessage(content, "student");
+    } catch (error) {
+      setAstraStatus(error.message, "warning", true);
     }
   });
-  groupStudyEnabledToggle.addEventListener("change", () => {
-    if (groupStudyEnabledToggle.checked && groupStudyModeSelect.value === "solo") {
-      groupStudyModeSelect.value = "mixed";
+}
+if (groupTutorNextBtn) {
+  groupTutorNextBtn.addEventListener("click", async () => {
+    groupTutorNextBtn.disabled = true;
+    try {
+      await sendGroupMainMessage("", "tutor");
+    } catch (error) {
+      setAstraStatus(error.message, "warning", true);
+    } finally {
+      groupTutorNextBtn.disabled = false;
+    }
+  });
+}
+if (groupStepOutBtn) {
+  groupStepOutBtn.addEventListener("click", async () => {
+    try {
+      await stepIntoGroupBreakout();
+    } catch (error) {
+      setAstraStatus(error.message, "warning", true);
+    }
+  });
+}
+if (groupBreakoutForm) {
+  groupBreakoutForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const content = groupBreakoutInput ? groupBreakoutInput.value.trim() : "";
+    if (!content) {
+      return;
+    }
+    if (groupBreakoutInput) {
+      groupBreakoutInput.value = "";
+    }
+    try {
+      await sendGroupBreakoutMessage(content);
+    } catch (error) {
+      setAstraStatus(error.message, "warning", true);
+    }
+  });
+}
+if (groupRejoinBtn) {
+  groupRejoinBtn.addEventListener("click", async () => {
+    try {
+      await rejoinGroupSession();
+    } catch (error) {
+      setAstraStatus(error.message, "warning", true);
     }
   });
 }
@@ -14626,6 +14980,22 @@ if (refreshProgressBtn) {
   refreshProgressBtn.addEventListener("click", () => {
     if (activeProfile) {
       fetchProgress(activeProfile.name);
+    }
+  });
+}
+if (progressTrendLensBtn) {
+  progressTrendLensBtn.addEventListener("click", async () => {
+    if (!activeProfile) {
+      return;
+    }
+    progressTrendLensBtn.disabled = true;
+    try {
+      await fetchProgress(activeProfile.name);
+      if (progressComparisonText) {
+        progressComparisonText.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
+    } finally {
+      progressTrendLensBtn.disabled = false;
     }
   });
 }
@@ -14642,7 +15012,9 @@ if (analyticsDashboardBtn) {
     }
   });
 }
-openWeeklyTabBtn.addEventListener("click", () => openPlanSubtab("thisweek"));
+if (openWeeklyTabBtn) {
+  openWeeklyTabBtn.addEventListener("click", () => openPlanSubtab("thisweek"));
+}
 if (openProgressTabBtn) {
   openProgressTabBtn.addEventListener("click", () => openPlanSubtab("progress"));
 }
@@ -15111,3 +15483,9 @@ renderConceptCanvas(null);
     setAvatarStatusText("Browser Voice Unavailable");
     setCaption("Browser speech is unavailable on this device.");
   }
+
+
+
+
+
+

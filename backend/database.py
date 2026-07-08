@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import sqlite3
 import threading
@@ -235,10 +235,22 @@ def init_db():
             CREATE TABLE IF NOT EXISTS student_profiles (
                 student_id TEXT PRIMARY KEY,
                 profile_data TEXT,
-                updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+                updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                learning_phase TEXT DEFAULT 'phase1_coverage',
+                phase2_cycle INTEGER DEFAULT 1,
+                phase1_completed_at TIMESTAMP
             )
             """
         )
+        cursor.execute("PRAGMA table_info(student_profiles)")
+        student_profile_columns = {row[1] for row in cursor.fetchall()}
+        if "learning_phase" not in student_profile_columns:
+            cursor.execute("ALTER TABLE student_profiles ADD COLUMN learning_phase TEXT DEFAULT 'phase1_coverage'")
+        if "phase2_cycle" not in student_profile_columns:
+            cursor.execute("ALTER TABLE student_profiles ADD COLUMN phase2_cycle INTEGER DEFAULT 1")
+        if "phase1_completed_at" not in student_profile_columns:
+            cursor.execute("ALTER TABLE student_profiles ADD COLUMN phase1_completed_at TIMESTAMP")
+
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS students (
@@ -381,6 +393,65 @@ def init_db():
             )
             """
         )
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS group_sessions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                topic TEXT NOT NULL,
+                subject TEXT,
+                exam TEXT,
+                pace_band TEXT NOT NULL,
+                scheduled_time TEXT,
+                status TEXT NOT NULL DEFAULT 'scheduled' CHECK(status IN ('scheduled', 'live', 'ended')),
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS group_session_members (
+                session_id INTEGER NOT NULL,
+                user_id TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'in_main' CHECK(status IN ('in_main', 'in_breakout', 'left')),
+                joined_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (session_id, user_id),
+                FOREIGN KEY(session_id) REFERENCES group_sessions(id) ON DELETE CASCADE
+            )
+            """
+        )
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS group_messages (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id INTEGER NOT NULL,
+                channel TEXT NOT NULL CHECK(channel IN ('main', 'breakout')),
+                breakout_owner_id TEXT,
+                sender_type TEXT NOT NULL CHECK(sender_type IN ('tutor', 'student')),
+                sender_id TEXT,
+                content TEXT NOT NULL,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY(session_id) REFERENCES group_sessions(id) ON DELETE CASCADE
+            )
+            """
+        )
+        cursor.execute(
+            """
+            CREATE INDEX IF NOT EXISTS idx_group_sessions_match
+            ON group_sessions(topic, subject, exam, pace_band, status, scheduled_time)
+            """
+        )
+        cursor.execute(
+            """
+            CREATE INDEX IF NOT EXISTS idx_group_members_user
+            ON group_session_members(user_id, status, session_id)
+            """
+        )
+        cursor.execute(
+            """
+            CREATE INDEX IF NOT EXISTS idx_group_messages_session_channel
+            ON group_messages(session_id, channel, breakout_owner_id, id)
+            """
+        )
 
         cursor.execute("PRAGMA table_info(chat_messages)")
         chat_message_columns = {row[1] for row in cursor.fetchall()}
@@ -492,6 +563,70 @@ def save_student_profile(student_id, profile_data):
     except Exception as exc:
         print(f"WARNING: Could not save student profile for {student_id}: {exc}")
         return profile_data
+
+
+def get_learning_phase(student_id):
+    try:
+        row = execute_query(
+            """
+            SELECT learning_phase, phase2_cycle
+            FROM student_profiles
+            WHERE student_id = ?
+            """,
+            (student_id,),
+            fetchone=True,
+        )
+        if not row:
+            return {"phase": "phase1_coverage", "cycle": 1}
+        return {
+            "phase": row["learning_phase"] or "phase1_coverage",
+            "cycle": int(row["phase2_cycle"] or 1),
+        }
+    except Exception as exc:
+        print(f"WARNING: Could not load learning phase for {student_id}: {exc}")
+        return {"phase": "phase1_coverage", "cycle": 1}
+
+
+def set_learning_phase(student_id, phase, cycle=1):
+    try:
+        phase = str(phase or "phase1_coverage").strip() or "phase1_coverage"
+        cycle = max(1, int(cycle or 1))
+        safe_write(
+            """
+            INSERT OR IGNORE INTO student_profiles (
+                student_id, profile_data, updated_at, learning_phase, phase2_cycle
+            )
+            VALUES (?, ?, CURRENT_TIMESTAMP, 'phase1_coverage', 1)
+            """,
+            (student_id, "{}"),
+        )
+        if phase == "phase2_revision":
+            safe_write(
+                """
+                UPDATE student_profiles
+                SET learning_phase = ?,
+                    phase2_cycle = ?,
+                    phase1_completed_at = COALESCE(phase1_completed_at, CURRENT_TIMESTAMP),
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE student_id = ?
+                """,
+                (phase, cycle, student_id),
+            )
+        else:
+            safe_write(
+                """
+                UPDATE student_profiles
+                SET learning_phase = ?,
+                    phase2_cycle = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE student_id = ?
+                """,
+                (phase, cycle, student_id),
+            )
+        return get_learning_phase(student_id)
+    except Exception as exc:
+        print(f"WARNING: Could not set learning phase for {student_id}: {exc}")
+        return {"phase": "phase1_coverage", "cycle": 1}
 
 
 def get_planner_state(student_id):
@@ -752,3 +887,236 @@ def upsert_json_record(table_name, key_column, key_value, json_column, json_valu
     """
     with db_cursor(commit=True) as cursor:
         cursor.execute(query, (key_value, json_value, updated_at))
+
+
+def _row_to_dict(row):
+    if not row:
+        return {}
+    return {key: row[key] for key in row.keys()}
+
+
+def _rows_to_dicts(rows):
+    return [_row_to_dict(row) for row in (rows or [])]
+
+
+def list_student_ids(limit=200):
+    try:
+        rows = execute_query(
+            """
+            SELECT student_id FROM student_profiles
+            UNION
+            SELECT student_id FROM students
+            ORDER BY student_id
+            LIMIT ?
+            """,
+            (int(limit or 200),),
+        )
+        return [str(row["student_id"] or "").strip() for row in (rows or []) if str(row["student_id"] or "").strip()]
+    except Exception as exc:
+        print(f"WARNING: Could not list student ids: {exc}")
+        return []
+
+
+def get_group_session(session_id):
+    try:
+        row = execute_query(
+            "SELECT * FROM group_sessions WHERE id = ?",
+            (int(session_id),),
+            fetchone=True,
+        )
+        return _row_to_dict(row)
+    except Exception as exc:
+        print(f"WARNING: Could not load group session {session_id}: {exc}")
+        return {}
+
+
+def list_group_session_members(session_id):
+    try:
+        rows = execute_query(
+            """
+            SELECT session_id, user_id, status, joined_at
+            FROM group_session_members
+            WHERE session_id = ? AND status != 'left'
+            ORDER BY joined_at, user_id
+            """,
+            (int(session_id),),
+        )
+        return _rows_to_dicts(rows)
+    except Exception as exc:
+        print(f"WARNING: Could not list group members for {session_id}: {exc}")
+        return []
+
+
+def get_active_group_session_for_user(user_id):
+    try:
+        row = execute_query(
+            """
+            SELECT gs.*
+            FROM group_sessions gs
+            JOIN group_session_members gsm ON gsm.session_id = gs.id
+            WHERE gsm.user_id = ?
+              AND gsm.status != 'left'
+              AND gs.status IN ('scheduled', 'live')
+            ORDER BY gs.created_at DESC, gs.id DESC
+            LIMIT 1
+            """,
+            (str(user_id or "").strip(),),
+            fetchone=True,
+        )
+        return _row_to_dict(row)
+    except Exception as exc:
+        print(f"WARNING: Could not load active group session for {user_id}: {exc}")
+        return {}
+
+
+def find_open_group_session(topic, subject, exam, pace_band):
+    try:
+        row = execute_query(
+            """
+            SELECT gs.*
+            FROM group_sessions gs
+            LEFT JOIN group_session_members gsm
+              ON gsm.session_id = gs.id AND gsm.status != 'left'
+            WHERE lower(gs.topic) = lower(?)
+              AND lower(COALESCE(gs.subject, '')) = lower(?)
+              AND lower(COALESCE(gs.exam, '')) = lower(?)
+              AND gs.pace_band = ?
+              AND gs.status = 'scheduled'
+            GROUP BY gs.id
+            HAVING COUNT(gsm.user_id) < 3
+            ORDER BY gs.created_at ASC, gs.id ASC
+            LIMIT 1
+            """,
+            (
+                str(topic or "").strip(),
+                str(subject or "").strip(),
+                str(exam or "").strip(),
+                str(pace_band or "steady").strip().lower() or "steady",
+            ),
+            fetchone=True,
+        )
+        return _row_to_dict(row)
+    except Exception as exc:
+        print(f"WARNING: Could not find open group session: {exc}")
+        return {}
+
+
+def create_group_session(topic, subject, exam, pace_band, scheduled_time=""):
+    try:
+        with _write_lock:
+            with db_cursor(commit=True) as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO group_sessions (topic, subject, exam, pace_band, scheduled_time, status, created_at)
+                    VALUES (?, ?, ?, ?, ?, 'scheduled', CURRENT_TIMESTAMP)
+                    """,
+                    (
+                        str(topic or "").strip(),
+                        str(subject or "").strip(),
+                        str(exam or "").strip(),
+                        str(pace_band or "steady").strip().lower() or "steady",
+                        str(scheduled_time or "").strip(),
+                    ),
+                )
+                return cursor.lastrowid
+    except Exception as exc:
+        print(f"WARNING: Could not create group session: {exc}")
+        return None
+
+
+def add_group_session_member(session_id, user_id, status="in_main"):
+    try:
+        with _write_lock:
+            with db_cursor(commit=True) as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO group_session_members (session_id, user_id, status, joined_at)
+                    VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+                    ON CONFLICT(session_id, user_id) DO UPDATE SET
+                        status = excluded.status
+                    """,
+                    (int(session_id), str(user_id or "").strip(), str(status or "in_main").strip() or "in_main"),
+                )
+                cursor.execute(
+                    """
+                    UPDATE group_sessions
+                    SET status = CASE (
+                        SELECT COUNT(*) FROM group_session_members
+                        WHERE session_id = ? AND status != 'left'
+                    ) WHEN 3 THEN 'live' ELSE status END
+                    WHERE id = ? AND status = 'scheduled'
+                    """,
+                    (int(session_id), int(session_id)),
+                )
+        return True
+    except Exception as exc:
+        print(f"WARNING: Could not add group session member: {exc}")
+        return False
+
+
+def update_group_member_status(session_id, user_id, status):
+    try:
+        safe_write(
+            """
+            UPDATE group_session_members
+            SET status = ?
+            WHERE session_id = ? AND user_id = ?
+            """,
+            (str(status or "in_main").strip(), int(session_id), str(user_id or "").strip()),
+        )
+        return True
+    except Exception as exc:
+        print(f"WARNING: Could not update group member status: {exc}")
+        return False
+
+
+def add_group_message(session_id, channel, sender_type, content, sender_id=None, breakout_owner_id=None):
+    try:
+        with _write_lock:
+            with db_cursor(commit=True) as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO group_messages (session_id, channel, breakout_owner_id, sender_type, sender_id, content, created_at)
+                    VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+                    """,
+                    (
+                        int(session_id),
+                        str(channel or "main").strip().lower() or "main",
+                        str(breakout_owner_id).strip() if breakout_owner_id is not None else None,
+                        str(sender_type or "student").strip().lower() or "student",
+                        str(sender_id).strip() if sender_id is not None else None,
+                        str(content or "").strip(),
+                    ),
+                )
+                return cursor.lastrowid
+    except Exception as exc:
+        print(f"WARNING: Could not add group message: {exc}")
+        return None
+
+
+def list_group_messages(session_id, channel="main", breakout_owner_id=None, since_id=None, since_created_at=None, limit=160):
+    try:
+        params = [int(session_id), str(channel or "main").strip().lower() or "main"]
+        query = """
+            SELECT id, session_id, channel, breakout_owner_id, sender_type, sender_id, content, created_at
+            FROM group_messages
+            WHERE session_id = ? AND channel = ?
+        """
+        if breakout_owner_id is not None:
+            query += " AND breakout_owner_id = ?"
+            params.append(str(breakout_owner_id).strip())
+        elif str(channel or "main").strip().lower() == "breakout":
+            query += " AND breakout_owner_id IS NULL"
+        if since_id:
+            query += " AND id > ?"
+            params.append(int(since_id))
+        if since_created_at:
+            query += " AND created_at > ?"
+            params.append(str(since_created_at))
+        query += " ORDER BY id ASC LIMIT ?"
+        params.append(max(1, min(int(limit or 160), 300)))
+        return _rows_to_dicts(execute_query(query, tuple(params)))
+    except Exception as exc:
+        print(f"WARNING: Could not list group messages: {exc}")
+        return []
+

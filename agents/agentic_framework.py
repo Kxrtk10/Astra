@@ -1,4 +1,5 @@
 from google.adk.agents import LlmAgent
+from google.genai import types
 
 from agents.behavior_agent import behavior_agent
 from agents.diagnostic_agent import diagnostic_agent
@@ -12,6 +13,10 @@ from agents.tutor_agent import tutor_agent
 agentic_learning_orchestrator = LlmAgent(
     name="AgenticLearningOrchestrator",
     model="gemini-2.5-flash",
+    generate_content_config=types.GenerateContentConfig(
+        max_output_tokens=4096,
+        temperature=0.7,
+    ),
     description=(
         "A multi-agent orchestration layer that routes student requests to the "
         "best specialist agent and keeps responses adaptive to profile, "

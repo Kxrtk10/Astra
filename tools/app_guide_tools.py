@@ -1,4 +1,4 @@
-GUIDE_FEATURES = [
+﻿GUIDE_FEATURES = [
     {
         "name": "Tutor",
         "tab": "Tutor",
@@ -42,10 +42,10 @@ GUIDE_FEATURES = [
         "description": "Use Tips for exam strategy, paper navigation, time management, and smart test-taking habits.",
     },
     {
-        "name": "Network",
-        "tab": "Network",
-        "keywords": ["network", "circle", "peer", "student", "community", "similar learners"],
-        "description": "Use Network to explore similar learners, tutor-network insights, and focused study-circle suggestions.",
+        "name": "Study groups",
+        "tab": "Study groups",
+        "keywords": ["study groups", "group class", "group session", "breakout", "peer", "classroom"],
+        "description": "Use Study groups to join a three-student classroom session, follow the main feed, and step into a private breakout for doubts.",
     },
     {
         "name": "Weekly Plan",
@@ -155,3 +155,4 @@ def build_app_guide_reply(user_input):
         "The fastest layout is: Tutor for learning, Practice for questions, Weekly Plan for scheduling, Lounge for casual talk, and Personalize for settings. "
         "Ask me about any feature by name and I will point you to the right place."
     )
+

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -132,6 +132,10 @@
       <div class="brand-block">
         <p class="eyebrow">Astra Learning Studio</p>
         <h1 id="studentWelcome">Astra</h1>
+        <div id="league-mini-widget" class="league-mini-widget">
+          <span id="mini-league-tier">Bronze III</span>
+          <span id="mini-league-lp">0 LP</span>
+        </div>
         <p id="studentSubcopy" class="subcopy">Your personalized JEE coach is ready.</p>
       </div>
 
@@ -162,22 +166,16 @@
 
     <main class="main-panel">
       <div class="main-toolbar">
+        <div class="main-astra-wordmark" aria-hidden="true">Astra</div>
         <button id="studioMenuToggleBtn" type="button" class="ghost-button menu-toggle-button">Hide studio menu</button>
       </div>
-      <div id="tabBar" class="tab-bar" role="tablist" aria-label="Tutor views">
+<div id="tabBar" class="tab-bar" role="tablist" aria-label="Tutor views">
         <div class="section-nav" role="tablist" aria-label="Main sections">
           <button type="button" class="section-nav-button active" data-section-group="home" aria-selected="true">Home</button>
           <button type="button" class="section-nav-button" data-section-group="learn" aria-selected="false">Learn</button>
           <button type="button" class="section-nav-button" data-section-group="plan" aria-selected="false">Plan</button>
           <button type="button" class="section-nav-button" data-section-group="connect" aria-selected="false">Connect</button>
           <button type="button" class="section-nav-button" data-section-group="settings" aria-selected="false">Settings</button>
-        </div>
-        <div class="nav-hub nav-hub-home" data-section-group="home" data-nav-group-container="home">
-          <p class="nav-hub-label">Home</p>
-          <p class="nav-hub-cue">Start with your current state, then move to Tutor.</p>
-          <div class="nav-hub-buttons">
-            <button class="tab-button active" data-tab="overviewTab" data-tab-key="overview" data-nav-group="home" role="tab" aria-selected="true">Overview</button>
-          </div>
         </div>
         <div class="nav-hub nav-hub-learn" data-section-group="learn" data-nav-group-container="learn">
           <p class="nav-hub-label">Learn</p>
@@ -200,10 +198,10 @@
         </div>
         <div class="nav-hub nav-hub-connect" data-section-group="connect" data-nav-group-container="connect">
           <p class="nav-hub-label">Connect</p>
-          <p class="nav-hub-cue">Use Lounge to reset, Network to collaborate, League to climb.</p>
+          <p class="nav-hub-cue">Use Lounge to reset, Study groups for class sessions, League to climb.</p>
           <div class="nav-hub-buttons">
             <button class="tab-button" data-tab="loungeTab" data-tab-key="lounge" data-nav-group="connect" role="tab" aria-selected="false">Lounge</button>
-            <button class="tab-button" data-tab="networkTab" data-tab-key="network" data-nav-group="connect" role="tab" aria-selected="false">Network</button>
+            <button class="tab-button" data-tab="networkTab" data-tab-key="network" data-nav-group="connect" role="tab" aria-selected="false">Study groups</button>
             <button class="tab-button" data-tab="leagueTab" data-tab-key="league" data-nav-group="connect" role="tab" aria-selected="false">League</button>
           </div>
         </div>
@@ -891,145 +889,99 @@
       </section>
 
       <section id="networkTab" class="tab-panel" role="tabpanel">
-        <div class="network-layout">
-          <div class="table-card network-hero-card">
+        <div class="study-groups-layout">
+          <div class="table-card study-groups-hero-card">
             <div class="card-header">
               <div>
-                <p class="eyebrow">Learning Network</p>
-                <h2>Personal tutors, shared intelligence, and focused learner circles.</h2>
+                <p class="eyebrow">Study groups</p>
+                <h2>Group class sessions for your next pending topic.</h2>
               </div>
-              <button id="refreshNetworkBtn" class="ghost-button" type="button">Refresh network</button>
+              <button id="refreshStudyGroupsBtn" class="ghost-button" type="button">Refresh groups</button>
             </div>
-            <p id="networkNote" class="muted">
-              Your tutor stays personal to you. This layer shares anonymized teaching patterns, learner similarity, and opt-in group study without turning the app into distracting social media.
-            </p>
-            <div id="networkStats" class="network-stat-grid">
-              <div class="network-stat-card">
-                <strong>-</strong>
-                <span>Peers in network</span>
+            <p id="studyGroupsStatus" class="muted">Astra matches students by the same next pending topic and a similar pace band.</p>
+          </div>
+
+          <div class="study-groups-grid">
+            <div class="table-card study-group-card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Your session</p>
+                  <p class="muted">Open your scheduled or live group class.</p>
+                </div>
+                <span id="activeGroupSessionPill" class="pill">None</span>
+              </div>
+              <div id="activeGroupSessionCard" class="study-group-session-card">
+                <p class="muted">No active group session yet.</p>
+              </div>
+            </div>
+
+            <div class="table-card study-group-card">
+              <div class="card-header">
+                <div>
+                  <p class="card-title">Groups you can join</p>
+                  <p class="muted">Plain matches based on topic and pace.</p>
+                </div>
+              </div>
+              <div id="groupCandidatesList" class="study-group-card-list">
+                <p class="muted">Group options will appear here after your progress tracker has a pending topic.</p>
               </div>
             </div>
           </div>
 
-          <div class="table-card network-card group-study-card">
+          <div id="groupSessionPanel" class="table-card group-session-panel hidden">
             <div class="card-header">
               <div>
-                <p class="card-title">Group Study Room</p>
-                <p class="muted">Opt in to match with friends or similar learners. Astra builds a shared plan for the room and still keeps every student on a personal track.</p>
+                <p class="eyebrow">Live group class</p>
+                <h2 id="groupSessionTitle">Group session</h2>
+                <p id="groupSessionMeta" class="muted">Main classroom feed</p>
               </div>
-              <span id="groupStudyStatusPill" class="pill">Solo</span>
-            </div>
-
-            <div class="group-study-controls">
-              <label class="field">
-                <span>Enable group study</span>
-                <input id="groupStudyEnabledToggle" type="checkbox">
-              </label>
-              <label class="field">
-                <span>Study mode</span>
-                <select id="groupStudyModeSelect">
-                  <option value="solo">Solo</option>
-                  <option value="friends">Friends-first</option>
-                  <option value="random">Random match</option>
-                  <option value="mixed">Mixed room</option>
-                </select>
-              </label>
-              <label class="field">
-                <span>Group size</span>
-                <select id="groupStudySizeSelect">
-                  <option value="2">2 students</option>
-                  <option value="3">3 students</option>
-                  <option value="4">4 students</option>
-                  <option value="5">5 students</option>
-                </select>
-              </label>
-              <label class="field">
-                <span>Session length</span>
-                <select id="groupStudyMinutesSelect">
-                  <option value="30">30 min</option>
-                  <option value="45">45 min</option>
-                  <option value="60">60 min</option>
-                  <option value="90">90 min</option>
-                  <option value="120">120 min</option>
-                </select>
-              </label>
-              <label class="field group-study-focus">
-                <span>Shared focus</span>
-                <input id="groupStudyFocusInput" type="text" placeholder="e.g. Projectile motion, Thermodynamics, Algebra" />
+              <label class="toggle-row disabled-toggle">
+                <input id="groupVoiceToggle" type="checkbox" disabled>
+                <span>Voice coming soon</span>
               </label>
             </div>
 
-            <div class="group-study-actions">
-              <button id="saveGroupStudyBtn" class="ghost-button" type="button">Save group setup</button>
-              <button id="rerollGroupStudyBtn" class="ghost-button" type="button">Change group</button>
-              <button id="soloGroupStudyBtn" class="ghost-button" type="button">Go solo</button>
-            </div>
-
-            <div class="group-study-summary-card">
-              <p class="card-title">Shared plan</p>
-              <p id="groupStudySummary" class="muted">Turn on group study to see a shared room plan.</p>
-              <div id="groupStudyRuleChips" class="manager-chip-list"></div>
-            </div>
-
-            <div class="group-study-columns">
-              <div class="group-study-column">
-                <p class="card-title">Room members</p>
-                <div id="groupStudyMembers" class="network-list">
-                  <p class="muted">Matched learners will appear here when group study is active.</p>
+            <div class="group-session-shell">
+              <div class="group-main-column">
+                <div class="group-session-actions">
+                  <button id="groupTutorNextBtn" type="button" class="ghost-button">Next teaching chunk</button>
+                  <button id="groupStepOutBtn" type="button" class="ghost-button">Step out</button>
                 </div>
-              </div>
-              <div class="group-study-column">
-                <p class="card-title">Session steps</p>
-                <div id="groupStudyPlan" class="network-list">
-                  <p class="muted">The shared plan for the room will appear here.</p>
+                <div id="groupMainFeed" class="chat-feed tutor-feed group-chat-feed">
+                  <div class="message tutor"><p>The group class feed will appear here.</p></div>
                 </div>
+                <form id="groupMainForm" class="composer group-composer">
+                  <textarea id="groupMainInput" rows="2" placeholder="Send a short message to the group..."></textarea>
+                  <div class="composer-actions">
+                    <span class="muted">The main class keeps moving at a steady pace.</span>
+                    <button type="submit">Send</button>
+                  </div>
+                </form>
               </div>
-            </div>
-          </div>
 
-          <div class="network-grid">
-            <div class="table-card network-card">
-              <div class="card-header">
-                <div>
-                  <p class="card-title">Tutor Network Insights</p>
-                  <p class="muted">Signals your personal tutor can borrow from the wider tutor network.</p>
+              <aside id="groupBreakoutPanel" class="group-breakout-panel hidden">
+                <div class="card-header compact-header">
+                  <div>
+                    <p class="card-title">Private breakout</p>
+                    <p class="muted">Clarify your doubt without stopping the main class.</p>
+                  </div>
+                  <button id="groupRejoinBtn" type="button" class="ghost-button">Rejoin session</button>
                 </div>
-                <span class="pill">Private</span>
-              </div>
-              <div id="tutorNetworkInsights" class="network-list">
-                <p class="muted">Tutor-network insight cards will appear here.</p>
-              </div>
-            </div>
-
-            <div class="table-card network-card">
-              <div class="card-header">
-                <div>
-                  <p class="card-title">Similar Learners</p>
-                  <p class="muted">Privacy-safe peer matching based on exam goals, study style, and preparation pattern.</p>
+                <div id="groupBreakoutFeed" class="chat-feed compact-feed group-breakout-feed">
+                  <div class="message tutor"><p>Step out when you need a private clarification.</p></div>
                 </div>
-                <span class="pill">Suggested</span>
-              </div>
-              <div id="studentMatchesList" class="network-list">
-                <p class="muted">Once there is enough overlap, your strongest learner matches will show up here.</p>
-              </div>
-            </div>
-
-            <div class="table-card network-card">
-              <div class="card-header">
-                <div>
-                  <p class="card-title">Study Circles</p>
-                  <p class="muted">Academic-only circles that could later become cohorts, accountability rooms, or moderated groups.</p>
-                </div>
-                <span class="pill">Starter</span>
-              </div>
-              <div id="studyCircleList" class="network-list">
-                <p class="muted">Suggested circles will appear here once your profile and goals are loaded.</p>
-              </div>
+                <form id="groupBreakoutForm" class="composer group-composer">
+                  <textarea id="groupBreakoutInput" rows="2" placeholder="Ask your private doubt..."></textarea>
+                  <div class="composer-actions">
+                    <span class="muted">Only this breakout thread sees it.</span>
+                    <button type="submit">Ask</button>
+                  </div>
+                </form>
+              </aside>
             </div>
           </div>
         </div>
       </section>
-
       <section id="assistTab" class="tab-panel" role="tabpanel">
         <div class="overview-lite-grid">
           <div class="table-card memory-card">
@@ -1120,32 +1072,49 @@
               </div>
             </div>
 
-            <div class="table-card chat-thread-card">
+            <div class="table-card chat-thread-card lounge-chat-manager-card">
               <div class="card-header">
                 <div>
                   <p class="card-title">Saved Lounge Chats</p>
-                  <p class="muted">Keep casual conversations organized and come back to important ones later.</p>
+                  <p class="muted">Pick a saved casual conversation without filling the page.</p>
                 </div>
                 <button id="newLoungeChatBtn" type="button" class="ghost-button">New chat</button>
               </div>
-              <div class="inline-form">
-                <input id="loungeChatSearchInput" type="text" placeholder="Search saved lounge chats by title">
-              </div>
-              <div id="loungeConversationList" class="conversation-list">
-                <p class="muted">Your saved lounge chats will appear here.</p>
+              <div id="loungeConversationList" class="lounge-chat-dropdown-panel">
+                <div class="lounge-chat-picker">
+                  <label for="loungeConversationSelect">Saved chat</label>
+                  <select id="loungeConversationSelect" class="lounge-chat-select" disabled>
+                    <option>No saved lounge chats yet</option>
+                  </select>
+                </div>
+                <div class="lounge-chat-actions">
+                  <button id="loungeRenameChatBtn" type="button" class="ghost-button" disabled>Rename</button>
+                  <button id="loungePinChatBtn" type="button" class="ghost-button" disabled>Pin</button>
+                  <button id="loungeDeleteChatBtn" type="button" class="ghost-button danger-button" disabled>Delete</button>
+                </div>
+                <p id="loungeConversationMeta" class="muted lounge-chat-meta">Start a new lounge chat when you want this space to remember the conversation.</p>
               </div>
             </div>
 
-            <div class="table-card chat-thread-card">
+            <div class="table-card chat-thread-card lounge-chat-manager-card lounge-deleted-manager-card">
               <div class="card-header">
                 <div>
                   <p class="card-title">Recently Deleted Lounge Chats</p>
-                  <p class="muted">Restore a lounge chat if you removed it by mistake.</p>
+                  <p class="muted">Recover a removed lounge chat from a simple dropdown.</p>
                 </div>
                 <span class="pill">Recovery</span>
               </div>
-              <div id="deletedLoungeConversationList" class="conversation-list">
-                <p class="muted">Deleted lounge chats will appear here when available.</p>
+              <div id="deletedLoungeConversationList" class="lounge-chat-dropdown-panel">
+                <div class="lounge-chat-picker">
+                  <label for="deletedLoungeConversationSelect">Deleted chat</label>
+                  <select id="deletedLoungeConversationSelect" class="lounge-chat-select" disabled>
+                    <option>No deleted lounge chats</option>
+                  </select>
+                </div>
+                <div class="lounge-chat-actions">
+                  <button id="restoreLoungeChatBtn" type="button" class="ghost-button" disabled>Recover chat</button>
+                </div>
+                <p id="deletedLoungeConversationMeta" class="muted lounge-chat-meta">Deleted lounge chats will appear here when available.</p>
               </div>
             </div>
 
@@ -1153,9 +1122,6 @@
               <div class="message tutor">
                 <p>This space is for casual talk, not pressure. We can chat first and study later.</p>
               </div>
-            </div>
-            <div class="subtab-action-row">
-              <button id="clearLoungeChatBtn" type="button" class="ghost-button">Delete lounge chat</button>
             </div>
             <form id="loungeForm" class="composer lounge-composer">
               <textarea id="loungeMessageInput" rows="3" style="pointer-events: auto; user-select: text;" placeholder="Talk about your day, football, a movie, a show, your mood, or anything you want off your chest..."></textarea>
@@ -1197,7 +1163,6 @@
           <button class="home-subtab-button active" data-home-subtab="overview" type="button">Overview</button>
           <button class="home-subtab-button" data-home-subtab="motivation" type="button">Motivation</button>
           <button class="home-subtab-button" data-home-subtab="personality" type="button">Tutor Personality</button>
-          <button class="home-subtab-button" data-home-subtab="progress" type="button">Recent Progress</button>
         </div>
 
         <button id="motivationQuickAccessBtn" type="button" class="ghost-button motivation-jump-button">Feeling low? Read this</button>
@@ -1338,34 +1303,6 @@
           </div>
         </div>
 
-        <div class="home-subtab-panel hidden" data-home-subtab-panel="progress">
-          <div class="table-card memory-card">
-            <div class="card-header">
-              <div>
-                <p class="card-title">Where you are now</p>
-                <p class="muted">A short snapshot of your current state and the next useful step.</p>
-              </div>
-              <span class="pill">Focus</span>
-            </div>
-            <div id="studentInsightSummary" class="student-insight-summary">
-              <p class="muted">Your adaptive support snapshot will appear here.</p>
-            </div>
-          </div>
-
-          <div class="table-card mini-plan-card">
-            <div class="card-header">
-              <div>
-                <p class="card-title">Weekly preview</p>
-                <p class="muted">A small glimpse of the week so you always know the direction.</p>
-              </div>
-              <div class="mini-action-row">
-                <button id="openWeeklyTabBtn" class="ghost-button" type="button">Open weekly plan</button>
-                <button id="openProgressTabBtn" class="ghost-button" type="button">Open progress board</button>
-              </div>
-            </div>
-            <div id="weeklyPreviewCards" class="weekly-preview-cards"></div>
-          </div>
-        </div>
       </section>
 
       <section id="leagueTab" class="tab-panel" role="tabpanel">
@@ -1450,6 +1387,18 @@
         </div>
 
         <div class="home-subtab-panel active" data-plan-subtab-panel="today" style="display: block;">
+        <div id="phase-banner" class="phase-banner hidden">
+          <div id="phase-banner-text"></div>
+          <div class="phase-progress-bar">
+            <div id="phase-progress-fill"></div>
+          </div>
+          <div id="phase-next-action"></div>
+        </div>
+
+        <div id="backlog-indicator" class="backlog-indicator hidden">
+          <span id="backlog-text"></span>
+          <button type="button" onclick="showRecoveryPlan()">View Recovery Plan</button>
+        </div>
         <div id="journey-setup-card" class="table-card journey-card hidden">
           <div class="card-header">
             <div>
@@ -1646,7 +1595,7 @@
                 <p class="card-title">Week Over Week</p>
                 <p id="progressWeekSummary" class="muted"></p>
               </div>
-              <span class="pill">Trend Lens</span>
+              <button id="progressTrendLensBtn" type="button" class="ghost-button">Trend Lens</button>
             </div>
             <div class="progress-analytics-grid">
               <div class="network-stat-card progress-analytics-stat">
@@ -1678,7 +1627,7 @@
                 <p class="eyebrow">AI Insight</p>
                 <p class="card-title">Astra's personalized read</p>
               </div>
-              <span class="pill">Insight</span>
+              <button id="analyticsDashboardBtn" type="button" class="ghost-button">Insight</button>
             </div>
             <p class="progress-insight-text muted"></p>
           </div>
@@ -1689,7 +1638,6 @@
                 <p class="card-title">Performance Chart</p>
                 <p id="performanceChartSummary" class="muted"></p>
               </div>
-              <span class="pill">7 Days</span>
             </div>
             <div id="performanceChartBars" class="performance-chart-bars"></div>
           </div>
@@ -1699,7 +1647,6 @@
               <div>
                 <p class="card-title">Subject Breakdown</p>
               </div>
-              <span class="pill">Subjects</span>
             </div>
             <div id="subjectBreakdownGrid" class="subject-breakdown-grid"></div>
           </div>
@@ -1710,20 +1657,8 @@
                 <p class="card-title">Consistency Tracker</p>
                 <p id="consistencyTrackerSummary" class="muted"></p>
               </div>
-              <span class="pill">Streak</span>
             </div>
             <div id="consistencyTrackerGrid" class="consistency-tracker-grid"></div>
-          </div>
-
-          <div id="progressInsightCard" class="table-card insight-note-card">
-            <div class="card-header">
-              <div>
-                <p class="eyebrow">Insight</p>
-                <p class="card-title">Astra's observation</p>
-              </div>
-              <span class="pill">Lightbulb</span>
-            </div>
-            <p class="progress-insight-text muted">A personalized insight will appear here.</p>
           </div>
 
           <div id="chapter-mastery-board" class="table-card progress-analytics-card">
@@ -1748,7 +1683,6 @@
                 <p class="card-title">Performance Analytics</p>
                 <p id="chapterAnalyticsSummary" class="muted"></p>
               </div>
-              <button id="analyticsDashboardBtn" type="button" class="ghost-button">Analytics</button>
             </div>
             <div id="chapterAnalyticsList" class="weekly-strategy-list">
             </div>
@@ -1784,47 +1718,13 @@
             </div>
           </div>
 
-          <div class="network-grid progress-grid">
-            <div class="table-card network-card progress-column done-column">
-              <div class="card-header">
-                <div>
-                  <p class="card-title">Green Check</p>
-                </div>
-                <span class="pill progress-pill done-pill">Done</span>
-              </div>
-              <div id="progressDoneList" class="network-list">
-              </div>
-            </div>
-
-            <div class="table-card network-card progress-column revise-column">
-              <div class="card-header">
-                <div>
-                  <p class="card-title">Brown Mark</p>
-                </div>
-                <span class="pill progress-pill revise-pill">Revise</span>
-              </div>
-              <div id="progressReviseList" class="network-list">
-              </div>
-            </div>
-
-            <div class="table-card network-card progress-column pending-column">
-              <div class="card-header">
-                <div>
-                  <p class="card-title">Red Mark</p>
-                </div>
-                <span class="pill progress-pill pending-pill">Pending</span>
-              </div>
-              <div id="progressPendingList" class="network-list">
-              </div>
-            </div>
-          </div>
         </div>
         </div>
       </section>
 
       <section id="personalizeTab" class="tab-panel" role="tabpanel">
-        <div class="personalize-grid">
-          <div class="table-card memory-manager-card">
+        <div class="personalize-grid personalize-grid-compact">
+          <div class="table-card memory-manager-card personalize-intro-card">
             <div class="card-header">
               <div>
                 <p class="card-title">Walk With Astra</p>
@@ -1839,7 +1739,7 @@
             </div>
           </div>
 
-          <div class="table-card tutor-studio-card">
+          <div class="table-card tutor-studio-card personalize-tutor-card">
             <div class="card-header">
               <div>
                 <p class="card-title">Customize Your AI Tutor</p>
@@ -1880,7 +1780,7 @@
             <p id="tutorStudioSummary" class="muted">Your tutor can be personal, fun, and still serious when it matters.</p>
           </div>
 
-          <div class="table-card memory-manager-card">
+          <div class="table-card memory-manager-card personalize-memory-card">
             <div class="card-header">
               <div>
                 <p class="card-title">Your Saved Life Context</p>
@@ -1907,7 +1807,7 @@
             </div>
           </div>
 
-          <div class="table-card exam-manager-card">
+          <div class="table-card exam-manager-card personalize-exam-card">
             <div class="card-header">
               <div>
                 <p class="card-title">Manage Your Exams</p>
@@ -1935,7 +1835,7 @@
             </div>
           </div>
 
-          <div class="table-card exam-manager-card">
+          <div class="table-card exam-manager-card personalize-syllabus-card">
             <div class="card-header">
               <div>
                 <p class="card-title">Upload Syllabus Or Portion</p>
@@ -1961,7 +1861,7 @@
             </div>
           </div>
 
-          <div class="table-card settings-card">
+          <div class="table-card settings-card personalize-look-card">
             <div class="card-header">
               <div>
                 <p class="card-title">Look And Feel</p>
@@ -1970,7 +1870,7 @@
               <span class="pill">Your Space</span>
             </div>
 
-            <div class="settings-stack">
+            <div class="settings-stack settings-look-stack">
               <div class="language-settings-section">
                 <h3>Language Preferences</h3>
 
@@ -2058,7 +1958,7 @@
             </div>
           </div>
 
-          <div class="table-card settings-card">
+          <div class="table-card settings-card personalize-data-card">
             <div class="card-header">
               <div>
                 <p class="card-title">Saved Data</p>
@@ -2069,7 +1969,7 @@
             <p id="dataSaveCounts" class="muted">Your profile, progress, and chats will be tracked here.</p>
           </div>
 
-          <div class="table-card settings-card">
+          <div class="table-card settings-card personalize-layout-card">
             <div class="card-header">
               <div>
                 <p class="card-title">Layout And Reading Comfort</p>
@@ -2080,7 +1980,7 @@
 
             <div id="tabManager" class="tab-manager"></div>
 
-            <div class="settings-stack">
+            <div class="settings-stack settings-toggle-grid">
               <label class="toggle-row">
                 <input id="nightModeToggle" type="checkbox">
                 <span>Night mode</span>

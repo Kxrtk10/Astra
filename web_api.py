@@ -10,7 +10,7 @@ import re
 import time
 from html import unescape
 from uuid import uuid4
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
@@ -101,9 +101,9 @@ from tools.motivation_tools import (
     get_daily_motivation,
     get_story_by_index,
 )
-from tools.network_tools import build_network_snapshot
 from tools.planner_tools import (
     DEFAULT_EXAM_SUBJECTS,
+    check_phase1_complete,
     format_study_plan,
     format_today_schedule,
     format_weekly_schedule,
@@ -111,10 +111,13 @@ from tools.planner_tools import (
     generate_this_weeks_plan,
     get_adaptive_learning_profile,
     get_revision_due_today,
+    get_unified_weakness_ranking,
     get_student_mastery_map,
     get_todays_focus,
     get_weekly_schedule_data,
+    load_planner_state,
     save_mock_scores,
+    save_planner_state,
     record_topic_outcome,
 )
 from tools.jee_syllabus import build_chapter_ready_syllabus
@@ -122,6 +125,7 @@ from tools.prompt_instruction_tools import (
     MODE_RESPONSE_SHAPES,
     build_recovery_prompt,
     build_personality_summary,
+    build_revision_context,
     build_tutor_prompt,
     build_prompt_instruction_block,
     build_chapter_test_prompt,
@@ -286,7 +290,7 @@ def _warn_missing_startup_env_vars():
     ]
     for env_name, feature_name, resolver in checks:
         if not resolver():
-            print(f"WARNING: Missing env variable: {env_name} — feature {feature_name} will not work")
+            print(f"WARNING: Missing env variable: {env_name} â€” feature {feature_name} will not work")
 
 
 def check_rate_limit(student_id, max_requests=30, window_seconds=60):
@@ -636,7 +640,7 @@ async def guard_unhandled_backend_errors(request: Request, call_next):
     try:
         return await call_next(request)
     except Exception as exc:
-        print(f"ERROR: {request.method} {request.url.path} failed — {exc}")
+        print(f"ERROR: {request.method} {request.url.path} failed â€” {exc}")
         logging.exception("Unhandled backend error on %s %s", request.method, request.url.path)
         return JSONResponse(
             status_code=500,
@@ -675,7 +679,7 @@ def startup_event():
         migrated_planner = _migrate_planner_states_to_db()
         global STUDENTS_LOADED
         STUDENTS_LOADED = _count_loaded_students()
-        print(f"Database ready — {STUDENTS_LOADED} students loaded")
+        print(f"Database ready â€” {STUDENTS_LOADED} students loaded")
         if migrated_profiles or migrated_planner:
             print(f"Migration complete: profiles={migrated_profiles}, planner_states={migrated_planner}")
     except Exception as exc:
@@ -1172,15 +1176,23 @@ class ProgressStatusRequest(BaseModel):
     status: str
 
 
-class GroupStudyPreferencesRequest(BaseModel):
-    student_name: str
-    enabled: bool = True
-    mode: str = "mixed"
-    group_size: int = 3
-    session_minutes: int = 60
-    focus: str = ""
-    rotation_index: int = 0
-    action: str = "save"
+class GroupSessionJoinRequest(BaseModel):
+    user_id: str
+    topic: str = ""
+    subject: str = ""
+    exam: str = ""
+    pace_band: str = ""
+
+
+class GroupSessionMessageRequest(BaseModel):
+    user_id: str
+    content: str = ""
+    sender_type: str = "student"
+
+
+class GroupBreakoutRequest(BaseModel):
+    user_id: str
+    invitee_ids: list[str] = Field(default_factory=list)
 
 
 class SummarizeRequest(BaseModel):
@@ -1675,9 +1687,9 @@ def _fallback_mock_question(exam_name, subject, index):
             _build_mock_question(
                 subject,
                 "A 2 kg body experiences a net force of 6 N. What is its acceleration?",
-                ["2 m/s²", "3 m/s²", "4 m/s²", "6 m/s²"],
-                "3 m/s²",
-                "Using F = ma, a = 6/2 = 3 m/s².",
+                ["2 m/sÂ²", "3 m/sÂ²", "4 m/sÂ²", "6 m/sÂ²"],
+                "3 m/sÂ²",
+                "Using F = ma, a = 6/2 = 3 m/sÂ².",
                 difficulty,
                 "newtons-laws",
             ),
@@ -1703,7 +1715,7 @@ def _fallback_mock_question(exam_name, subject, index):
             ),
             _build_mock_question(
                 subject,
-                "The pH of a neutral solution at 25°C is usually...",
+                "The pH of a neutral solution at 25Â°C is usually...",
                 ["1", "5", "7", "14"],
                 "7",
                 "Neutral water has pH 7 at room temperature.",
@@ -1778,15 +1790,15 @@ def _fallback_mock_question(exam_name, subject, index):
             _build_mock_question(
                 subject,
                 "What is the area of a circle with radius 3?",
-                ["6π", "9π", "12π", "18π"],
-                "9π",
-                "Area = πr² = 9π.",
+                ["6Ï€", "9Ï€", "12Ï€", "18Ï€"],
+                "9Ï€",
+                "Area = Ï€rÂ² = 9Ï€.",
                 difficulty,
                 "mensuration",
             ),
             _build_mock_question(
                 subject,
-                "Solve: x² = 16. What is the positive root?",
+                "Solve: xÂ² = 16. What is the positive root?",
                 ["2", "4", "8", "16"],
                 "4",
                 "The positive square root of 16 is 4.",
@@ -2009,6 +2021,125 @@ def _load_profile_or_404(name):
     return _ensure_jee_mvp_profile_scope(profile)
 
 
+def _phase_topic_counts(student_id: str) -> dict:
+    state = load_progress_state(student_id)
+    counts = {"pending": 0, "revise": 0, "done": 0}
+    for item in state.get("items", []) or []:
+        status = str(item.get("status", "")).strip().lower()
+        if status in counts:
+            counts[status] += 1
+    total = sum(counts.values())
+    return {
+        "topics_red": counts["pending"],
+        "topics_brown": counts["revise"],
+        "topics_green": counts["done"],
+        "total_topics": total,
+    }
+
+
+def _phase_days_to_exam(profile: dict) -> int | None:
+    try:
+        journey = _load_json_safe(_journey_path(profile.get("name", ""), "journey"), {})
+        exam_date = str(journey.get("exam_date") or profile.get("exam_date") or "").strip()
+        if not exam_date:
+            exams = profile.get("exams") or []
+            if exams:
+                exam_date = str((exams[0] or {}).get("exam_date") or "").strip()
+        if not exam_date:
+            return None
+        return max(0, (datetime.strptime(exam_date[:10], "%Y-%m-%d").date() - datetime.today().date()).days)
+    except Exception:
+        return None
+
+
+def _phase_status_payload(profile: dict) -> dict:
+    student_id = profile["name"]
+    phase_state = database.get_learning_phase(student_id)
+    completion = check_phase1_complete(student_id)
+    counts = _phase_topic_counts(student_id)
+    total_topics = counts["total_topics"]
+    coverage_percent = round((counts["topics_green"] / total_topics) * 100) if total_topics else 0
+    days_to_exam = _phase_days_to_exam(profile)
+    current_phase = phase_state.get("phase") or "phase1_coverage"
+    if days_to_exam is None:
+        next_action = "Set your exam date so Astra can time phase transitions."
+    elif current_phase == "phase1_coverage":
+        next_action = f"{counts['topics_red']} topics remaining in coverage"
+    elif current_phase == "phase2_revision":
+        next_action = f"Revision cycle {phase_state.get('cycle', 1)} active. Strengthen {counts['topics_brown']} brown topics."
+    else:
+        next_action = f"Exam prep active with {days_to_exam} days remaining."
+    return {
+        "current_phase": current_phase,
+        "phase1_complete": bool(completion.get("phase1_complete")),
+        "topics_red": counts["topics_red"],
+        "topics_brown": counts["topics_brown"],
+        "topics_green": counts["topics_green"],
+        "total_topics": total_topics,
+        "coverage_percent": coverage_percent,
+        "current_cycle": int(phase_state.get("cycle") or 1),
+        "days_to_exam": days_to_exam,
+        "next_action": next_action,
+        "missing_exam_date": days_to_exam is None,
+    }
+
+
+def _topic_previous_score(student_id: str, topic: str):
+    row = database.execute_query(
+        """
+        SELECT AVG(score) AS avg_score
+        FROM progress_records
+        WHERE student_id = ? AND LOWER(topic) = LOWER(?)
+        """,
+        (student_id, topic),
+        fetchone=True,
+    )
+    if row and row["avg_score"] is not None:
+        return round(float(row["avg_score"]), 1)
+    return None
+
+
+def _topic_confusion_summary(student_id: str, topic: str) -> str:
+    rows = database.execute_query(
+        """
+        SELECT confusion_type, missing_prerequisite, recovery_action, COUNT(*) AS count
+        FROM confusion_events
+        WHERE student_id = ? AND (LOWER(topic) = LOWER(?) OR LOWER(unit) = LOWER(?))
+        GROUP BY confusion_type, missing_prerequisite, recovery_action
+        ORDER BY count DESC
+        LIMIT 5
+        """,
+        (student_id, topic, topic),
+    ) or []
+    parts = []
+    for row in rows:
+        label = str(row["confusion_type"] or "confusion").strip()
+        prerequisite = str(row["missing_prerequisite"] or "").strip()
+        recovery = str(row["recovery_action"] or "").strip()
+        text = f"{row['count']}x {label}"
+        if prerequisite:
+            text += f"; missing prerequisite: {prerequisite}"
+        if recovery:
+            text += f"; recovery used: {recovery}"
+        parts.append(text)
+    return "; ".join(parts) if parts else "No specific confusion events recorded for this topic."
+
+
+def _build_phase_revision_context(student_id: str, topic_payload: dict) -> str:
+    phase_state = database.get_learning_phase(student_id)
+    if phase_state.get("phase") != "phase2_revision":
+        return ""
+    topic = str(
+        topic_payload.get("topic")
+        or topic_payload.get("subtopic_name")
+        or topic_payload.get("unit_name")
+        or "this topic"
+    ).strip()
+    previous_score = _topic_previous_score(student_id, topic)
+    confusion_summary = _topic_confusion_summary(student_id, topic)
+    return build_revision_context(topic, phase_state.get("cycle", 1), previous_score, confusion_summary)
+
+
 def _authenticated_student_name(fallback: str = "") -> str:
     authenticated_student = current_authenticated_student.get()
     if authenticated_student and isinstance(authenticated_student, dict):
@@ -2020,6 +2151,57 @@ def _authenticated_student_name(fallback: str = "") -> str:
         if resolved:
             return resolved
     return str(fallback or "").strip()
+
+
+def _safe_award_lp(student_id: str, points: int, reason: str) -> dict | None:
+    try:
+        before = get_engagement_snapshot(student_id)
+        award_points(student_id, points, reason)
+        after = get_engagement_snapshot(student_id)
+        before_points = int(before.get("points") or 0)
+        after_points = int(after.get("points") or 0)
+        awarded = max(0, after_points - before_points)
+        if awarded <= 0:
+            return None
+        return {
+            "amount": awarded,
+            "points": awarded,
+            "reason": reason,
+            "old_tier": before.get("current_league"),
+            "new_tier": after.get("current_league"),
+            "engagement": after,
+        }
+    except Exception as exc:
+        logging.warning("LP award failed for %s: %s", student_id, exc)
+        return None
+
+
+def _safe_lp_awards(*awards: dict | None) -> list[dict]:
+    return [award for award in awards if award]
+
+
+def _safe_record_daily_completion(student_id: str) -> None:
+    try:
+        record_daily_completion(student_id)
+    except Exception as exc:
+        logging.warning("Daily completion streak update failed for %s: %s", student_id, exc)
+
+
+def _safe_record_login_streak(student_id: str) -> None:
+    try:
+        state = load_engagement_state(student_id)
+        today = datetime.now().date()
+        last_raw = str(state.get("last_completion_date") or "").strip()
+        if last_raw:
+            try:
+                last_date = datetime.strptime(last_raw, "%Y-%m-%d").date()
+                if (today - last_date) >= timedelta(days=3):
+                    break_streak(student_id)
+            except ValueError:
+                logging.warning("Invalid last completion date for %s: %s", student_id, last_raw)
+        record_daily_completion(student_id)
+    except Exception as exc:
+        logging.warning("Login streak update failed for %s: %s", student_id, exc)
 
 
 def _fallback_video_profile(student_name: str, tutor_face_url: str = "", tutor_personality: str = ""):
@@ -2359,22 +2541,22 @@ SUPPORTED_LANGUAGE_ALIASES = {
     "english": "english",
     "eng": "english",
     "hindi": "hindi",
-    "हिंदी": "hindi",
+    "à¤¹à¤¿à¤‚à¤¦à¥€": "hindi",
     "hinglish": "hinglish",
     "hindi + english": "hinglish",
     "hindi english": "hinglish",
     "telugu": "telugu",
-    "తెలుగు": "telugu",
+    "à°¤à±†à°²à±à°—à±": "telugu",
     "tamil": "tamil",
-    "தமிழ்": "tamil",
+    "à®¤à®®à®¿à®´à¯": "tamil",
     "kannada": "kannada",
-    "ಕನ್ನಡ": "kannada",
+    "à²•à²¨à³à²¨à²¡": "kannada",
     "marathi": "marathi",
-    "मराठी": "marathi",
+    "à¤®à¤°à¤¾à¤ à¥€": "marathi",
     "bengali": "bengali",
-    "বাংলা": "bengali",
+    "à¦¬à¦¾à¦‚à¦²à¦¾": "bengali",
     "gujarati": "gujarati",
-    "ગુજરાતી": "gujarati",
+    "àª—à«àªœàª°àª¾àª¤à«€": "gujarati",
 }
 
 
@@ -2807,13 +2989,13 @@ def _build_mode_aware_fallback_reply(
     if mode == "lounge":
         return (
             f"That sounds like something we can keep calm and easy. "
-            f"If you want, tell me more about {topic_label}, and I’ll stay with you at your pace."
+            f"If you want, tell me more about {topic_label}, and Iâ€™ll stay with you at your pace."
         )
 
     pacing_label = str(response_pacing or "standard").strip().lower()
     accessibility_suffix = ""
     if reading_comfort_mode or chunked_reply_mode or pacing_label != "standard":
-        accessibility_suffix = " I’ll keep it short, broken into small parts, and easy to scan."
+        accessibility_suffix = " Iâ€™ll keep it short, broken into small parts, and easy to scan."
 
     if mode == "tips":
         return (
@@ -2844,7 +3026,7 @@ def _build_mode_aware_fallback_reply(
             lines.append(f"Focus note: {primary_weak} has needed extra support before, so keep the first attempt small and accurate.")
         return "\n".join(lines)
 
-    tutor_intro = f"Let’s work through {topic_label} step by step."
+    tutor_intro = f"Letâ€™s work through {topic_label} step by step."
     if level <= 2:
         core = "The simplest way to think about it is to identify what is given, choose the key rule, and apply it once carefully."
     elif level == 3:
@@ -2852,7 +3034,7 @@ def _build_mode_aware_fallback_reply(
     else:
         core = "Start with the main idea, connect it to the underlying rule or formula, and then extend it once more if the student wants a deeper or exam-level version."
 
-    follow_up = f"If you send the exact question, I’ll continue from here without restarting the whole explanation. {next_step}"
+    follow_up = f"If you send the exact question, Iâ€™ll continue from here without restarting the whole explanation. {next_step}"
     if primary_weak:
         follow_up = (
             f"I also want to keep a careful eye on {primary_weak} because it has shown up as a weak area before. "
@@ -2861,8 +3043,8 @@ def _build_mode_aware_fallback_reply(
     if teaching_adjustment:
         follow_up = f"{teaching_adjustment} {follow_up}"
     if emotional_state in {"overwhelmed", "strained"}:
-        tutor_intro = f"Let’s keep {topic_label} small and calm."
-        core = "I’ll keep this short, clear, and easy to follow so the next step feels manageable."
+        tutor_intro = f"Letâ€™s keep {topic_label} small and calm."
+        core = "Iâ€™ll keep this short, clear, and easy to follow so the next step feels manageable."
 
     if len(mode_shape) >= 4:
         return "\n".join([tutor_intro, core, follow_up])
@@ -2978,7 +3160,12 @@ def _run_agent_reply(
                 "If the student's message asks about a different Physics topic, answer that actual question fully first. "
                 "Never say 'we are focusing on X right now' and never redirect away from the question before answering."
             )
-            instruction_block = "\n\n".join([instruction_block, chapter_plan_rule, chapter_block])
+            revision_context = _build_phase_revision_context(profile["name"], active_chapter_subtopic)
+            instruction_blocks = [instruction_block, chapter_plan_rule]
+            if revision_context:
+                instruction_blocks.append(revision_context)
+            instruction_blocks.append(chapter_block)
+            instruction_block = "\n\n".join(instruction_blocks)
     else:
         instruction_block = build_prompt_instruction_block(
             profile,
@@ -3148,8 +3335,8 @@ def _run_agent_reply(
             level = max(1, min(int(tutor_level or 3), 5))
             if level == 1:
                 outgoing_message += (
-                    "\n\nTutor level is 1. Explain in simple layman terms, very clearly, with short sentences and minimal jargon. "
-                    "Use 1 to 2 short paragraphs. Keep it crisp and reassuring."
+                    "\n\nTutor level is 1. Explain in simple layman terms, very clearly, with minimal jargon. "
+                    "Use as much space as needed to be clear while staying reassuring and easy to follow."
                 )
             elif level == 2:
                 outgoing_message += (
@@ -3271,9 +3458,8 @@ def _run_agent_reply(
                 )
         if voice_chat_mode:
             outgoing_message += (
-                "\n\nVoice chat mode is on. Reply in a short, natural, conversational way. "
-                "Keep the response easy to speak aloud, ideally within 3 to 5 short sentences "
-                "unless the user explicitly asks for more detail."
+                "\n\nVoice chat mode is on. Reply in a natural, conversational way. "
+                "Keep the response easy to speak aloud, and still provide the full requested count or detail when the student asks for it."
             )
         pacing_label = str(response_pacing or "standard").strip().lower()
         if reading_comfort_mode or chunked_reply_mode or pacing_label != "standard":
@@ -3707,6 +3893,8 @@ def auth_login(request: AuthLoginRequest):
     _clear_failed_login_attempts(email)
     session = issue_session(user["id"])
     profile = load_profile(user["student_name"])
+    if profile and profile.get("name"):
+        _safe_record_login_streak(profile["name"])
     return {
         "user": user,
         "session": session,
@@ -3718,6 +3906,8 @@ def auth_login(request: AuthLoginRequest):
 def auth_me(authorization: str | None = Header(default=None)):
     user = require_bearer_token(authorization)
     profile = load_profile(user["student_name"])
+    if profile and profile.get("name"):
+        _safe_record_login_streak(profile["name"])
     return {
         "user": user,
         "profile": profile,
@@ -4339,6 +4529,119 @@ def planner_rebalance(student_id: str):
     }
 
 
+@app.get("/api/phase/status/{student_id}")
+def phase_status(student_id: str):
+    try:
+        profile = _load_profile_or_404(student_id)
+        return _phase_status_payload(profile)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.exception("Could not load phase status: %s", exc)
+        raise HTTPException(status_code=500, detail="Could not load phase status right now.") from exc
+
+
+@app.post("/api/phase/transition/{student_id}")
+def phase_transition(student_id: str):
+    try:
+        profile = _load_profile_or_404(student_id)
+        resolved_student_id = profile["name"]
+        phase_state = database.get_learning_phase(resolved_student_id)
+        current_phase = phase_state.get("phase") or "phase1_coverage"
+        completion = check_phase1_complete(resolved_student_id)
+        days_to_exam = _phase_days_to_exam(profile)
+        if current_phase == "phase1_coverage" and completion.get("phase1_complete"):
+            database.set_learning_phase(resolved_student_id, "phase2_revision", cycle=1)
+            ranked = get_unified_weakness_ranking(resolved_student_id)
+            planner_state = load_planner_state(resolved_student_id)
+            planner_state["phase2_weak_topics_ranked"] = ranked
+            planner_state["phase2_started_at"] = datetime.utcnow().isoformat(timespec="seconds")
+            save_planner_state(resolved_student_id, planner_state)
+            lp_awards = _safe_lp_awards(
+                _safe_award_lp(resolved_student_id, 100, "Phase 1 Coverage Complete - Major Milestone")
+            )
+            return {
+                "transitioned": True,
+                "new_phase": "phase2_revision",
+                "message": "Coverage complete. Revision mode activated.",
+                "weak_topics_ranked": ranked,
+                "lp_awards": lp_awards,
+            }
+        if current_phase == "phase2_revision" and days_to_exam is not None and days_to_exam <= 30:
+            database.set_learning_phase(resolved_student_id, "phase3_exam_prep", cycle=phase_state.get("cycle", 1))
+            lp_awards = _safe_lp_awards(
+                _safe_award_lp(resolved_student_id, 150, "Phase 2 Revision Complete - Major Milestone")
+            )
+            return {
+                "transitioned": True,
+                "new_phase": "phase3_exam_prep",
+                "message": "Exam prep mode activated for the final 30 days.",
+                "lp_awards": lp_awards,
+            }
+        return {"transitioned": False, "current_phase": current_phase}
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.exception("Could not transition phase: %s", exc)
+        raise HTTPException(status_code=500, detail="Could not transition phase right now.") from exc
+
+
+@app.get("/api/backlog/summary/{student_id}")
+def backlog_summary(student_id: str):
+    try:
+        profile = _load_profile_or_404(student_id)
+        planner_state = load_planner_state(profile["name"])
+        raw_backlog_hours = planner_state.get("backlog_hours", {}) or {}
+        backlog_hours = {}
+        if isinstance(raw_backlog_hours, dict):
+            for key, value in raw_backlog_hours.items():
+                try:
+                    backlog_hours[str(key)] = round(float(value or 0), 2)
+                except (TypeError, ValueError):
+                    logging.warning("Ignoring non-numeric backlog hour value for %s: %r", key, value)
+        total_hours = round(sum(backlog_hours.values()), 2)
+        backlog_topics = []
+        for item in planner_state.get("history", []) or []:
+            if not isinstance(item, dict) or item.get("status") not in {"missed", "rolled_over"}:
+                continue
+            for task in item.get("tasks", []) or []:
+                if not isinstance(task, dict):
+                    continue
+                topic = task.get("topic") or task.get("subject") or task.get("exam")
+                if topic:
+                    try:
+                        task_hours = round(float(task.get("hours") or 0), 2)
+                    except (TypeError, ValueError):
+                        task_hours = 0
+                    backlog_topics.append(
+                        {
+                            "topic": topic,
+                            "subject": task.get("subject", ""),
+                            "hours": task_hours,
+                            "status": item.get("status"),
+                        }
+                    )
+        has_backlog = total_hours > 0 or bool(backlog_topics)
+        topic_count = len(backlog_topics)
+        recovery_message = (
+            f"{topic_count} topics behind schedule. Plan adjusted to recover by Friday."
+            if has_backlog
+            else "No backlog right now. Today's plan is on track."
+        )
+        return {
+            "has_backlog": has_backlog,
+            "backlog_topics": backlog_topics[-10:],
+            "backlog_hours_total": total_hours,
+            "backlog_hours": backlog_hours,
+            "recovery_message": recovery_message,
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.exception("Could not load backlog summary: %s", exc)
+        raise HTTPException(status_code=500, detail="Could not load backlog summary right now.") from exc
+
+
 @app.get("/api/tutor/todays-session/{student_id}")
 def tutor_todays_session(student_id: str):
     profile = _load_profile_or_404(student_id)
@@ -4375,6 +4678,10 @@ def tutor_complete_session(request: TutorCompleteSessionRequest):
         request.duration_minutes,
         request.session_type,
     )
+    lp_awards = _safe_lp_awards(
+        _safe_award_lp(profile["name"], 25, "Chapter session completed")
+    )
+    _safe_record_daily_completion(profile["name"])
     return {
         "student_id": profile["name"],
         "updated_confidence": result.get("confidence_level", "new"),
@@ -4382,6 +4689,7 @@ def tutor_complete_session(request: TutorCompleteSessionRequest):
         "weekly_plan_updated": result.get("weekly_plan_updated", False),
         "encouragement_message": "Nice work. Keep the revision loop active and come back for the next scheduled session.",
         "result": result,
+        "lp_awards": lp_awards,
     }
 
 
@@ -4393,6 +4701,7 @@ def session_start_chapter(request: ChapterStartRequest):
     return {
         "session": session,
         "first_subtopic": current,
+        "revision_context": _build_phase_revision_context(profile["name"], current or {}),
     }
 
 
@@ -4441,6 +4750,13 @@ def session_complete_subtopic(request: ChapterSubtopicCompleteRequest):
         request.time_spent_minutes,
         chapter_name=session_state.get("unit_name", ""),
     )
+    if chapter_result.get("chapter_complete") or chapter_result.get("session_complete"):
+        chapter_result["lp_awards"] = _safe_lp_awards(
+            _safe_award_lp(profile["name"], 25, "Chapter session completed")
+        )
+        _safe_record_daily_completion(profile["name"])
+    else:
+        chapter_result["lp_awards"] = []
     return chapter_result
 
 
@@ -4525,9 +4841,17 @@ def session_submit_chapter_test(request: ChapterTestSubmitRequest):
         request.answers,
         request.time_taken_minutes,
     )
+    score = float(request.score or 0)
+    if score >= 90:
+        lp_award = _safe_award_lp(profile["name"], 45, "Excellent chapter test score")
+    elif score >= 70:
+        lp_award = _safe_award_lp(profile["name"], 30, "Chapter test passed")
+    else:
+        lp_award = _safe_award_lp(profile["name"], 10, "Chapter test attempted")
     return {
         "mastery_report": result,
         "next_steps": result.get("revision_scheduled", []),
+        "lp_awards": _safe_lp_awards(lp_award),
     }
 
 
@@ -5060,11 +5384,13 @@ def save_progress_item(request: ProgressItemRequest):
             "status": request.status,
         },
     )
+    lp_awards = []
     if not before_item or before_item.get("status") != request.status:
         if request.status == "done":
-            award_points(profile["name"], 25, f"completing {request.topic}")
+            lp_awards = _safe_lp_awards(_safe_award_lp(profile["name"], 25, f"completing {request.topic}"))
         elif request.status == "revise":
-            award_points(profile["name"], 12, f"marking {request.topic} for structured revision")
+            lp_awards = _safe_lp_awards(_safe_award_lp(profile["name"], 12, f"marking {request.topic} for structured revision"))
+    snapshot["lp_awards"] = lp_awards
     return snapshot
 
 
@@ -5087,82 +5413,475 @@ def save_progress_status(request: ProgressStatusRequest):
         tutor_response="Progress tracker updated.",
         metadata={"item_id": request.item_id, "status": request.status},
     )
+    lp_awards = []
     if not existing_item or existing_item.get("status") != request.status:
         if request.status == "done":
-            award_points(profile["name"], 20, "pushing a topic into the done lane")
+            lp_awards = _safe_lp_awards(_safe_award_lp(profile["name"], 20, "pushing a topic into the done lane"))
         elif request.status == "revise":
-            award_points(profile["name"], 10, "moving a topic into the revision lane")
+            lp_awards = _safe_lp_awards(_safe_award_lp(profile["name"], 10, "moving a topic into the revision lane"))
+    snapshot["lp_awards"] = lp_awards
     return snapshot
 
 
-@app.get("/api/network/{student_name}")
-def network_summary(student_name: str):
-    profile = _load_profile_or_404(student_name)
-    return build_network_snapshot(profile)
+CLASSROOM_TUTOR_SYSTEM_PROMPT = """
+GROUP CLASSROOM TUTOR MODE
+
+You are Astra's classroom tutor for one shared group session of exactly the assigned topic.
+Teach the group collectively as "everyone" or "the group" rather than adapting to one student's emotional state.
+Move step by step at a steady fixed pace. Do not let one student's confusion stop the main class.
+Encourage students to discuss quickly with each other before escalating a doubt.
+Keep explanations clear, structured, exam-relevant, and suitable for JEE Main / JEE Advanced preparation.
+Do not use the student's private memory, behavioral profile, sentiment adaptation, or 1:1 tutor persona rules here.
+""".strip()
 
 
-@app.post("/api/network/group-study/preferences")
-def update_group_study_preferences(request: GroupStudyPreferencesRequest):
-    profile = _load_profile_or_404(request.student_name)
-    current_preferences = dict(profile.get("group_study_preferences") or {})
-    action = str(request.action or "save").strip().lower()
+def _clean_group_text(value):
+    return str(value or "").strip()
 
-    def _safe_int(value, default, minimum=None, maximum=None):
-        try:
-            parsed = int(value)
-        except (TypeError, ValueError):
-            parsed = default
-        if minimum is not None:
-            parsed = max(minimum, parsed)
-        if maximum is not None:
-            parsed = min(maximum, parsed)
-        return parsed
 
-    if action == "solo":
-        current_preferences.update(
-            {
-                "enabled": False,
-                "mode": "solo",
-                "group_size": _safe_int(current_preferences.get("group_size", request.group_size), request.group_size or 3, minimum=2, maximum=5),
-                "session_minutes": _safe_int(current_preferences.get("session_minutes", request.session_minutes), request.session_minutes or 60, minimum=30, maximum=120),
-                "focus": request.focus.strip() or str(current_preferences.get("focus", "")).strip(),
+def _topic_key(value):
+    return re.sub(r"\s+", " ", _clean_group_text(value).lower())
+
+
+def _get_next_pending_topic(user_id):
+    state = load_progress_state(user_id)
+    for item in state.get("items", []) or []:
+        status = _clean_group_text(item.get("status")).lower()
+        if status in {"pending", "red", "not_started", "not started"}:
+            return {
+                "topic": _clean_group_text(item.get("topic")),
+                "subject": _clean_group_text(item.get("subject")),
+                "exam": _clean_group_text(item.get("exam")),
+                "item_id": item.get("id", ""),
             }
-        )
-    else:
-        try:
-            group_size = int(request.group_size or current_preferences.get("group_size", 3) or 3)
-        except (TypeError, ValueError):
-            group_size = 3
-        try:
-            session_minutes = int(request.session_minutes or current_preferences.get("session_minutes", 60) or 60)
-        except (TypeError, ValueError):
-            session_minutes = 60
-        try:
-            rotation_index = int(request.rotation_index or current_preferences.get("rotation_index", 0) or 0)
-        except (TypeError, ValueError):
-            rotation_index = 0
+    return {}
 
-        current_preferences.update(
-            {
-                "enabled": bool(request.enabled) if action != "reroll" else True,
-                "mode": str(request.mode or current_preferences.get("mode", "mixed")).strip().lower() or "mixed",
-                "group_size": max(2, min(5, group_size)),
-                "session_minutes": max(30, min(120, session_minutes)),
-                "focus": request.focus.strip() or str(current_preferences.get("focus", "")).strip(),
-                "rotation_index": max(0, rotation_index + (1 if action == "reroll" else 0)),
-            }
-        )
-        if current_preferences["mode"] == "solo":
-            current_preferences["enabled"] = False
 
-    profile["group_study_preferences"] = current_preferences
-    save_profile(profile)
-    network = build_network_snapshot(profile)
+def _derive_pace_band(user_id):
+    try:
+        analytics = load_analytics_state(user_id)
+    except Exception:
+        analytics = {}
+    attempts = list((analytics or {}).get("practice_attempts") or [])[-8:]
+    completions = list((analytics or {}).get("chapter_completions") or [])[-6:]
+    subtopics = list((analytics or {}).get("subtopic_scores") or [])[-10:]
+
+    accuracy_values = []
+    duration_values = []
+    for attempt in attempts:
+        try:
+            accuracy_values.append(float(attempt.get("accuracy_percent", 0) or 0))
+        except (TypeError, ValueError):
+            pass
+        try:
+            minutes = float(attempt.get("time_taken_minutes", 0) or 0)
+            if minutes > 0:
+                duration_values.append(minutes)
+        except (TypeError, ValueError):
+            pass
+    for completion in completions:
+        try:
+            accuracy_values.append(float(completion.get("score", 0) or 0))
+        except (TypeError, ValueError):
+            pass
+        try:
+            minutes = float(completion.get("time_taken_minutes", 0) or 0)
+            if minutes > 0:
+                duration_values.append(minutes)
+        except (TypeError, ValueError):
+            pass
+    for subtopic in subtopics:
+        try:
+            accuracy_values.append(float(subtopic.get("score", 0) or 0))
+        except (TypeError, ValueError):
+            pass
+        try:
+            minutes = float(subtopic.get("duration_minutes", 0) or 0)
+            if minutes > 0:
+                duration_values.append(minutes)
+        except (TypeError, ValueError):
+            pass
+
+    if not accuracy_values and not duration_values:
+        return "steady"
+    avg_accuracy = sum(accuracy_values) / len(accuracy_values) if accuracy_values else 65
+    avg_duration = sum(duration_values) / len(duration_values) if duration_values else 60
+    if avg_accuracy >= 75 and avg_duration <= 55:
+        return "fast"
+    if avg_accuracy < 55 or avg_duration >= 90:
+        return "slow"
+    return "steady"
+
+
+
+def _primary_exam_name_from_profile(profile):
+    exams = profile.get("exams") if isinstance(profile, dict) else []
+    if isinstance(exams, list) and exams:
+        first = exams[0] or {}
+        name = _clean_group_text(first.get("name") if isinstance(first, dict) else first)
+        if name:
+            return name
+    return _clean_group_text((profile or {}).get("exam")) or "JEE"
+
+def _resolve_group_target(user_id, topic="", subject="", exam="", pace_band=""):
+    pending = _get_next_pending_topic(user_id)
     return {
-        "profile": profile,
-        "group_study": network.get("group_study"),
-        "stats": network.get("stats"),
+        "topic": _clean_group_text(topic) or pending.get("topic", ""),
+        "subject": _clean_group_text(subject) or pending.get("subject", ""),
+        "exam": _clean_group_text(exam) or pending.get("exam", "") or _primary_exam_name_from_profile(load_profile(user_id)),
+        "pace_band": (_clean_group_text(pace_band) or _derive_pace_band(user_id) or "steady").lower(),
     }
+
+
+def _session_member_labels(members):
+    labels = []
+    for member in members or []:
+        labels.append({
+            "user_id": member.get("user_id", ""),
+            "label": member.get("user_id", "Student"),
+            "status": member.get("status", "in_main"),
+            "joined_at": member.get("joined_at", ""),
+        })
+    return labels
+
+
+def _group_session_payload_for_user(user_id, session_id=None, include_messages=True):
+    session = database.get_group_session(session_id) if session_id else database.get_active_group_session_for_user(user_id)
+    if not session:
+        return None
+    members = database.list_group_session_members(session["id"])
+    payload = {
+        "id": session.get("id"),
+        "topic": session.get("topic", ""),
+        "subject": session.get("subject", ""),
+        "exam": session.get("exam", ""),
+        "pace_band": session.get("pace_band", "steady"),
+        "scheduled_time": session.get("scheduled_time", ""),
+        "status": session.get("status", "scheduled"),
+        "member_count": len(members),
+        "members": _session_member_labels(members),
+        "current_user_status": next((m.get("status") for m in members if m.get("user_id") == user_id), "left"),
+    }
+    if include_messages:
+        payload["main_messages"] = database.list_group_messages(session["id"], "main")
+        payload["breakout_messages"] = database.list_group_messages(session["id"], "breakout", user_id)
+    return payload
+
+
+def _build_group_session_dashboard(user_id):
+    target = _resolve_group_target(user_id)
+    pace_band = target.get("pace_band", "steady")
+    candidates = []
+    if target.get("topic"):
+        peer_ids = []
+        for peer_id in database.list_student_ids(limit=300):
+            if peer_id == user_id:
+                continue
+            peer_target = _resolve_group_target(peer_id)
+            if _topic_key(peer_target.get("topic")) == _topic_key(target.get("topic")) and peer_target.get("pace_band") == pace_band:
+                peer_ids.append(peer_id)
+        open_session = database.find_open_group_session(target["topic"], target.get("subject", ""), target.get("exam", ""), pace_band)
+        if open_session:
+            members = database.list_group_session_members(open_session["id"])
+            candidates.append({
+                "session_id": open_session["id"],
+                "topic": open_session.get("topic", target["topic"]),
+                "subject": open_session.get("subject", target.get("subject", "")),
+                "exam": open_session.get("exam", target.get("exam", "")),
+                "pace_band": open_session.get("pace_band", pace_band),
+                "member_count": len(members),
+                "members": _session_member_labels(members),
+            })
+        for index in range(0, min(len(peer_ids), 6), 2):
+            group_members = [user_id] + peer_ids[index:index + 2]
+            candidates.append({
+                "session_id": None,
+                "topic": target["topic"],
+                "subject": target.get("subject", ""),
+                "exam": target.get("exam", ""),
+                "pace_band": pace_band,
+                "member_count": len(group_members),
+                "members": [{"user_id": member, "label": member, "status": "candidate"} for member in group_members],
+            })
+            if len(candidates) >= 3:
+                break
+        if not candidates:
+            candidates.append({
+                "session_id": None,
+                "topic": target["topic"],
+                "subject": target.get("subject", ""),
+                "exam": target.get("exam", ""),
+                "pace_band": pace_band,
+                "member_count": 1,
+                "members": [{"user_id": user_id, "label": user_id, "status": "candidate"}],
+            })
+    return {
+        "active_session": _group_session_payload_for_user(user_id),
+        "next_topic": target if target.get("topic") else None,
+        "pace_band": pace_band,
+        "groups": candidates[:3],
+    }
+
+
+def _require_group_member(session_id, user_id):
+    clean_user_id = _clean_group_text(user_id)
+    for member in database.list_group_session_members(session_id):
+        if member.get("user_id") == clean_user_id:
+            return member
+    raise HTTPException(status_code=403, detail="You are not a member of this group session.")
+
+
+def _call_group_llm(prompt, fallback):
+    if not genai_client:
+        return fallback
+    try:
+        response = genai_client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config=genai.types.GenerateContentConfig(max_output_tokens=900, temperature=0.55),
+        )
+        return (response.text or "").strip() or fallback
+    except Exception as exc:
+        logging.warning("Group classroom model call fell back: %s", exc)
+        return fallback
+
+
+def _ensure_group_opening_message(session_id):
+    existing = database.list_group_messages(session_id, "main", limit=1)
+    if existing:
+        return
+    session = database.get_group_session(session_id)
+    topic = session.get("topic", "this topic") if session else "this topic"
+    content = (
+        f"Welcome everyone. Today we will study {topic} at a steady classroom pace. "
+        "Use the main feed for quick answers, and step out into a breakout if a doubt needs private clarification."
+    )
+    database.add_group_message(session_id, "main", "tutor", content)
+
+
+def _generate_group_tutor_main_chunk(session_id):
+    session = database.get_group_session(session_id)
+    messages = database.list_group_messages(session_id, "main", limit=30)
+    topic = session.get("topic", "the assigned topic") if session else "the assigned topic"
+    subject = session.get("subject", "") if session else ""
+    history = "\n".join(f"{m.get('sender_type')}: {m.get('content')}" for m in messages[-12:])
+    fallback = (
+        f"Next classroom step for {topic}: start from the core idea, connect it to one exam-style condition, "
+        "then try one short check question before we move ahead."
+    )
+    prompt = f"""{CLASSROOM_TUTOR_SYSTEM_PROMPT}
+
+Topic: {topic}
+Subject: {subject}
+Recent main feed:
+{history}
+
+Generate the next teaching chunk for the whole group. Keep it structured, clear, and forward-moving. Include one short check question at the end."""
+    return _call_group_llm(prompt, fallback)
+
+
+def _generate_group_breakout_reply(session_id, user_id, doubt):
+    session = database.get_group_session(session_id)
+    topic = session.get("topic", "the topic") if session else "the topic"
+    breakout = database.list_group_messages(session_id, "breakout", user_id, limit=20)
+    history = "\n".join(f"{m.get('sender_type')}: {m.get('content')}" for m in breakout[-8:])
+    fallback = (
+        f"For this doubt in {topic}, isolate the exact step that feels unclear, then test it with one small example. "
+        "Once that step is clear, rejoin the main session and continue from the recap."
+    )
+    prompt = f"""{CLASSROOM_TUTOR_SYSTEM_PROMPT}
+
+Private breakout for one student from the group session.
+Topic: {topic}
+Breakout history:
+{history}
+Student doubt: {doubt}
+
+Answer only inside this breakout. Be concise, specific to the doubt, and do not slow down the main class."""
+    return _call_group_llm(prompt, fallback)
+
+
+def _generate_group_rejoin_recap(session_id, user_id, since_created_at):
+    session = database.get_group_session(session_id)
+    topic = session.get("topic", "the topic") if session else "the topic"
+    missed = database.list_group_messages(session_id, "main", since_created_at=since_created_at, limit=60)
+    missed_text = "\n".join(f"{m.get('sender_type')}: {m.get('content')}" for m in missed[-20:])
+    fallback = f"Quick recap before you rejoin: the group continued with {topic}, covered the next core step, and kept one check question for practice. You can continue from the latest main message."
+    prompt = f"""Summarize what this student missed while in a breakout.
+Topic: {topic}
+Main-channel messages since they stepped out:
+{missed_text}
+
+Write 2-4 plain-language sentences. No extra headings."""
+    return _call_group_llm(prompt, fallback)
+
+@app.get("/api/group-sessions/matches/{student_name}")
+def group_session_matches(student_name: str):
+    try:
+        profile = _load_profile_or_404(student_name)
+        return _build_group_session_dashboard(profile["name"])
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.exception("Could not build group session matches")
+        raise HTTPException(status_code=500, detail="Could not load study groups right now.") from exc
+
+
+@app.get("/api/group-sessions/active/{student_name}")
+def active_group_session(student_name: str):
+    try:
+        profile = _load_profile_or_404(student_name)
+        return {"session": _group_session_payload_for_user(profile["name"])}
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.exception("Could not load active group session")
+        raise HTTPException(status_code=500, detail="Could not load your group session right now.") from exc
+
+
+@app.post("/api/group-sessions/join")
+def join_group_session(request: GroupSessionJoinRequest):
+    try:
+        profile = _load_profile_or_404(request.user_id)
+        user_id = profile["name"]
+        target = _resolve_group_target(user_id, request.topic, request.subject, request.exam, request.pace_band)
+        if not target.get("topic"):
+            raise HTTPException(status_code=400, detail="No pending topic is ready for a group session yet.")
+        session = database.find_open_group_session(target["topic"], target.get("subject", ""), target.get("exam", ""), target["pace_band"])
+        if session:
+            session_id = session["id"]
+        else:
+            scheduled_time = (datetime.utcnow() + timedelta(minutes=10)).isoformat(timespec="seconds")
+            session_id = database.create_group_session(
+                target["topic"],
+                target.get("subject", ""),
+                target.get("exam", ""),
+                target["pace_band"],
+                scheduled_time,
+            )
+        if not session_id:
+            raise HTTPException(status_code=500, detail="Could not create the group session.")
+        database.add_group_session_member(session_id, user_id, "in_main")
+        _ensure_group_opening_message(session_id)
+        return {"session": _group_session_payload_for_user(user_id, session_id)}
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.exception("Could not join group session")
+        raise HTTPException(status_code=500, detail="Could not join that study group right now.") from exc
+
+
+@app.get("/api/group-sessions/{session_id}/messages")
+def group_session_messages(session_id: int, user_id: str, breakout_owner_id: str = ""):
+    try:
+        _require_group_member(session_id, user_id)
+        return {
+            "session": _group_session_payload_for_user(user_id, session_id, include_messages=False),
+            "main_messages": database.list_group_messages(session_id, "main"),
+            "breakout_messages": database.list_group_messages(session_id, "breakout", breakout_owner_id or user_id),
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.exception("Could not load group messages")
+        raise HTTPException(status_code=500, detail="Could not load group messages right now.") from exc
+
+
+@app.post("/api/group-sessions/{session_id}/main-message")
+def post_group_main_message(session_id: int, request: GroupSessionMessageRequest):
+    try:
+        _require_group_member(session_id, request.user_id)
+        sender_type = str(request.sender_type or "student").strip().lower()
+        if sender_type == "tutor":
+            content = _generate_group_tutor_main_chunk(session_id)
+            database.add_group_message(session_id, "main", "tutor", content)
+        else:
+            content = str(request.content or "").strip()
+            if not content:
+                raise HTTPException(status_code=400, detail="Message cannot be empty.")
+            database.add_group_message(session_id, "main", "student", content, sender_id=request.user_id)
+        return {
+            "session": _group_session_payload_for_user(request.user_id, session_id, include_messages=False),
+            "main_messages": database.list_group_messages(session_id, "main"),
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.exception("Could not post group main message")
+        raise HTTPException(status_code=500, detail="Could not send that group message right now.") from exc
+
+
+@app.post("/api/group-sessions/{session_id}/breakout")
+def step_into_group_breakout(session_id: int, request: GroupBreakoutRequest):
+    try:
+        _require_group_member(session_id, request.user_id)
+        database.update_group_member_status(session_id, request.user_id, "in_breakout")
+        database.add_group_message(
+            session_id,
+            "breakout",
+            "tutor",
+            "You are in a private breakout. Ask the doubt here and the main class will keep moving.",
+            breakout_owner_id=request.user_id,
+        )
+        return {
+            "session": _group_session_payload_for_user(request.user_id, session_id, include_messages=False),
+            "breakout_messages": database.list_group_messages(session_id, "breakout", request.user_id),
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.exception("Could not start breakout")
+        raise HTTPException(status_code=500, detail="Could not open breakout right now.") from exc
+
+
+@app.post("/api/group-sessions/{session_id}/breakout-message")
+def post_group_breakout_message(session_id: int, request: GroupSessionMessageRequest):
+    try:
+        _require_group_member(session_id, request.user_id)
+        content = str(request.content or "").strip()
+        if not content:
+            raise HTTPException(status_code=400, detail="Message cannot be empty.")
+        database.add_group_message(session_id, "breakout", "student", content, sender_id=request.user_id, breakout_owner_id=request.user_id)
+        reply = _generate_group_breakout_reply(session_id, request.user_id, content)
+        database.add_group_message(session_id, "breakout", "tutor", reply, breakout_owner_id=request.user_id)
+        return {
+            "session": _group_session_payload_for_user(request.user_id, session_id, include_messages=False),
+            "breakout_messages": database.list_group_messages(session_id, "breakout", request.user_id),
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.exception("Could not post breakout message")
+        raise HTTPException(status_code=500, detail="Could not send that breakout message right now.") from exc
+
+
+@app.post("/api/group-sessions/{session_id}/rejoin")
+def rejoin_group_session(session_id: int, request: GroupBreakoutRequest):
+    try:
+        _require_group_member(session_id, request.user_id)
+        breakout_messages = database.list_group_messages(session_id, "breakout", request.user_id, limit=80)
+        since = next(
+            (
+                message.get("created_at", "")
+                for message in reversed(breakout_messages)
+                if message.get("sender_type") == "tutor"
+                and "private breakout" in str(message.get("content", "")).lower()
+            ),
+            "",
+        )
+        recap = _generate_group_rejoin_recap(session_id, request.user_id, since)
+        database.add_group_message(session_id, "breakout", "tutor", recap, breakout_owner_id=request.user_id)
+        database.update_group_member_status(session_id, request.user_id, "in_main")
+        return {
+            "session": _group_session_payload_for_user(request.user_id, session_id, include_messages=False),
+            "main_messages": database.list_group_messages(session_id, "main"),
+            "breakout_messages": database.list_group_messages(session_id, "breakout", request.user_id),
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logging.exception("Could not rejoin group session")
+        raise HTTPException(status_code=500, detail="Could not rejoin the group session right now.") from exc
 
 
 @app.get("/api/fun-fact/{student_name}")
@@ -5400,7 +6119,7 @@ def checkpoint_evaluate(request: CheckpointEvaluateRequest):
             )
 
         if evaluation["is_correct"]:
-            evaluation["feedback"] = evaluation.get("feedback") or "Nice work — that clicked."
+            evaluation["feedback"] = evaluation.get("feedback") or "Nice work â€” that clicked."
             evaluation["offer_more_practice"] = True
             evaluation["more_practice_heading"] = "More practice is ready if you want it."
         else:
@@ -6025,6 +6744,7 @@ def practice_analytics(request: PracticeAnalyticsRequest):
         },
     )
     earned_points = 10
+    lp_award = None
     if already_rewarded_today:
         earned_points = 0
     else:
@@ -6038,13 +6758,14 @@ def practice_analytics(request: PracticeAnalyticsRequest):
             earned_points += 10
         elif request.question_count >= 8:
             earned_points += 5
-        award_points(
+        lp_award = _safe_award_lp(
             profile["name"],
             earned_points,
             f"{request.mode} practice review with {round(request.accuracy_percent, 1)}% accuracy",
         )
     summary = get_analytics_summary(profile["name"])
     summary["earned_points"] = earned_points
+    summary["lp_awards"] = _safe_lp_awards(lp_award)
     summary["reward_policy"] = "One rewarded practice review per mode per day."
     return summary
 
@@ -6205,6 +6926,11 @@ def submit_mock_test(test_id: str, request: MockSubmitRequest):
         except Exception as exc:
             logging.warning("Could not update planner from mock weak topic %s: %s", topic, exc)
 
+    lp_awards = _safe_lp_awards(
+        _safe_award_lp(request.student_id, 20, "Mock test completed"),
+        _safe_award_lp(request.student_id, 15, "Mock test above 60%") if percentage >= 60 else None,
+    )
+
     return {
         "test": test,
         "score": score,
@@ -6217,6 +6943,7 @@ def submit_mock_test(test_id: str, request: MockSubmitRequest):
         "analysis": analysis,
         "weak_topics": weak_topics,
         "question_review": review,
+        "lp_awards": lp_awards,
     }
 
 
@@ -6305,11 +7032,16 @@ def analyse_external_mock(request: ExternalMockAnalysisRequest):
             json.dumps({"analysis": analysis, "notes": request.notes}, ensure_ascii=False),
         ),
     )
+    lp_awards = _safe_lp_awards(
+        _safe_award_lp(request.student_id, 20, "Mock test completed"),
+        _safe_award_lp(request.student_id, 15, "Mock test above 60%") if percentage >= 60 else None,
+    )
     return {
         "student_id": request.student_id,
         "exam_type": request.exam_type,
         "percentage": percentage,
         "analysis": analysis,
+        "lp_awards": lp_awards,
     }
 
 
@@ -6479,3 +7211,8 @@ if __name__ == "__main__":
         "web_api:app",
         **uvicorn_kwargs,
     )
+
+
+
+
+

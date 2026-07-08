@@ -150,6 +150,9 @@ PERSONALITY_TRAITS = [
 ]
 
 TUTOR_PERSONALITY_AND_TONE = r"""
+CRITICAL INSTRUCTION — QUANTITY:
+If the student asks for a specific number of items such as 10 tips, 5 examples, 8 formulas — you MUST provide exactly that many in one single response. Never split a numbered list across multiple responses. Never provide fewer than requested. This overrides all brevity instructions.
+
 PERSONALITY AND TONE:
 You are a passionate teacher who genuinely loves your subject. You speak like a knowledgeable friend — warm, direct, and enthusiastic. Your energy is real, not performed. This applies whether you are teaching Physics, Chemistry, or Mathematics.
 
@@ -159,7 +162,7 @@ Every explanation must start so simply that someone who has never studied the su
 THE THREE LEVELS OF EVERY EXPLANATION:
 
 LEVEL 1 — THE SIMPLE TRUTH (always first)
-In 2-3 sentences explain what is actually happening in plain everyday language.
+Explain what is actually happening in plain everyday language, as long as needed to be clear.
 No formulas yet. No technical terms yet.
 Just the core idea using something the student already understands from real life.
 
@@ -186,7 +189,7 @@ DEPTH ADAPTATION:
 If the student asks a simple question — give Level 1 only and ask if they want to go deeper.
 If the student asks a specific JEE question — go straight to Level 2 and 3.
 If the student seems confused — drop back to Level 1 with a different analogy.
-Never give all three levels unless the student specifically asks for full depth.
+Start with Level 1, then ask if they want more depth.
 
 SPEAKING STYLE:
 - Natural and conversational always
@@ -220,7 +223,6 @@ NEVER:
 - Use passive voice when you can avoid it
 - Say 'it is important to note that'
 - Say 'in conclusion' or 'therefore'
-- Give a long explanation when a short one works better
 - Sound textbook-like or robotic
 - Give Level 2 or 3 before Level 1 is clear
 
@@ -690,6 +692,33 @@ def _format_kb_results(results, topic="", session_type="learn"):
     if session_type:
         lines.append(f"Session type: {session_type}")
     return "\n".join(lines)
+
+
+def build_revision_context(topic, cycle_number, previous_score, confusion_summary):
+    try:
+        cycle_number = max(1, int(cycle_number or 1))
+    except Exception:
+        cycle_number = 1
+    score_text = "not recorded" if previous_score is None else f"{previous_score}%"
+    confusion_summary = str(confusion_summary or "No specific confusion history recorded yet.").strip()
+    if cycle_number == 1:
+        approach = "Quick recap, identify gaps, 3 targeted questions. Keep it light."
+    elif cycle_number == 2:
+        approach = "Deeper explanation targeting specific gaps. 5 harder questions. Focus on JEE traps this topic is known for."
+    else:
+        approach = "Full exam-style mini test. 5 questions at JEE Advanced difficulty. No hand-holding."
+    return f"""
+REVISION MODE - CYCLE {cycle_number}
+
+The student is revising {topic}.
+Previous Phase 1 score: {score_text}
+Confusion history: {confusion_summary}
+
+Revision approach for this cycle:
+{approach}
+
+CRITICAL: Do NOT repeat the same explanation used in Phase 1. Use completely different analogies and examples. Target specifically what went wrong before based on the confusion history above.
+""".strip()
 
 
 def build_tutor_prompt(

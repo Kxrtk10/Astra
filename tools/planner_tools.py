@@ -7,6 +7,7 @@ from pathlib import Path
 from collections import OrderedDict
 
 from google.adk.tools import ToolContext
+import backend.database as database
 from backend.database import get_planner_state as db_get_planner_state, save_planner_state as db_save_planner_state
 from backend.storage import atomic_write_json
 from tools.chat_outcome_tracker import build_task_learning_context, get_task_learning_profiles
@@ -2278,6 +2279,129 @@ def _load_weekly(student_id):
 
 def _load_today(student_id):
     return _load_json_file(_journey_path(student_id, "today"), {})
+
+
+def check_phase1_complete(student_id):
+    try:
+        state = load_progress_state(student_id)
+        items = state.get("items", []) or []
+        pending_count = sum(1 for item in items if str(item.get("status", "")).strip().lower() == "pending")
+        return {
+            "phase1_complete": pending_count == 0,
+            "remaining_pending": pending_count,
+        }
+    except Exception as exc:
+        print(f"WARNING: Could not check phase 1 completion for {student_id}: {exc}")
+        return {"phase1_complete": False, "remaining_pending": 0}
+
+
+def _journey_weightage_lookup(student_id):
+    lookup = {}
+    try:
+        journey = _load_journey(student_id)
+        for item in journey.get("topics", []) or []:
+            topic = _normalize_topic(item.get("topic"))
+            subject = _subject_key(item.get("subject"))
+            if not topic:
+                continue
+            weight = float(item.get("weightage_percent") or item.get("weightage") or 0)
+            lookup[(subject, topic)] = max(weight, lookup.get((subject, topic), 0))
+            lookup[("", topic)] = max(weight, lookup.get(("", topic), 0))
+    except Exception:
+        pass
+    if lookup:
+        return lookup
+    try:
+        for unit in iter_all_units():
+            topic = _normalize_topic(unit.get("name") or unit.get("unit_name"))
+            subject = _subject_key(unit.get("subject"))
+            if not topic:
+                continue
+            weight = float(unit.get("weightage_percent") or unit.get("weightage") or 0)
+            lookup[(subject, topic)] = max(weight, lookup.get((subject, topic), 0))
+            lookup[("", topic)] = max(weight, lookup.get(("", topic), 0))
+    except Exception:
+        pass
+    return lookup
+
+
+def get_unified_weakness_ranking(student_id):
+    try:
+        from tools.analytics_tools import get_weak_strong_topics
+
+        weak_topics = (get_weak_strong_topics(student_id) or {}).get("weak_topics", []) or []
+        rows = database.execute_query(
+            """
+            SELECT topic, unit, COUNT(*) AS confusion_count
+            FROM confusion_events
+            WHERE student_id = ?
+            GROUP BY topic, unit
+            """,
+            (student_id,),
+        ) or []
+        weight_lookup = _journey_weightage_lookup(student_id)
+        merged = {}
+
+        for item in weak_topics:
+            topic = str(item.get("topic") or "").strip()
+            subject = str(item.get("subject") or "").strip() or "General"
+            key = _normalize_topic(topic)
+            if not key:
+                continue
+            entry = merged.setdefault(
+                key,
+                {
+                    "topic": topic,
+                    "subject": subject,
+                    "avg_score": None,
+                    "confusion_count": 0,
+                    "score_weak": False,
+                },
+            )
+            entry["subject"] = subject or entry["subject"]
+            entry["avg_score"] = float(item.get("avg_score") or item.get("best_score") or 0)
+            entry["score_weak"] = True
+
+        for row in rows:
+            topic = str(row["topic"] or row["unit"] or "").strip()
+            key = _normalize_topic(topic)
+            if not key:
+                continue
+            entry = merged.setdefault(
+                key,
+                {
+                    "topic": topic,
+                    "subject": "General",
+                    "avg_score": None,
+                    "confusion_count": 0,
+                    "score_weak": False,
+                },
+            )
+            entry["confusion_count"] += int(row["confusion_count"] or 0)
+
+        ranked = []
+        for key, entry in merged.items():
+            subject_key = _subject_key(entry.get("subject"))
+            weightage = weight_lookup.get((subject_key, key), weight_lookup.get(("", key), 0))
+            avg_score = entry.get("avg_score")
+            score_pressure = max(0.0, 100.0 - float(avg_score)) if avg_score is not None else 0.0
+            confusion_pressure = min(50.0, float(entry.get("confusion_count") or 0) * 10.0)
+            overlap_bonus = 35.0 if entry.get("score_weak") and entry.get("confusion_count") else 0.0
+            combined_rank = round(score_pressure + confusion_pressure + overlap_bonus + float(weightage or 0), 2)
+            ranked.append(
+                {
+                    "topic": entry.get("topic", ""),
+                    "subject": entry.get("subject") or "General",
+                    "avg_score": round(float(avg_score), 1) if avg_score is not None else None,
+                    "confusion_count": int(entry.get("confusion_count") or 0),
+                    "combined_rank": combined_rank,
+                }
+            )
+        ranked.sort(key=lambda item: item["combined_rank"], reverse=True)
+        return ranked
+    except Exception as exc:
+        print(f"WARNING: Could not build unified weakness ranking for {student_id}: {exc}")
+        return []
 
 
 def _topic_progress_lookup(student_id):

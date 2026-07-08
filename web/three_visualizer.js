@@ -858,21 +858,24 @@ function createConceptStage(canvas) {
 
 const tutorCanvas = document.getElementById("threeTutorCanvas");
 const conceptCanvas = document.getElementById("threeConceptCanvas");
+const ENABLE_THREE_STUDIO = window.ASTRA_ENABLE_THREE_STUDIO === true;
 let tutorStage = null;
 let conceptStage = null;
 
-try {
-  tutorStage = createTutorStage(tutorCanvas);
-} catch (error) {
-  console.error("3D tutor stage failed to initialize:", error);
-  makeFallback(tutorCanvas, "3D Tutor Stage", "The tutor scene could not initialize yet. Refresh once more after the page fully loads.", "#f9a8d4");
-}
+if (ENABLE_THREE_STUDIO) {
+  try {
+    tutorStage = createTutorStage(tutorCanvas);
+  } catch (error) {
+    console.error("3D tutor stage failed to initialize:", error);
+    makeFallback(tutorCanvas, "3D Tutor Stage", "The tutor scene could not initialize yet. Refresh once more after the page fully loads.", "#f9a8d4");
+  }
 
-try {
-  conceptStage = createConceptStage(conceptCanvas);
-} catch (error) {
-  console.error("3D concept stage failed to initialize:", error);
-  makeFallback(conceptCanvas, "3D Concept Stage", "The concept scene could not initialize yet. Refresh once more after the page fully loads.", "#facc15");
+  try {
+    conceptStage = createConceptStage(conceptCanvas);
+  } catch (error) {
+    console.error("3D concept stage failed to initialize:", error);
+    makeFallback(conceptCanvas, "3D Concept Stage", "The concept scene could not initialize yet. Refresh once more after the page fully loads.", "#facc15");
+  }
 }
 
 window.addEventListener("alt:tutor-appearance", (event) => {
