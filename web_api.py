@@ -8,11 +8,10 @@ import os
 import random
 import re
 import time
-from html import unescape
 from uuid import uuid4
 from datetime import datetime, timedelta
 from pathlib import Path
-from urllib.parse import parse_qs, unquote, urlparse
+from urllib.parse import urlparse
 
 import httpx
 from dotenv import load_dotenv
@@ -87,6 +86,8 @@ from tools.knowledge_base_tools import (
 from tools.feature_health_tools import get_feature_health_snapshot
 from tools.fun_fact_tools import get_daily_fun_fact
 from tools.live_context_tools import build_live_context_bundle, should_fetch_live_context
+from tools.lounge_live_context_tools import build_lounge_live_context
+from tools.insight_style_tools import STUDENT_INSIGHT_STYLE_GUIDE
 from tools.last_minute_tools import build_last_minute_revision_context
 from tools.learning_sources_tools import (
     build_learning_sources_context,
@@ -446,77 +447,6 @@ def _formula_search_blob(subject: str, chapter: dict, formula: dict) -> str:
     ]
     return " ".join(str(part) for part in parts).lower()
 
-
-LOUNGE_WEB_SEARCH_KEYWORDS = (
-    "world cup",
-    "match",
-    "score",
-    "news",
-    "today",
-    "right now",
-    "latest",
-    "current",
-    "2026",
-    "who won",
-    "tournament",
-)
-
-
-def _lounge_needs_web_search(message: str) -> bool:
-    normalized = str(message or "").lower()
-    return any(keyword in normalized for keyword in LOUNGE_WEB_SEARCH_KEYWORDS)
-
-
-def _strip_search_html(value: str) -> str:
-    text = re.sub(r"<[^>]+>", " ", str(value or ""))
-    text = unescape(text)
-    return re.sub(r"\s+", " ", text).strip()
-
-
-def _clean_duckduckgo_url(value: str) -> str:
-    href = unescape(str(value or ""))
-    parsed = urlparse(href)
-    if "duckduckgo.com" in parsed.netloc and parsed.path.startswith("/l/"):
-        uddg = parse_qs(parsed.query).get("uddg", [""])[0]
-        if uddg:
-            return unquote(uddg)
-    return href
-
-
-def _search_lounge_web_context(query: str) -> dict:
-    if not _lounge_needs_web_search(query):
-        return {"text": "", "sources": []}
-    try:
-        with httpx.Client(timeout=8.0, follow_redirects=True) as client:
-            response = client.get(
-                "https://duckduckgo.com/html/",
-                params={"q": query},
-                headers={"User-Agent": "Mozilla/5.0 AstraLearningStudio/1.0"},
-            )
-            response.raise_for_status()
-        html_text = response.text or ""
-        results = []
-        pattern = re.compile(
-            r'<a[^>]+class="[^"]*result__a[^"]*"[^>]+href="(?P<href>[^"]+)"[^>]*>(?P<title>.*?)</a>',
-            re.IGNORECASE | re.DOTALL,
-        )
-        for match in pattern.finditer(html_text):
-            title = _strip_search_html(match.group("title"))
-            url = _clean_duckduckgo_url(match.group("href"))
-            if title and url:
-                results.append({"title": title, "url": url})
-            if len(results) >= 3:
-                break
-        if not results:
-            return {"text": "", "sources": []}
-        lines = [f"{index}. {item['title']} ({item['url']})" for index, item in enumerate(results, start=1)]
-        return {
-            "text": "Current web information: " + "\n".join(lines) + "\nUse this to answer accurately.",
-            "sources": [{"title": item["title"], "url": item["url"]} for item in results],
-        }
-    except Exception as exc:
-        logging.warning("Lounge web search failed: %s", exc)
-        return {"text": "", "sources": []}
 
 
 def _migrate_student_profiles_to_db():
@@ -2823,6 +2753,41 @@ def _maybe_apply_confusion_recovery(profile, request, conversation_id, reply):
         return reply, None, False
 
 
+def _fallback_lounge_title(message):
+    words = re.findall(r"[A-Za-z0-9]+", str(message or ""))
+    filler = {"okay", "now", "give", "tell", "me", "about", "the", "a", "an", "can", "you", "please", "what", "whats", "were", "was", "is", "i", "want", "to", "talk", "discuss", "conversation"}
+    useful = [word for word in words if word.lower() not in filler]
+    chosen = (useful or words)[:6]
+    return " ".join(chosen).title()[:48] or "Lounge chat"
+
+
+def _generate_lounge_conversation_title(student_message, tutor_reply):
+    fallback = _fallback_lounge_title(student_message)
+    if not genai_client:
+        return fallback
+    prompt = (
+        "Create a concise title for this casual Lounge conversation. "
+        "Return only a natural 3 to 6 word title, with no quotes, punctuation, prefix, or explanation.\n\n"
+        f"Student: {str(student_message or '')[:500]}\n"
+        f"Astra: {str(tutor_reply or '')[:500]}"
+    )
+    try:
+        response = genai_client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config=genai.types.GenerateContentConfig(max_output_tokens=24, temperature=0.2),
+        )
+        title = re.sub(r"^[Tt]itle\s*:\s*", "", str(response.text or "").strip().strip("\"'"))
+        title = re.sub(r"[^A-Za-z0-9 &+'-]", " ", title)
+        title = re.sub(r"\s+", " ", title).strip()
+        generic_openers = ("i want", "let s talk", "lets talk", "talk about", "can we talk")
+        if 2 <= len(title.split()) <= 7 and not title.lower().startswith(generic_openers):
+            return title[:48]
+    except Exception as exc:
+        logging.info("Lounge title generation used fallback: %s", exc)
+    return fallback
+
+
 def _handle_local_command(profile, user_input):
     normalized = user_input.strip().lower()
 
@@ -2986,11 +2951,8 @@ def _build_mode_aware_fallback_reply(
     if mode == "guide":
         return build_app_guide_reply(user_input)
 
-    if mode == "lounge":
-        return (
-            f"That sounds like something we can keep calm and easy. "
-            f"If you want, tell me more about {topic_label}, and Iâ€™ll stay with you at your pace."
-        )
+    if mode == 'lounge':
+        return f'I don\'t have enough live information on {topic_label} right now.'
 
     pacing_label = str(response_pacing or "standard").strip().lower()
     accessibility_suffix = ""
@@ -3305,7 +3267,7 @@ def _run_agent_reply(
                 "unless it directly helps learning."
             )
             outgoing_message += f"\n\n{tutor_mode_hint}"
-        if is_jee_track:
+        if conversation_mode == "tutor" and is_jee_track:
             outgoing_message += (
                 "\n\nThis student is on a JEE track. Distinguish clearly between JEE Main preparation and JEE Advanced preparation. "
                 "Treat JEE Main as the first scoring milestone that needs clean execution, speed, and dependable accuracy. "
@@ -3433,27 +3395,57 @@ def _run_agent_reply(
             )
         else:
             outgoing_message += (
-                "\n\nThis is the lounge tab. Focus on casual talk, general knowledge, current affairs, sports, entertainment, hobbies, daily life reflection, emotional support, and light conversation. "
+                "\n\nThis is the Lounge tab. Focus on casual talk, general knowledge, current affairs, sports, entertainment, hobbies, daily life reflection, emotional support, and light conversation. "
                 "If the student wants to talk about football, a match, a movie, a show, a game, or any other fun topic, engage naturally instead of redirecting them."
             )
             outgoing_message += (
-                "\n\nThe tutor should feel warm and human rather than robotic. "
-                "It can discuss general knowledge, life perspective, and supportive reflection when useful."
+                "\n\nAuthoritative Lounge tone: warm but economical. Answer factual/current questions directly, never open with fake enthusiasm, never restate the student question as filler, and keep casual replies short unless the student is venting or asks for depth."
             )
             outgoing_message += (
                 "\n\nWhen the student seems emotionally heavy, listen first, reflect gently, and only then offer perspective or a soft next step. "
-                "The goal in Lounge is trust, relief, and emotional safety."
+                "The goal in Lounge is trust, relief, and emotional safety. Do not weaken the existing emotional-support behavior."
             )
-            lounge_web_context = _search_lounge_web_context(user_input)
-            if lounge_web_context["text"]:
+            lounge_live_context = build_lounge_live_context(user_input)
+            if lounge_live_context.get("text"):
                 live_context_bundle["text"] = "\n\n".join(
-                    part for part in [lounge_web_context["text"], live_context_bundle.get("text", "")] if part
+                    part for part in [lounge_live_context["text"], live_context_bundle.get("text", "")] if part
                 )
-                live_context_bundle["sources"] = lounge_web_context["sources"] + live_context_bundle.get("sources", [])
+                live_context_bundle["sources"] = lounge_live_context.get("sources", []) + live_context_bundle.get("sources", [])
+                deterministic_reply = str(lounge_live_context.get("deterministic_reply") or "").strip()
+                if deterministic_reply and not lounge_live_context.get("has_data") and "sports" in str(lounge_live_context.get("intent") or ""):
+                    return {
+                        "reply": deterministic_reply,
+                        "live_sources": live_context_bundle["sources"],
+                        "visual_learning": None,
+                        "video_explanation": None,
+                        "adaptive_profile": None,
+                        "reply_source": "live_no_data",
+                    }
+                if lounge_live_context.get("has_data") and "sports" in str(lounge_live_context.get("intent") or ""):
+                    result_lines = [line[2:].strip() for line in str(lounge_live_context.get("text") or "").splitlines() if line.startswith("- ")]
+                    requested_label = "sports"
+                    direct_reply = "Here are the latest available {} results:\n{}".format(requested_label, "\n".join("- " + line for line in result_lines))
+                    return {
+                        "reply": direct_reply,
+                        "live_sources": live_context_bundle["sources"],
+                        "visual_learning": None,
+                        "video_explanation": None,
+                        "adaptive_profile": None,
+                        "reply_source": "live_data",
+                    }
+                if lounge_live_context.get("has_data"):
+                    live_instruction = (
+                        "Live Lounge context is available above. Answer directly using it when relevant. "
+                        "Do not hedge when the answer is present in the context, and do not add generic disclaimers."
+                    )
+                else:
+                    live_instruction = (
+                        "The Lounge live-data lookup found no matching cached source. Say that plainly in one short sentence. "
+                        "Do not guess, restate the question, ask a deflecting question, or add fake excitement."
+                    )
                 outgoing_message = (
-                    f"{lounge_web_context['text']}\n\n"
-                    "Answer the student's Lounge message using the current web information above when it is relevant. "
-                    "If the web results are incomplete, say what is known and avoid guessing.\n\n"
+                    f"{lounge_live_context['text']}\n\n"
+                    f"{live_instruction}\n\n"
                     f"{outgoing_message}"
                 )
         if voice_chat_mode:
@@ -3482,7 +3474,7 @@ def _run_agent_reply(
             outgoing_message += (
                 f"\n\nReply in {response_language} unless the user explicitly asks you to switch languages."
             )
-        if should_fetch_live_context(user_input):
+        if conversation_mode != "lounge" and should_fetch_live_context(user_input):
             extra_live_context = build_live_context_bundle(user_input)
             live_context_bundle = {
                 "text": "\n\n".join(
@@ -4209,12 +4201,66 @@ def remove_memory(request: MemoryUpdateRequest):
     }
 
 
+def _generate_strategy_subject_insights(profile: dict, items: list[dict]) -> list[dict]:
+    if not items:
+        return items
+
+    evidence = []
+    for item in items:
+        row = {
+            "subject": item.get("subject"),
+            "mock_tests_taken": int(item.get("mock_tests_taken") or 0),
+            "backlog_hours": int(round(float(item.get("backlog_hours") or 0))),
+            "completed_sessions": int(item.get("completed_sessions") or 0),
+            "average_score": item.get("average_score"),
+            "weak_topic": item.get("weak_topic"),
+            "strong_topic": item.get("strong_topic"),
+            "score_trend": item.get("score_trend"),
+        }
+        if item.get("duration_is_recorded"):
+            row["completed_hours"] = item.get("completed_hours")
+        evidence.append(row)
+
+    if genai_client:
+        try:
+            prompt = (
+                f"{STUDENT_INSIGHT_STYLE_GUIDE}\n\n"
+                "Write one or two concise sentences for each subject in the supplied evidence. "
+                "Make each insight meaningfully different when its evidence differs. Mention a real weak topic, "
+                "trend, or practice signal only when it is present. Do not repeat the displayed mock-count and "
+                "backlog statistics as boilerplate. If a subject has little evidence, say that plainly and "
+                "encouragingly. Never infer an unrecorded study duration. "
+                "Return only a JSON object whose keys are the exact subject names and whose values are strings.\n"
+                f"Student: {profile.get('name', 'Student')}\n"
+                f"Evidence: {json.dumps(evidence, ensure_ascii=True)}"
+            )
+            response = genai_client.models.generate_content(
+                model="gemini-2.5-flash", contents=prompt
+            )
+            candidate = _extract_json_payload(str(getattr(response, "text", "") or ""))
+            generated = json.loads(candidate) if candidate else {}
+            if isinstance(generated, dict):
+                by_subject = {str(key).strip().lower(): str(value).strip() for key, value in generated.items()}
+                for item in items:
+                    insight = by_subject.get(str(item.get("subject", "")).strip().lower(), "")
+                    if insight:
+                        item["summary"] = insight
+        except Exception as exc:
+            print(f"WARNING: Strategy subject insight generation failed for {profile.get('name', 'student')}: {exc}")
+
+    return items
+
+
 @app.get("/api/weekly-plan/{student_name}")
 def weekly_plan(student_name: str):
     profile = _load_profile_or_404(student_name)
     plan = get_weekly_schedule_data(profile)
     if "message" in plan:
         return plan
+
+    plan["section_progress"] = _generate_strategy_subject_insights(
+        profile, plan.get("section_progress", [])
+    )
 
     exam_names = [str(exam.get("name", "")).strip().upper() for exam in profile.get("exams", [])]
     retrieval_query = (
@@ -6006,6 +6052,12 @@ def chat(request: ChatRequest):
             )
         save_chat_message(profile["name"], request.conversation_mode, "student", request.message, conversation_id=conversation_id)
         save_chat_message(profile["name"], request.conversation_mode, "tutor", reply, conversation_id=conversation_id)
+        if request.conversation_mode == "lounge":
+            lounge_history = get_chat_history(profile["name"], "lounge", conversation_id=conversation_id, limit=10)
+            lounge_student_messages = [item for item in lounge_history if item.get("role") == "student"]
+            if len(lounge_student_messages) == 1:
+                clean_title = _generate_lounge_conversation_title(request.message, reply)
+                update_conversation_metadata(profile["name"], "lounge", conversation_id, title=clean_title)
         return {
             "reply": reply,
             "student_name": profile["name"],

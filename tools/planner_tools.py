@@ -850,6 +850,97 @@ def _section_progress_entry(state, exam_name, subject):
     return section_progress[key]
 
 
+def _subject_activity_rollup(student_id, subject):
+    aliases = {
+        "Physics": ("physics",),
+        "Chemistry": ("chemistry",),
+        "Mathematics": ("mathematics", "maths", "math"),
+    }.get(subject, (str(subject).strip().lower(),))
+    placeholders = ", ".join("?" for _ in aliases)
+    params = (student_id, *aliases)
+    rows = database.execute_query(
+        f"""
+        SELECT topic, score, duration_minutes, recorded_at
+        FROM progress_records
+        WHERE student_id = ? AND LOWER(TRIM(subject)) IN ({placeholders})
+        ORDER BY recorded_at ASC, id ASC
+        """,
+        params,
+    ) or []
+    scores = [float(row["score"]) for row in rows if row["score"] is not None]
+    total_minutes = sum(max(0, int(row["duration_minutes"] or 0)) for row in rows)
+
+    topic_rows = database.execute_query(
+        f"""
+        SELECT topic, AVG(score) AS average_score, COUNT(*) AS attempts
+        FROM progress_records
+        WHERE student_id = ? AND LOWER(TRIM(subject)) IN ({placeholders})
+          AND topic IS NOT NULL AND TRIM(topic) != '' AND score IS NOT NULL
+        GROUP BY LOWER(TRIM(topic))
+        ORDER BY average_score ASC, attempts DESC
+        """,
+        params,
+    ) or []
+    weak_topic = str(topic_rows[0]["topic"]).strip() if topic_rows else None
+    strong_topic = str(topic_rows[-1]["topic"]).strip() if topic_rows else None
+
+    trend = None
+    if len(scores) >= 4:
+        midpoint = max(1, len(scores) // 2)
+        earlier = sum(scores[:midpoint]) / len(scores[:midpoint])
+        recent = sum(scores[midpoint:]) / len(scores[midpoint:])
+        if recent >= earlier + 5:
+            trend = "improving"
+        elif recent <= earlier - 5:
+            trend = "needs attention"
+        else:
+            trend = "steady"
+
+    score_column = {
+        "Physics": "physics_score",
+        "Chemistry": "chemistry_score",
+        "Mathematics": "maths_score",
+    }.get(subject)
+    mock_count = 0
+    if score_column:
+        mock_row = database.execute_query(
+            f"""
+            SELECT COUNT(*) AS count
+            FROM mock_results
+            WHERE student_id = ?
+              AND ({score_column} IS NOT NULL OR LOWER(exam_type) LIKE ?)
+            """,
+            (student_id, f"%{subject.lower()}%"),
+            fetchone=True,
+        )
+        mock_count = int(mock_row["count"] or 0) if mock_row else 0
+
+    return {
+        "completed_sessions": len(rows),
+        "completed_hours": round(total_minutes / 60.0, 1),
+        "duration_is_recorded": total_minutes > 0,
+        "average_score": round(sum(scores) / len(scores), 1) if scores else None,
+        "weak_topic": weak_topic,
+        "strong_topic": strong_topic,
+        "score_trend": trend,
+        "mock_tests_taken": mock_count,
+        "last_completed_on": rows[-1]["recorded_at"] if rows else None,
+    }
+
+
+def _subject_insight_fallback(subject, activity, backlog_hours):
+    sessions = int(activity.get("completed_sessions") or 0)
+    mocks = int(activity.get("mock_tests_taken") or 0)
+    weak_topic = activity.get("weak_topic")
+    if sessions == 0 and mocks == 0:
+        return f"Not much is logged for {subject} yet - a few sessions will help build a clearer picture."
+    if weak_topic and activity.get("average_score") is not None:
+        return f"You have started building a picture in {subject}. Give {weak_topic} another focused pass next."
+    if backlog_hours > 0:
+        return f"There is some real activity logged for {subject}, with unfinished work still waiting. Take one backlog topic at a time."
+    return f"Your {subject} picture is starting to take shape. Keep logging practice so Astra can spot a useful pattern."
+
+
 def get_section_progress(profile):
     try:
         state = load_planner_state(profile["name"])
@@ -857,49 +948,42 @@ def get_section_progress(profile):
 
         for exam in get_exam_entries(profile):
             for subject in exam["subjects"]:
-                progress = _section_progress_entry(state, exam["name"], subject)
+                legacy = _section_progress_entry(state, exam["name"], subject)
+                activity = _subject_activity_rollup(profile["name"], subject)
                 mock_score = _get_mock_score(state, exam["name"], subject)
-                backlog = round(_get_backlog_hours(state, exam["name"], subject), 2)
-                strengths = []
-                weaknesses = []
-
-                if mock_score is not None and float(mock_score) >= 75:
-                    strengths.append("strong mock performance")
-                if progress["completed_sessions"] >= 3:
-                    strengths.append("consistent revision rhythm")
-                if backlog <= 0.5:
-                    strengths.append("low carry-forward backlog")
-
-                if mock_score is not None and float(mock_score) < 60:
-                    weaknesses.append("accuracy needs improvement")
-                if backlog > 1.5:
-                    weaknesses.append("time is getting lost here")
-                if progress["completed_sessions"] <= 1:
-                    weaknesses.append("needs more repeated exposure")
+                backlog = int(round(_get_backlog_hours(state, exam["name"], subject)))
+                completed_sessions = max(
+                    int(activity.get("completed_sessions") or 0),
+                    int(legacy.get("completed_sessions") or 0),
+                )
+                completed_hours = activity.get("completed_hours")
+                if not activity.get("duration_is_recorded"):
+                    completed_hours = round(float(legacy.get("completed_hours") or 0), 1)
 
                 progress_cards.append(
                     {
                         "exam": exam["name"],
                         "subject": subject,
-                        "completed_hours": round(progress["completed_hours"], 2),
-                        "completed_sessions": progress["completed_sessions"],
-                        "mock_score": mock_score,
-                        "backlog_hours": backlog,
-                        "last_completed_on": progress["last_completed_on"],
-                        "strengths": strengths or ["still building this section"],
-                        "weaknesses": weaknesses or ["no major red flags right now"],
-                        "summary": (
-                            f"{subject} in {exam['name']}: "
-                            f"{round(progress['completed_hours'], 2)} hours completed across "
-                            f"{progress['completed_sessions']} sessions. "
-                            f"Current focus should stay on {weaknesses[0] if weaknesses else 'steady strengthening and timed execution'}."
+                        "completed_hours": completed_hours,
+                        "completed_sessions": completed_sessions,
+                        "duration_is_recorded": bool(
+                            activity.get("duration_is_recorded") or legacy.get("completed_hours")
                         ),
+                        "mock_score": mock_score,
+                        "mock_tests_taken": activity.get("mock_tests_taken", 0),
+                        "backlog_hours": backlog,
+                        "last_completed_on": activity.get("last_completed_on") or legacy.get("last_completed_on"),
+                        "average_score": activity.get("average_score"),
+                        "weak_topic": activity.get("weak_topic"),
+                        "strong_topic": activity.get("strong_topic"),
+                        "score_trend": activity.get("score_trend"),
+                        "summary": _subject_insight_fallback(subject, activity, backlog),
                     }
                 )
 
         return progress_cards
     except Exception as exc:
-        print(f"WARNING: Could not build section progress for {profile.get('name', 'student')} — returning safe defaults. {exc}")
+        print(f"WARNING: Could not build section progress for {profile.get('name', 'student')} - returning safe defaults. {exc}")
         return []
 
 

@@ -214,7 +214,7 @@ def save_chat_message(student_name, conversation_mode, role, message_text, conve
             UPDATE chat_conversations
             SET updated_at = ?,
                 title = CASE
-                    WHEN (? = 'student') THEN ?
+                    WHEN (? = 'student') AND lower(trim(title)) = 'new chat' THEN ?
                     ELSE title
                 END
             WHERE id = ?

@@ -119,12 +119,6 @@ const journeyExamDateSaveBtn = document.getElementById("journeyExamDateSaveBtn")
 const beginJourneyBtn = document.getElementById("beginJourneyBtn");
 const journeySetupStatus = document.getElementById("journeySetupStatus");
 const todaysFocusCard = document.getElementById("todays-focus-card");
-const phaseBanner = document.getElementById("phase-banner");
-const phaseBannerText = document.getElementById("phase-banner-text");
-const phaseProgressFill = document.getElementById("phase-progress-fill");
-const phaseNextAction = document.getElementById("phase-next-action");
-const backlogIndicator = document.getElementById("backlog-indicator");
-const backlogText = document.getElementById("backlog-text");
 const todaysFocusSummary = document.getElementById("todaysFocusSummary");
 const todaysSessionBadge = document.getElementById("todaysSessionBadge");
 const todaysSubjectBadge = document.getElementById("todaysSubjectBadge");
@@ -190,6 +184,13 @@ const overviewStartLearningBtn = document.getElementById("overviewStartLearningB
 const overviewMetricCovered = document.getElementById("overviewMetricCovered");
 const overviewMetricAverage = document.getElementById("overviewMetricAverage");
 const overviewMetricStreak = document.getElementById("overviewMetricStreak");
+const overviewLastTopic = document.getElementById("overviewLastTopic");
+const overviewLastTopicStatus = document.getElementById("overviewLastTopicStatus");
+const overviewProgressBadge = document.getElementById("overviewProgressBadge");
+const overviewDoneCount = document.getElementById("overviewDoneCount");
+const overviewReviseCount = document.getElementById("overviewReviseCount");
+const overviewPendingCount = document.getElementById("overviewPendingCount");
+const overviewNextStep = document.getElementById("overviewNextStep");
 const continueJourneyBtn = document.getElementById("continueJourneyBtn");
 const openPracticeFromHomeBtn = document.getElementById("openPracticeFromHomeBtn");
 const needHelpConceptBtn = document.getElementById("needHelpConceptBtn");
@@ -264,7 +265,6 @@ const kbStatusTag = document.getElementById("kbStatusTag");
 const guideFeed = document.getElementById("guideFeed");
 const loungeFeed = document.getElementById("loungeFeed");
 const practiceFeed = document.getElementById("practiceFeed");
-const featureHealthList = document.getElementById("featureHealthList");
 const clearTutorChatBtn = document.getElementById("clearTutorChatBtn");
 const tutorFullscreenBtn = document.getElementById("tutor-fullscreen-btn");
 const loungeFullscreenBtn = document.getElementById("lounge-fullscreen-btn");
@@ -275,6 +275,13 @@ const tutorConversationList = document.getElementById("tutorConversationList");
 const deletedTutorConversationList = document.getElementById("deletedTutorConversationList");
 const tutorChatSearchInput = document.getElementById("tutorChatSearchInput");
 const newLoungeChatBtn = document.getElementById("newLoungeChatBtn");
+const loungeTimerToggleBtn = document.getElementById("loungeTimerToggleBtn");
+const loungeTimerPanel = document.getElementById("loungeTimerPanel");
+const loungeHistoryToggleBtn = document.getElementById("loungeHistoryToggleBtn");
+const loungeHistoryPanel = document.getElementById("loungeHistoryPanel");
+const closeLoungeHistoryBtn = document.getElementById("closeLoungeHistoryBtn");
+const loungeDeletedToggleBtn = document.getElementById("loungeDeletedToggleBtn");
+const loungeDeletedPanel = document.getElementById("deletedLoungeConversationList");
 const loungeConversationList = document.getElementById("loungeConversationList");
 const deletedLoungeConversationList = document.getElementById("deletedLoungeConversationList");
 const loungeChatSearchInput = document.getElementById("loungeChatSearchInput");
@@ -282,10 +289,8 @@ const loungeConversationSelect = document.getElementById("loungeConversationSele
 const loungeRenameChatBtn = document.getElementById("loungeRenameChatBtn");
 const loungePinChatBtn = document.getElementById("loungePinChatBtn");
 const loungeDeleteChatBtn = document.getElementById("loungeDeleteChatBtn");
-const loungeConversationMeta = document.getElementById("loungeConversationMeta");
 const deletedLoungeConversationSelect = document.getElementById("deletedLoungeConversationSelect");
 const restoreLoungeChatBtn = document.getElementById("restoreLoungeChatBtn");
-const deletedLoungeConversationMeta = document.getElementById("deletedLoungeConversationMeta");
 const lastMinuteFeed = document.getElementById("lastMinuteFeed");
 const tipsFeed = document.getElementById("tipsFeed");
 const chatForm = document.getElementById("chatForm");
@@ -383,10 +388,8 @@ const mockExternalAnalysisResult = document.getElementById("mockExternalAnalysis
 const mockHistoryList = document.getElementById("mockHistoryList");
 const tipsForm = document.getElementById("tipsForm");
 const tipsMessageInput = document.getElementById("tipsMessageInput");
-const tipsResourceList = document.getElementById("tipsResourceList");
 const learningSourcesList = document.getElementById("learningSourcesList");
 const learningSourcePackBadge = document.getElementById("learningSourcePackBadge");
-const learningSourceRouteNote = document.getElementById("learningSourceRouteNote");
 const studyGroupsStatus = document.getElementById("studyGroupsStatus");
 const refreshStudyGroupsBtn = document.getElementById("refreshStudyGroupsBtn");
 const activeGroupSessionPill = document.getElementById("activeGroupSessionPill");
@@ -624,8 +627,8 @@ let activeTutorConversationId = null;
 let journeyPlanSnapshot = null;
 let journeyWeeklySnapshot = null;
 let todaysFocusSnapshot = null;
+let latestProgressSnapshot = null;
 let latestPhaseStatus = null;
-let latestBacklogSummary = null;
 let latestEngagementSnapshot = null;
 let journeyTimerInterval = null;
 let journeyTimerStartedAt = null;
@@ -1304,6 +1307,19 @@ function renderSessionStats(topic = "", confidence = "new", score = 0) {
   renderTutorSideSessionSummary();
 }
 
+function getProgressStatusPhrase(status) {
+  const value = String(status || "").trim().toLowerCase();
+  if (value === "done") return "solid";
+  if (value === "revise") return "needs another look";
+  if (value === "pending") return "not started yet";
+  return "building";
+}
+
+function getLatestProgressItem(snapshot) {
+  const items = Array.isArray(snapshot && snapshot.items) ? snapshot.items : [];
+  return [...items].sort((a, b) => String(b.updated_at || "").localeCompare(String(a.updated_at || "")))[0] || null;
+}
+
 function updateOverviewCommandCenter() {
   const focus = todaysFocusSnapshot && (todaysFocusSnapshot.primary || todaysFocusSnapshot.morning) ? (todaysFocusSnapshot.primary || todaysFocusSnapshot.morning) : {};
   if (overviewCommandTopic) {
@@ -1336,6 +1352,34 @@ function updateOverviewCommandCenter() {
   if (overviewMetricStreak) {
     overviewMetricStreak.textContent = `${(activeProfile && activeProfile.streak_days) || 0} days`;
   }
+
+  const progress = latestProgressSnapshot || {};
+  const counts = progress.counts || {};
+  const latestItem = getLatestProgressItem(progress);
+  const fallbackTopic = focus.topic ? { topic: focus.topic, subject: focus.subject || "", status: "pending" } : null;
+  const displayItem = latestItem || fallbackTopic;
+  if (overviewLastTopic) {
+    overviewLastTopic.textContent = displayItem && displayItem.topic
+      ? `${displayItem.topic}${displayItem.subject ? ` - ${displayItem.subject}` : ""}`
+      : "No recent topic yet";
+  }
+  if (overviewLastTopicStatus) {
+    overviewLastTopicStatus.textContent = displayItem
+      ? `Status: ${getProgressStatusPhrase(displayItem.status)}.`
+      : "Start a session or save progress to build this view.";
+  }
+  if (overviewProgressBadge) {
+    overviewProgressBadge.textContent = counts.total ? `${counts.completion_rate || 0}% complete` : "Starting";
+  }
+  if (overviewDoneCount) overviewDoneCount.textContent = counts.done || 0;
+  if (overviewReviseCount) overviewReviseCount.textContent = counts.revise || 0;
+  if (overviewPendingCount) overviewPendingCount.textContent = counts.pending || 0;
+  if (overviewNextStep) {
+    const momentum = progress.topic_momentum || {};
+    overviewNextStep.textContent = momentum.next_focus
+      || (counts.pending ? "Clear one pending topic before adding more." : "Keep a light revision loop going.");
+  }
+
   if (astraStatusBar) {
     setAstraStatus(
       focus.topic
@@ -5439,41 +5483,6 @@ function renderFunFact(funFact) {
   funFactCategory.textContent = label.charAt(0).toUpperCase() + label.slice(1);
 }
 
-function renderTipsResources(resources) {
-  if (!tipsResourceList) {
-    return;
-  }
-
-  tipsResourceList.innerHTML = "";
-  if (!resources || !resources.length) {
-    const empty = document.createElement("p");
-    empty.className = "muted";
-    empty.textContent = "Add exam goals to unlock curated strategy resources here.";
-    tipsResourceList.appendChild(empty);
-    return;
-  }
-
-  resources.forEach((resource) => {
-    const card = document.createElement("a");
-    card.className = "tips-resource-item";
-    card.href = resource.url;
-    card.target = "_blank";
-    card.rel = "noreferrer noopener";
-
-    const title = document.createElement("p");
-    title.className = "exam-chip-title";
-    title.textContent = `${resource.exam}: ${resource.title}`;
-
-    const meta = document.createElement("p");
-    meta.className = "muted";
-    meta.textContent = `${resource.source} - ${resource.tip}`;
-
-    card.appendChild(title);
-    card.appendChild(meta);
-    tipsResourceList.appendChild(card);
-  });
-}
-
 function renderLearningSources(resources) {
   if (!learningSourcesList) {
     return;
@@ -5490,39 +5499,28 @@ function renderLearningSources(resources) {
 
   resources.forEach((resource) => {
     const card = document.createElement("a");
-    card.className = "tips-resource-item";
+    card.className = "tips-resource-item assist-source-link";
     card.href = resource.url;
     card.target = "_blank";
     card.rel = "noreferrer noopener";
 
-    const title = document.createElement("p");
+    const title = document.createElement("span");
     title.className = "exam-chip-title";
-    title.textContent = `${resource.scope}: ${resource.title}`;
+    title.textContent = resource.title || "Open source";
 
-    const meta = document.createElement("p");
+    const meta = document.createElement("span");
     meta.className = "muted";
-    meta.textContent = `${resource.source} | ${resource.kind}`;
-
-    const why = document.createElement("p");
-    why.className = "muted";
-    why.textContent = resource.why || "Helpful linked source.";
+    meta.textContent = [resource.source, resource.kind, resource.scope].filter(Boolean).join(" | ");
 
     card.appendChild(title);
     card.appendChild(meta);
-    card.appendChild(why);
     learningSourcesList.appendChild(card);
   });
 }
 
-function renderLearningSourcePack(pack, routeText) {
+function renderLearningSourcePack(pack) {
   if (learningSourcePackBadge) {
     learningSourcePackBadge.textContent = (pack && pack.label) || "Open Sources";
-  }
-  if (learningSourceRouteNote) {
-    const packReason = pack && pack.reason ? ` ${pack.reason}` : "";
-    learningSourceRouteNote.textContent = routeText
-      ? `Astra is using ${pack && pack.label ? pack.label : "a compact source pack"} for this route.${packReason} ${routeText}`
-      : `Astra will choose a compact source pack based on your current study state.${packReason}`;
   }
 }
 
@@ -6466,6 +6464,7 @@ function drawProgressChart(canvas, weeklyHistory) {
 }
 
 function renderProgressSnapshot(snapshot) {
+  latestProgressSnapshot = snapshot || null;
   const counts = (snapshot && snapshot.counts) || {};
   const topicMomentum = (snapshot && snapshot.topic_momentum) || {};
   const examTotals = (snapshot && snapshot.exam_totals) || {};
@@ -6530,6 +6529,7 @@ function renderProgressSnapshot(snapshot) {
       : `This week: ${counts.done || 0} done, ${counts.revise || 0} revise, ${counts.pending || 0} pending. ${focus}`;
   }
   drawProgressChart(progressWeeklyCanvas, weeklyHistory);
+  updateOverviewCommandCenter();
 }
 
 function renderChapterMasteryBoard(payload) {
@@ -8404,6 +8404,22 @@ function getSelectedDeletedLoungeConversation() {
   return deletedLoungeConversationSnapshot.find((conversation) => Number(conversation.id) === selectedId) || null;
 }
 
+function setLoungePopover(panel, toggle, open) {
+  if (!panel || !toggle) {
+    return;
+  }
+  panel.classList.toggle("hidden", !open);
+  toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  if (panel === loungeHistoryPanel) {
+    panel.setAttribute("aria-hidden", open ? "false" : "true");
+  }
+}
+
+function closeLoungePanels() {
+  setLoungePopover(loungeTimerPanel, loungeTimerToggleBtn, false);
+  setLoungePopover(loungeHistoryPanel, loungeHistoryToggleBtn, false);
+}
+
 function setLoungeActionState(conversation) {
   const disabled = !conversation;
   [loungeRenameChatBtn, loungePinChatBtn, loungeDeleteChatBtn].forEach((button) => {
@@ -8413,11 +8429,6 @@ function setLoungeActionState(conversation) {
   });
   if (loungePinChatBtn) {
     loungePinChatBtn.textContent = conversation && conversation.pinned_at ? "Unpin" : "Pin";
-  }
-  if (loungeConversationMeta) {
-    loungeConversationMeta.textContent = conversation
-      ? `Selected: ${conversation.title || "New chat"}${conversation.updated_at ? ` - ${conversation.updated_at}` : ""}`
-      : "Start a new lounge chat when you want this space to remember the conversation.";
   }
 }
 
@@ -8471,9 +8482,6 @@ function renderDeletedLoungeConversations(conversations) {
     if (restoreLoungeChatBtn) {
       restoreLoungeChatBtn.disabled = true;
     }
-    if (deletedLoungeConversationMeta) {
-      deletedLoungeConversationMeta.textContent = "Deleted lounge chats will appear here when available.";
-    }
     return;
   }
 
@@ -8490,12 +8498,6 @@ function renderDeletedLoungeConversations(conversations) {
   deletedLoungeConversationSelect.disabled = false;
   if (restoreLoungeChatBtn) {
     restoreLoungeChatBtn.disabled = false;
-  }
-  const selected = getSelectedDeletedLoungeConversation() || deletedLoungeConversationSnapshot[0];
-  if (deletedLoungeConversationMeta) {
-    deletedLoungeConversationMeta.textContent = selected
-      ? `Recover: ${selected.title || "Deleted lounge chat"}${selected.deleted_at ? ` - ${selected.deleted_at}` : ""}`
-      : "Deleted lounge chats will appear here when available.";
   }
 }
 function renderChatHistory(mode, messages) {
@@ -8808,53 +8810,18 @@ function renderStorageStatus(status) {
     return;
   }
   if (!status) {
-    dataSaveStatus.textContent = "Waiting for saved profile, progress, and chat details...";
-    dataSaveCounts.textContent = "No storage summary loaded yet.";
+    dataSaveStatus.textContent = "Your progress, settings, and chats are saved automatically.";
+    dataSaveCounts.textContent = "Saved data will appear after your profile loads.";
     return;
   }
   dataSaveStatus.textContent = status.profile_saved
-    ? "Your profile is saved automatically, and this app is now tracking saved progress and chats too."
+    ? "Your progress, settings, and chats are saved automatically."
     : "Your profile has not been saved yet.";
-  dataSaveCounts.textContent = `Progress items: ${status.progress_items || 0} | Saved chat messages: ${status.chat_messages || 0} | Practice attempts: ${status.practice_attempts || 0} | Memory items: ${status.memory_items || 0} | Behavior events: ${status.behavior_events || 0} | Outcome records: ${status.outcome_records || 0} | Trend: ${(status.analytics_trend || "building").replace(/_/g, " ")} | Syllabus docs: ${status.syllabus_documents || 0}`;
-}
-
-function renderFeatureHealth(snapshot) {
-  if (!featureHealthList) {
-    return;
-  }
-
-  featureHealthList.innerHTML = "";
-  if (!snapshot || !Array.isArray(snapshot.checks)) {
-    const empty = document.createElement("p");
-    empty.className = "muted";
-    empty.textContent = "Feature health will appear here after a profile loads.";
-    featureHealthList.appendChild(empty);
-    return;
-  }
-
-  const header = document.createElement("p");
-  header.className = "muted";
-  header.textContent = `Overall health: ${snapshot.health_score || 0}%`;
-  featureHealthList.appendChild(header);
-
-  snapshot.checks.forEach((check) => {
-    const row = document.createElement("div");
-    row.className = "source-chip";
-    row.style.display = "block";
-    row.style.marginBottom = "0.6rem";
-
-    const title = document.createElement("strong");
-    title.textContent = `${String(check.feature || "feature").replace(/_/g, " ")}: ${String(check.status || "unknown").toUpperCase()}`;
-
-    const detail = document.createElement("p");
-    detail.className = "muted";
-    detail.style.margin = "0.35rem 0 0";
-    detail.textContent = check.detail || "";
-
-    row.appendChild(title);
-    row.appendChild(detail);
-    featureHealthList.appendChild(row);
-  });
+  const savedParts = [];
+  if (status.progress_items) savedParts.push(`${status.progress_items} progress items`);
+  if (status.chat_messages) savedParts.push(`${status.chat_messages} chat messages`);
+  if (status.syllabus_documents) savedParts.push(`${status.syllabus_documents} syllabus docs`);
+  dataSaveCounts.textContent = savedParts.length ? savedParts.join(" | ") : "Astra will start saving once you study.";
 }
 
 async function fetchStorageStatus(studentName) {
@@ -8868,19 +8835,6 @@ async function fetchStorageStatus(studentName) {
     throw new Error(payload.detail || "Could not load saved-data status.");
   }
   renderStorageStatus(payload);
-}
-
-async function fetchFeatureHealth(studentName) {
-  if (!studentName) {
-    renderFeatureHealth(null);
-    return;
-  }
-  const response = await fetch(`/api/feature-health/${encodeURIComponent(studentName)}`);
-  const payload = await response.json();
-  if (!response.ok) {
-    throw new Error(payload.detail || "Could not load feature health.");
-  }
-  renderFeatureHealth(payload);
 }
 
 function renderTutorVideoBridge(video) {
@@ -11901,7 +11855,7 @@ function renderSectionProgress(items) {
     targets.forEach((target) => {
       const empty = document.createElement("p");
       empty.className = "muted";
-      empty.textContent = "No section data yet.";
+      empty.textContent = "No subject data yet.";
       target.appendChild(empty);
     });
     return;
@@ -11914,29 +11868,28 @@ function renderSectionProgress(items) {
 
       const title = document.createElement("p");
       title.className = "exam-chip-title";
-      title.textContent = `${item.exam} | ${item.subject}`;
+      title.textContent = item.subject;
+
+      const stats = document.createElement("div");
+      stats.className = "subject-insight-stats";
+
+      const mockStat = document.createElement("span");
+      const mockCount = Number(item.mock_tests_taken || 0);
+      mockStat.textContent = `${mockCount} mock ${mockCount === 1 ? "test" : "tests"}`;
+
+      const backlogStat = document.createElement("span");
+      const backlogHours = Math.round(Number(item.backlog_hours || 0));
+      backlogStat.textContent = `~${backlogHours} hrs backlog`;
 
       const summary = document.createElement("p");
-      summary.className = "muted";
-      summary.textContent = item.summary;
+      summary.className = "subject-insight-copy";
+      summary.textContent = item.summary || `Not much is logged for ${item.subject} yet.`;
 
-      const stats = document.createElement("p");
-      stats.className = "muted";
-      stats.textContent = `Completed: ${item.completed_hours}h across ${item.completed_sessions} sessions | Mock: ${item.mock_score !== null && item.mock_score !== undefined ? item.mock_score : "not set"} | Backlog: ${item.backlog_hours}h`;
-
-      const strengths = document.createElement("p");
-      strengths.className = "memory-heading";
-      strengths.textContent = `Strengths: ${(item.strengths || []).join(", ")}`;
-
-      const weaknesses = document.createElement("p");
-      weaknesses.className = "memory-heading";
-      weaknesses.textContent = `Watch-outs: ${(item.weaknesses || []).join(", ")}`;
-
+      stats.appendChild(mockStat);
+      stats.appendChild(backlogStat);
       card.appendChild(title);
-      card.appendChild(summary);
       card.appendChild(stats);
-      card.appendChild(strengths);
-      card.appendChild(weaknesses);
+      card.appendChild(summary);
       target.appendChild(card);
     });
   });
@@ -13059,16 +13012,6 @@ async function fetchExamCatalog() {
   renderExamCatalogOptions();
 }
 
-async function fetchTipsResources(studentName) {
-  if (!studentName) {
-    renderTipsResources([]);
-    return;
-  }
-  const response = await fetch(`/api/tips/${encodeURIComponent(studentName)}`);
-  const payload = await response.json();
-  renderTipsResources(payload.resources || []);
-}
-
 async function fetchStudyGroups(studentName) {
   if (!studentName) {
     renderStudyGroups(null);
@@ -13222,8 +13165,7 @@ async function saveProgressItem() {
     progressTopicInput.value = "";
     progressNoteInput.value = "";
     await fetchStorageStatus(activeProfile.name);
-    await fetchFeatureHealth(activeProfile.name);
-  } catch (error) {
+    } catch (error) {
     if (progressReminderText) {
       progressReminderText.textContent = error.message;
     }
@@ -13255,8 +13197,7 @@ async function updateProgressItemStatus(itemId, status) {
     await refreshEngagementAfterLPAward(payload.lp_awards);
     await fetchVideoLibrary(activeProfile.name);
     await fetchStorageStatus(activeProfile.name);
-    await fetchFeatureHealth(activeProfile.name);
-  } catch (error) {
+    } catch (error) {
     if (progressReminderText) {
       progressReminderText.textContent = error.message;
     }
@@ -13519,12 +13460,10 @@ async function saveExamPlans(exams, successMessage) {
   activeProfile = payload.profile;
   renderExamManager(activeProfile.exams || []);
   await refreshWeeklyPlan();
-  await fetchTipsResources(activeProfile.name);
   await fetchLearningSources(activeProfile.name);
   await fetchVideoLibrary(activeProfile.name);
   await fetchStudyGroups(activeProfile.name);
   await fetchStudentInsights(activeProfile.name);
-  await fetchFeatureHealth(activeProfile.name);
   updateExamBrandCopy(activeProfile);
 appendMessage("tutor", "tutor", successMessage || "Your exam list has been updated and your schedule will adapt from the next plan refresh.");
 }
@@ -13601,7 +13540,6 @@ async function updateMemory(category, value, action) {
   renderFunFact(payload.fun_fact);
   await fetchStudentInsights(activeProfile.name);
   await fetchStudyGroups(activeProfile.name);
-  await fetchFeatureHealth(activeProfile.name);
 }
 
 async function addInterest() {
@@ -13655,7 +13593,6 @@ async function fetchPhaseStatus(silent = false) {
       throw new Error(payload.detail || "Could not load phase status.");
     }
     latestPhaseStatus = payload;
-    updatePhaseBanner(payload);
     return payload;
   } catch (error) {
     if (!silent) {
@@ -13689,73 +13626,8 @@ async function transitionLearningPhase(silent = true) {
   }
 }
 
-function updatePhaseBanner(phaseStatus) {
-  if (!phaseBanner || !phaseStatus) {
-    return;
-  }
-  const phase = String(phaseStatus.current_phase || "phase1_coverage");
-  const coverage = Math.max(0, Math.min(100, Number(phaseStatus.coverage_percent) || 0));
-  const red = Number(phaseStatus.topics_red) || 0;
-  const brown = Number(phaseStatus.topics_brown) || 0;
-  const green = Number(phaseStatus.topics_green) || 0;
-  const cycle = Number(phaseStatus.current_cycle) || 1;
-  const days = phaseStatus.days_to_exam;
-  let text = `Phase 1 - Coverage | ${coverage}% complete | ${red} topics remaining`;
-  let progress = coverage;
-  phaseBanner.classList.remove("phase-phase2", "phase-phase3");
-  if (phase === "phase2_revision") {
-    const revisionTotal = Math.max(1, brown + green);
-    progress = Math.round((green / revisionTotal) * 100);
-    text = `Phase 2 - Revision Cycle ${cycle} | ${brown} topics to strengthen`;
-    phaseBanner.classList.add("phase-phase2");
-  } else if (phase === "phase3_exam_prep") {
-    const safeDays = Number(days);
-    progress = Number.isFinite(safeDays) ? Math.max(0, Math.min(100, Math.round(((30 - safeDays) / 30) * 100))) : 0;
-    text = `Phase 3 - Exam Prep | ${Number.isFinite(safeDays) ? safeDays : "Set exam date"} days remaining`;
-    phaseBanner.classList.add("phase-phase3");
-  }
-  phaseBanner.classList.remove("hidden");
-  if (phaseBannerText) phaseBannerText.textContent = text;
-  if (phaseProgressFill) phaseProgressFill.style.width = `${Math.max(0, Math.min(100, progress))}%`;
-  if (phaseNextAction) phaseNextAction.textContent = phaseStatus.next_action || "";
-}
-
-async function fetchBacklogSummary(silent = false) {
-  if (!activeProfile) {
-    return null;
-  }
-  try {
-    const response = await fetch(`/api/backlog/summary/${encodeURIComponent(activeProfile.name)}`);
-    const payload = await response.json();
-    if (!response.ok) {
-      throw new Error(payload.detail || "Could not load backlog summary.");
-    }
-    latestBacklogSummary = payload;
-    updateBacklogIndicator(payload);
-    return payload;
-  } catch (error) {
-    if (!silent) {
-      setAstraStatus(`Could not load backlog: ${error.message}`, "warning", true);
-    }
-    return null;
-  }
-}
-
-function updateBacklogIndicator(summary) {
-  if (!backlogIndicator || !backlogText) {
-    return;
-  }
-  if (!summary || !summary.has_backlog) {
-    backlogIndicator.classList.add("hidden");
-    return;
-  }
-  backlogIndicator.classList.remove("hidden");
-  backlogText.textContent = summary.recovery_message || `${summary.backlog_hours_total || 0} backlog hours will be redistributed.`;
-}
-
 async function refreshTodayPhaseAndBacklog() {
   await fetchPhaseStatus(true);
-  await fetchBacklogSummary(true);
 }
 
 function showPhaseTransitionModal(transition) {
@@ -13782,14 +13654,6 @@ function showPhaseTransitionModal(transition) {
   });
   document.body.appendChild(modal);
 }
-
-window.showRecoveryPlan = function showRecoveryPlan() {
-  const summary = latestBacklogSummary;
-  const message = summary && summary.recovery_message
-    ? summary.recovery_message
-    : "No recovery plan is needed right now.";
-  window.alert(message);
-};
 
 async function safeStudioStep(stepFn) {
   try {
@@ -13833,7 +13697,6 @@ async function enterLearningStudio(studentName, options = {}) {
   renderFunFact(payload.fun_fact);
   const studioSteps = [
     () => fetchMotivationSection(),
-    () => fetchTipsResources(activeProfile.name),
     () => fetchLearningSources(activeProfile.name),
     () => fetchVideoLibrary(activeProfile.name),
     () => fetchStudyGroups(activeProfile.name),
@@ -13842,7 +13705,6 @@ async function enterLearningStudio(studentName, options = {}) {
     () => fetchEngagement(activeProfile.name),
     () => fetchStudentInsights(activeProfile.name),
     () => fetchStorageStatus(activeProfile.name),
-    () => fetchFeatureHealth(activeProfile.name),
     () => fetchSyllabusDocuments(activeProfile.name),
     () => fetchTutorConversations(),
     () => fetchLoungeConversations(),
@@ -14753,10 +14615,38 @@ document.addEventListener("click", (event) => {
     dropdown.classList.add("hidden");
   }
 });
+if (loungeTimerToggleBtn && loungeTimerPanel) {
+  loungeTimerToggleBtn.addEventListener("click", () => {
+    const willOpen = loungeTimerPanel.classList.contains("hidden");
+    setLoungePopover(loungeHistoryPanel, loungeHistoryToggleBtn, false);
+    setLoungePopover(loungeTimerPanel, loungeTimerToggleBtn, willOpen);
+  });
+}
+if (loungeHistoryToggleBtn && loungeHistoryPanel) {
+  loungeHistoryToggleBtn.addEventListener("click", () => {
+    const willOpen = loungeHistoryPanel.classList.contains("hidden");
+    setLoungePopover(loungeTimerPanel, loungeTimerToggleBtn, false);
+    setLoungePopover(loungeHistoryPanel, loungeHistoryToggleBtn, willOpen);
+  });
+}
+if (closeLoungeHistoryBtn) {
+  closeLoungeHistoryBtn.addEventListener("click", () => {
+    setLoungePopover(loungeHistoryPanel, loungeHistoryToggleBtn, false);
+  });
+}
+if (loungeDeletedToggleBtn && loungeDeletedPanel) {
+  loungeDeletedToggleBtn.addEventListener("click", () => {
+    const willOpen = loungeDeletedPanel.classList.contains("hidden");
+    loungeDeletedPanel.classList.toggle("hidden", !willOpen);
+    loungeDeletedToggleBtn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+  });
+}
+
 if (newLoungeChatBtn) {
   newLoungeChatBtn.addEventListener("click", async () => {
     try {
       await createLoungeConversation();
+      closeLoungePanels();
     } catch (error) {
       appendMessage("lounge", "tutor", error.message);
     }
@@ -14850,11 +14740,6 @@ if (deletedLoungeConversationSelect) {
     const selected = getSelectedDeletedLoungeConversation();
     if (restoreLoungeChatBtn) {
       restoreLoungeChatBtn.disabled = !selected;
-    }
-    if (deletedLoungeConversationMeta) {
-      deletedLoungeConversationMeta.textContent = selected
-        ? `Recover: ${selected.title || "Deleted lounge chat"}${selected.deleted_at ? ` - ${selected.deleted_at}` : ""}`
-        : "Deleted lounge chats will appear here when available.";
     }
   });
 }
